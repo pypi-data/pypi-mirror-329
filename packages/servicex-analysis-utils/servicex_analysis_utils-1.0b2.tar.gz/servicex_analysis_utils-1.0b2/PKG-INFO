@@ -1,0 +1,45 @@
+Metadata-Version: 2.4
+Name: servicex_analysis_utils
+Version: 1.0b2
+Summary: A package with analysis tools for ServiceX.
+Project-URL: Source Code, https://github.com/ArturU043/ServiceX_analysis_utils
+Project-URL: Issue Tracker, https://github.com/ArturU043/ServiceX_analysis_utils/issues
+Author-email: Artur Cordeiro Oudot Choi <acordeir@cern.ch>
+License: BSD-3-Clause
+License-File: LICENSE
+Requires-Python: >=3.9
+Requires-Dist: awkward>=2.6
+Requires-Dist: dask-awkward>=2024.12.2
+Requires-Dist: uproot>=5.0
+Provides-Extra: test
+Requires-Dist: numpy>=1.21; extra == 'test'
+Requires-Dist: pandas; extra == 'test'
+Requires-Dist: pyarrow>=8.0.0; extra == 'test'
+Requires-Dist: pytest>=7.2.0; extra == 'test'
+Description-Content-Type: text/markdown
+
+# ServiceX analysis utils
+This repository provides analysis tools to be used with the [ServiceX Client](https://github.com/ssl-hep/ServiceX_frontend/tree/master)
+
+### To install 
+```
+pip install servicex-analysis-utils
+```
+
+##### This package contains the to_awk() function:
+```
+    Load an awkward array from the deliver() output with uproot or uproot.dask.
+
+    Parameters:
+        deliver_dict (dict): Returned dictionary from servicex.deliver()
+                            (keys are sample names, values are file paths or URLs).
+        dask (bool):        Optional. Flag to load as dask-awkward array. Default is False
+        **uproot_kwargs :   Optional. Additional keyword arguments passed to uproot.dask or uproot.iterate
+
+    
+    Returns:
+        dict: keys are sample names and values are awkward arrays or dask-awkward arrays.
+```
+
+## Documentation
+The different functions are documented in TBD 
