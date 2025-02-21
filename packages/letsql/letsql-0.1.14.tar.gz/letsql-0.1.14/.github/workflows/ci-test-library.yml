@@ -1,0 +1,74 @@
+name: ci-test-library
+
+on:
+  push:
+    # Skip the backend suite if all changes are docs
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - "**/*.qmd"
+      - "*.md"
+      - "codecov.yml"
+      - ".envrc"
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: ["x86_64"]
+        python-version: ["3.11"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: extractions/setup-just@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: rust latest
+        run: rustup update
+
+      # check how to use virtual environment https://stackoverflow.com/q/74668349/4001592
+      - name: create virtual environment
+        run: python -m venv .venv
+
+      - name: install dependencies
+        run: |
+          source .venv/bin/activate
+          python -m pip install pytest maturin pytest-cov
+
+      - name: develop
+        run: |
+          source .venv/bin/activate
+          python -m maturin develop
+
+      - name: test
+        run: |
+          source .venv/bin/activate
+          python -m pytest --import-mode=importlib python/letsql/tests/test_examples.py -v --cov --cov-report=xml -m library
+        working-directory: ${{ github.workspace }}
+        env:
+          POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
+          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+          POSTGRES_HOST: ${{ vars.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ vars.POSTGRES_PORT }}
+          POSTGRES_DATABASE: ${{ vars.POSTGRES_DATABASE }}
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5.3.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
