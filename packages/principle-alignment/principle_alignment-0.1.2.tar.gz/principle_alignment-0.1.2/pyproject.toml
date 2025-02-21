@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "principle-alignment"
+version = "0.1.2"
+description = "principle alignment package"
+readme = "README.md"
+authors = [
+    {name = "ZJun", email = "zhangjun310@live.com"}
+]
+requires-python = ">=3.10"
+license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "fastapi",
+    "pyyaml",
+    "openai",
+    "python-dotenv",
+    "tenacity",
+    "requests",
+]
+
+[project.urls]
+Repository = "https://github.com/ZJCODE/principle-alignment"
+
+[tool.setuptools]
+packages = {find = {include = ["principle_alignment*"], exclude = ["examples*"]}}
