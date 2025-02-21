@@ -1,0 +1,32 @@
+{#
+SPDX-FileCopyrightText: 2023 Thomas Breitner
+
+SPDX-License-Identifier: MIT
+#}
+
+
+{%- if pagetree %}
+<div class="pagetree-container">
+    <div class="pagetree-functions"></div>
+    <ul class="pagetree">
+    {%- for nav_item in pagetree %}
+    {%- if nav_item.children %}
+        <li>
+        <details open>
+            <summary>{{ nav_item.title }}</summary>
+            <ul>
+            {%- for nav_item in nav_item.children %}
+                {% include "nav_sub.html.j2" %}
+            {%- endfor %}
+            </ul>
+        </details>
+        </li>
+    {%- else %}
+        <li>
+            {% include "nav_item.html.j2" %}
+        </li>
+    {%- endif %}
+    {%- endfor %}
+    </ul>
+</div>
+{%- endif %}
