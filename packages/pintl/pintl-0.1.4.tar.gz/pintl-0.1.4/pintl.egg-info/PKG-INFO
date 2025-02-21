@@ -1,0 +1,42 @@
+Metadata-Version: 2.2
+Name: pintl
+Version: 0.1.4
+Summary: A Python internationalization package
+Author-email: Petri Lipponen <petri.lipponen@movesense.com>
+License: MIT
+Project-URL: Homepage, https://github.com/petri-lipponen-movesense/pintl
+Project-URL: Repository, https://github.com/petri-lipponen-movesense/pintl
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# PIntl
+
+PIntl is a localization package heavily inspired by the Flutter's "intl" package. The localization files are in ".arb" format (basically json), one file per language in a single folder.
+
+## Usage
+
+To use PIntl, first initialize the localization
+
+```PIntl.load("tests/l10n")```
+or 
+if you need per instance localization, like in web service
+```pintl = PIntl.load("tests/l10n")``` 
+
+and set the locale:
+```set_locale("fi")```
+or
+```pintl.set_locale("fi")```
+
+####
+
+To get the string, simply call global string function (uses last created instance) with optional parameter dictionary:
+```_("my_localized_string", {"param1",123})```
+
+or equivalent instance method
+```_("my_localized_string", {"param1",123})```
+
+
