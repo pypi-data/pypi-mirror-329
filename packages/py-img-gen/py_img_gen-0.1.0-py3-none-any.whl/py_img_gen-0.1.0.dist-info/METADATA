@@ -1,0 +1,50 @@
+Metadata-Version: 2.4
+Name: py-img-gen
+Version: 0.1.0
+Summary: A library for the book "Image Generation with Python"
+Project-URL: Repository, https://github.com/py-img-gen/py-img-gen-lib
+Project-URL: Issues, https://github.com/py-img-gen/py-img-gen-lib/issues
+Author-email: Shunsuke Kitada <shunsuke.kitada.0831@gmail.com>, Image Generation with Python <python.image.generation@gmail.com>
+License-Expression: MIT
+Keywords: clip,controlnet,diffusers,image-generation,lora,python,stable-diffusion,torch,torchvision,transformers
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.10
+Requires-Dist: diffusers[torch]>=0.31.0
+Requires-Dist: einops>=0.7.0
+Requires-Dist: matplotlib>=3.5.0
+Requires-Dist: torch>=1.0.0
+Requires-Dist: torchvision>=0.2.1
+Requires-Dist: transformers[torch]>=4.30.0
+Provides-Extra: clip
+Requires-Dist: more-itertools>=10.6.0; extra == 'clip'
+Requires-Dist: scikit-image>=0.25.1; extra == 'clip'
+Provides-Extra: controlnet
+Requires-Dist: controlnet-aux>=0.0.9; extra == 'controlnet'
+Requires-Dist: mediapipe>=0.10.11; extra == 'controlnet'
+Requires-Dist: opencv-python>=4.10.0.84; extra == 'controlnet'
+Provides-Extra: docs
+Requires-Dist: furo>=2024.8.6; extra == 'docs'
+Requires-Dist: myst-parser>=4.0.0; extra == 'docs'
+Requires-Dist: sphinx-autodoc-typehints>=3.0.0; extra == 'docs'
+Requires-Dist: sphinx-pyproject>=0.3.0; extra == 'docs'
+Requires-Dist: sphinx>=8.1.3; extra == 'docs'
+Provides-Extra: lora
+Requires-Dist: datasets>=3.1.0; extra == 'lora'
+Requires-Dist: peft>=0.13.2; extra == 'lora'
+Provides-Extra: ncsn
+Requires-Dist: diffusers-ncsn>=0.1.0; extra == 'ncsn'
+Provides-Extra: quantization
+Requires-Dist: bitsandbytes>=0.44.1; extra == 'quantization'
+Provides-Extra: sd3
+Requires-Dist: protobuf<3.21.0; extra == 'sd3'
+Requires-Dist: sentencepiece>=0.2.0; extra == 'sd3'
+Description-Content-Type: text/markdown
+
+# py-img-gen lib
+
+[![CI](https://github.com/py-img-gen/py-img-gen-lib/actions/workflows/ci.yaml/badge.svg)](https://github.com/py-img-gen/py-img-gen-lib/actions/workflows/ci.yaml)
+
+A library for the book "Image Generation with Python".
