@@ -1,0 +1,22 @@
+{#
+SPDX-FileCopyrightText: 2023 Thomas Breitner
+
+SPDX-License-Identifier: MIT
+#}
+
+{%- if not nav_item.children %}
+<li>
+  {% include "nav_item.html.j2" %}
+</li>
+{%- else %}
+  <li>
+    <details>
+    <summary>{{ nav_item.title }}</summary>
+    <ul>
+        {%- for nav_item in nav_item.children %}
+            {% include "nav_sub.html.j2" %}
+        {%- endfor %}
+    </ul>
+    </details>
+  </li>
+{%- endif %}
