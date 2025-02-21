@@ -1,0 +1,177 @@
+# MLToolkit
+
+Welcome to the **MLToolkit** repository! This repository contains tools, functions, and utilities to streamline and optimize workflows for machine learning engineers, data scientists, and analysts. Our toolkit is designed to support end-to-end ML pipelines with modules for artifact management, configuration loading, Docker tooling, GCP bucket operations, and robust logging.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Modules](#modules)
+  - [Artifact Registry Tools](#artifact-registry-tools)
+  - [Configuration Loader](#configuration-loader)
+  - [Docker Tools](#docker-tools)
+  - [GCP Bucket Tools](#gcp-bucket-tools)
+  - [Logging Utilities](#logging-utilities)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Overview
+
+**MLToolkit** is a collection of essential scripts, functions, and libraries that help us manage and deploy machine learning models. The toolkit supports:
+- Preprocessing and model evaluation utilities
+- Pipelines for model training and deployment
+- Version control for model management
+- Integration with cloud services (GCP, AWS)
+- Logging, monitoring, and debugging utilities
+
+It is built to work seamlessly both locally and in the cloud, ensuring that logs, artifacts, and configurations are consistent and centralized.
+
+## Modules
+
+### Artifact Registry Tools (`artifact_registry_tools.py`)
+
+This module provides the `ArtifactHelper` class to interact with Google Cloud Artifact Registry. It supports operations such as checking for existing repositories, creating new repositories, listing repositories, and uploading files.
+
+**Usage Example:**
+```python
+from mltoolkit import artifact_registry_tools
+
+helper = artifact_registry_tools.ArtifactHelper(
+    project_id="your-project",
+    location="your-location",
+    credential_file_path="path/to/creds.json"
+)
+
+if helper.check_repository("my-repo"):
+    print("Repository exists")
+else:
+    helper.create_repository("my-repo", repository_format="docker")
+```
+
+### Configuration Loader (`config_loader.py`)
+
+The ConfigLoader class supports loading configuration files (YAML, YML, and JSON) either from a local path or directly from a GCP bucket.
+
+**Usage Example:**
+```python
+from mltoolkit import config_loader
+
+loader = config_loader.ConfigLoader()
+config = loader.load_from_bucket("my-bucket", "config.yaml")
+print(config)
+```
+
+### Docker Tools (`docker_tools.py`)
+
+The DockerTool class offers utility functions for building, deleting, running, listing, and uploading Docker images. It also supports cleaning up Docker resources to manage storage.
+
+**Usage Example:**
+```python
+from mltoolkit import docker_tools
+
+docker = docker_tools.DockerTool(credentials_file_path="path/to/creds.json")
+docker.build_image(image_name="my-image", dockerfile="Dockerfile")
+```
+
+### GCP Bucket Tools (`gcp_bucket.py`)
+
+**Usage Example:**
+```python
+from mltoolkit import gcp_bucket
+
+bucket = gcp_bucket.GCPBucket(
+    project_id="your-project",
+    location="your-location",
+    credentials="path/to/creds.json",
+    bucket_name="my-bucket"
+)
+bucket.local_file_upload("local_file.txt", "uploads/file.txt")
+```
+
+### Logging Utilities (`logging.py`)
+
+The `mltoolkit_logging.py` module provides a configurable logger that supports structured JSON logging with custom fields such as environment, operating company, and stage. You can log locally (to the console) or use Google Cloud Logging based on your environment.
+
+#### Setup
+
+Import the logger from the package and configure it for your ML pipeline. For example, for local testing you might force local logging:
+
+```python
+from mltoolkit import logging
+
+# Setup the logger; for local testing, force local logging with use_cloud=False.
+logger = logging.setup_logger("ml-pipeline", use_cloud=False)
+```
+
+#### Logging at Various Levels
+
+- **DEBUG:** Detailed system information for diagnosing issues.
+```python
+  logger.debug(
+      "DEBUG: Detailed debug message for initialization.",
+      extra={"environment": "dev", "operating_company": "ExampleCorp", "stage": "initialization"}
+  )
+```
+
+- **INFO:** General process information.
+```python
+logger.info(
+    "INFO: Process started successfully.",
+    extra={"environment": "dev", "operating_company": "ExampleCorp", "stage": "data-loading"}
+)
+```
+
+- **WARNING:** Indicates a potential issue that doesn't stop execution.
+```python
+logger.warning(
+    "WARNING: Detected a potential issue in data preprocessing.",
+    extra={"environment": "dev", "operating_company": "ExampleCorp", "stage": "data-preprocessing"}
+)
+```
+
+- **ERROR:** Logs an error that occurred during execution.
+```python
+logger.error(
+    "ERROR: Failed to train model due to invalid input.",
+    extra={"environment": "dev", "operating_company": "ExampleCorp", "stage": "model-training"},
+    exc_info=True
+)
+```
+
+- **CRITICAL:** Logs a severe error with a stack trace.
+```python
+try:
+    1 / 0  # Simulate an error.
+except Exception:
+    logger.critical(
+        "CRITICAL: Fatal error during model deployment.",
+        extra={"environment": "dev", "operating_company": "ExampleCorp", "stage": "model-deployment"},
+        exc_info=True  # This flag includes the stack trace.
+    )
+```
+
+These examples demonstrate how to log at different severity levels with structured metadata. When deployed (by setting use_cloud=True), logs will be sent to Google Cloud Logging, allowing you to aggregate logs across different projects and environments.
+
+#### Installation
+
+**Clone the repository and install the required dependencies:**
+```bash
+pip install pit-mltoolkit
+```
+
+#### Usage
+**Import the modules as needed in your projects:**
+```python
+from mltoolkit import artifact_registry_tools, config_loader, docker_tools, gcp_bucket, logging
+```
+
+Refer to the examples provided in each module section above for guidance on how to integrate these utilities into your ML workflows.
+
+#### Contributors
+
+- PepkorIT Machine Learning Engineering Team:
+    - Tyron Lambrechts
+    - Thomas Verryne
+    - Neil Slabbert
