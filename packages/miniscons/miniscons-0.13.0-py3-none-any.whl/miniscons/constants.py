@@ -1,0 +1,13 @@
+SCONS_FLAGS = (
+    "CPPPATH",
+    "LIBPATH",
+    "BINPATH",
+    "LIBS",
+    "FRAMEWORKS",
+    "FRAMEWORKPATH",
+    "CPPDEFINES",
+    "CXXFLAGS",
+    "CCFLAGS",
+    "SHLINKFLAGS",
+    "LINKFLAGS",
+)
