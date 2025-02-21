@@ -1,0 +1,35 @@
+InGameScreen {
+    layout: grid;
+    grid-size: 2 2;
+    grid-rows: 1fr 7;
+    grid-columns: 25 1fr;
+    grid-gutter: 0 1;
+
+    Sidebar {
+        margin-left: 1;
+    }
+
+    Players, #actions {
+        margin-right: 1;
+    }
+
+    Sidebar, Players, #actions {
+        border: double $panel;
+        border-title-color: $text-secondary;
+
+        &:focus {
+            border: double $border;
+            border-title-color: $text-primary;
+        }
+    }
+
+    #actions {
+        padding: 1 2;
+        align: center middle;
+
+        Button {
+            min-width: 11;
+            margin: 0 3;
+        }
+    }
+}
