@@ -1,0 +1,56 @@
+[project]
+name = "polaroids"
+version = "0.2.0"
+description = "Validate you Generic polars dataframes"
+readme = "README.md"
+authors = [
+    { name = "gabriel", email = "106454081+gab23r@users.noreply.github.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "polars>=1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "pytest>=8.3.4",
+    "ruff>=0.9.6",
+    "pyright>=1.1.394",
+    "pre-commit>=4.1.0",
+]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.5",
+    "mkdocstrings[python]>=0.28.1",
+]
+
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "standard"
+
+
+[tool.ruff]
+line-length = 100
+include = ["src/**/*.py"]
+
+lint.extend-select = [
+    "D", # Doctrings
+]
+
+
+[tool.ruff.lint.extend-per-file-ignores]
+"tests/*" = ["D"]
+"**/__init__.py" = ["D104"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.format]
+docstring-code-format = true
