@@ -1,0 +1,41 @@
+{% load partials %}
+
+{% if use_crispy %}
+    {% load crispy_forms_tags %}
+{% endif %}
+
+<div class="table-responsive">
+        <table class="table table-sm table-striped table-hover w-auto table-font-size"
+            style="border-collapse: separate; border-spacing: 0.15rem 0;"
+        >
+            <thead>
+                <tr>
+                    {% for header in headers %}
+                    <th class="bg-primary text-center text-white text-wrap align-middle text-truncate table-column-width"
+                        >{{ header|capfirst }}</th>
+                    {% endfor %}
+                    <th class="bg-secondary text-center text-white align-middle">
+                        <span >Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for object in object_list %}
+                <tr class="text-center">
+                    {% for field in object.fields %}
+                    <td class="{% if forloop.first %}fw-medium{% endif %} py-0 align-middle text-truncate table-column-width px-2"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="{{field}}"
+                        data-bs-placement="top"
+                        data-bs-custom-class="custom-tooltip">
+                        {{ field }}
+                    </td>
+                    {% endfor %}
+                    <td class="text-end py-1 align-middle">
+                        {{ object.actions }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</div>
