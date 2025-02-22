@@ -1,0 +1,520 @@
+grammar akn
+  root              <- 'noop'
+
+  # ------------------------------------------------------------------------------
+  # Judgment
+  # ------------------------------------------------------------------------------ 
+
+  judgment          <- judgmentBody
+                       conclusions:conclusions?
+                       attachments:attachments?
+                       <Judgment>
+
+  judgmentBody      <- introduction:introduction?
+                       background:background?
+                       arguments:arguments?
+                       remedies:remedies?
+                       motivation:motivation?
+                       decision:decision?
+                       <JudgmentBody>
+
+  # ------------------------------------------------------------------------------ 
+  # Hierarchical Structure (acts, bills)
+  # ------------------------------------------------------------------------------
+  # TODO: coverpage
+
+  act               <- hierarchical_structure <Act>
+
+  bill              <- hierarchical_structure <Bill>
+
+  hierarchical_structure <- preface:preface?
+                            preamble:preamble?
+                            body
+                            conclusions:conclusions?
+                            attachments:attachments?
+                            <HierarchicalStructure>
+
+  # ------------------------------------------------------------------------------
+  # Open structure (doc, statement, debateReport, etc.)
+  # ------------------------------------------------------------------------------
+
+  debateReport      <- open_structure <DebateReport>
+
+  doc               <- open_structure <Doc>
+
+  statement         <- open_structure <Statement>
+
+  # TODO: components
+  open_structure    <- preface:preface?
+                       preamble:preamble?
+                       mainBody
+                       conclusions:conclusions?
+                       attachments:attachments?
+                       <OpenStructure>
+
+  # ------------------------------------------------------------------------------
+  # Debate structure (debate)
+  # ------------------------------------------------------------------------------
+
+  debate            <- debate_structure <Debate>
+
+  # TODO: components
+  debate_structure  <- preface:preface?
+                       debateBody
+                       conclusions:conclusions?
+                       attachments:attachments?
+                       <DebateStructure>
+
+  # ------------------------------------------------------------------------------
+  # Hierarchical elements
+  # ------------------------------------------------------------------------------
+
+  hier_element      <- crossheading / hier_element_block
+
+  hier_element_block <- hier_element_name attrs:block_attrs? heading:hier_element_heading? eol
+                        body:(indent
+                          subheading:subheading?
+                          content:hier_block_element*
+                        dedent)? <HierElement>
+
+                        # the num and heading MUST be separated by ' - ', including spaces
+                        # otherwise, the dash is considered a part of the num, or of the heading
+                        #
+                        # eg: num - heading
+                        #     - heading
+                        #     num
+                        #     num -
+  hier_element_heading <- num:hier_element_heading_num? heading:hier_element_heading_heading? <HierElementHeading>
+
+  hier_element_heading_num <- !hier_element_heading_heading space content:(!hier_element_heading_heading num_content)+
+
+  hier_element_heading_heading <- space '-' heading_content
+
+                     # heading text, or non-capturing eol to indicate no heading
+  heading_content   <- (space content:inline+) / &eol
+
+  num_content       <- escape / [^\n]
+
+  hier_block_element <- hier_element / block_element
+
+                     # this is for top-level containers that may/may not start with an
+                     # indented block, but otherwise contain hier content
+  hier_indent       <- (indent content:hier_element+ dedent) / hier_element
+
+                     # this is for top-level containers that may/may not start with an
+                     # indented block, but otherwise contain block and hier content
+  hier_block_indent <- (indent content:hier_block_element+ dedent) / hier_block_element
+
+                     # this is for top-level containers that may/may not start with an
+                     # indented block, but otherwise contain block and hier content
+  speech_container_indent <- (indent content:speech_container+ dedent) / speech_container
+
+                     # synonyms that are prefixes of other items must come last
+  hier_element_name <- ('ALINEA' / 'ARTICLE' / 'BOOK' / 'CHAPTER' / 'CLAUSE' / 'DIVISION' / 'INDENT' / 'LEVEL' / 'LIST'
+                        / 'PARAGRAPH' / 'PART' / 'POINT' / 'PROVISO' / 'RULE' / 'SECTION' / 'SUBCHAPTER'
+                        / 'SUBCLAUSE' / 'SUBDIVISION' / 'SUBLIST' / 'SUBPARAGRAPH' / 'SUBPART' / 'SUBRULE'
+                        / 'SUBSECTION' / 'SUBTITLE' / 'TITLE' / 'TOME' / 'TRANSITIONAL'
+                        / 'ART' / 'CHAP' / 'PARA' / 'SEC' / 'SUBCHAP' / 'SUBPARA' / 'SUBSEC')
+
+  # ------------------------------------------------------------------------------
+  # Debate/speech elements
+  # ------------------------------------------------------------------------------
+
+  speech_container  <- speech_container_name attrs:block_attrs? heading:hier_element_heading? eol
+                       body:(indent
+                         subheading:subheading?
+                         content:speech_hier_block_element*
+                       dedent)? <SpeechContainer>
+
+  speech_hier_block_element <- speech_container / speech_group / speech_block_element
+
+  speech_group      <- speech_group_name attrs:block_attrs? heading:hier_element_heading? eol
+                       body:(indent
+                         subheading:subheading?
+                         speech_from
+                         content:speech_hier_block_element+
+                       dedent) <SpeechGroup>
+
+  speech_from       <- 'FROM' space content:inline+ eol <From>
+
+  speech_container_name <- ('ADDRESS' / 'ADJOURNMENT' / 'ADMINISTRATIONOFOATH' / 'COMMUNICATION' / 'DEBATESECTION'
+                            / 'DECLARATIONOFVOTE' / 'MINISTERIALSTATEMENTS' / 'NATIONALINTEREST' / 'NOTICESOFMOTION'
+                            / 'ORALSTATEMENTS' / 'PAPERS' / 'PERSONALSTATEMENTS' / 'PETITIONS' / 'POINTOFORDER'
+                            / 'PRAYERS' / 'PROCEDURALMOTIONS' / 'QUESTIONS' / 'RESOLUTIONS' / 'ROLLCALL'
+                            / 'WRITTENSTATEMENTS')
+
+  # TODO: other
+  speech_group_name <- ('SPEECHGROUP' / 'SPEECH' / 'QUESTION' / 'ANSWER')
+
+  # ------------------------------------------------------------------------------
+  # Containers
+  # ------------------------------------------------------------------------------
+
+  preface           <- preface_marker attrs:block_attrs? eol
+                       content:(!preamble_marker !body_marker block_element)*
+                       <Preface>
+
+  preamble          <- preamble_marker attrs:block_attrs? eol
+                       content:(!body_marker block_element)*
+                       <Preamble>
+
+                     # body that MUST have a hier element
+  body              <- body_marker?
+                       content:(!conclusions_marker !attachment_marker hier_block_indent)*
+                       <Body>
+
+                     # body with mixed block and hier elements
+  mainBody          <- body_marker?
+                       content:(!conclusions_marker !attachment_marker hier_block_indent)*
+                       <MainBody>
+
+                     # body with mixed block and debate elements
+  debateBody        <- body_marker?
+                       content:(!conclusions_marker !attachment_marker speech_container_indent)*
+                       <DebateBody>
+
+  conclusions       <- conclusions_marker
+                       content:(!attachment_marker block_element)*
+                       <Conclusions>
+
+  # Judgment-specific containers
+
+  introduction      <- introduction_marker
+                       content:(!background_marker !arguments_marker !remedies_marker !motivation_marker !decision_marker !conclusions_marker !attachment_marker hier_block_indent)*
+                       <Introduction>
+
+  background        <- background_marker
+                       content:(!arguments_marker !remedies_marker !motivation_marker !decision_marker !conclusions_marker !attachment_marker hier_block_indent)*
+                       <Background>
+
+  arguments         <- arguments_marker?
+                       content:(!remedies_marker !motivation_marker !decision_marker !conclusions_marker !attachment_marker hier_block_indent)*
+                       <Arguments>
+
+  remedies          <- remedies_marker
+                       content:(!motivation_marker !decision_marker !conclusions_marker !attachment_marker hier_block_indent)*
+                       <Remedies>
+
+  motivation        <- motivation_marker
+                       content:(!decision_marker !conclusions_marker !attachment_marker hier_block_indent)*
+                       <Motivation>
+
+  decision          <- decision_marker
+                       content:(!conclusions_marker !attachment_marker hier_block_indent)*
+                       <Decision>
+
+  attachments       <- attachment+ <Attachments>
+
+                       # an attachment's body may be indented with a subheading, or go
+                       # directly into content, or a mixture
+  attachment        <- attachment_marker attrs:block_attrs? heading:attachment_heading? eol
+                       indented:(
+                         indent
+                           subheading:subheading?
+                           content:(!attachment_marker hier_block_element)*
+                           attachments:attachments?
+                         dedent
+                       )?
+                       content:(!attachment_marker hier_block_indent)*
+                       <Attachment>
+
+  attachment_heading <- space content:inline* <AttachmentHeading>
+
+  # General container markers
+
+  body_marker       <- 'BODY' eol
+
+  conclusions_marker <- 'CONCLUSIONS' eol
+
+  preamble_marker   <- 'PREAMBLE'
+
+  preface_marker    <- 'PREFACE'
+
+  # Judgment markers
+
+  introduction_marker <- 'INTRODUCTION' eol
+
+  background_marker <- 'BACKGROUND' eol
+
+  arguments_marker  <- 'ARGUMENTS' eol
+
+  remedies_marker   <- 'REMEDIES' eol
+
+  motivation_marker <- 'MOTIVATION' eol
+
+  decision_marker   <- 'DECISION' eol
+
+  # attachment markers
+
+  attachment_marker <- 'ATTACHMENT' / 'APPENDIX' / 'SCHEDULE' / 'ANNEXURE'
+
+  # ------------------------------------------------------------------------------ 
+  # Blocks
+  # ------------------------------------------------------------------------------
+
+                     # optionally nested block element
+  block_element     <- nested_block_element / block_elements
+
+  nested_block_element <- indent content:block_element+ dedent <NestedBlockElement>
+
+  block_elements    <- block_list / bullet_list / table / longtitle / footnote / block_quote / blocks / p / line
+
+  # ------------------------------------------------------------------------------
+  # Speech blocks for debates
+  # ------------------------------------------------------------------------------
+
+  speech_block_element <- nested_speech_block_element / speech_block_elements
+
+  nested_speech_block_element <- indent content:speech_block_element+ dedent <NestedAltBlockElement>
+
+  speech_block_elements <- speech_block / block_list / bullet_list / table / footnote / p / line
+
+  speech_block      <- speech_block_name attrs:block_attrs? space content:inline+ eol <SpeechBlock>
+
+  speech_block_name <- 'SCENE' / 'NARRATIVE' / 'SUMMARY'
+
+  # ------------------------------------------------------------------------------
+  # Actual block elements
+  # ------------------------------------------------------------------------------
+
+  longtitle         <- 'LONGTITLE' body:(space content:inline+)? eol <Longtitle>
+
+  subheading        <- 'SUBHEADING' body:(space content:inline+)? eol <Subheading>
+
+  crossheading      <- 'CROSSHEADING' attrs:block_attrs? body:(space content:inline+)? eol <Crossheading>
+
+                     # explicit P tag with attribute support
+  p                 <- 'P' attrs:block_attrs? space content:inline+ eol <P>
+
+                     # The line block is the only thing that can contain arbitrary text
+                     # at the start of a line, where a dedent may occur. By guarding
+                     # against it, we don't have to guard at every place that
+                     # could start a line.
+  line              <- !dedent content:inline+ eol <Line>
+
+  # ------------------------------------------------------------------------------
+  # Block container, which can contain other blocks
+  #
+  # Note: the intro and wrapUp contain blocks, which actually means they're not necessary because the blockContainer
+  #       can contain any block. So we just don't use them.
+  #
+  # BLOCKS
+  #   intro
+  #
+  #   ITEMS
+  #     ITEM 1
+  #
+  #   wrapUp
+
+                     # block container element, for grouping blocks
+  blocks            <- 'BLOCKS' attrs:block_attrs? eol
+                       indent
+                         content:block_element+
+                       dedent <BlockContainer>
+
+
+  # ------------------------------------------------------------------------------
+  # Block lists
+  #
+  # BLOCKLIST
+  #   intro
+  #
+  #   ITEM (a) - heading
+  #     SUBHEADING subhead
+  #
+  #     block content
+  #
+  #   wrapup
+  # ------------------------------------------------------------------------------
+
+  block_list        <- ('BLOCKLIST' / 'ITEMS') attrs:block_attrs? eol
+                       indent
+                         intro:block_list_intro?
+                         items:block_list_item+
+                         wrapup:block_list_wrapup?
+                       dedent <BlockList>
+
+                     # A blocklist can only have one line each of list introduction and wrapup, but
+                     # we need to be able to support a line of text and footnotes.
+  block_list_intro  <- !'ITEM' line footnotes:footnote* <BlockListIntro>
+
+  block_list_wrapup <- line footnotes:footnote* <BlockListWrapUp>
+
+  block_list_item   <- 'ITEM' heading:hier_element_heading? eol
+                       content:(indent
+                         subheading:subheading?
+                         children:block_element+
+                       dedent)?
+                       <BlockListItem>
+
+  # ------------------------------------------------------------------------------
+  # UL (unordered list)
+  #
+  # BULLETS
+  #   * item 1
+  #   * multi-line
+  #     item
+  #   item without a star
+  # ------------------------------------------------------------------------------
+
+  bullet_list       <- 'BULLETS' attrs:block_attrs? eol
+                       indent
+                         items:bullet_list_item+
+                       dedent <BulletList>
+
+  bullet_list_item  <- ('*' space?)? initial:(block_elements / eol)
+                       content:(indent
+                         siblings:block_element+
+                       dedent)?
+                       <BulletListItem>
+
+  # ------------------------------------------------------------------------------
+  # Tables
+  #
+  # TABLE
+  #   TR
+  #     TH{colspan 2}
+  #       text
+  #
+  #     TC{rowspan 3|colspan 1}
+  #       text
+  # ------------------------------------------------------------------------------
+
+  table             <- 'TABLE' attrs:block_attrs? eol
+                       indent
+                         rows:table_row+
+                       dedent <Table>
+
+  table_row         <- 'TR' eol
+                       indent
+                         cells:table_cell+
+                       dedent <TableRow>
+
+  table_cell        <- name:('TH' / 'TC') attrs:block_attrs? eol
+                       content:(indent
+                         content:block_element+
+                       dedent)? <TableCell>
+
+                     # TC.foo
+                     # TC{attrname attrvalue|attrname attrvalue}
+                     # TC.foo.bar{attrname attrvalue}
+  block_attrs       <- classes:block_attr_class* pairs:block_attr_pairs? <BlockAttrs>
+
+  block_attr_class  <- '.' class_name?
+
+  block_attr_pairs  <- '{' first:block_attr? space? rest:('|' space? attr:block_attr?)* '}'
+
+  block_attr        <- attr_name value:(space attr_value)? <BlockAttr>
+
+  class_name        <- [^ \n|{}.]+
+
+  attr_name         <- [^ \n|{}]+
+
+  attr_value        <- [^\n|}]*
+
+  # ------------------------------------------------------------------------------
+  # Subflows (that go from inlines into nested complex structures)
+  # ------------------------------------------------------------------------------
+
+  block_quote       <- 'QUOTE' attrs:block_attrs? eol
+                        indent
+                          content:hier_block_element+
+                        dedent
+                        <BlockQuote>
+
+  footnote          <- 'FOOTNOTE' space marker:([^ \n]+) space? eol
+                       indent
+                         content:hier_block_element+
+                       dedent
+                       <Footnote>
+
+  # ------------------------------------------------------------------------------ 
+  # Inlines and markers
+  # ------------------------------------------------------------------------------ 
+
+  # inlines that are not nested, and so we don't need to be careful of the closing }}
+  inline            <- non_inline_start / escape / inline_marker / [^\n] <InlineText>
+
+  # match as much text as possible that isn't potentially a special inline or escape marker.
+  #
+  # !!! NB: Every non-special character goes through this rule and so it's heavily used.
+  #         The code generated for this rule is customised by Parser in parser.py
+  #         in order to greatly improve its performance. If this regex changes, it MUST
+  #         also be updated in Parser.NON_INLINE_START_RE.
+  non_inline_start  <- [^*/_{\n\\]+
+
+  # inlines that ARE nested, and so we must guard against the closing }}
+  inline_nested     <- [^*/_{\n\\}]+ / escape / (!'}}' inline_marker / [^\n]) <InlineText>
+
+  inline_marker     <- bold / footnote_ref / image / italics / ref / remark / sup / sub / standard_inline / underline
+
+  # escape anything with a single backslash (double here because it needs to be escaped itself)
+  escape            <- '\\' [^\n]
+
+  # special case inlines that can't logically contain themselves, and so their openers and closers are symmetric
+
+                     # **foo**
+  bold              <- '**' content:(!'**' inline)+ '**' <Bold>
+
+                     # //foo//
+  italics           <- '//' content:(!'//' inline)+ '//' <Italics>
+
+                     # __foo__
+  underline         <- '__' content:(!'__' inline)+ '__' <Underline>
+
+                     # {{*remark}}
+                     # {{*[remark]}}
+                     #
+                     # OR
+                     #
+                     # {{*a remark
+                     # that covers
+                     # multiple lines}}
+                     #
+                     # Note that indents and dedents are explicitly disallowed
+  remark            <- inline_open '*' content:(!inline_close !indent !dedent content:([\n] / inline_nested))+ inline_close <Remark>
+
+  # special inlines
+
+                     # {{IMG src description}}
+  image             <- inline_open 'IMG' space? href:(!inline_close [^ \n])+ content:(!inline_close [^\n])* inline_close <Image>
+
+                     # {{^foo}}
+  sup               <- inline_open '^' content:(!inline_close inline_nested)+ inline_close <Sup>
+
+                     # {{_foo}}
+  sub               <- inline_open '_' content:(!inline_close inline_nested)+ inline_close <Sub>
+
+                     # {{>href text}}
+  ref               <- inline_open '>' href:(!inline_close [^ \n])* ' '? content:(!inline_close inline_nested)* inline_close <Ref>
+
+                     # {{FOOTNOTE 9}}
+  footnote_ref      <- inline_open 'FOOTNOTE' space marker:(!inline_close [^\n])+ inline_close <FootnoteRef>
+
+  # standard inlines
+
+                     # {{abbr{title Laws.Africa} LA}}
+  standard_inline   <- inline_open tag:standard_inline_marker attrs:block_attrs? ' '? content:(!inline_close inline_nested)* inline_close <StandardInline>
+
+  inline_open       <- '{{'
+
+  inline_close      <- '}}'
+
+  standard_inline_marker <- 'abbr' / 'def' / 'em' / 'inline' / 'term' / '-' / '+'
+
+  # ------------------------------------------------------------------------------
+  # Terminals
+  # ------------------------------------------------------------------------------ 
+
+  eol               <- newline empty_line*
+
+  empty_line        <- newline
+
+  space             <- ' '+
+
+  newline           <- "\n"
+
+  # These MUST match parser.INDENT and parser.DEDENT
+  indent            <- '\x0E' eol
+
+  dedent            <- '\x0F' eol
