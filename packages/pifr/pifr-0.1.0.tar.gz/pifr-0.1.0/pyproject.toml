@@ -1,0 +1,133 @@
+[build-system]
+requires = [
+    "pdm-backend",
+    "pdm-build-locked",
+]
+build-backend = "pdm.backend"
+
+[project]
+name = "pifr"
+version = "0.1.0"
+description = "Pull docker image from remote host"
+authors = [
+    { name = "ZHOU Cheng", email = "c.zhou@live.com" },
+]
+dependencies = [
+    "click==8.1.8",
+    "rich==13.9.4",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+keywords = [
+    "ssh",
+    "docker",
+    "image",
+]
+classifiers = [
+    "Topic :: Utilities",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+Homepage = "https://github.com/ldsink/pifr"
+Repository = "https://github.com/ldsink/pifr"
+
+[project.scripts]
+pifr = "pifr.main:cli"
+
+[dependency-groups]
+dev = [
+    "ruff==0.9.5",
+]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 150
+include = [
+    "*.pyi",
+    "*.py",
+]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+    ".idea",
+]
+
+[tool.ruff.lint]
+select = [
+    "F",
+    "E",
+    "W",
+    "I",
+    "UP",
+    "S",
+    "B",
+    "A",
+    "C4",
+    "ICN",
+    "G",
+    "PIE",
+    "T20",
+    "RET",
+    "SIM",
+    "TID",
+    "PTH",
+    "PD",
+    "NPY",
+    "RUF100",
+]
+ignore = [
+    "A003",
+    "B005",
+    "B904",
+    "B905",
+    "E501",
+    "RET504",
+    "RUF100",
+    "S105",
+    "S106",
+    "S108",
+    "S311",
+    "SIM102",
+    "SIM108",
+    "S307",
+    "S603",
+    "S607",
+    "S608",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = [
+    "F401",
+]
