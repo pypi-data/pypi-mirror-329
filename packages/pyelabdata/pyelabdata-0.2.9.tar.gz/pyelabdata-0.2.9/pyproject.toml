@@ -1,0 +1,32 @@
+# Build package as follows:
+# - delete all files in the directory dist
+# - run the following commands
+#     python -m build
+#     twine upload dist/*
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyelabdata"
+version = "0.2.9"
+authors = [
+    { name="Elektronikpraktikum, Department Physik, FAU Erlangen-Nürnberg", email="physik-ep@fau.de" },
+    { name="Michael Krieger, Lehrstuhl für Angewandte Physik, FAU Erlangen-Nürnberg", email="michael.krieger@fau.de"}
+]
+description = "pyelabdata provides functions for simple one-line access to data in eLabFTW"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[project.urls]
+"Repository" = "https://github.com/FAU-PHYSIK-EP/pyelabdata"
+"Issues" = "https://github.com/FAU-PHYSIK-EP/pyelabdata/issues"
