@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "asteroid-odyssey"
+version = "0.1.18"
+authors = [
+  { name = "Asteroid Founders", email = "founders@asteroid.ai" },
+]
+description = "A Python SDK for interacting with the Asteroid Agents API"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "requests>=2.28.0",
+    "urllib3>=1.26.0",
+    "asteroid-sdk>=0.1.19"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[tool.hatch.build]
+packages = ["src/asteroid_odyssey"]
