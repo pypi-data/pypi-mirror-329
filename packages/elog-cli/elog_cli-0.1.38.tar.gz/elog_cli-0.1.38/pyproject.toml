@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools", "wheel", "tomli"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "elog-cli"
+version = "0.1.38"
+description = "CLI tool for elog management"
+requires-python = ">=3.10"
+readme = "README.md"
+authors = [{name = "Claudio Bisegni", email = "bisegni@slac.stanford.edu"}]
+dependencies = [
+    "click",
+    "click-loglevel",
+    "click_repl",
+    "pytest",
+    "requests",
+    "PyJWT",
+    "attrs",
+    "httpx",
+    "python-dateutil",
+    "openapi-python-client"
+]
+
+[project.scripts]
+elog-cli = "elog_cli.main:cli"
+
+[tool.setuptools.packages.find]
+include = ["elog_cli*"]
