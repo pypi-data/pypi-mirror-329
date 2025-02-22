@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aiogram_mediagroup_handle"]
+
+[project]
+name = "aiogram-mediagroup-handle"
+version = "0.1.0"
+description = "aiogram media group observer"
+readme = "README.md"
+authors = [
+    { name = "andrei-samofalov", email = "andrei.e.samofalov@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "aiogram>=3",
+]
+
+[dependency-groups]
+dev = [
+    "isort>=6.0.0",
+    "ruff>=0.9.7",
+]
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.isort]
+multi_line_output = 3
