@@ -1,0 +1,37 @@
+{
+    "config": {
+        "step": {
+            "reauth_confirm": {
+                "description": "![Habiticans]({habiticans}) It seems your API token for **{name}** has been reset. To re-authorise the integration, you can either log in with your username or email, and password, or directly provide your new API token.",
+                "sections": {
+                    "reauth_api_key": {
+                        "name": "Re-authorise via API Token"
+                    },
+                    "reauth_login": {
+                        "description": "Enter your login details below to re-authorise the Home Assistant integration with Habitica",
+                        "name": "Re-authorise via login"
+                    }
+                },
+                "title": "Re-authorise {name} with Habitica"
+            }
+        }
+    },
+    "services": {
+        "api_call": {
+            "description": "Calls Habitica API.",
+            "fields": {
+                "args": {
+                    "description": "Any additional JSON or URL parameter arguments. See apidoc mentioned for path. Example uses same API endpoint.",
+                    "name": "Args"
+                },
+                "name": {
+                    "description": "Habitica's username to call for."
+                },
+                "path": {
+                    "description": "Items from API URL in form of an array with method attached at the end. Consult https://habitica.com/apidoc/. Example uses https://habitica.com/apidoc/#api-Task-CreateUserTasks."
+                }
+            },
+            "name": "API name"
+        }
+    }
+}
