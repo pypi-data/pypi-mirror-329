@@ -1,0 +1,29 @@
+Metadata-Version: 2.1
+Name: elgato-toggle
+Version: 0.1.3
+Summary: Toggle elgato keylights from the CLI
+Author-Email: Jinnatar <jinnak@nocturnal.fi>
+License: License :: OSI Approved :: MIT License
+Requires-Python: >=3.11
+Requires-Dist: absl-py<3.0.0,>=2.1.0
+Requires-Dist: elgato==5.1.2
+Description-Content-Type: text/markdown
+
+# Elgato-toggle
+
+## Installation
+```
+pip install elgato-toggle
+```
+
+## Sample usage
+
+Toggle a single light:
+```shell
+elgato-toggle --light=keylight.local
+```
+
+Toggle multiple lights via shell expansion:
+```shell
+elgato-toggle --light=keylight-{left,right}.local
+```
