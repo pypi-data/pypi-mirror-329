@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "aserto_authorizer"
+version = "0.20.4"
+description = "gRPC client for Aserto Authorizer service instances"
+readme = "README.md"
+authors = ["Aserto, Inc. <pypi@aserto.com>"]
+homepage = "https://github.com/aserto-dev/python-authorizer"
+repository = "https://github.com/aserto-dev/python-authorizer"
+documentation = "https://github.com/aserto-dev/python-authorizer"
+license = "Apache-2.0"
+classifiers = [
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries",
+  "Typing :: Typed",
+]
+packages = [
+    { include = "aserto", from = "src" },
+    { include = "google", from = "src" },
+    { include = "protoc_gen_openapiv2", from = "src" }
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.8"
+grpcio = "^1.70.0"
+protobuf = "^5.27.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.4.2"
+isort = "^5.13.0"
+grpc-stubs = "^1.53.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
