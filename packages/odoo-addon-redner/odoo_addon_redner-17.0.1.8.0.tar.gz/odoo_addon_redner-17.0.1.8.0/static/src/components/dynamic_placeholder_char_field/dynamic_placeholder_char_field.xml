@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="web.CharField" t-inherit-mode="extension">
+        <xpath expr="//input" position="attributes">
+            <attribute name="t-att-placeholder">placeholder</attribute>
+        </xpath>
+        <xpath expr="//input" position="after">
+            <t t-call="dynamic_placeholder.magicButton">
+                <t t-set="positionCenter" t-value="true" />
+            </t>
+        </xpath>
+    </t>
+    <t t-name="dynamic_placeholder.magicButton">
+        <div class="position-relative d-inline">
+            <button
+                t-if="activeConverterType"
+                class="btn position-absolute end-0"
+                t-attf-class="{{positionCenter ? 'pb-0 pt-0' : 'bottom-0'}}"
+                t-att-disabled="showPlaceholderButton"
+                t-ref="magicButton"
+                t-on-click="onDynamicPlaceholderOpen"
+            >
+                <i class="fa fa-magic" role="img" aria-label="Magic" />
+            </button>
+        </div>
+    </t>
+</templates>
