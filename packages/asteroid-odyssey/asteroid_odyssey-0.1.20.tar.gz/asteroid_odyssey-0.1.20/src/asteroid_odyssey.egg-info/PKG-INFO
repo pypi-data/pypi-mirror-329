@@ -1,0 +1,45 @@
+Metadata-Version: 2.2
+Name: asteroid_odyssey
+Version: 0.1.20
+Summary: A Python SDK for interacting with the Asteroid Agents API
+Author-email: Asteroid <founders@asteroid.ai>
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: requests>=2.28.0
+Requires-Dist: urllib3>=1.26.0
+Requires-Dist: asteroid-sdk>=0.1.19
+
+# Asteroid Odyssey
+
+A Python SDK for exploring the far reaches of the known web.
+
+## Installation
+
+```bash
+pip install asteroid-odyssey
+```
+
+## Usage
+
+```python
+from asteroid_odyssey import Odyssey
+
+odyssey = Odyssey()
+odyssey.run_workflow()
+```
+
+## Regenerate the client
+
+Assuming your structure is like this:
+```
+asteroid-odyssey/<you are here>
+agents/server/api/openapi.yaml
+```
+
+```bash
+openapi-python-client generate --path ../agents/server/api/openapi.yaml --output-path src/api/generated/agents --overwrite
+openapi-python-client generate --path ../platform/server/openapi.yaml --output-path src/api/generated/platform --overwrite
+```
