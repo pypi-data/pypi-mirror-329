@@ -1,0 +1,56 @@
+Metadata-Version: 2.2
+Name: pdf_invoice_util
+Version: 0.0.4
+Author-email: Geert Selderslaghs <geert.selderslaghs@gmail.com>
+License: MIT License
+        
+        Copyright (c) 2024 Geert Selderslaghs
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+Project-URL: Repository, https://github.com/gselderslaghs/pdf-invoice-util.git
+Project-URL: Bug Tracker, https://github.com/gselderslaghs/pdf-invoice-util/issues
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: fpdf2>=2.8
+
+# Python interface for invoice generation
+Simple utility for PDF invoice generation in Python
+
+## Setup
+1. Install the module ```pip install pdf-invoice-util```
+2. Copy ```config/config.example.yaml``` from the repository to ```config/config.yaml``` and update parameter values as desired
+3. Optionally configure terms by creating a ```translations/terms.[language].yaml``` file, check out the example file ```config/terms.example.yaml```
+
+## Usage
+1. Import the module ```from pdf_invoice_util import Invoice, InvoicePDF```
+2. Generate an invoice object eg. ```invoice = Invoice(invoice_id, invoice_date <YY-mm-dd>, customer_id, customer_name, customer_address, customer_postal_code, customer_city, customer_country, customer_vat_registered_number, vat_percentage)```
+3. Set article lines by using the ```set_articles()``` method on the invoice object, eg. ```invoice.set_articles([{'name': 'Pizza margherita', 'price': 9.99, 'amount': 1}, {'name': 'Pizza fungi', 'price': 11.99, 'amount': 1}])```
+4. Generate an InvoicePDF object eg. ```pdf = InvoicePDF(invoice <the invoice object>, invoice_language <the desired print language>)```
+5. Generate the PDF by running the ```generate_document()``` method on the InvoicePDF object
+
+## Translations
+Translations can be overwritten by copying the translation file into /translations folder
+
+## Contribution
+Feel free or make proposals for code contributions and the addition of translation files for additional language support in this repository
+
+## Credits
+Big thanks to Pluralsight (https://www.pluralsight.com) and Chart Explorers (https://www.youtube.com/@ChartExplorers) for the detailed descriptions on working with the used techniques
