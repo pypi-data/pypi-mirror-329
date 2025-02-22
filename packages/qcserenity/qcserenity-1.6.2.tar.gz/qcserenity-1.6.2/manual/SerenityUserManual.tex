@@ -1,0 +1,168 @@
+\documentclass[bibliography=totocnumbered,a4paper,10pt,oneside]{scrbook}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm, amssymb, latexsym}
+\usepackage{epstopdf,graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings,xcolor,float,multirow}
+\usepackage{array}
+\usepackage{longtable}
+
+\usepackage[a4paper, total={6in, 9in}]{geometry}
+\usepackage{xspace}
+
+\usepackage{pdfpages}
+
+%==============%
+%  Code Style  %
+%==============%
+\definecolor{serenity-green}{rgb}{0.1875,0.46875,0.0}
+\lstset{
+  basicstyle=\ttfamily,
+  commentstyle=\color{gray}\ttfamily,
+  columns=fullflexible,
+  language=bash,
+  frame=l,
+  showstringspaces=false,
+  backgroundcolor = \color{serenity-green!30}
+}
+
+
+
+%==========%
+%  Macros  %
+%==========%
+
+\newcommand{
+\serenity}{\textsc{Serenity}\xspace}
+
+\newcommand{\ttt}[1]{%
+  \begingroup\setlength{\fboxsep}{1pt}%
+  \colorbox{serenity-green!30}{\texttt{\hspace*{2pt}\vphantom{(g}#1\hspace*{2pt}}}%
+  \endgroup
+}
+
+%==============%
+%  References  %
+%==============%
+\usepackage[backend=bibtex,
+            sorting=none,
+            style=chem-angew]{biblatex}
+\addbibresource{SerenityUserManual.bib}
+
+%============%
+%  Document  %
+%============%
+\begin{document}
+\thispagestyle{empty}
+\begin{center}
+\vspace*{1cm}
+\includegraphics[width=0.95\textwidth]{./figs/SerenityLogo.png}\\
+%{\Huge
+% \textsc{Serenity}
+%}\\
+\vspace{2cm}
+{\LARGE\textbf{
+User Manual
+}}\\
+\vspace{1cm}
+{\large\textbf{
+Program Version: 1.6.2\\
+Manual Generated: \today
+}}\\
+\vspace{2cm}
+{\large\textbf{
+The Serenity Developers$^{\dagger}$\footnote{Release Repository: \texttt{http://github.com/qcserenity/serenity}}
+\footnote{For questions and requests pertaining the manual please contact:\\ \texttt{serenity@uni-muenster.de}}
+}}\\
+\vspace{2cm}
+{\large Manual layout by: \\
+Jan P.\ Unsleber
+}
+\\[2ex]
+
+$^{\dagger}$ Theoretische Organische Chemie,
+Organisch-Chemisches Institut \\
+and Center for Multiscale Theory and Computation,\\
+Universit\"at M\"unster\\
+Corrensstra{\ss}e 40, 48149 M\"unster, Germany\\[2ex]
+
+\vfill
+\end{center}
+\newpage
+\pagenumbering{Roman}
+\setcounter{page}{1}
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\numberwithin{equation}{subsection}
+
+\input{misc/preface.tex}
+
+% =============================
+%   Installation Instructions
+% =============================
+
+\input{installation/install.tex}
+
+% =================================
+%   Text input: Systems and Tasks
+% =================================
+
+\input{input/textInput.tex}
+
+% ==========
+%   Python
+% ==========
+
+\clearpage
+\input{python/python.tex}
+
+\newpage
+
+% ====================================
+%   Bugs, Feedback, Feature Requests
+% ====================================
+
+\input{misc/feedback.tex}
+
+% ========================
+%   Theoretical Background
+% ========================
+\clearpage
+\chapter{Theoretical Background}
+\input{theory/dlpnoMethods/pnoConstruction}
+\input{theory/dlpnoMethods/dlpno_ccsd_equations}
+\input{theory/orbitalAlignment/orbitalAlignment_equations}
+\input{theory/sphericalHarmonicsRotation/eulerAngles}
+\input{theory/delleySurface/delleySurface}
+\input{theory/cholesky/cholesky}
+
+
+% ========================
+%   Citation and License
+% ========================
+
+\clearpage
+\input{misc/cite.tex}
+
+\clearpage
+\printbibliography
+
+% ==============
+%   Appendices
+% ==============
+\clearpage
+\appendix
+
+\input{examples/examples.tex}
+
+\clearpage
+
+\input{misc/history.tex}
+
+\clearpage
+
+\input{misc/lgpl.tex}
+\end{document}
