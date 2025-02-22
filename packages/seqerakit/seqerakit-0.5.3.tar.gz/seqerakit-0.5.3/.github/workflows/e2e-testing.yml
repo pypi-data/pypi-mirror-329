@@ -1,0 +1,94 @@
+name: e2e-testing
+run-name: Create all entities in Seqera Platform from end-to-end with seqerakit
+# This workflow can be triggered manually with GitHub actions workflow dispatch button.
+# It will automate the end-to-end creation all of the following entities in Seqera Platform.
+
+on:
+  pull_request_target:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      pre_delete:
+        description: 'Delete all entities in the yaml before testing'
+        required: false
+        type: boolean
+        default: false
+      clearup:
+        description: 'Clearup all entities in yaml after testing'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  e2e-testing:
+    name:
+    if: github.repository == 'seqeralabs/seqera-kit'
+    runs-on: ubuntu-latest
+
+    env:
+      TOWER_ACCESS_TOKEN: ${{ secrets.TOWER_ACCESS_TOKEN }}
+      TOWER_GITHUB_PASSWORD: ${{ secrets.TOWER_GITHUB_PASSWORD }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ASSUME_ROLE_ARN: ${{ secrets.AWS_ASSUME_ROLE_ARN }}
+      AZURE_BATCH_KEY: ${{ secrets.AZURE_BATCH_KEY }}
+      AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_KEY }}
+      GOOGLE_KEY: ${{ secrets.GOOGLE_KEY }}
+      SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_WORK_DIR: ${{ secrets.AWS_WORK_DIR }}
+      AWS_COMPUTE_ENV_NAME: ${{ secrets.AWS_COMPUTE_ENV_NAME }}
+    steps:
+      - name: Check out source-code repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      - name: Install pip & seqerakit
+        run: |
+          pip install -e .
+
+      - name: Install Tower CLI v0.9.1
+        run: |
+          wget https://github.com/seqeralabs/tower-cli/releases/download/v0.9.1/tw-linux-x86_64 \
+          && chmod +x tw-linux-x86_64 \
+          && sudo mv tw-linux-x86_64 /usr/local/bin/tw
+
+      - name: pre-clear
+        # Note this task always 'succeeds'
+        if: ( success() || failure() ) && ( github.event_name != 'workflow_dispatch' || inputs.pre_delete )
+        run: |
+          temp_file=$(mktemp -q)
+          echo $GOOGLE_KEY | base64 -d > $temp_file
+          export GOOGLE_KEY=$temp_file
+
+          seqerakit examples/yaml/e2e/*.yml --delete || true
+
+      - name: dryrun
+        run: |
+          temp_file=$(mktemp -q)
+          echo $GOOGLE_KEY | base64 -d > $temp_file
+          export GOOGLE_KEY=$temp_file
+
+          seqerakit examples/yaml/e2e/*.yml --dryrun
+
+      - name: create
+        run: |
+          temp_file=$(mktemp -q)
+          echo $GOOGLE_KEY | base64 -d > $temp_file
+          export GOOGLE_KEY=$temp_file
+
+          seqerakit examples/yaml/e2e/*.yml
+
+      - name: teardown
+        if: ( success() || failure() ) && ( github.event_name != 'workflow_dispatch' || inputs.clearup )
+        run: |
+          temp_file=$(mktemp -q)
+          echo $GOOGLE_KEY | base64 -d > $temp_file
+          export GOOGLE_KEY=$temp_file
+
+          seqerakit examples/yaml/e2e/*.yml --delete
