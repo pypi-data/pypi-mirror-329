@@ -1,0 +1,50 @@
+Metadata-Version: 2.2
+Name: barcode_decoder
+Version: 0.1.5
+Summary: Library to convert electronic components distributors  barcodes and QR codes to unified format. Library allows to extract information about: partnumber, ordered quantity, order number, part LOT and origin.
+Home-page: https://github.com/partmanager/barcode-decoder
+Author: sakoPO
+Project-URL: Bug Tracker, https://github.com/partmanager/barcode-decoder/issues
+Project-URL: Changelog, https://github.com/partmanager/barcode-decoder/releases
+Project-URL: Source Code, https://github.com/partmanager/barcode-decoder
+Project-URL: Documentation, https://partmanager.github.io/barcode-decoder
+Classifier: Programming Language :: Python :: 3
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Manufacturing
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# barcode-decoder
+Barcode and QR decoder
+
+Simple application for decoding barcodes and QR codes from various distributors and converting them to standardized output.
+
+## Usage
+### Installation
+`pip install barcode_decoder`
+
+### Command line usage
+`$ barcode_decoder`
+
+### Usage as library
+```
+from barcode_decoder import barcode_decoder
+
+result = barcode_decoder.decode(barcode_string)
+```
+
+### Currently supported distributors:
+- Farnell
+- Mouser
+- TME
+- Wurth Elektronik
+
+### Setting your scaner
+You need to enable Code Identifier in your scanner settings.
+
+### Testing
+Application is tested using Gryphon D432
+
