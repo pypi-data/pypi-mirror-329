@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = { find = { where = ["src"], exclude = ["tests*", "logs*"] } }
+
+# Include package data
+include-package-data = true
+
+[project]
+name = "asteroid_odyssey"
+description = "A Python SDK for interacting with the Asteroid Agents API"
+authors = [
+    { name = "Asteroid", email = "founders@asteroid.ai" }
+]
+version = "0.1.19"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "requests>=2.28.0",
+    "urllib3>=1.26.0",
+    "asteroid-sdk>=0.1.19"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.entry-points.inspect_ai]
+asteroid_sdk = "asteroid_sdk.supervision.inspect_ai._registry"
