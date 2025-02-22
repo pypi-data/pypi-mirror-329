@@ -1,0 +1,30 @@
+{
+  "name": "hexweb.entry.http_spells",
+  "category": "hexcasting:patterns/spells",
+  "icon": "minecraft:sculk_shrieker",
+  "sortnum": 27,
+  "advancement": "hexcasting:root",
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "hexweb.page.http_spells.entry"
+    },
+    {
+      "type": "hexcasting:pattern",
+      "op_id": "hexweb:request",
+      "anchor": "hexweb:request",
+      "input": "url, headers, method, json",
+      "output": "res",
+      "text": "hexweb.page.http_spells.request"
+    },
+    {
+      "type": "hexcasting:pattern",
+      "op_id": "hexweb:get_response",
+      "anchor": "hexweb:get_response",
+      "input": "res",
+      "output": "json",
+      "text": "hexweb.page.http_spells.get_response"
+    }
+  ]
+}
