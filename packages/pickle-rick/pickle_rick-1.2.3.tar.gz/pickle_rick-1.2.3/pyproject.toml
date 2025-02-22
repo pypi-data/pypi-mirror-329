@@ -1,0 +1,48 @@
+[project]
+name = "pickle-rick"
+version = "1.2.3"
+description = "Python tools for working with configuration files"
+authors = [
+    { name = "Zipfian Science", email = "about@zipfian.science" }
+]
+license = { text = "Apache 2.0" }
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "rickle"
+]
+keywords = ['Pickle', 'Python', 'config', 'configuration', 'YAML', 'JSON', 'TOML', 'XML', 'INI', 'ENV']
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    'Intended Audience :: Developers',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python :: 3',
+    'Topic :: Software Development',
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.optional-dependencies]
+net = [
+    'twisted',
+    'pyopenssl'
+]
+xml = ['xmltodict']
+dotenv = ['python-dotenv']
+validators = ["py.validator"]
+jsonschema = ["jsonschema[format]"]
+full = [
+    "py.validator",
+    'python-dotenv',
+    'xmltodict',
+    'twisted',
+    'pyopenssl',
+    "jsonschema[format]"
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
