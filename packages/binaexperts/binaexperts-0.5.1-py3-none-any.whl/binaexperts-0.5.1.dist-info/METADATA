@@ -1,0 +1,243 @@
+Metadata-Version: 2.1
+Name: binaexperts
+Version: 0.5.1
+Summary: Binaexperts SDK, a comprehensive computer vision toolkit
+Author: Nastaran Dab, Mahdi Tajdari
+Author-email: n.dab@binaexperts.com, m.tajdari@binaexperts.com
+License: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: PyYAML==6.0.2
+Requires-Dist: setuptools==68.2.0
+Requires-Dist: requests
+Requires-Dist: jsonschema==4.23.0
+Requires-Dist: opencv-python==4.10.0.84
+Requires-Dist: numpy==2.1.1
+Provides-Extra: inference
+Requires-Dist: torch>=2.0.0; extra == "inference"
+Requires-Dist: torchvision; extra == "inference"
+Requires-Dist: gitpython>=3.1.30; extra == "inference"
+Requires-Dist: matplotlib>=3.8.0; extra == "inference"
+Requires-Dist: pandas>=2.1.0; extra == "inference"
+Requires-Dist: tqdm>=4.66.1; extra == "inference"
+Requires-Dist: seaborn>=0.13.2; extra == "inference"
+Requires-Dist: scipy>=1.12.0; extra == "inference"
+
+# BinaExperts SDK
+
+**BinaExperts SDK** is a comprehensive toolkit for computer vision, designed to empower developers and researchers in building innovative visual solutions. Focused on scalability and versatility, it provides a robust foundation for creating state-of-the-art computer vision applications. Its architecture supports seamless integration with various platforms and is continuously evolving to address emerging challenges and opportunities in the field.
+
+
+## Installation
+
+Install the BinaExperts SDK directly from PyPI:
+
+```bash
+pip install binaexperts
+```
+If you need additional dependencies for inference, install with:
+
+```bash
+pip install binaexperts[inference]
+```
+
+This will install additional packages required for running inference tasks, such as PyTorch and torchvision.
+Ensure that you have a compatible CUDA setup if using GPU acceleration.
+
+## Usage
+
+Once installed, you can start leveraging the SDK’s two core functionalities:
+
+- **Dataset Conversion**: Easily convert datasets between various formats using a unified API. The conversion module supports both file-based and in-memory operations and currently supports the following formats:
+  - **COCO**
+  - **YOLO**
+  - **BinaExperts**
+- **Inference**: Perform predictions on static images or live video streams. Inference currently supports YOLOv5 and YOLOv7 models for local and live applications.
+
+
+## 1. Dataset Conversion
+
+The `Convertor` class simplifies the process of converting datasets between formats such as COCO, YOLO, and BinaExperts.
+
+```python
+import binaexperts.convertors
+
+# Initialize the Convertor
+convertor = binaexperts.convertors.Convertor()
+
+# Convert from a source dataset to a target format
+converted_output = convertor.convert(
+    target_format='yolo',
+    source='path/to/source_dataset.zip',  # Use 'source' instead of 'source_path' to match method signature
+    destination='path/to/target_dataset.zip'  # Optional; if omitted, returns a file-like object.
+)
+
+# Save the output if it's returned as an in-memory object
+if converted_output:
+    with open("output_dataset.zip", "wb") as f:
+        f.write(converted_output.read())
+
+print("Conversion completed successfully!")
+
+```
+### In-Memory IO Conversion Example
+
+In this example, we demonstrate how to convert a dataset directly from an in-memory BytesIO object and obtain the result in memory—no disk I/O required.
+```python
+import io
+import binaexperts
+
+# Simulate an in-memory YOLO dataset as a BytesIO object
+yolo_dataset_buffer = io.BytesIO()
+# Assuming yolo_dataset_zip_content is the binary content of a YOLO zip file
+yolo_dataset_zip_content = b"binary content of YOLO zip file"  # Placeholder for actual binary content
+yolo_dataset_buffer.write(yolo_dataset_zip_content)
+yolo_dataset_buffer.seek(0)  # Reset to the beginning
+
+# Initialize the Convertor
+convertor = binaexperts.Convertor()
+
+# Perform the conversion from YOLO to COCO format using in-memory IO
+output_coco_buffer = convertor.convert(
+    target_format='coco',
+    source=yolo_dataset_buffer,  # Input as BytesIO
+)
+
+# Access the converted COCO dataset in memory
+coco_data = output_coco_buffer.getvalue()
+
+# Further processing or sending `coco_data` over a network...
+print("In-memory conversion completed successfully!")
+```
+**Summary**: Use the conversion module to seamlessly switch between dataset formats with minimal configuration, whether working with files on disk or in-memory streams.
+
+---
+
+## 2. Inference
+
+The SDK now includes inference capabilities that allow you to run predictions on images and video streams.
+
+### Static Image Inference
+
+Use the `image_inference` function to perform predictions on a single image. Choose between **YOLOv5** or **YOLOv7** as your model type.
+
+```python
+from binaexperts.bina.inference import image_inference
+
+# Initialize image inference (select 'yolov5' or 'yolov7')
+inf = image_inference(model_type='yolov5', device='cuda')
+
+# Load your trained model
+inf.load_model("path/to/model.pt")
+
+# Run prediction on an image with specified IOU and confidence thresholds
+results = inf.predict("path/to/image.jpg", iou_thres=0.3, confidence_thres=0.01)
+```
+
+
+### Live Inference
+
+For real-time applications, use the `LiveInference` class to process video streams or camera inputs.
+
+```python
+from binaexperts.bina.core import LiveInference
+
+# Initialize live inference (choose 'yolov5' or 'yolov7')
+live_infer = LiveInference(model_type='yolov5', device='cuda', source=0)
+
+# Load the trained model
+live_infer.load_model("path/to/model.pt")
+
+# Run live inference with defined thresholds
+live_infer.run(iou_thres=0.5, confidence_thres=0.5)
+```
+
+
+**Summary**: The inference module extends the SDK’s capabilities, enabling both static and live predictions. It supports YOLOv5 and YOLOv7 models, allowing you to integrate computer vision inference into various applications seamlessly.
+
+---
+
+
+## Features
+
+- **Dataset Conversion**: Convert datasets effortlessly between various formats.
+- **Inference**: Run predictions on static images and live streams using YOLOv5/YOLOv7.
+- **Modular Design**: Easily extendable for future formats, training pipelines, and additional inference features.
+- **Flexible IO**: Supports both file-based and in-memory operations for versatile deployment scenarios.
+
+---
+
+## Future Roadmap
+
+### Data Preparation
+- Enhanced conversion tools and additional format support.
+- Automated dataset validation to ensure data integrity.
+
+### Training
+- Auto-training workflows with model selection, hyperparameter tuning, and comprehensive training pipelines.
+
+### Inference Enhancements
+- Further improvements for both local and live inference.
+- Expanded support for additional model architectures.
+
+### Community Suggestions
+- We welcome your ideas and contributions to further enhance the SDK.
+
+---
+
+## Project Structure
+
+```
+binaexperts/
+│
+├── bina/
+│   ├── inference/
+│   ├── services/
+│   ├── __init__.py
+│   ├── core.py
+│
+├── common/
+│   ├── __init__.py
+│   ├── loadhelpers.py
+│   ├── logger.py
+│   ├── setup_utils.py
+│   ├── utils.py
+│   ├── yolo_utils.py
+│
+├── convertors/
+│   ├── schema/
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── const.py
+│   │   ├── convertor.py
+│
+├── SDKs/
+│   ├── YOLO/
+│   │   ├── yolov5/
+│   │   ├── yolov7/
+│   │   ├── __init__.py
+│
+├── __init__.py
+```
+
+---
+
+## Contributing
+
+The **BinaExperts SDK** was designed and developed by the technical team at **BinaExperts**, led by **Nastaran Dab** and **Mahdi Tajdari**. Contributions, bug reports, documentation improvements, and feature suggestions are welcome. Please reach out to the project team for contribution guidelines.
+
+---
+
+## Acknowledgments
+
+Special thanks to **Nastaran Dab** and **Mahdi Tajdari** for their leadership and contributions in developing and maintaining the **BinaExperts SDK**.
+
+---
+
+## License
+
+This project is licensed under the **MIT License**.
