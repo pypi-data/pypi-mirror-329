@@ -1,0 +1,1 @@
+uv run pytest tests -s --capture=tee-sys --cov=. --cov-report=term-missing --cov-report=lcov:data/report/coverage.lcov --cov-report=json:data/report/coverage.json --cov-report=html:data/report/coverage --html=data/report/test.html --self-contained-html --cov-fail-under=40

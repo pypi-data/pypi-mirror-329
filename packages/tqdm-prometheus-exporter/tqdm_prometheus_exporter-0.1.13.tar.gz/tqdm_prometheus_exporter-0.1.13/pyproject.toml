@@ -1,0 +1,30 @@
+[project]
+name = "tqdm-prometheus-exporter"
+version = "0.1.13"
+description = "Echo tqdm progress to a prometheus endpoint"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [ "tqdm>=4.67.1", "bottle>=0.13.0", "requests>=2.26.0", "pytest>=8.3.4", "pytest-cov>=3.0.0", "pytest-html>=3.0.0", "jsonpickle>=2.0.0",]
+classifiers = [ "Programming Language :: Python :: 3", "Operating System :: OS Independent",]
+license = "MIT"
+license-files = [ "LICEN[CS]E*",]
+[[project.authors]]
+name = "arrowed"
+email = "arrowed@arrowed.org"
+
+[build-system]
+requires = [ "hatchling",]
+build-backend = "hatchling.build"
+
+[project.urls]
+Homepage = "https://github.com/arrowed/tqdm-prometheus-exporter"
+Issues = "https://github.com/arrowed/tqdm-prometheus-exporter/issues"
+
+[tool.uv]
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://pypi.org/simple"
+publish-url = "https://test.pypi.org/legacy/"
+
+[tool.hatch.build.targets.wheel]
+packages = [ "tqdmpromproxy",]
