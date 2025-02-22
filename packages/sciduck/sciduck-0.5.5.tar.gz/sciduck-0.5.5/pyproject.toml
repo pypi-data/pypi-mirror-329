@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sciduck"
+version = "0.5.5"
+description = "single cell data analyis unification and communication toolkit"
+requires-python = ">=3.9"
+license-expression = "BSD-3-clause"
+authors = [
+    {name = "Nelson Johansen"},
+    {name = "Matthew Schmitz"},
+    {name = "Dan Yuan"},
+    {name = "Zizhen Yao"},
+    {name = "Trygve Bakken"},
+]
+maintainers = [
+    {name = "Nelson Johansen", email = "nelson.johansen@alleninstitute.org"},
+]
+readme = "README.md"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Framework :: Jupyter",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "anndata>=0.8",
+    "numpy>=1.23",
+    "pandas >=1.5",
+    "scipy>=1.8",
+]
+
+[project.urls]
+Source = "https://github.com/AllenInstitute/sciduck"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sciduck"]
