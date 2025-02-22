@@ -1,0 +1,32 @@
+---
+repos:
+  - repo: "https://github.com/astral-sh/ruff-pre-commit"
+    rev: "v0.9.6"
+    hooks:
+      - id: "ruff"
+        args: ["--fix"]
+      - id: "ruff-format"
+  - repo: "https://github.com/pre-commit/mirrors-mypy"
+    rev: 'v1.15.0'
+    hooks:
+      - id: "mypy"
+        additional_dependencies:
+          - "dnspython"
+          - "prometheus_client"
+          - "types-PyYAML"
+          - "httpx"
+          - "PySocks"
+        args: ["--strict", "."]
+        pass_filenames: false
+  - repo: "https://github.com/adrienverge/yamllint.git"
+    rev: "v1.35.1"
+    hooks:
+      - id: "yamllint"
+  - repo: "https://github.com/thclark/pre-commit-sphinx"
+    rev: "0.0.3"
+    hooks:
+      - id: "build-docs"
+        additional_dependencies: [".[docs]", "sphinx_changelog"]
+        args: ['--cache-dir', 'src/docs/_build/doctrees', '--html-dir', 'src/docs/_build/html', '--source-dir', 'src/docs/source']
+        language_version: "python3"
+...

@@ -1,0 +1,159 @@
+########### BASIC METADATA ###############
+[project]
+authors = [
+  {email = "thomas@gibfest.dk"},
+  {name = "Thomas Steen Rasmussen"}
+]
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+description = "Multi-target Prometheus exporter with an exclusive focus on DNS monitoring"
+dynamic = ["version"]
+keywords = ["prometheus", "dns", "monitoring"]
+license = {text = "BSD 3-Clause License"}
+name = "dns_exporter"
+readme = "README.md"
+requires-python = ">=3.10"
+
+
+########### DEPENDENCIES ###############
+dependencies = [
+    "dnspython[doh,dnssec,idna,doq] >= 2.7.0",
+    "PyYAML >= 6.0",
+    "prometheus-client >= 0.15.0",
+    "PySocks >= 1.7.1",
+]
+
+[project.optional-dependencies]
+dev = ["pre-commit == 4.1.0", "setuptools-scm == 8.1.0"]
+test = [
+    "coverage[toml]==7.6.12",
+    "gera2ld.socks==0.5.0",
+    "prometheus-client==0.21.1",
+    "pytest==8.3.4",
+    "pytest-cov==6.0.0",
+    "pytest-mock==3.14.0",
+    "pytest-order==1.3.0",
+    "pytest-randomly==3.16.0",
+    "requests==2.32.3",
+    "tox==4.24.1",
+    "types-PyYAML==6.0.12.20241230",
+]
+docs = ["Sphinx==8.1.3", "sphinx_changelog==1.6.0"]
+
+
+########## SCRIPTS ####################
+[project.scripts]
+dns_exporter = "dns_exporter.entrypoint:main"
+
+
+########## URLS #######################
+[project.urls]
+homepage = "https://github.com/tykling/dns_exporter"
+documentation = "https://dns-exporter.readthedocs.org/"
+
+
+########### SETUPTOOLS ################
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "src/dns_exporter/_version.py"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["dns_exporter"]
+
+
+########### RUFF ######################
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "G004", # Logging statement uses f-string
+    "ANN101", # Missing type annotation for `self` in method
+    "ANN102", # Missing type annotation for `cls` in classmethod
+    "EM101", # Exception must not use a string literal, assign to variable first
+    "COM812", # missing-trailing-comma (https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules)
+    "ISC001", # single-line-implicit-string-concatenation (https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules)
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"src/tests/*.py" = [
+    "S101", # asserts allowed in tests...
+    "ARG", # Unused function args -> fixtures nevertheless are functionally relevant...
+    "FBT", # Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
+    "PLR2004", # Magic value used in comparison, ...
+    "ANN001", # Missing type annotation for function argument ...
+    "ANN201", # Missing return type annotation for public function ...
+    "S113", # Probable use of requests call without timeout
+    "E501", # Line too long
+]
+"conftest.py" = [
+    "T201", # print()
+    "ANN001", # Missing type annotation for function argument ...
+    "ANN201", # Missing return type annotation for public function ...
+    "INP001", # File `conftest.py` is part of an implicit namespace package. Add an `__init__.py`
+    "PT004", # Fixture ... does not return anything, add leading underscore
+]
+"src/docs/source/conf.py" = [
+    "INP001", # File ... is part of an implicit namespace package. Add an `__init__.py`.
+    "A001", # Variable `copyright` is shadowing a Python builtin
+]
+
+
+############ MYPY #####################
+[tool.mypy]
+python_version = "3.10"
+exclude = [
+    "build/",
+    "venv/",
+    "src/conftest.py",
+    "src/tests/",
+    "src/docs/source/conf.py",
+]
+
+
+########### COVERAGE.PY ###############
+[tool.coverage.run]
+omit = ["_version.py"]
+
+
+########### PYTEST ####################
+[tool.pytest.ini_options]
+log_format = "%(asctime)s pytest %(levelname)s %(name)s.%(funcName)s():%(lineno)i:  %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
+# consider warnings errors except PytestUnraisableExceptionWarning and ResourceWarning which happens regularly in socket code,
+# and a DeprecationWarning in aioquic
+filterwarnings = [
+    "error",
+    "ignore::pytest.PytestUnraisableExceptionWarning",
+    "ignore::ResourceWarning",
+    "ignore::DeprecationWarning:aioquic.*",
+]
+addopts = "--cov=dns_exporter/ --cov-report=xml --cov-report=html --cov-config=../pyproject.toml"
+
+
+########### TOX #######################
+[tool.tox]
+envlist = ["py310", "py311", "py312", "py313"]
+skipsdist = true
+
+[tool.tox.env_run_base]
+description = "Run test under {base_python}"
+change_dir = "src/"
+deps = [
+    "-e.[test]",
+]
+commands = [
+    ["pytest"]
+]
