@@ -1,0 +1,57 @@
+"Plan Name" = "jack+jill"
+
+["Basic Info"]
+Status = "married"
+Names = [ "Jack", "Jill",]
+"Birth year" = [ 1962, 1965,]
+"Life expectancy" = [ 89, 92,]
+"Start date" = "01-01"
+
+[Assets]
+"taxable savings balances" = [ 90.5, 60.2,]
+"tax-deferred savings balances" = [ 600.2, 150.0,]
+"tax-free savings balances" = [ 70.6, 40.8,]
+"Beneficiary fractions" = [ 1, 1, 1,]
+"Spousal surplus deposit fraction" = 0.0
+
+["Wages and Contributions"]
+"Contributions file name" = "jack+jill.xlsx"
+
+["Fixed Income"]
+"Pension amounts" = [ 0.0, 10.5,]
+"Pension ages" = [ 65, 65,]
+"Pension indexed" = [ false, false,]
+"Social security amounts" = [ 28.4, 19.7,]
+"Social security ages" = [ 70, 62,]
+
+["Rates Selection"]
+"Heirs rate on tax-deferred estate" = 30.0
+"Long-term capital gain tax rate" = 15.0
+"Dividend tax rate" = 2.0
+"TCJA expiration year" = 2026
+Method = "historical"
+From = 1969
+To = 2002
+
+["Asset Allocation"]
+"Interpolation method" = "s-curve"
+"Interpolation center" = 15
+"Interpolation width" = 5
+Type = "individual"
+generic = [ [ [ 60, 40, 0, 0,], [ 70, 30, 0, 0,],], [ [ 60, 40, 0, 0,], [ 80, 0, 10, 10,],],]
+
+["Optimization Parameters"]
+"Spending profile" = "smile"
+"Smile dip" = 15
+"Smile increase" = 12
+"Smile delay" = 0
+"Surviving spouse spending percent" = 60
+Objective = "maxSpending"
+
+["Solver Options"]
+maxRothConversion = 100
+bequest = 500
+noRothConversions = "Jill"
+
+[Results]
+"Default plots" = "today"
