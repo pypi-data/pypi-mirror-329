@@ -1,0 +1,138 @@
+[project]
+name = "astro-elisa"
+dynamic = ["version"]
+description = "Efficient library for spectral analysis in high-energy astrophysics."
+readme = "README.md"
+requires-python = ">=3.9, <3.13"
+license = "GPL-3.0-or-later"
+keywords = []
+authors = [
+    { name = "Wang-Chen Xue", email = "wcxuemail@gmail.com" },
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "arviz>=0.17.1; python_version < '3.10'",
+    "arviz>=0.18.0,<=0.20.0; python_version >= '3.10'",
+    "astropy>=5.3,<=6.1.7; python_version < '3.11'",
+    "astropy>=5.3,<=7.0.1; python_version >= '3.11'",
+    "corner>=2.2.2,<=2.2.3",
+    "dill<=0.3.9",
+    "h5py<=3.13.0",
+    "iminuit<=2.30.1",
+    "jax>=0.4.28; python_version < '3.10'",
+    "jax>=0.4.28,<=0.5.0; python_version >= '3.10'",
+    "jaxns==2.6.7",
+    "matplotlib",
+    "nautilus-sampler==1.0.5",
+    "numpy",
+    "numpyro>=0.16.1,<=0.17.0",
+    "optimistix>=0.0.8,<=0.0.10",
+    "prettytable<=3.14.0",
+    "quadax>=0.2.1,<=0.2.6",
+    "scipy>=1.11.0,<=1.12.0; python_version < '3.10'",
+    "scipy>=1.11.0,<=1.15.2; python_version >= '3.10'",
+    "seaborn<=0.13.2",
+    "tinygp<=0.3.0",
+    "tqdm",
+    "ultranest==4.4.0",
+]
+
+
+[project.optional-dependencies]
+xspec = ["xspex"]
+test = ["coverage[toml]", "pytest", "pytest-cov"]
+docs = [
+    "ipywidgets",
+    "jupyter",
+    "jupyterlab_widgets",
+    "sphinx>=7.4.0",
+    "sphinx-autodoc-typehints",
+    "sphinx-codeautolink",
+    "sphinx-copybutton",
+    "sphinx-design",
+    "myst-nb",
+    "numba",
+    "numpydoc",
+    "pydata-sphinx-theme",
+    "widgetsnbextension",
+]
+dev = ["pre-commit>=3.6.0", "ruff>=0.2.0"]
+
+
+[project.urls]
+Documentation = "https://github.com/wcxve/elisa#readme"
+Issues = "https://github.com/wcxve/elisa/issues"
+Source = "https://github.com/wcxve/elisa"
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
+[tool.hatch]
+metadata.allow-direct-references = true
+version.path = "src/elisa/__about__.py"
+build.targets.sdist.only-include = ["src", "tests"]
+build.targets.wheel.packages = ["src/elisa"]
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.9", "3.10", "3.11", "3.12"]
+
+[tool.ruff]
+line-length = 79
+target-version = "py39"
+extend-exclude = ["src/elisa/infer/nested_sampling.py"]
+format.quote-style = "single"
+lint.extend-select = ["Q"]
+lint.flake8-quotes.inline-quotes = "single"
+lint.ignore = [
+    "B028",  # allow warnings without stacklevel
+    "C901",  # allow functions with a high complexity
+    "E731",  # allow lambda functions
+]
+lint.ignore-init-module-imports = true
+lint.isort.known-first-party = ["elisa"]
+lint.isort.combine-as-imports = true
+lint.select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "UP",  # pyupgrade
+]
+#lint.pydocstyle.convention = "numpy"
+
+[tool.ruff.lint.per-file-ignores]
+"docs/notebooks/model-building.ipynb" = ["F403", "F405"]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+source = ["src/"]
+omit = [
+    "docs/*",
+    "src/elisa/infer/nested_sampling.py",
+    "src/elisa/models/tables/*",
+    "tests/*",
+    "*__init__*"
+]
+
+[tool.coverage.paths]
+source = ["src/", "*/site-packages"]
+
+[tool.coverage.report]
+show_missing = true
