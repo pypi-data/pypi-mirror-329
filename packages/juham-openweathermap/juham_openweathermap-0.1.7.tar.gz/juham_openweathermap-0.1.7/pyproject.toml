@@ -1,0 +1,56 @@
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "juham-openweathermap"
+version = "0.1.7"
+requires-python = ">=3.8"
+description = "Weather forecast plugin for `juham` applications"
+readme = {file = "docs/source/README.rst", content-type = "text/x-rst"}
+license = {file = "docs/source/LICENSE.rst", content-type = "text/x-rst"}
+keywords = ["object-oriented", "plugin", "framework"]
+authors = [
+  {name = "J Meskanen", email = "juham.api@gmail.com" }
+]
+maintainers = [
+  {name = "J. Meskanen", email = "juham.api@gmail.com" }
+]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.8",
+]
+
+dependencies = [
+  "juham-automation >= 0.0.7",
+  "pytz >= 2024.1",
+]
+
+
+[project.optional-dependencies]
+dev = ["check-manifest"]
+
+
+[project.entry-points."juham.plugins"]
+openweathermap_plugin = "juham_openweathermap:OpenWeatherMap"
+
+
+
+[project.urls]
+"Homepage" = "https://meskanen.com"
+"Bug Reports" = "https://meskanen.com"
+"Funding" = "https://meskanen.com"
+"Say Thanks!" = "http://meskanen.com"
+"Source" = "https://meskanen.com"
+
+
+
+[tool.mypy]
+files = ["juham_openweathermap"]
+ignore_missing_imports = true
