@@ -1,0 +1,7 @@
+PLAYGROUND_DIR = ".nix-playground"
+PKG_NAME = "pkg_name"
+DER_LINK = "der"
+PKG_LINK = "pkg"
+SRC_LINK = "src"
+DEFAULT_CHECKOUT_DIR = "checkout"
+PATCH_FILE = "checkout.patch"
