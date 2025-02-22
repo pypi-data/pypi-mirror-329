@@ -1,0 +1,71 @@
+Metadata-Version: 2.4
+Name: sunflare
+Version: 0.4.0
+Summary: Redsun plugin development toolkit
+Project-URL: bugs, https://github.com/redsun-acquisition/sunflare/issues
+Project-URL: changelog, https://redsun-acquisition.github.io/sunflare/changelog/
+Project-URL: homepage, https://github.com/redsun-acquisition/sunflare
+Author-email: Jacopo Abramo <jacopo.abramo@gmail.com>
+Maintainer-email: Jacopo Abramo <jacopo.abramo@gmail.com>
+License: Apache-2.0
+License-File: LICENSE
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Software Development :: Build Tools
+Requires-Python: >=3.9
+Requires-Dist: attrs
+Requires-Dist: bluesky
+Requires-Dist: msgspec
+Requires-Dist: numpy<1.27,>=1.24
+Requires-Dist: psygnal
+Requires-Dist: pyyaml
+Requires-Dist: types-pyyaml
+Requires-Dist: typing-extensions>=4.10.0
+Requires-Dist: zmq
+Provides-Extra: dev
+Requires-Dist: mypy; extra == 'dev'
+Requires-Dist: ophyd; extra == 'dev'
+Requires-Dist: pre-commit; extra == 'dev'
+Requires-Dist: pytest; extra == 'dev'
+Requires-Dist: pytest-cov; extra == 'dev'
+Requires-Dist: ruff; extra == 'dev'
+Provides-Extra: docs
+Requires-Dist: myst-parser; extra == 'docs'
+Requires-Dist: pydata-sphinx-theme; extra == 'docs'
+Requires-Dist: sphinx; extra == 'docs'
+Requires-Dist: sphinx-design; extra == 'docs'
+Requires-Dist: sphinxcontrib-mermaid; extra == 'docs'
+Provides-Extra: pyqt
+Requires-Dist: pyqt6; extra == 'pyqt'
+Requires-Dist: qtpy; extra == 'pyqt'
+Provides-Extra: pyside
+Requires-Dist: pyside6; extra == 'pyside'
+Requires-Dist: qtpy; extra == 'pyside'
+Description-Content-Type: text/markdown
+
+[![PyPI](https://img.shields.io/pypi/v/sunflare.svg?color=green)](https://pypi.org/project/sunflare)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/sunflare)](https://pypi.org/project/sunflare)
+[![codecov](https://codecov.io/gh/redsun-acquisition/sunflare/graph/badge.svg?token=XAL7NBIU9N)](https://codecov.io/gh/redsun-acquisition/sunflare)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+# Sunflare
+
+> [!WARNING]
+> This project is still in alpha stage and very unstable. Use at your own risk.
+
+Sunflare is an Software Development Kit (SDK) which provides common, reusable components for building plugins which can interact with [Redsun].
+
+The aim is to provide reusable patterns in developing software applications for scientific device orchestration leveraging Bluesky hardware interface and data model.
+
+For more information, see the [documentation].
+
+[redsun]: https://redsun-acquisition.github.io/redsun/
+[documentation]: https://redsun-acquisition.github.io/sunflare/
