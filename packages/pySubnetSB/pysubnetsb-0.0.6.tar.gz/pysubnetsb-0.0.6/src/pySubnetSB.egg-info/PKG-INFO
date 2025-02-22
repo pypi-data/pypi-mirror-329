@@ -1,0 +1,82 @@
+Metadata-Version: 2.2
+Name: pySubnetSB
+Version: 0.0.6
+Summary: Python Subnet Discovery for Systems Biology
+Author-email: Joseph Hellerstein <joseph.hellerstein@gmail.com>
+License: MIT License
+        
+        Copyright (c) 2024 Model Engineering
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/ModelEngineering/pySubnetSB
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: build
+Requires-Dist: coverage
+Requires-Dist: jupyterlab
+Requires-Dist: matplotlib
+Requires-Dist: nose2
+Requires-Dist: pandas
+Requires-Dist: pip>20
+Requires-Dist: pylint
+Requires-Dist: python-libsbml
+Requires-Dist: pynauty
+Requires-Dist: sbmlnetwork
+Requires-Dist: seaborn
+Requires-Dist: simplesbml
+Requires-Dist: tellurium
+Requires-Dist: tqdm
+Requires-Dist: twine
+Requires-Dist: zipfile36
+
+[![Build](https://github.com/ModelEngineering/pySubnetSB/actions/workflows/github-actions.yml/badge.svg)](https://github.com/ModelEngineering/pySubnetSB/actions/workflows/github-actions.yml)
+[![Coverage](https://github.com/ModelEngineering/pySubnetSB/actions/workflows/github-actions.yml/coverage.svg)](https://github.com/ModelEngineering/pySubnetSB/actions/workflows/github-actions.yml)
+
+# SUBNET DISCOVERY FOR SBML MODELS
+
+# Motivation
+Many advances in biomedical research are driven by structural analysis, a study of the interconnections
+between elements in biological systems (e.g., identifying drug target and phylogenetic analyses). Structural analysis
+appeals because structural information is much easier to obtain than dynamical data such as species concentrations
+and reaction fluxes. Our focus is on subnet discovery in chemical reaction networks (CRNs); that is, discovering a
+subset of a target CRN that is structurally identical to a reference CRN. Applications of subnet discovery include the
+discovery of conserved chemical pathways and the elucidation of the structure of complex CRNs. Although there are
+theoretical results for finding subgraphs, we are unaware of tools for CRN subnet discovery. This is in part due to the
+special characteristics of CRN graphs, that they are directed, bipartite, hypergraphs.
+
+# Results
+We introduces pySubnetSB, an open source python package for discovering subnets represented in the systems
+biology markup language (SBML) community standard. pySubnetSB uses a constraint-based approach to discover
+subgraphs using techniques that work well for CRNs, and provides considerable speed-up through vectorization and
+process-based parallelism. We provide a methodology for evaluating the statistical significance of subnet discovery and
+apply pySubnetSB to discovering subnets in more than 100,000 model pairs in the BioModels repository of curated
+models.
+
+# Availability
+pySubnetSB is installed using
+
+    pip install pySubnetSB
+https://github.com/ModelEngineering/pySubnetSB/blob/main/
+examples/api_basics.ipynb is a Jupyter notebook that demonstrates pySubsetSB capabilities.
+
+# Version History
+* 0.1.0 2/21/2025. First beta release.
