@@ -1,0 +1,221 @@
+
+# Note that a user config is applied to this Table/dict using
+# pythong mergedeep with Strategy.REPLACE, lists are not additive, dics are replaced.
+
+defines: { } # Add these defines to every eda call
+
+dep_command_enables:
+  shell:             true # Support DEPS.yml shell commands
+  work_dir_add_srcs: true # Support DEPS.yml commands adding artifacts to sources (files_sv, etc)
+  peakrdl:           true # Support DEPS.yml peakrdl commands
+  var_subst_args:    true # Support var substitution from eda/DEPS args
+  var_subst_os_env:  true # Support var substitution from os.environ
+  tee:               true # Support renaming eda command log file names (instead of auto-named from <target>)
+
+deps_legacy_supported: true # Support legacy 'DEPS' files, non-yaml.
+deps_yaml_supported:   true # Support DEPS.yml files.
+deps_subprocess_shell: true # Support subprocess commands using shell=True
+
+dep_sub: [ ] # Legacy, no longer supported.
+vars: { }    # Legacy, no longer supported.
+
+tools:
+
+  # <tool-name>:
+  #   defines:             <Table, macroName: <value|null|> >
+  #   log-bad-strings:     <Array of strings>
+  #   log-must-strings:    <Array of strings>
+  #   sim-libraries:       <Array of strings>
+  #   compile-args:        <string space separated>
+  #   compile-waves-args:  <string space separated>
+  #   compile-waivers:     <Array of strings, no spaces>
+  #   elab-args:           <string space separated>
+  #   elab-waves-args:     <string space separated>
+  #   simulate-args:       <string space separated>
+  #   simulate-waves-args: <string space separated>
+  #   simulate-waivers:    <Array of strings, no spaces>
+  #   coverage-args:       <string space separated>
+
+  verilator:
+    defines: { }
+    log-bad-strings:
+      - "%Error"
+      - "%Fatal"
+    log-must-strings:
+      - "R e p o r t: Verilator" # These come at end of compile or simulation, since we don't suppress it.
+    compile-args: |
+      --timing
+      --assert
+      --autoflush
+      -j 2
+      -sv
+    compile-waves-args: |
+      --trace-structs
+      --trace-params
+    compile-waivers:
+      - CASEINCOMPLETE
+      - REALCVT  # Implicit conversion of real to integer
+      - SELRANGE
+      - TIMESCALEMOD  # If one file has `timescale, then they all must
+      - UNSIGNED
+      - WIDTH
+      # Other potential verilator compilers Warnings to waive:
+      # - ALWCOMBORDER
+      # - ASCRANGE
+      # - CASEOVERLAP
+      # - CASEX
+      # - CMPCONST
+      # - COMBDLY
+      # - CONSTRAINTIGN
+      # - COVERIGN
+      # - IGNOREDRETURN
+      # - IMPLICIT
+      # - IMPLICITSTATIC
+      # - INITIALDLY
+      # - LATCH
+      # - MISINDENT
+      # - MODDUP
+      # - MULTIDRIVEN
+      # - NULLPORT
+      # - PINMISSING
+      # - RISEFALLDLY
+      # - SIDEEFFECT
+      # - SHORTREAL
+      # - UNOPTFLAT
+      # - WIDTHCONCAT
+    simulate-args: |
+      +verilator+error+limit+100
+    coverage-args: |
+      --annotate logs/annotated
+      --annotate-min 1
+      coverage.dat
+
+
+  modelsim_ase:
+    defines:
+      OC_ASSERT_PROPERTY_NOT_SUPPORTED: 1
+      OC_TOOL_MODELSIM_ASE: 1
+    log-bad-strings:
+      - "Error:"
+    log-must-strings:
+      - " vsim "
+      - "Errors: 0"
+    compile-args: |
+      -sv -svinputport=net -lint
+    compile-waivers:
+      - 2275 # 2275 - Existing package 'foo_pkg' will be overwritten.
+      - 2555 # 2555 - assignment to input port foo
+      - 2583 # 2583 - [SVCHK] - Extra checking for conflicts with always_comb and
+             #        always_latch variables is done at vopt time.
+    simulate-waivers:
+      - 3009 # 3009: [TSCALE] - Module 'foo' does not have a timeunit/timeprecision
+             #       specification in effect, but other modules do.
+    simulate-waves-args: |
+      +acc
+
+
+  iverilog:
+    log-bad-strings:
+      - "Error:"
+      - "ERROR:"
+      - "error:"
+      - "FATAL:"
+      - "Fatal:"
+      - "fatal:"
+      - ": syntax error"
+      - "I give up"
+    compile-args: |
+      -g2012
+      -gsupported-assertions
+      -grelative-include
+
+
+  vivado:
+    sim-libraries:
+      - xil_defaultlib
+      - unisims_ver
+      - unimacro_ver
+      - xpm
+      - secureip
+      - xilinx_vip
+    compile-args: |
+      -sv
+    elab-args: |
+      -s snapshot -timescale 1ns/1ps --stats
+    # CommandSimVivado we don't set elab-waves-args (does gui + waves differently),
+    # but you could set: -debug all if you wanted that on every run:
+    #elab-waves-args: |
+    #  -debug all
+    simulate-args: |
+      snapshot --stats --onerror quit
+
+
+#
+# auto_tools_order
+# -- should be used when a new tool is added.
+# -- Is in-order for the handlers, so Verilator is the default simulator if
+#    verilator is installed and the eda command is "sim".
+#
+auto_tools_order:
+  - # This is a 1 entry list so it works nicely with mergedeep.Strategy.REPLACE
+    verilator:
+      exe: verilator
+      handlers:
+        elab: CommandElabVerilator
+        sim: CommandSimVerilator
+
+
+    gtkwave:
+      exe: gtkwave
+      handlers: { }
+
+    vivado:
+      exe: vivado
+      handlers:
+        elab: CommandElabVivado
+        sim: CommandSimVivado
+        synth: CommandSynthVivado
+        proj: CommandProjVivado
+        upload: CommandUploadVivado
+        open: CommandOpenVivado
+        flist: CommandFListVivado
+        build: CommandBuildVivado
+
+    tabbycad_yosys:
+      exe: yosys
+      requires_env:
+        - YOSYSHQ_LICENSE
+      handlers:
+        synth: CommandSynthTabbyCadYosys
+
+    invio_yosys:
+      exe: yosys
+      requires_py:
+        - invio
+      handlers:
+        synth: CommandSynthInvioYosys
+
+    slang_yosys:
+      exe: yosys
+      requires_cmd:
+        - yosys -m slang
+      handlers:
+        synth: CommandSynthSlangYosys
+
+    questa:
+      exe: qrun
+      handlers:
+        elab: CommandElabQuesta
+        sim: CommandSimQuesta
+
+    modelsim_ase:
+      exe: vsim
+      handlers:
+        elab: CommandElabModelsimAse
+        sim: CommandSimModelsimAse
+
+    iverilog:
+      exe: iverilog
+      handlers:
+        elab: CommandElabIverilog
+        sim: CommandSimIverilog
