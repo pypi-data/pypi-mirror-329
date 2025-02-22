@@ -1,0 +1,90 @@
+Metadata-Version: 2.4
+Name: twat-image
+Version: 2.1.2
+Project-URL: Documentation, https://github.com/twardoch/twat-image#readme
+Project-URL: Issues, https://github.com/twardoch/twat-image/issues
+Project-URL: Source, https://github.com/twardoch/twat-image
+Author-email: Adam Twardoch <adam+github@twardoch.com>
+License-Expression: MIT
+License-File: LICENSE
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.10
+Requires-Dist: pydantic>=2.10.6
+Requires-Dist: twat>=1.8.1
+Provides-Extra: all
+Requires-Dist: pydantic>=2.10.6; extra == 'all'
+Requires-Dist: twat>=1.8.1; extra == 'all'
+Provides-Extra: dev
+Requires-Dist: mypy>=1.15.0; extra == 'dev'
+Requires-Dist: pre-commit>=4.1.0; extra == 'dev'
+Requires-Dist: ruff>=0.9.6; extra == 'dev'
+Provides-Extra: test
+Requires-Dist: pytest-benchmark[histogram]>=5.1.0; extra == 'test'
+Requires-Dist: pytest-cov>=6.0.0; extra == 'test'
+Requires-Dist: pytest-xdist>=3.6.1; extra == 'test'
+Requires-Dist: pytest>=8.3.4; extra == 'test'
+Description-Content-Type: text/markdown
+
+# twat-image
+
+(work in progress)
+
+Non-AI image modification. 
+
+## Features
+
+- Plugin for twat
+- Modern Python packaging with PEP 621 compliance
+- Type hints and runtime type checking
+- Comprehensive test suite and documentation
+- CI/CD ready configuration
+
+## Installation
+
+```bash
+pip install twat-image
+```
+
+## Usage
+
+```python
+import twat_image
+plugin = twat_image.plugin
+```
+
+## Development
+
+This project uses [Hatch](https://hatch.pypa.io/) for development workflow management.
+
+### Setup Development Environment
+
+```bash
+# Install hatch if you haven't already
+pip install hatch
+
+# Create and activate development environment
+hatch shell
+
+# Run tests
+hatch run test
+
+# Run tests with coverage
+hatch run test-cov
+
+# Run linting
+hatch run lint
+
+# Format code
+hatch run format
+```
+
+## License
+
+MIT License  
+.
