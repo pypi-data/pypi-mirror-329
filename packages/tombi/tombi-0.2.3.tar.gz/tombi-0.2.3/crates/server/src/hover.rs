@@ -1,0 +1,173 @@
+mod all_of;
+mod any_of;
+mod constraints;
+mod default_value;
+mod one_of;
+mod value;
+
+use config::TomlVersion;
+use constraints::DataConstraints;
+use futures::future::BoxFuture;
+use schema_store::{
+    get_schema_name, Accessor, Accessors, DocumentSchema, SchemaUrl, ValueSchema, ValueType,
+};
+use std::{fmt::Debug, ops::Deref};
+
+pub async fn get_hover_content(
+    tree: &document_tree::DocumentTree,
+    toml_version: TomlVersion,
+    position: text::Position,
+    keys: &[document_tree::Key],
+    document_schema: Option<&DocumentSchema>,
+    schema_store: &schema_store::SchemaStore,
+) -> Option<HoverContent> {
+    let table = tree.deref();
+    match document_schema {
+        Some(document_schema) => {
+            table
+                .get_hover_content(
+                    &Vec::with_capacity(0),
+                    document_schema.value_schema.as_ref(),
+                    toml_version,
+                    position,
+                    keys,
+                    Some(&document_schema.schema_url),
+                    &document_schema.definitions,
+                    schema_store,
+                )
+                .await
+        }
+        None => {
+            table
+                .get_hover_content(
+                    &Vec::with_capacity(0),
+                    None,
+                    toml_version,
+                    position,
+                    keys,
+                    None,
+                    &Default::default(),
+                    schema_store,
+                )
+                .await
+        }
+    }
+}
+
+trait GetHoverContent {
+    fn get_hover_content<'a: 'b, 'b>(
+        &'a self,
+        accessors: &'a Vec<Accessor>,
+        value_schema: Option<&'a ValueSchema>,
+        toml_version: TomlVersion,
+        position: text::Position,
+        keys: &'a [document_tree::Key],
+        schema_url: Option<&'a SchemaUrl>,
+        definitions: &'a schema_store::SchemaDefinitions,
+        schema_store: &'a schema_store::SchemaStore,
+    ) -> BoxFuture<'b, Option<HoverContent>>;
+}
+
+#[derive(Debug)]
+pub struct HoverContent {
+    pub title: Option<String>,
+    pub description: Option<String>,
+    pub accessors: Accessors,
+    pub value_type: ValueType,
+    pub constraints: Option<DataConstraints>,
+    pub schema_url: Option<SchemaUrl>,
+    pub range: Option<text::Range>,
+}
+
+impl HoverContent {
+    pub fn into_nullable(mut self) -> HoverContent {
+        self.value_type = self.value_type.into_nullable();
+        self
+    }
+}
+
+impl PartialEq for HoverContent {
+    fn eq(&self, other: &Self) -> bool {
+        self.title == other.title
+            && self.description == other.description
+            && self.accessors == other.accessors
+            && self.value_type == other.value_type
+            && self.range == other.range
+    }
+}
+
+impl Eq for HoverContent {}
+
+impl std::hash::Hash for HoverContent {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.title.hash(state);
+        self.description.hash(state);
+        self.accessors.hash(state);
+        self.value_type.hash(state);
+        self.range.hash(state);
+    }
+}
+
+impl std::fmt::Display for HoverContent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        const SECTION_SEPARATOR: &str = "-----";
+
+        if let Some(title) = &self.title {
+            writeln!(f, "#### {}\n", title)?;
+        }
+
+        if let Some(description) = &self.description {
+            writeln!(f, "{}\n", description)?;
+        }
+
+        if self.title.is_some() || self.description.is_some() {
+            writeln!(f, "{}\n", SECTION_SEPARATOR)?;
+        }
+
+        writeln!(f, "Keys: `{}`\n", self.accessors)?;
+        writeln!(f, "Value: `{}`\n", self.value_type)?;
+
+        if let Some(constraints) = &self.constraints {
+            writeln!(f, "{}", constraints)?;
+        }
+
+        if let Some(schema_url) = &self.schema_url {
+            if let Some(schema_filename) = get_schema_name(schema_url) {
+                writeln!(f, "Schema: [{schema_filename}]({schema_url})\n",)?;
+            }
+        }
+
+        Ok(())
+    }
+}
+
+impl From<HoverContent> for tower_lsp::lsp_types::Hover {
+    fn from(value: HoverContent) -> Self {
+        tower_lsp::lsp_types::Hover {
+            contents: tower_lsp::lsp_types::HoverContents::Markup(
+                tower_lsp::lsp_types::MarkupContent {
+                    kind: tower_lsp::lsp_types::MarkupKind::Markdown,
+                    value: value.to_string(),
+                },
+            ),
+            range: value.range.map(Into::into),
+        }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use rstest::rstest;
+    use schema_store::SchemaUrl;
+
+    #[rstest]
+    #[case("https://json.schemastore.org/tombi.schema.json")]
+    #[case("file://./folder/tombi.schema.json")]
+    #[case("file://./tombi.schema.json")]
+    #[case("file://tombi.schema.json")]
+    fn url_content(#[case] url: &str) {
+        let url = SchemaUrl::parse(url).unwrap();
+        assert_eq!(get_schema_name(&url).unwrap(), "tombi.schema.json");
+    }
+}
