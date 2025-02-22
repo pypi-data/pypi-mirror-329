@@ -1,0 +1,63 @@
+Metadata-Version: 2.2
+Name: suteado
+Version: 1.1
+Summary: m.kuku.luで使える捨てアドぽいぽいの非公式API
+Home-page: https://github.com/milypy/suteado/
+Download-URL: https://github.com/milypy/suteado/
+Author: mily
+Author-email: goshoahiru0323@gmail.com
+Maintainer: mily
+Maintainer-email: goshoahiru0323@gmail.com
+License: MIT
+Keywords: suteadopoipoi suteado mail freemail
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.1
+Description-Content-Type: text/markdown
+Requires-Dist: requests
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: download-url
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: requires-dist
+Dynamic: summary
+
+# suteado
+捨てアドぽいぽい(m.kuku.lu)の非公式API
+```
+pip install suteado
+```
+
+サンプルコード
+
+```
+from suteado import suteado as st
+
+#インスタンスの作成 セッションハッシュは指定しなくても一応通るけどその度に新しいアカウントになる
+mail = st.SuteAddress("SHASH%3ABCDEFGHIJK1234567890")
+
+#メールの作成(アドレス名の指定無し)
+print(mail.create_Mail("eay.jp"))
+
+#メールの作成(アドレス名の指定あり) この場合:abcdefg@eay.jpが作成される
+print(mail.create_Mail("eay.jp","abcdefg1234"))
+
+#指定したセッションハッシュのアカウントに登録されているすべてのメールの取得
+print(mail.get_AllAddress())
+
+#メールボックスの確認 整数で因数を指定して最新のものから数個取得も出来る
+print(mail.get_mailbox(3))
+
+#ログイン情報からセッションハッシュを抽出する ログイン情報はあなたのユーザー情報→使用中のアカウント情報
+print(mail.login(450569192000,"iawgopisnavoi")
+
+```
+
+セッションハッシュはサイトのcookieのSessionHashみたいな名前のやつです。
+chromeだったら使いたいアカウントにログインして右クリック → 検証 → Application → StorageのCookies → https://m.kuku.lu/ のcookie_sessionhashに格納されてる値をコピーすれば使えます。
