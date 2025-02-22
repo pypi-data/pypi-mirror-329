@@ -1,0 +1,27 @@
+{
+  "name": "Python 3",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "runArgs": [
+    "-v",
+    "/var/run/docker.sock:/var/run/docker.sock"
+  ],
+  "postCreateCommand": "pip install -e .[dev] && colrev install all_internal_packages && pre-commit run --all-files",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "streetsidesoftware.code-spell-checker",
+        "markdown.showPreview",
+        "mhutchie.git-graph"
+      ],
+      "settings": {
+        "markdown.extension.preview.autoShowPreviewToSide": true,
+        "markdown.extension.print.theme": "dark",
+        "workbench.colorTheme": "Default Dark+",
+        "window.autoDetectColorScheme": true
+      }
+    }
+  }
+}
