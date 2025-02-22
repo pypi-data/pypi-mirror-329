@@ -1,0 +1,64 @@
+Metadata-Version: 2.2
+Name: TurtleGlide
+Version: 0.0.1
+Summary: Comandos para crear archivos HTML, CSS y JS
+Author-email: Alejandro <hjosealejandro21@gmail.com>
+License: MPL-2.0
+Project-URL: Github, https://github.com/jose-CR/TurtleGlide
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django :: 3.2
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests
+Requires-Dist: django<4,>=3.2
+Requires-Dist: setuptools
+
+TurtleGlide
+================
+
+Introducción
+------------
+
+TurtleGlide es una herramienta para crear archivos dentro de la carpeta templates o static de una app de Django.
+
+Instalación
+------------
+
+Instalar TurtleGlide en tu proyecto Django:
+
+```bash
+pip install TurtleGlide
+```
+
+Luego la instalas como una app de Django en INSTALLED_APPS:
+
+```python
+INSTALLED_APPS = [
+    'TurtleGlide'
+]
+```
+
+ahora llamamos al archivo setup.sh que estalara todas las dependencias necesarias
+```bash
+./setup.sh
+```
+
+uso de TurtleGlide
+------------
+
+hay tres paramentros obligatorios para el uso del comando creeate_archive:
+
+- app_name: Nombre de la app
+- file_path: Ruta del componente HTML
+- --type: de forma determinada el tipo de archivo a crear: "template" para archivos en la carpeta templates, "static" para archivos en la carpeta static
+
+comando de ejemplo:
+------------
+
+```bash
+python manage.py create_archive "app_name" "file_path" --type="template"
+```
