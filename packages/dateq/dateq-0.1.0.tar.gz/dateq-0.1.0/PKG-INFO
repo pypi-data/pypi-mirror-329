@@ -1,0 +1,67 @@
+Metadata-Version: 2.2
+Name: dateq
+Version: 0.1.0
+Summary: a command line date/time processor
+Home-page: https://github.com/purarue/dateq
+License: MIT
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: arrow>=1.3.0
+Requires-Dist: click>=8.1.7
+Requires-Dist: dateparser>=1.2.0
+Provides-Extra: testing
+Requires-Dist: flake8; extra == "testing"
+Requires-Dist: mypy; extra == "testing"
+Requires-Dist: pytest; extra == "testing"
+
+# dateq
+
+WIP; this is meant to replace and collect all my dozens of tiny date scripts that do custom, little things
+
+A command line date/time processor (pronounced, like [`jq`](https://jqlang.org/); `date`-`q`)
+
+## Installation
+
+Requires `python3.10+`
+
+To install with pip, run:
+
+```
+pip install git+https://github.com/purarue/dateq
+```
+
+## Usage
+
+```
+Usage: dateq parse [OPTIONS] DATE...
+
+Options:
+  --force-tz TZ    force timezone for parsed dates
+  --utc            convert to UTC
+  -l, --localize   localize time to your current timezone
+  --format FORMAT  format for date string
+  --strict         raise an error if the date string is invalid
+  -h, --help       Show this message and exit.
+
+  For a list of all formats, run 'LIST_FORMATS=1 dateq parse --help'
+```
+
+### Tests
+
+```bash
+git clone 'https://github.com/purarue/dateq'
+cd ./dateq
+pip install '.[testing]'
+pytest
+flake8 ./dateq
+mypy ./dateq
+```
