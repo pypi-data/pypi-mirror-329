@@ -1,0 +1,24 @@
+[project]
+name = "robotframework-oneflow"
+version = "0.1.4"
+description = "Robot Framework library to treat a test suite as a one flow, where if any test case will fail than it skip the rest of the tests"
+authors = [{ name = "otemek", email = "etombsc@gmail.com" }]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = ["robotframework (>=6)"]
+
+[project.urls]
+Homepage = "https://github.com/otemek/robotframework-oneflow"
+Issues = "https://github.com/otemek/robotframework-oneflow/issues"
+
+[tool.poetry]
+packages = [{ include = "OneFlow" }]
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^6"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
