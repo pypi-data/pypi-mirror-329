@@ -1,0 +1,70 @@
+[tool.poetry]
+name = "gyver"
+version = "5.2.0"
+description = "Toolbox for web development"
+authors = ["Gustavo Correa <self.gustavocorrea@gmail.com>"]
+readme = "README.md"
+repository = "https://github.com/guscardvs/gyver"
+
+[tool.poetry.extras]
+pydantic = ["pydantic"]
+tzdata = ["tzdata"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+typing-extensions = "^4.12.2"
+tzdata = { markers = "sys_platform != \"linux\"", version = "^2024.2", optional = true }
+gyver-attrs = "^0.9.4"
+faust-cchardet = "^2.1.19"
+env-star = "^2.6.0"
+lazy-fields = "^1.1.0"
+gyver-misc = "^0.5.9"
+pydantic = { version = "^2.9.2", optional = true }
+
+[tool.poetry.group.lint.dependencies]
+ruff = "^0.7.4"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.3"
+pytest-cov = "^6.0.0"
+coverage = "^7.6.7"
+pytest-asyncio = "^0.24.0"
+hypothesis = "^6.119.2"
+
+
+[tool.poetry.group.docs.dependencies]
+termynal = "^0.10.0"
+mkdocstrings = { extras = ["python"], version = "^0.22.0" }
+mkdocs-material = "^9.1.21"
+
+
+[tool.poetry.group.opts.dependencies]
+attrs = "^22.2.0"
+
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+extend-select = ['UP']
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = [
+    "--cov=gyver/",
+    "--cov-report=html",
+    "--cov-config=.coveragerc",
+    "--no-cov-on-fail",
+    "--cov-fail-under=80",
+    "-sv",
+    "--maxfail=1",
+]
+filterwarnings = [
+    "error",
+    "ignore:The --rsyncdir command line argument and rsyncdirs config variable are deprecated.:DeprecationWarning",
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
