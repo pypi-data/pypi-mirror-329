@@ -1,0 +1,93 @@
+Metadata-Version: 2.2
+Name: mortie
+Version: 0.0.0
+Summary: Morton numbering and indexing for healpix grids
+Home-page: https://github.com/espg/mortie
+Author: Shane Grigsby (espg)
+Author-email: "Shane Grigsby (espg)" <refuge@rocktalus.com>
+License: BSD 3-Clause License
+        
+        Copyright (c) 2022, Shane Grigsby
+        All rights reserved.
+        
+        Redistribution and use in source and binary forms, with or without
+        modification, are permitted provided that the following conditions are met:
+        
+        1. Redistributions of source code must retain the above copyright notice, this
+           list of conditions and the following disclaimer.
+        
+        2. Redistributions in binary form must reproduce the above copyright notice,
+           this list of conditions and the following disclaimer in the documentation
+           and/or other materials provided with the distribution.
+        
+        3. Neither the name of the copyright holder nor the names of its
+           contributors may be used to endorse or promote products derived from
+           this software without specific prior written permission.
+        
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+        AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+        DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+        CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+        OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+        
+Project-URL: Homepage, https://github.com/espg/mortie
+Project-URL: Bug Tracker, https://github.com/espg/mortie/issues
+Keywords: healpix,geohashing,morton index
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: healpy
+Requires-Dist: numba
+Requires-Dist: cython
+Requires-Dist: llvmlite
+
+mortie
+======
+
+![Morty using mortie](./morty.jpg)
+
+Mortie is a library for applying morton indexing to healpix grids. Morton
+numbering (also called z-ordering) facilitates several geospatial operators
+such as buffering and neighborhood look-ups, and can generally be thought of as
+a type of geohashing.
+
+This particular implementation focuses on hierarchical healpix maps, and is
+mostly inspired from [this paper](https://doi.org/10.1016/j.heliyon.2017.e00332).
+
+TODO:
+
+- [x] add paper reference
+- [x] add funding information
+- [ ] add tests
+- [x] remove / prune dead code
+- [ ] add example(s)
+- [x] fix north / south bug
+- [ ] remove numba dependency
+- [ ] update documentation
+- [x] publish to pypi
+
+Dependencies currently are numpy, numba, and healpy. Ideally, this will be
+reduced to just healpy and numpy in the near future. Although not a dependency,
+there are several functions that have been written to interface with the vaex
+project. The environment.yaml file contains a full plotting environment needed
+to run the examples; setup.py will only build the minimum requirements for only
+the library.
+
+## Funding
+Initial funding of this work was supported by the ICESat-2 project science
+office, at the Laboratory for Cryospheric Sciences (NASA Goddard, Section 615). 
+
+## References
+<a id="1">[1]</a> 
+Youngren, Robert W., and Mikel D. Petty. 
+"A multi-resolution HEALPix data structure for spherically mapped point data." 
+Heliyon 3.6 (2017): e00332. [doi: 10.1016/j.heliyon.2017.e00332](https://doi.org/10.1016/j.heliyon.2017.e00332)
