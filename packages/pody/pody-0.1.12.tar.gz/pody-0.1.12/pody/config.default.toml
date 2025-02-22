@@ -1,0 +1,23 @@
+
+# should be comma-separated list of ports or ranges
+# e.g. "20000,20002-20010"
+available_ports = "20000-21000"
+
+volume_mappings = [
+	"/data/pody-volume/$username:/workspace/$username:rw", 
+	"/data/pody-volume/share:/workspace/share:ro"
+]
+
+# the ports will be mapped to the host machine 
+# under random available port
+[[images]]
+name = "ubuntu2204-cu121-base:latest"
+ports = [22, 8000]
+description = "Ubuntu 22.04 with CUDA 12.1 base image"
+
+# if tag is not specified, 
+# all tags of the image will be available
+[[images]]
+name = "lab-cuda"
+ports = [22]
+description = "Our lab image, the tag indicates its specificaion"
