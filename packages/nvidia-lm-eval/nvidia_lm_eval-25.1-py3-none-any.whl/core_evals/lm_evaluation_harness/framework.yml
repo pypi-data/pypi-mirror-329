@@ -1,0 +1,228 @@
+framework:
+  name: lm-evaluation-harness
+  pkg_name: lm_eval
+  full_name: Language Model Evaluation Harness
+  description: This project provides a unified framework to test generative language models on a large number of different evaluation tasks.
+  url: https://github.com/EleutherAI/lm-evaluation-harness
+  source: https://gitlab-master.nvidia.com/swdl-nemollm-mlops/evals/lm-evaluation-harness
+defaults:
+  command: >-
+    {% if target.api_endpoint.api_key is not none %}OPENAI_API_KEY=${{target.api_endpoint.api_key}}{% endif %}
+    lm-eval --tasks {{config.params.task}}{% if config.params.extra.num_fewshot is defined %} --num_fewshot {{ config.params.extra.num_fewshot }}{% endif %}
+    --model {% if target.api_endpoint.type == "completions" %}local-completions{% elif target.api_endpoint.type == "chat" %}local-chat-completions{% endif %}
+    --model_args "base_url={{target.api_endpoint.url}},model={{target.api_endpoint.model_id}},tokenized_requests=false,{% if target.api_endpoint.type == "completions" %}tokenizer={{config.params.extra.tokenizer}}{% endif %},num_concurrent={{config.params.parallelism}}{% if config.params.max_new_tokens is not none %},max_gen_toks={{ config.params.max_new_tokens }}{% endif %},timeout={{ config.params.timeout }},max_retries={{ config.params.max_retries }},stream={{ target.api_endpoint.stream }}"
+    --log_samples --output_path {{config.output_dir}} --use_cache {{config.output_dir}}/lm_cache {% if config.params.limit_samples is not none %}--limit {{config.params.limit_samples}}{% endif %}
+    {% if target.api_endpoint.type == "chat" %}--fewshot_as_multiturn --apply_chat_template {% endif %} {% if config.params.extra.args is defined %} {{config.params.extra.args}} {% endif %}
+    {% if config.params.temperature is not none or config.params.top_p is not none %}--gen_kwargs="{% if config.params.temperature is not none %}temperature={{ config.params.temperature }},{% endif %}{% if config.params.top_p is not none %}top_p={{ config.params.top_p}}{% endif %}"{% endif %}
+  config:
+    supported_endpoint_types:
+    - completions
+    params:
+      limit_samples: null
+      max_new_tokens: null
+      temperature: 0.0000001
+      top_p: 0.9999999
+      parallelism: 10
+      max_retries: 5
+      timeout: 30
+      extra:
+        tokenizer: meta-llama/Llama-3.1-70B-Instruct
+  target:
+    api_endpoint: # required to add: url, model_id, type
+      stream: false
+evaluations:
+- name: MMLU
+  description: The MMLU (Massive Multitask Language Understanding) benchmark is designed to measure the knowledge acquired during pretraining by evaluating models in zero-shot and few-shot settings. It covers 57 subjects across various fields, testing both world knowledge and problem-solving abilities.
+  defaults:
+    config:
+      type: "mmlu"
+      supported_endpoint_types:
+      - completions
+      params:
+        task: "mmlu_str"
+        extra:
+          num_fewshot: 5
+          args: "--trust_remote_code"
+- name: MMLU-instruct
+  description: >-
+    - The MMLU (Massive Multitask Language Understanding) benchmark is designed to measure the knowledge acquired during pretraining by evaluating models in zero-shot and few-shot settings. It covers 57 subjects across various fields, testing both world knowledge and problem-solving abilities.
+    - This variant applies a chat template and defaults to zero-shot evaluation.
+  defaults:
+    config:
+      type: "mmlu_instruct"
+      supported_endpoint_types:
+      - chat
+      params:
+        task: "mmlu_str"
+        extra:
+          num_fewshot: 0
+          args: "--trust_remote_code --system_instruction='Below is a multi-choice question. You must reply with only a single letter (either A, B, C or D)\n\n'"
+- name: IFEval
+  description: IFEval is a dataset designed to test a model’s ability to follow explicit instructions, such as “include keyword x” or “use format y.” The focus is on the model’s adherence to formatting instructions rather than the content generated, allowing for the use of strict and rigorous metrics.
+  defaults:
+    config:
+      type: "ifeval"
+      supported_endpoint_types:
+      - chat
+      params:
+        task: "ifeval"
+- name: MMLU-Pro
+  description: MMLU-Pro is a refined version of the MMLU dataset, which has been a standard for multiple-choice knowledge assessment. Recent research identified issues with the original MMLU, such as noisy data (some unanswerable questions) and decreasing difficulty due to advances in model capabilities and increased data contamination. MMLU-Pro addresses these issues by presenting models with 10 choices instead of 4, requiring reasoning on more questions, and undergoing expert review to reduce noise. As a result, MMLU-Pro is of higher quality and currently more challenging than the original.
+  defaults:
+    config:
+      type: "mmlu_pro"
+      supported_endpoint_types:
+      - completions
+      params:
+        task: "mmlu_pro"
+- name: MMLU-Pro-instruct
+  description: >-
+    - MMLU-Pro is a refined version of the MMLU dataset, which has been a standard for multiple-choice knowledge assessment. Recent research identified issues with the original MMLU, such as noisy data (some unanswerable questions) and decreasing difficulty due to advances in model capabilities and increased data contamination. MMLU-Pro addresses these issues by presenting models with 10 choices instead of 4, requiring reasoning on more questions, and undergoing expert review to reduce noise. As a result, MMLU-Pro is of higher quality and currently more challenging than the original.
+    - This variant applies a chat template and defaults to zero-shot evaluation.
+  defaults:
+    config:
+      type: "mmlu_pro_instruct"
+      supported_endpoint_types:
+      - chat
+      params:
+        task: "mmlu_pro"
+        max_new_tokens: 1024
+        extra:
+          num_fewshot: 0
+# Currently unsupported due to https://github.com/EleutherAI/lm-evaluation-harness/issues/2618
+# - name: MathLvl5
+#   description: MATH is a compilation of high-school level competition problems gathered from several sources, formatted consistently using Latex for equations and Asymptote for figures. Generations must fit a very specific output format. We keep only level 5 MATH questions and call it MATH Lvl 5.
+#   defaults:
+#     config:
+#       type: "math"
+#       supported_endpoint_types:
+#       - chat
+#       params:
+#         task: "leaderboard_math_hard"
+- name: GSM8K
+  description: The GSM8K benchmark evaluates the arithmetic reasoning of large language models using 1,319 grade school math word problems.
+  defaults:
+    config:
+      type: "gsm8k"
+      supported_endpoint_types:
+      - completions
+      params:
+        task: "gsm8k"
+- name: GSM8K-instruct
+  description: >-
+    - The GSM8K benchmark evaluates the arithmetic reasoning of large language models using 1,319 grade school math word problems.
+    - This variant applies a chat template and defaults to zero-shot evaluation.
+  defaults:
+    config:
+      type: "gsm8k_instruct"
+      supported_endpoint_types:
+      - chat
+      params:
+        task: "gsm8k"
+        max_new_tokens: 1536
+        extra:
+          num_fewshot: 0
+          args: "--system_instruction='Below is a math question. I want you to first reason through the steps required to reach the answer, then end your response with \"#### \" followed by the answer. For instance, if the answer is 42 then your response must end with \"#### 42\" (without the quotes).\n\n'"
+- name: MGSM
+  description: The Multilingual Grade School Math (MGSM) benchmark evaluates the reasoning abilities of large language models in multilingual settings. It consists of 250 grade-school math problems from the GSM8K dataset, translated into ten diverse languages, and tests models using chain-of-thought prompting.
+  defaults:
+    config:
+      type: "mgsm"
+      supported_endpoint_types:
+      - completions
+      params:
+        task: "mgsm_direct"
+- name: MGSM-CoT
+  description: The Multilingual Grade School Math (MGSM) benchmark evaluates the reasoning abilities of large language models in multilingual settings. It consists of 250 grade-school math problems from the GSM8K dataset, translated into ten diverse languages, and tests models using chain-of-thought prompting.
+  defaults:
+    config:
+      type: "mgsm_cot"
+      supported_endpoint_types:
+      - chat
+      params:
+        task: "mgsm_cot_native"
+        max_new_tokens: 1024
+        extra:
+          num_fewshot: 0
+- name: WikiLingua
+  description: The WikiLingua benchmark is a large-scale, multilingual dataset designed for evaluating cross-lingual abstractive summarization systems. It includes approximately 770,000 article-summary pairs in 18 languages, extracted from WikiHow, with gold-standard alignments created by matching images used to describe each how-to step in an article.
+  defaults:
+    config:
+      type: "wikilingua"
+      supported_endpoint_types:
+      - chat
+      params:
+        task: "wikilingua"
+      extra:
+        args: "--trust_remote_code"
+- name: winogrande
+  description: WinoGrande is a collection of 44k problems, inspired by Winograd Schema Challenge (Levesque, Davis, and Morgenstern 2011), but adjusted to improve the scale and robustness against the dataset-specific bias. Formulated as a fill-in-a-blank task with binary options, the goal is to choose the right option for a given sentence which requires commonsense reasoning.
+  defaults:
+    config:
+      type: "winogrande"
+      supported_endpoint_types:
+      - completions
+      params:
+        task: "winogrande"
+- name: ARC Challenge
+  description: The ARC dataset consists of 7,787 science exam questions drawn from a variety of sources, including science questions provided under license by a research partner affiliated with AI2. These are text-only, English language exam questions that span several grade levels as indicated in the files. Each question has a multiple choice structure (typically 4 answer options). The questions are sorted into a Challenge Set of 2,590 “hard” questions (those that both a retrieval and a co-occurrence method fail to answer correctly) and an Easy Set of 5,197 questions.
+  defaults:
+    config:
+      type: "arc_challenge"
+      supported_endpoint_types:
+      - completions
+      params:
+        task: "arc_challenge"
+- name: HellaSwag
+  description: The HellaSwag benchmark tests a language model's commonsense reasoning by having it choose the most logical ending for a given story.
+  defaults:
+    config:
+      type: "hellaswag"
+      supported_endpoint_types:
+      - completions
+      params:
+        task: "hellaswag"
+- name: Truthful QA
+  description: The TruthfulQA benchmark measures the truthfulness of language models in generating answers to questions. It consists of 817 questions across 38 categories, such as health, law, finance, and politics, designed to test whether models can avoid generating false answers that mimic common human misconceptions.
+  defaults:
+    config:
+      type: "truthfulqa"
+      params:
+        task: "truthfulqa"
+- name: BIG-Bench Hard
+  description: The BIG-Bench Hard (BBH) benchmark is a part of the BIG-Bench evaluation suite, focusing on 23 particularly difficult tasks that current language models struggle with. These tasks require complex, multi-step reasoning, and the benchmark evaluates models using few-shot learning and chain-of-thought prompting techniques.
+  defaults:
+    config:
+      type: "bbh"
+      supported_endpoint_types:
+      - completions
+      params:
+        task: "leaderboard_bbh"
+- name: MuSR
+  description: The MuSR (Multistep Soft Reasoning) benchmark evaluates the reasoning capabilities of large language models through complex, multistep tasks specified in natural language narratives. It introduces sophisticated natural language and complex reasoning challenges to test the limits of chain-of-thought prompting.
+  defaults:
+    config:
+      type: "musr"
+      supported_endpoint_types:
+      - completions
+      params:
+        task: "leaderboard_musr"
+- name: GPQA
+  description: The GPQA (Graduate-Level Google-Proof Q&A) benchmark is a challenging dataset of 448 multiple-choice questions in biology, physics, and chemistry. It is designed to be extremely difficult for both humans and AI, ensuring that questions cannot be easily answered using web searches.
+  defaults:
+    config:
+      type: "gpqa"
+      supported_endpoint_types:
+      - completions
+      params:
+        task: "leaderboard_gpqa"
+- name: GPQA-Diamond-CoT
+  description: The GPQA (Graduate-Level Google-Proof Q&A) benchmark is a challenging dataset of 448 multiple-choice questions in biology, physics, and chemistry. It is designed to be extremely difficult for both humans and AI, ensuring that questions cannot be easily answered using web searches.
+  defaults:
+    config:
+      type: "gpqa_diamond_cot"
+      supported_endpoint_types:
+      - chat
+      params:
+        task: "gpqa_diamond_cot_zeroshot"
+        max_new_tokens: 1024
