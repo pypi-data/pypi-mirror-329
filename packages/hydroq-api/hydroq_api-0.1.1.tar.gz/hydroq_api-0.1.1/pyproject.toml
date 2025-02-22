@@ -1,0 +1,35 @@
+[project]
+name = "hydroq-api"
+version = "0.1.1"
+description = "Get your Hydro Quebec electiricty data"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{name = "Lyubomir Georgiev"}]
+license = {text = "Apache-2.0"}
+classifiers = [
+    "License :: OSI Approved :: Apache Software License"
+]
+dependencies = [
+    "pkce>=1.0.3",
+    "requests>=2.32.3",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.optional-dependencies]
+test = ["pytest", "requests-mock"]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "pytest>=8.3.4",
+    "requests-mock>=1.12.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/lvg77/hydroq-api"
+Changelog = "https://github.com/lvg77/hydroq-api/releases"
+Issues = "https://github.com/lvg77/hydroq-api/issues"
+CI = "https://github.com/lvg77/hydroq-api/actions"
