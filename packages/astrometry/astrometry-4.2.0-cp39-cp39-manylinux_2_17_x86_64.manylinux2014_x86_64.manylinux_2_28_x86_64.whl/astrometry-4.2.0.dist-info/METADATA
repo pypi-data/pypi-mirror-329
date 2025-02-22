@@ -1,0 +1,1373 @@
+Metadata-Version: 2.2
+Name: astrometry
+Version: 4.2.0
+Summary: Astrometry.net solver interface
+Author-email: Alexandre Marcireau <alexandre.marcireau@gmail.com>
+License:                     GNU GENERAL PUBLIC LICENSE
+                               Version 3, 29 June 2007
+        
+         Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+         Everyone is permitted to copy and distribute verbatim copies
+         of this license document, but changing it is not allowed.
+        
+                                    Preamble
+        
+          The GNU General Public License is a free, copyleft license for
+        software and other kinds of works.
+        
+          The licenses for most software and other practical works are designed
+        to take away your freedom to share and change the works.  By contrast,
+        the GNU General Public License is intended to guarantee your freedom to
+        share and change all versions of a program--to make sure it remains free
+        software for all its users.  We, the Free Software Foundation, use the
+        GNU General Public License for most of our software; it applies also to
+        any other work released this way by its authors.  You can apply it to
+        your programs, too.
+        
+          When we speak of free software, we are referring to freedom, not
+        price.  Our General Public Licenses are designed to make sure that you
+        have the freedom to distribute copies of free software (and charge for
+        them if you wish), that you receive source code or can get it if you
+        want it, that you can change the software or use pieces of it in new
+        free programs, and that you know you can do these things.
+        
+          To protect your rights, we need to prevent others from denying you
+        these rights or asking you to surrender the rights.  Therefore, you have
+        certain responsibilities if you distribute copies of the software, or if
+        you modify it: responsibilities to respect the freedom of others.
+        
+          For example, if you distribute copies of such a program, whether
+        gratis or for a fee, you must pass on to the recipients the same
+        freedoms that you received.  You must make sure that they, too, receive
+        or can get the source code.  And you must show them these terms so they
+        know their rights.
+        
+          Developers that use the GNU GPL protect your rights with two steps:
+        (1) assert copyright on the software, and (2) offer you this License
+        giving you legal permission to copy, distribute and/or modify it.
+        
+          For the developers' and authors' protection, the GPL clearly explains
+        that there is no warranty for this free software.  For both users' and
+        authors' sake, the GPL requires that modified versions be marked as
+        changed, so that their problems will not be attributed erroneously to
+        authors of previous versions.
+        
+          Some devices are designed to deny users access to install or run
+        modified versions of the software inside them, although the manufacturer
+        can do so.  This is fundamentally incompatible with the aim of
+        protecting users' freedom to change the software.  The systematic
+        pattern of such abuse occurs in the area of products for individuals to
+        use, which is precisely where it is most unacceptable.  Therefore, we
+        have designed this version of the GPL to prohibit the practice for those
+        products.  If such problems arise substantially in other domains, we
+        stand ready to extend this provision to those domains in future versions
+        of the GPL, as needed to protect the freedom of users.
+        
+          Finally, every program is threatened constantly by software patents.
+        States should not allow patents to restrict development and use of
+        software on general-purpose computers, but in those that do, we wish to
+        avoid the special danger that patents applied to a free program could
+        make it effectively proprietary.  To prevent this, the GPL assures that
+        patents cannot be used to render the program non-free.
+        
+          The precise terms and conditions for copying, distribution and
+        modification follow.
+        
+                               TERMS AND CONDITIONS
+        
+          0. Definitions.
+        
+          "This License" refers to version 3 of the GNU General Public License.
+        
+          "Copyright" also means copyright-like laws that apply to other kinds of
+        works, such as semiconductor masks.
+        
+          "The Program" refers to any copyrightable work licensed under this
+        License.  Each licensee is addressed as "you".  "Licensees" and
+        "recipients" may be individuals or organizations.
+        
+          To "modify" a work means to copy from or adapt all or part of the work
+        in a fashion requiring copyright permission, other than the making of an
+        exact copy.  The resulting work is called a "modified version" of the
+        earlier work or a work "based on" the earlier work.
+        
+          A "covered work" means either the unmodified Program or a work based
+        on the Program.
+        
+          To "propagate" a work means to do anything with it that, without
+        permission, would make you directly or secondarily liable for
+        infringement under applicable copyright law, except executing it on a
+        computer or modifying a private copy.  Propagation includes copying,
+        distribution (with or without modification), making available to the
+        public, and in some countries other activities as well.
+        
+          To "convey" a work means any kind of propagation that enables other
+        parties to make or receive copies.  Mere interaction with a user through
+        a computer network, with no transfer of a copy, is not conveying.
+        
+          An interactive user interface displays "Appropriate Legal Notices"
+        to the extent that it includes a convenient and prominently visible
+        feature that (1) displays an appropriate copyright notice, and (2)
+        tells the user that there is no warranty for the work (except to the
+        extent that warranties are provided), that licensees may convey the
+        work under this License, and how to view a copy of this License.  If
+        the interface presents a list of user commands or options, such as a
+        menu, a prominent item in the list meets this criterion.
+        
+          1. Source Code.
+        
+          The "source code" for a work means the preferred form of the work
+        for making modifications to it.  "Object code" means any non-source
+        form of a work.
+        
+          A "Standard Interface" means an interface that either is an official
+        standard defined by a recognized standards body, or, in the case of
+        interfaces specified for a particular programming language, one that
+        is widely used among developers working in that language.
+        
+          The "System Libraries" of an executable work include anything, other
+        than the work as a whole, that (a) is included in the normal form of
+        packaging a Major Component, but which is not part of that Major
+        Component, and (b) serves only to enable use of the work with that
+        Major Component, or to implement a Standard Interface for which an
+        implementation is available to the public in source code form.  A
+        "Major Component", in this context, means a major essential component
+        (kernel, window system, and so on) of the specific operating system
+        (if any) on which the executable work runs, or a compiler used to
+        produce the work, or an object code interpreter used to run it.
+        
+          The "Corresponding Source" for a work in object code form means all
+        the source code needed to generate, install, and (for an executable
+        work) run the object code and to modify the work, including scripts to
+        control those activities.  However, it does not include the work's
+        System Libraries, or general-purpose tools or generally available free
+        programs which are used unmodified in performing those activities but
+        which are not part of the work.  For example, Corresponding Source
+        includes interface definition files associated with source files for
+        the work, and the source code for shared libraries and dynamically
+        linked subprograms that the work is specifically designed to require,
+        such as by intimate data communication or control flow between those
+        subprograms and other parts of the work.
+        
+          The Corresponding Source need not include anything that users
+        can regenerate automatically from other parts of the Corresponding
+        Source.
+        
+          The Corresponding Source for a work in source code form is that
+        same work.
+        
+          2. Basic Permissions.
+        
+          All rights granted under this License are granted for the term of
+        copyright on the Program, and are irrevocable provided the stated
+        conditions are met.  This License explicitly affirms your unlimited
+        permission to run the unmodified Program.  The output from running a
+        covered work is covered by this License only if the output, given its
+        content, constitutes a covered work.  This License acknowledges your
+        rights of fair use or other equivalent, as provided by copyright law.
+        
+          You may make, run and propagate covered works that you do not
+        convey, without conditions so long as your license otherwise remains
+        in force.  You may convey covered works to others for the sole purpose
+        of having them make modifications exclusively for you, or provide you
+        with facilities for running those works, provided that you comply with
+        the terms of this License in conveying all material for which you do
+        not control copyright.  Those thus making or running the covered works
+        for you must do so exclusively on your behalf, under your direction
+        and control, on terms that prohibit them from making any copies of
+        your copyrighted material outside their relationship with you.
+        
+          Conveying under any other circumstances is permitted solely under
+        the conditions stated below.  Sublicensing is not allowed; section 10
+        makes it unnecessary.
+        
+          3. Protecting Users' Legal Rights From Anti-Circumvention Law.
+        
+          No covered work shall be deemed part of an effective technological
+        measure under any applicable law fulfilling obligations under article
+        11 of the WIPO copyright treaty adopted on 20 December 1996, or
+        similar laws prohibiting or restricting circumvention of such
+        measures.
+        
+          When you convey a covered work, you waive any legal power to forbid
+        circumvention of technological measures to the extent such circumvention
+        is effected by exercising rights under this License with respect to
+        the covered work, and you disclaim any intention to limit operation or
+        modification of the work as a means of enforcing, against the work's
+        users, your or third parties' legal rights to forbid circumvention of
+        technological measures.
+        
+          4. Conveying Verbatim Copies.
+        
+          You may convey verbatim copies of the Program's source code as you
+        receive it, in any medium, provided that you conspicuously and
+        appropriately publish on each copy an appropriate copyright notice;
+        keep intact all notices stating that this License and any
+        non-permissive terms added in accord with section 7 apply to the code;
+        keep intact all notices of the absence of any warranty; and give all
+        recipients a copy of this License along with the Program.
+        
+          You may charge any price or no price for each copy that you convey,
+        and you may offer support or warranty protection for a fee.
+        
+          5. Conveying Modified Source Versions.
+        
+          You may convey a work based on the Program, or the modifications to
+        produce it from the Program, in the form of source code under the
+        terms of section 4, provided that you also meet all of these conditions:
+        
+            a) The work must carry prominent notices stating that you modified
+            it, and giving a relevant date.
+        
+            b) The work must carry prominent notices stating that it is
+            released under this License and any conditions added under section
+            7.  This requirement modifies the requirement in section 4 to
+            "keep intact all notices".
+        
+            c) You must license the entire work, as a whole, under this
+            License to anyone who comes into possession of a copy.  This
+            License will therefore apply, along with any applicable section 7
+            additional terms, to the whole of the work, and all its parts,
+            regardless of how they are packaged.  This License gives no
+            permission to license the work in any other way, but it does not
+            invalidate such permission if you have separately received it.
+        
+            d) If the work has interactive user interfaces, each must display
+            Appropriate Legal Notices; however, if the Program has interactive
+            interfaces that do not display Appropriate Legal Notices, your
+            work need not make them do so.
+        
+          A compilation of a covered work with other separate and independent
+        works, which are not by their nature extensions of the covered work,
+        and which are not combined with it such as to form a larger program,
+        in or on a volume of a storage or distribution medium, is called an
+        "aggregate" if the compilation and its resulting copyright are not
+        used to limit the access or legal rights of the compilation's users
+        beyond what the individual works permit.  Inclusion of a covered work
+        in an aggregate does not cause this License to apply to the other
+        parts of the aggregate.
+        
+          6. Conveying Non-Source Forms.
+        
+          You may convey a covered work in object code form under the terms
+        of sections 4 and 5, provided that you also convey the
+        machine-readable Corresponding Source under the terms of this License,
+        in one of these ways:
+        
+            a) Convey the object code in, or embodied in, a physical product
+            (including a physical distribution medium), accompanied by the
+            Corresponding Source fixed on a durable physical medium
+            customarily used for software interchange.
+        
+            b) Convey the object code in, or embodied in, a physical product
+            (including a physical distribution medium), accompanied by a
+            written offer, valid for at least three years and valid for as
+            long as you offer spare parts or customer support for that product
+            model, to give anyone who possesses the object code either (1) a
+            copy of the Corresponding Source for all the software in the
+            product that is covered by this License, on a durable physical
+            medium customarily used for software interchange, for a price no
+            more than your reasonable cost of physically performing this
+            conveying of source, or (2) access to copy the
+            Corresponding Source from a network server at no charge.
+        
+            c) Convey individual copies of the object code with a copy of the
+            written offer to provide the Corresponding Source.  This
+            alternative is allowed only occasionally and noncommercially, and
+            only if you received the object code with such an offer, in accord
+            with subsection 6b.
+        
+            d) Convey the object code by offering access from a designated
+            place (gratis or for a charge), and offer equivalent access to the
+            Corresponding Source in the same way through the same place at no
+            further charge.  You need not require recipients to copy the
+            Corresponding Source along with the object code.  If the place to
+            copy the object code is a network server, the Corresponding Source
+            may be on a different server (operated by you or a third party)
+            that supports equivalent copying facilities, provided you maintain
+            clear directions next to the object code saying where to find the
+            Corresponding Source.  Regardless of what server hosts the
+            Corresponding Source, you remain obligated to ensure that it is
+            available for as long as needed to satisfy these requirements.
+        
+            e) Convey the object code using peer-to-peer transmission, provided
+            you inform other peers where the object code and Corresponding
+            Source of the work are being offered to the general public at no
+            charge under subsection 6d.
+        
+          A separable portion of the object code, whose source code is excluded
+        from the Corresponding Source as a System Library, need not be
+        included in conveying the object code work.
+        
+          A "User Product" is either (1) a "consumer product", which means any
+        tangible personal property which is normally used for personal, family,
+        or household purposes, or (2) anything designed or sold for incorporation
+        into a dwelling.  In determining whether a product is a consumer product,
+        doubtful cases shall be resolved in favor of coverage.  For a particular
+        product received by a particular user, "normally used" refers to a
+        typical or common use of that class of product, regardless of the status
+        of the particular user or of the way in which the particular user
+        actually uses, or expects or is expected to use, the product.  A product
+        is a consumer product regardless of whether the product has substantial
+        commercial, industrial or non-consumer uses, unless such uses represent
+        the only significant mode of use of the product.
+        
+          "Installation Information" for a User Product means any methods,
+        procedures, authorization keys, or other information required to install
+        and execute modified versions of a covered work in that User Product from
+        a modified version of its Corresponding Source.  The information must
+        suffice to ensure that the continued functioning of the modified object
+        code is in no case prevented or interfered with solely because
+        modification has been made.
+        
+          If you convey an object code work under this section in, or with, or
+        specifically for use in, a User Product, and the conveying occurs as
+        part of a transaction in which the right of possession and use of the
+        User Product is transferred to the recipient in perpetuity or for a
+        fixed term (regardless of how the transaction is characterized), the
+        Corresponding Source conveyed under this section must be accompanied
+        by the Installation Information.  But this requirement does not apply
+        if neither you nor any third party retains the ability to install
+        modified object code on the User Product (for example, the work has
+        been installed in ROM).
+        
+          The requirement to provide Installation Information does not include a
+        requirement to continue to provide support service, warranty, or updates
+        for a work that has been modified or installed by the recipient, or for
+        the User Product in which it has been modified or installed.  Access to a
+        network may be denied when the modification itself materially and
+        adversely affects the operation of the network or violates the rules and
+        protocols for communication across the network.
+        
+          Corresponding Source conveyed, and Installation Information provided,
+        in accord with this section must be in a format that is publicly
+        documented (and with an implementation available to the public in
+        source code form), and must require no special password or key for
+        unpacking, reading or copying.
+        
+          7. Additional Terms.
+        
+          "Additional permissions" are terms that supplement the terms of this
+        License by making exceptions from one or more of its conditions.
+        Additional permissions that are applicable to the entire Program shall
+        be treated as though they were included in this License, to the extent
+        that they are valid under applicable law.  If additional permissions
+        apply only to part of the Program, that part may be used separately
+        under those permissions, but the entire Program remains governed by
+        this License without regard to the additional permissions.
+        
+          When you convey a copy of a covered work, you may at your option
+        remove any additional permissions from that copy, or from any part of
+        it.  (Additional permissions may be written to require their own
+        removal in certain cases when you modify the work.)  You may place
+        additional permissions on material, added by you to a covered work,
+        for which you have or can give appropriate copyright permission.
+        
+          Notwithstanding any other provision of this License, for material you
+        add to a covered work, you may (if authorized by the copyright holders of
+        that material) supplement the terms of this License with terms:
+        
+            a) Disclaiming warranty or limiting liability differently from the
+            terms of sections 15 and 16 of this License; or
+        
+            b) Requiring preservation of specified reasonable legal notices or
+            author attributions in that material or in the Appropriate Legal
+            Notices displayed by works containing it; or
+        
+            c) Prohibiting misrepresentation of the origin of that material, or
+            requiring that modified versions of such material be marked in
+            reasonable ways as different from the original version; or
+        
+            d) Limiting the use for publicity purposes of names of licensors or
+            authors of the material; or
+        
+            e) Declining to grant rights under trademark law for use of some
+            trade names, trademarks, or service marks; or
+        
+            f) Requiring indemnification of licensors and authors of that
+            material by anyone who conveys the material (or modified versions of
+            it) with contractual assumptions of liability to the recipient, for
+            any liability that these contractual assumptions directly impose on
+            those licensors and authors.
+        
+          All other non-permissive additional terms are considered "further
+        restrictions" within the meaning of section 10.  If the Program as you
+        received it, or any part of it, contains a notice stating that it is
+        governed by this License along with a term that is a further
+        restriction, you may remove that term.  If a license document contains
+        a further restriction but permits relicensing or conveying under this
+        License, you may add to a covered work material governed by the terms
+        of that license document, provided that the further restriction does
+        not survive such relicensing or conveying.
+        
+          If you add terms to a covered work in accord with this section, you
+        must place, in the relevant source files, a statement of the
+        additional terms that apply to those files, or a notice indicating
+        where to find the applicable terms.
+        
+          Additional terms, permissive or non-permissive, may be stated in the
+        form of a separately written license, or stated as exceptions;
+        the above requirements apply either way.
+        
+          8. Termination.
+        
+          You may not propagate or modify a covered work except as expressly
+        provided under this License.  Any attempt otherwise to propagate or
+        modify it is void, and will automatically terminate your rights under
+        this License (including any patent licenses granted under the third
+        paragraph of section 11).
+        
+          However, if you cease all violation of this License, then your
+        license from a particular copyright holder is reinstated (a)
+        provisionally, unless and until the copyright holder explicitly and
+        finally terminates your license, and (b) permanently, if the copyright
+        holder fails to notify you of the violation by some reasonable means
+        prior to 60 days after the cessation.
+        
+          Moreover, your license from a particular copyright holder is
+        reinstated permanently if the copyright holder notifies you of the
+        violation by some reasonable means, this is the first time you have
+        received notice of violation of this License (for any work) from that
+        copyright holder, and you cure the violation prior to 30 days after
+        your receipt of the notice.
+        
+          Termination of your rights under this section does not terminate the
+        licenses of parties who have received copies or rights from you under
+        this License.  If your rights have been terminated and not permanently
+        reinstated, you do not qualify to receive new licenses for the same
+        material under section 10.
+        
+          9. Acceptance Not Required for Having Copies.
+        
+          You are not required to accept this License in order to receive or
+        run a copy of the Program.  Ancillary propagation of a covered work
+        occurring solely as a consequence of using peer-to-peer transmission
+        to receive a copy likewise does not require acceptance.  However,
+        nothing other than this License grants you permission to propagate or
+        modify any covered work.  These actions infringe copyright if you do
+        not accept this License.  Therefore, by modifying or propagating a
+        covered work, you indicate your acceptance of this License to do so.
+        
+          10. Automatic Licensing of Downstream Recipients.
+        
+          Each time you convey a covered work, the recipient automatically
+        receives a license from the original licensors, to run, modify and
+        propagate that work, subject to this License.  You are not responsible
+        for enforcing compliance by third parties with this License.
+        
+          An "entity transaction" is a transaction transferring control of an
+        organization, or substantially all assets of one, or subdividing an
+        organization, or merging organizations.  If propagation of a covered
+        work results from an entity transaction, each party to that
+        transaction who receives a copy of the work also receives whatever
+        licenses to the work the party's predecessor in interest had or could
+        give under the previous paragraph, plus a right to possession of the
+        Corresponding Source of the work from the predecessor in interest, if
+        the predecessor has it or can get it with reasonable efforts.
+        
+          You may not impose any further restrictions on the exercise of the
+        rights granted or affirmed under this License.  For example, you may
+        not impose a license fee, royalty, or other charge for exercise of
+        rights granted under this License, and you may not initiate litigation
+        (including a cross-claim or counterclaim in a lawsuit) alleging that
+        any patent claim is infringed by making, using, selling, offering for
+        sale, or importing the Program or any portion of it.
+        
+          11. Patents.
+        
+          A "contributor" is a copyright holder who authorizes use under this
+        License of the Program or a work on which the Program is based.  The
+        work thus licensed is called the contributor's "contributor version".
+        
+          A contributor's "essential patent claims" are all patent claims
+        owned or controlled by the contributor, whether already acquired or
+        hereafter acquired, that would be infringed by some manner, permitted
+        by this License, of making, using, or selling its contributor version,
+        but do not include claims that would be infringed only as a
+        consequence of further modification of the contributor version.  For
+        purposes of this definition, "control" includes the right to grant
+        patent sublicenses in a manner consistent with the requirements of
+        this License.
+        
+          Each contributor grants you a non-exclusive, worldwide, royalty-free
+        patent license under the contributor's essential patent claims, to
+        make, use, sell, offer for sale, import and otherwise run, modify and
+        propagate the contents of its contributor version.
+        
+          In the following three paragraphs, a "patent license" is any express
+        agreement or commitment, however denominated, not to enforce a patent
+        (such as an express permission to practice a patent or covenant not to
+        sue for patent infringement).  To "grant" such a patent license to a
+        party means to make such an agreement or commitment not to enforce a
+        patent against the party.
+        
+          If you convey a covered work, knowingly relying on a patent license,
+        and the Corresponding Source of the work is not available for anyone
+        to copy, free of charge and under the terms of this License, through a
+        publicly available network server or other readily accessible means,
+        then you must either (1) cause the Corresponding Source to be so
+        available, or (2) arrange to deprive yourself of the benefit of the
+        patent license for this particular work, or (3) arrange, in a manner
+        consistent with the requirements of this License, to extend the patent
+        license to downstream recipients.  "Knowingly relying" means you have
+        actual knowledge that, but for the patent license, your conveying the
+        covered work in a country, or your recipient's use of the covered work
+        in a country, would infringe one or more identifiable patents in that
+        country that you have reason to believe are valid.
+        
+          If, pursuant to or in connection with a single transaction or
+        arrangement, you convey, or propagate by procuring conveyance of, a
+        covered work, and grant a patent license to some of the parties
+        receiving the covered work authorizing them to use, propagate, modify
+        or convey a specific copy of the covered work, then the patent license
+        you grant is automatically extended to all recipients of the covered
+        work and works based on it.
+        
+          A patent license is "discriminatory" if it does not include within
+        the scope of its coverage, prohibits the exercise of, or is
+        conditioned on the non-exercise of one or more of the rights that are
+        specifically granted under this License.  You may not convey a covered
+        work if you are a party to an arrangement with a third party that is
+        in the business of distributing software, under which you make payment
+        to the third party based on the extent of your activity of conveying
+        the work, and under which the third party grants, to any of the
+        parties who would receive the covered work from you, a discriminatory
+        patent license (a) in connection with copies of the covered work
+        conveyed by you (or copies made from those copies), or (b) primarily
+        for and in connection with specific products or compilations that
+        contain the covered work, unless you entered into that arrangement,
+        or that patent license was granted, prior to 28 March 2007.
+        
+          Nothing in this License shall be construed as excluding or limiting
+        any implied license or other defenses to infringement that may
+        otherwise be available to you under applicable patent law.
+        
+          12. No Surrender of Others' Freedom.
+        
+          If conditions are imposed on you (whether by court order, agreement or
+        otherwise) that contradict the conditions of this License, they do not
+        excuse you from the conditions of this License.  If you cannot convey a
+        covered work so as to satisfy simultaneously your obligations under this
+        License and any other pertinent obligations, then as a consequence you may
+        not convey it at all.  For example, if you agree to terms that obligate you
+        to collect a royalty for further conveying from those to whom you convey
+        the Program, the only way you could satisfy both those terms and this
+        License would be to refrain entirely from conveying the Program.
+        
+          13. Use with the GNU Affero General Public License.
+        
+          Notwithstanding any other provision of this License, you have
+        permission to link or combine any covered work with a work licensed
+        under version 3 of the GNU Affero General Public License into a single
+        combined work, and to convey the resulting work.  The terms of this
+        License will continue to apply to the part which is the covered work,
+        but the special requirements of the GNU Affero General Public License,
+        section 13, concerning interaction through a network will apply to the
+        combination as such.
+        
+          14. Revised Versions of this License.
+        
+          The Free Software Foundation may publish revised and/or new versions of
+        the GNU General Public License from time to time.  Such new versions will
+        be similar in spirit to the present version, but may differ in detail to
+        address new problems or concerns.
+        
+          Each version is given a distinguishing version number.  If the
+        Program specifies that a certain numbered version of the GNU General
+        Public License "or any later version" applies to it, you have the
+        option of following the terms and conditions either of that numbered
+        version or of any later version published by the Free Software
+        Foundation.  If the Program does not specify a version number of the
+        GNU General Public License, you may choose any version ever published
+        by the Free Software Foundation.
+        
+          If the Program specifies that a proxy can decide which future
+        versions of the GNU General Public License can be used, that proxy's
+        public statement of acceptance of a version permanently authorizes you
+        to choose that version for the Program.
+        
+          Later license versions may give you additional or different
+        permissions.  However, no additional obligations are imposed on any
+        author or copyright holder as a result of your choosing to follow a
+        later version.
+        
+          15. Disclaimer of Warranty.
+        
+          THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
+        APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+        HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
+        OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
+        THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+        PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
+        IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
+        ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+        
+          16. Limitation of Liability.
+        
+          IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+        WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
+        THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
+        GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE
+        USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF
+        DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD
+        PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
+        EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
+        SUCH DAMAGES.
+        
+          17. Interpretation of Sections 15 and 16.
+        
+          If the disclaimer of warranty and limitation of liability provided
+        above cannot be given local legal effect according to their terms,
+        reviewing courts shall apply local law that most closely approximates
+        an absolute waiver of all civil liability in connection with the
+        Program, unless a warranty or assumption of liability accompanies a
+        copy of the Program in return for a fee.
+        
+                             END OF TERMS AND CONDITIONS
+        
+                    How to Apply These Terms to Your New Programs
+        
+          If you develop a new program, and you want it to be of the greatest
+        possible use to the public, the best way to achieve this is to make it
+        free software which everyone can redistribute and change under these terms.
+        
+          To do so, attach the following notices to the program.  It is safest
+        to attach them to the start of each source file to most effectively
+        state the exclusion of warranty; and each file should have at least
+        the "copyright" line and a pointer to where the full notice is found.
+        
+            <one line to give the program's name and a brief idea of what it does.>
+            Copyright (C) <year>  <name of author>
+        
+            This program is free software: you can redistribute it and/or modify
+            it under the terms of the GNU General Public License as published by
+            the Free Software Foundation, either version 3 of the License, or
+            (at your option) any later version.
+        
+            This program is distributed in the hope that it will be useful,
+            but WITHOUT ANY WARRANTY; without even the implied warranty of
+            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            GNU General Public License for more details.
+        
+            You should have received a copy of the GNU General Public License
+            along with this program.  If not, see <https://www.gnu.org/licenses/>.
+        
+        Also add information on how to contact you by electronic and paper mail.
+        
+          If the program does terminal interaction, make it output a short
+        notice like this when it starts in an interactive mode:
+        
+            <program>  Copyright (C) <year>  <name of author>
+            This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+            This is free software, and you are welcome to redistribute it
+            under certain conditions; type `show c' for details.
+        
+        The hypothetical commands `show w' and `show c' should show the appropriate
+        parts of the General Public License.  Of course, your program's commands
+        might be different; for a GUI interface, you would use an "about box".
+        
+          You should also get your employer (if you work as a programmer) or school,
+        if any, to sign a "copyright disclaimer" for the program, if necessary.
+        For more information on this, and how to apply and follow the GNU GPL, see
+        <https://www.gnu.org/licenses/>.
+        
+          The GNU General Public License does not permit incorporating your program
+        into proprietary programs.  If your program is a subroutine library, you
+        may consider it more useful to permit linking proprietary applications with
+        the library.  If this is what you want to do, use the GNU Lesser General
+        Public License instead of this License.  But first, please read
+        <https://www.gnu.org/licenses/why-not-lgpl.html>.
+        
+Project-URL: homepage, https://github.com/neuromorphicsystems/astrometry/
+Project-URL: repository, https://github.com/neuromorphicsystems/astrometry/
+Project-URL: documentation, https://github.com/neuromorphicsystems/astrometry/
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests>=1.26
+Provides-Extra: astropy
+Requires-Dist: astropy>=5; extra == "astropy"
+Provides-Extra: lint
+Requires-Dist: isort; extra == "lint"
+Requires-Dist: black; extra == "lint"
+Requires-Dist: pyright; extra == "lint"
+Provides-Extra: plot
+Requires-Dist: numpy>=1.26; extra == "plot"
+Provides-Extra: tests
+Requires-Dist: astropy>=5; extra == "tests"
+Requires-Dist: psutil==6.1.1; extra == "tests"
+Requires-Dist: numpy>=1.26; extra == "tests"
+
+- [Astrometry](#astrometry)
+- [Get started](#get-started)
+- [Examples](#examples)
+  - [Use the solver without `with`](#use-the-solver-without-with)
+  - [Provide size and position hints](#provide-size-and-position-hints)
+  - [Print progress information (download and solve)](#print-progress-information-download-and-solve)
+  - [Print field stars metadata](#print-field-stars-metadata)
+  - [Calculate field stars pixel positions with astropy](#calculate-field-stars-pixel-positions-with-astropy)
+  - [Print series description and size (without downloading them)](#print-series-description-and-size-without-downloading-them)
+  - [Disable tune-up and distortion](#disable-tune-up-and-distortion)
+  - [Stop the solver early using the log-odds callback](#stop-the-solver-early-using-the-log-odds-callback)
+    - [Return after the first match](#return-after-the-first-match)
+    - [Return early if the best log-odds are larger than 100.0](#return-early-if-the-best-log-odds-are-larger-than-1000)
+    - [Return early if there are at least ten matches](#return-early-if-there-are-at-least-ten-matches)
+    - [Return early if the three best matches are similar](#return-early-if-the-three-best-matches-are-similar)
+- [Choosing series](#choosing-series)
+- [Documentation](#documentation)
+  - [Solver](#solver)
+  - [SizeHint](#sizehint)
+  - [PositionHint](#positionhint)
+  - [Action](#action)
+  - [Parity](#parity)
+  - [SolutionParameters](#solutionparameters)
+  - [Solution](#solution)
+  - [Match](#match)
+  - [Star](#star)
+  - [Series](#series)
+  - [batches\_generator](#batches_generator)
+  - [SupportsFloatMapping](#supportsfloatmapping)
+- [Contribute](#contribute)
+  - [Clone the repository](#clone-the-repository)
+  - [Format and lint](#format-and-lint)
+  - [Build a local version](#build-a-local-version)
+  - [Publish](#publish)
+  - [MSVC compatibility (work in progress)](#msvc-compatibility-work-in-progress)
+
+# Astrometry
+
+Astrometry turns a list of star positions into a pixel-to-sky transformation (WCS) by calling C functions from the Astrometry.net library (https://astrometry.net).
+
+Astrometry.net star index files ("series") are automatically downloaded when required.
+
+This package is useful for solving plates from a Python script, comparing star extraction methods, or hosting a simple local version of Astrometry.net with minimal dependencies. See https://github.com/dam90/astrometry for a more complete self-hosting solution.
+
+Unlike Astrometry.net, Astrometry does not include FITS parsing or image pre-processing algorithms. Stars must be provided as a list of pixel positions.
+
+This library works on Linux and macOS but it requires WSL on Windows.
+
+We are not the authors of the Astrometry.net library. You should cite works from https://astrometry.net/biblio.html if you use the Astrometry.net algorithm via this package.
+
+# Get started
+
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+pip install astrometry
+```
+
+```py
+import astrometry
+
+with astrometry.Solver(
+    astrometry.series_5200.index_files(
+        cache_directory="astrometry_cache",
+        scales={6},
+    )
+) as solver:
+
+    stars = [
+        [388.9140568247906, 656.5003281719216],
+        [732.9210858972549, 473.66395545775106],
+        [401.03459504299843, 253.788113189415],
+        [312.6591868096163, 624.7527729425295],
+        [694.6844564647456, 606.8371776658344],
+        [741.7233477959561, 344.41284826261443],
+        [867.3574610200455, 672.014835980283],
+        [1063.546651153479, 593.7844603550848],
+        [286.69070190952704, 422.170016812049],
+        [401.12779619355155, 16.13543616977013],
+        [205.12103484692776, 698.1847350789413],
+        [202.88444768690894, 111.24830187635557],
+        [339.1627757703069, 86.60739435924549],
+    ]
+
+    solution = solver.solve(
+        stars=stars,
+        size_hint=None,
+        position_hint=None,
+        solution_parameters=astrometry.SolutionParameters(),
+    )
+
+    if solution.has_match():
+        print(f"{solution.best_match().center_ra_deg=}")
+        print(f"{solution.best_match().center_dec_deg=}")
+        print(f"{solution.best_match().scale_arcsec_per_pixel=}")
+```
+
+`solve` is thread-safe. It can be called any number of times from the same `Solver` object.
+
+# Examples
+
+## Use the solver without `with`
+
+```py
+import astrometry
+
+solver = astrometry.Solver(...)
+solver.solve(...) # solve can be called multiple times
+solver.close() # close the index files used by the solver
+```
+
+## Provide size and position hints
+
+```py
+import astrometry
+
+with astrometry.Solver(...) as solver:
+    solution = solver.solve(
+        stars=...,
+        size_hint=astrometry.SizeHint(
+            lower_arcsec_per_pixel=1.0,
+            upper_arcsec_per_pixel=2.0,
+        ),
+        position_hint=astrometry.PositionHint(
+            ra_deg=65.7,
+            dec_deg=36.2,
+            radius_deg=1.0,
+        ),
+        solution_parameters=...
+    )
+```
+
+## Print progress information (download and solve)
+
+```py
+import astrometry
+import logging
+
+logging.getLogger().setLevel(logging.INFO)
+
+with astrometry.Solver(...) as solver:
+    solution = solver.solve(...)
+```
+
+## Print field stars metadata
+
+Astrometry extracts metadata from the star index ("series"). See [Choosing series](#choosing-series) for a description of the available data.
+
+```py
+import astrometry
+
+with astrometry.Solver(...) as solver:
+    solution = solver.solve(...)
+
+    if solution.has_match():
+        for star in solution.best_match().stars:
+            print(f"{star.ra_deg}º, {star.dec_deg}º:", star.metadata)
+```
+
+## Calculate field stars pixel positions with astropy
+
+```py
+import astrometry
+
+with astrometry.Solver(...) as solver:
+    solution = solver.solve(...)
+
+    if solution.has_match():
+        wcs = solution.best_match().astropy_wcs()
+        pixels = wcs.all_world2pix(
+            [[star.ra_deg, star.dec_deg] for star in solution.best_match().stars],
+            0,
+        )
+        # pixels is a len(solution.best_match().stars) x 2 numpy array of float values
+```
+
+`astropy.wcs.WCS` provides many more functions to probe the transformation properties and convert from and to pixel coordinates. See https://docs.astropy.org/en/stable/api/astropy.wcs.WCS.html for details. Astropy (https://pypi.org/project/astropy/) must be installed to use this method.
+
+## Print series description and size (without downloading them)
+
+```py
+import astrometry
+
+print(astrometry.series_5200_heavy.description)
+print(astrometry.series_5200_heavy.size_as_string({2, 3, 4}))
+```
+
+See [Choosing Series](#choosing-series) for a list of available series.
+
+## Disable tune-up and distortion
+
+```py
+import astrometry
+
+with astrometry.Solver(...) as solver:
+    solution = solver.solve(
+        stars=...,
+        size_hint=...,
+        position_hint=...,
+        solution_parameters=astrometry.SolutionParameters(
+            sip_order=0,
+            tune_up_logodds_threshold=None,
+        ),
+    )
+```
+
+## Stop the solver early using the log-odds callback
+
+### Return after the first match
+
+```py
+import astrometry
+
+with astrometry.Solver(...) as solver:
+    solution = solver.solve(
+        stars=...,
+        size_hint=...,
+        position_hint=...,
+        solution_parameters=astrometry.SolutionParameters(
+            logodds_callback=lambda logodds_list: astrometry.Action.STOP,
+        ),
+    )
+```
+
+### Return early if the best log-odds are larger than 100.0
+
+```py
+import astrometry
+
+with astrometry.Solver(...) as solver:
+    solution = solver.solve(
+        stars=...,
+        size_hint=...,
+        position_hint=...,
+        solution_parameters=astrometry.SolutionParameters(
+            logodds_callback=lambda logodds_list: (
+                astrometry.Action.STOP
+                if logodds_list[0] > 100.0
+                else astrometry.Action.CONTINUE
+            ),
+        ),
+    )
+```
+
+### Return early if there are at least ten matches
+
+```py
+import astrometry
+
+with astrometry.Solver(...) as solver:
+    solution = solver.solve(
+        stars=...,
+        size_hint=...,
+        position_hint=...,
+        solution_parameters=astrometry.SolutionParameters(
+            logodds_callback=lambda logodds_list: (
+                astrometry.Action.STOP
+                if len(logodds_list) >= 10.0
+                else astrometry.Action.CONTINUE
+            ),
+        ),
+    )
+```
+
+### Return early if the three best matches are similar
+
+```py
+import astrometry
+
+def logodds_callback(logodds_list: list[float]) -> astrometry.Action:
+    if len(logodds_list) < 3:
+        return astrometry.Action.CONTINUE
+    if logodds_list[1] > logodds_list[0] - 10 and logodds_list[2] > logodds_list[0] - 10:
+        return astrometry.Action.STOP
+    return astrometry.Action.CONTINUE
+
+
+with astrometry.Solver(...) as solver:
+    solution = solver.solve(
+        stars=...,
+        size_hint=...,
+        position_hint=...,
+        solution_parameters=astrometry.SolutionParameters(
+            logodds_callback=logodds_callback,
+        ),
+    )
+```
+
+# Choosing series
+
+This library downloads series from http://data.astrometry.net. A solver can be instantiated with multiple series and scales as follows:
+
+```py
+import astrometry
+
+with astrometry.Solver(
+    astrometry.series_5200.index_files(
+        cache_directory="astrometry_cache",
+        scales={4, 5, 6},
+    )
+    + astrometry.series_4200.index_files(
+        cache_directory="astrometry_cache",
+        scales={6, 7, 12},
+    )
+) as solver:
+    ...
+```
+
+Astrometry.net gives the following recommendations to choose a scale:
+
+> Each index file contains a large number of “skymarks” (landmarks for the sky) that allow our solver to identify your images. The skymarks contained in each index file have sizes (diameters) within a narrow range. You probably want to download index files whose quads are, say, 10% to 100% of the sizes of the images you want to solve.
+>
+> For example, let’s say you have some 1-degree square images. You should grab index files that contain skymarks of size 0.1 to 1 degree, or 6 to 60 arcminutes. Referring to the table below, you should [try index files with scales 3 to 9]. You might find that the same number of fields solve, and faster, using just one or two of the index files in the middle of that range - in our example you might try [5, 6 and 7].
+>
+> -- _http://astrometry.net/doc/readme.html_
+
+| Scale                     | 0               | 1               | 2               | 3               | 4            | 5             | 6             | 7             | 8             | 9             | 10            | 11             | 12              | 13              | 14              | 15              | 16              | 17               | 18                | 19                |
+| ------------------------- | --------------- | --------------- | --------------- | --------------- | ------------ | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | -------------- | --------------- | --------------- | --------------- | --------------- | --------------- | ---------------- | ----------------- | ----------------- |
+| Skymark diameter (arcmin) | [2.0,&nbsp;2.8] | [2.8,&nbsp;4.0] | [4.0,&nbsp;5.6] | [5.6,&nbsp;8.0] | [8,&nbsp;11] | [11,&nbsp;16] | [16,&nbsp;22] | [22,&nbsp;30] | [30,&nbsp;42] | [42,&nbsp;60] | [60,&nbsp;85] | [85,&nbsp;120] | [120,&nbsp;170] | [170,&nbsp;240] | [240,&nbsp;340] | [340,&nbsp;480] | [480,&nbsp;680] | [680,&nbsp;1000] | [1000,&nbsp;1400] | [1400,&nbsp;2000] |
+
+The table below lists series sizes and properties (we copied the descriptions from http://data.astrometry.net). You can access a series' object with `astrometry.series_{name}` (for example `astrometry.series_4200`).
+
+| Name       | Total&nbsp;size | Scales       | Description                                                                                                                                                                                                                                          | Metadata                                                                                                                                                                                                                                                                                                                                                                                  |
+| ---------- | --------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4100       | 0.36&nbsp;GB    | [7,&nbsp;19] | built from the Tycho-2 catalog, good for images wider than 1 degree, recommended                                                                                                                                                                     | MAG_BT:&nbsp;float<br />MAG_VT:&nbsp;float<br />MAG_HP:&nbsp;float<br />MAG:&nbsp;float                                                                                                                                                                                                                                                                                                   |
+| 4200       | 33.78&nbsp;GB   | [0,&nbsp;19] | built from the near-infared 2MASS survey, runs out of stars at the low end, most users will probably prefer 4100 or 5200                                                                                                                             | j_mag:&nbsp;float                                                                                                                                                                                                                                                                                                                                                                         |
+| 5000       | 76.24&nbsp;GB   | [0,&nbsp;7]  | an older version from Gaia-DR2 but without Tycho-2 stars merged in, our belief is that series_5200 will work better than this one                                                                                                                    | source_id:&nbsp;int<br />phot_g_mean_mag:&nbsp;float<br />phot_bp_mean_mag:&nbsp;float<br />phot_rp_mean_mag:&nbsp;float<br />parallax:&nbsp;float<br />parallax_error:&nbsp;float<br />pmra:&nbsp;float<br />pmra_error:&nbsp;float<br />pmdec:&nbsp;float<br />pmdec_error:&nbsp;float<br />ra:&nbsp;float<br />dec:&nbsp;float<br />ref_epoch:&nbsp;float                              |
+| 5200       | 36.14&nbsp;GB   | [0,&nbsp;6]  | LIGHT version built from Tycho-2 + Gaia-DR2, good for images narrower than 1 degree, combine with 4100-series for broader scale coverage, the LIGHT version contains smaller files with no additional Gaia-DR2 information tagged along, recommended | -                                                                                                                                                                                                                                                                                                                                                                                         |
+| 5200_heavy | 79.67&nbsp;GB   | [0,&nbsp;6]  | HEAVY version same as 5200, but with additional Gaia-DR2 information (magnitude in G, BP, RP, proper motions and parallaxes), handy if you want that extra Gaia information for matched stars                                                        | ra:&nbsp;float<br />dec:&nbsp;float<br />mag:&nbsp;float<br />ref_cat:&nbsp;str<br />ref_id:&nbsp;int<br />pmra:&nbsp;float<br />pmdec:&nbsp;float<br />parallax:&nbsp;float<br />ra_ivar:&nbsp;float<br />dec_ivar:&nbsp;float<br />pmra_ivar:&nbsp;float<br />pmdec_ivar:&nbsp;float<br />parallax_ivar:&nbsp;float<br />phot_bp_mean_mag:&nbsp;float<br />phot_rp_mean_mag:&nbsp;float |
+| 6000       | 1.20&nbsp;GB    | [4,&nbsp;6]  | very specialized, uses GALEX Near-UV measurements, and only a narrow range of scales                                                                                                                                                                 | fuv_mag:&nbsp;float<br />nuv_mag:&nbsp;float                                                                                                                                                                                                                                                                                                                                              |
+| 6100       | 1.58&nbsp;GB    | [4,&nbsp;6]  | very specialized, uses GALEX Far-UV measurements, and only a narrow range of scales                                                                                                                                                                  | fuv_mag:&nbsp;float<br />nuv_mag:&nbsp;float                                                                                                                                                                                                                                                                                                                                              |
+
+The table below indicates the total file size for each scale (most series have multiple index files per scale).
+
+| Name       | 0             | 1             | 2             | 3            | 4              | 5              | 6              | 7              | 8             | 9             | 10            | 11            | 12           | 13           | 14           | 15             | 16             | 17             | 18             | 19             |
+| ---------- | ------------- | ------------- | ------------- | ------------ | -------------- | -------------- | -------------- | -------------- | ------------- | ------------- | ------------- | ------------- | ------------ | ------------ | ------------ | -------------- | -------------- | -------------- | -------------- | -------------- |
+| 4100       | -             | -             | -             | -            | -              | -              | -              | 165.00&nbsp;MB | 94.55&nbsp;MB | 49.77&nbsp;MB | 24.87&nbsp;MB | 10.21&nbsp;MB | 5.30&nbsp;MB | 2.73&nbsp;MB | 1.38&nbsp;MB | 740.16&nbsp;kB | 408.96&nbsp;kB | 247.68&nbsp;kB | 187.20&nbsp;kB | 144.00&nbsp;kB |
+| 4200       | 14.22&nbsp;GB | 9.25&nbsp;GB  | 5.06&nbsp;GB  | 2.63&nbsp;GB | 1.31&nbsp;GB   | 659.09&nbsp;MB | 328.25&nbsp;MB | 165.44&nbsp;MB | 81.84&nbsp;MB | 41.18&nbsp;MB | 20.52&nbsp;MB | 8.02&nbsp;MB  | 4.17&nbsp;MB | 2.16&nbsp;MB | 1.10&nbsp;MB | 596.16&nbsp;kB | 339.84&nbsp;kB | 213.12&nbsp;kB | 164.16&nbsp;kB | 132.48&nbsp;kB |
+| 5000       | 34.79&nbsp;GB | 20.19&nbsp;GB | 10.74&nbsp;GB | 5.44&nbsp;GB | 2.71&nbsp;GB   | 1.36&nbsp;GB   | 676.79&nbsp;MB | 340.73&nbsp;MB | -             | -             | -             | -             | -            | -            | -            | -              | -              | -              | -              | -              |
+| 5200       | 17.20&nbsp;GB | 9.49&nbsp;GB  | 4.86&nbsp;GB  | 2.45&nbsp;GB | 1.22&nbsp;GB   | 614.89&nbsp;MB | 307.72&nbsp;MB | -              | -             | -             | -             | -             | -            | -            | -            | -              | -              | -              | -              | -              |
+| 5200_heavy | 36.46&nbsp;GB | 21.20&nbsp;GB | 11.29&nbsp;GB | 5.72&nbsp;GB | 2.85&nbsp;GB   | 1.43&nbsp;GB   | 714.56&nbsp;MB | -              | -             | -             | -             | -             | -            | -            | -            | -              | -              | -              | -              | -              |
+| 6000       | -             | -             | -             | -            | 892.55&nbsp;MB | 457.66&nbsp;MB | 233.23&nbsp;MB | -              | -             | -             | -             | -             | -            | -            | -            | -              | -              | -              | -              | -              |
+| 6100       | -             | -             | -             | -            | 599.33&nbsp;MB | 384.09&nbsp;MB | 214.79&nbsp;MB | -              | -             | -             | -             | -             | -            | -            | -            | -              | -              | -              | -              | -              |
+
+# Documentation
+
+## Solver
+
+```py
+class Solver:
+    def __init__(self, index_files: list[pathlib.Path]): ...
+
+    def solve(
+        self,
+        stars: typing.Iterable[SupportsFloatMapping],
+        size_hint: typing.Optional[SizeHint],
+        position_hint: typing.Optional[PositionHint],
+        solution_parameters: SolutionParameters,
+    ) -> Solution: ...
+
+    def __enter__(self) -> Solver: ...
+
+    def __exit__(
+        self,
+        exception_type: typing.Optional[typing.Type[BaseException]],
+        value: typing.Optional[BaseException],
+        traceback: typing.Optional[types.TracebackType],
+    ) -> bool: ...
+```
+
+`solve` is thread-safe and can be called any number of times.
+
+-   `index_files`: List of index files to use for solving. The list need not come from a `Series` object. Series subsets and combinations are possible as well.
+-   `star`: iterator over a list of pixel coordinates for the input stars.
+-   `size_hint`: Optional angular pixel size range ([SizeHint](#sizehint)). Significantly speeds up `solve` when provided. If `size_hint` is `None`, the range `[0.1, 1000.0]` is used. This default range can be changed by setting `astrometry.DEFAULT_LOWER_ARCSEC_PER_PIXEL` and `astrometry.DEFAULT_UPPER_ARCSEC_PER_PIXEL` to other values.
+-   `position_hint`: Optional field center Ra/Dec coordinates and error radius ([PositionHint](#positionhint)). Significantly speeds up `solve` when provided. If `position_hint` is None, the entire sky is used (`radius_deg = 180.0`).
+-   `solution_parameters`: Advanced solver parameters ([SolutionParameters](#solutionparameters))
+
+## SizeHint
+
+```py
+@dataclasses.dataclass
+class SizeHint:
+    lower_arcsec_per_pixel: float
+    upper_arcsec_per_pixel: float
+```
+
+`lower_arcsec_per_pixel` and `upper_arcsec_per_pixel` must be larger than `0` and `upper_arcsec_per_pixel` must be smaller than or equal to `upper_arcsec_per_pixel`.
+
+## PositionHint
+
+```py
+@dataclasses.dataclass
+class PositionHint:
+    ra_deg: float
+    dec_deg: float
+    radius_deg: float
+```
+
+-   `ra_deg` must be in the range `[0.0, 360.0[`.
+-   `dec_deg` must be in the range `[-90.0, 90.0]`.
+-   `radius` must be larger than or equal to zero.
+
+All values are in degrees and must use the same frame of reference as the index files. Astrometry.net index files use J2000 FK5 (https://docs.astropy.org/en/stable/api/astropy.coordinates.FK5.html). ICRS and FK5 differ by less than 0.1 arcsec (https://www.iers.org/IERS/EN/Science/ICRS/ICRS.html).
+
+## Action
+
+```py
+class Action(enum.Enum):
+    STOP = 0
+    CONTINUE = 1
+```
+
+## Parity
+
+```py
+class Parity(enum.IntEnum):
+    NORMAL = 0
+    FLIP = 1
+    BOTH = 2
+```
+
+## SolutionParameters
+
+```py
+@dataclasses.dataclass
+class SolutionParameters:
+    solve_id: typing.Optional[str] = None
+    uniformize_index: bool = True
+    deduplicate: bool = True
+    sip_order: int = 3
+    sip_inverse_order: int = 0
+    distance_from_quad_bonus: bool = True
+    positional_noise_pixels: float = 1.0
+    distractor_ratio: float = 0.25
+    code_tolerance_l2_distance: float = 0.01
+    minimum_quad_size_pixels: typing.Optional[float] = None
+    minimum_quad_size_fraction: float = 0.1
+    maximum_quad_size_pixels: float = 0.0
+    maximum_quads: int = 0
+    maximum_matches: int = 0
+    parity: Parity = Parity.BOTH
+    tune_up_logodds_threshold: typing.Optional[float] = 14.0
+    output_logodds_threshold: float = 21.0
+    slices_generator: typing.Callable[[int], typing.Iterable[tuple[int, int]]] = astrometry.batches_generator(25)
+    logodds_callback: typing.Callable[[list[float]], Action] = lambda _: Action.CONTINUE
+```
+
+-   `solve_id`: Optional plate identifier used in logging messages. If `solve_id` is `None`, it is automatically assigned a unique integer. The value can be retrieved from the Solution object (`solution.solve_id`).
+-   `uniformize_index`: Uniformize field stars at the matched index scale before verifying a match.
+-   `deduplicate`: De-duplicate field stars before verifying a match.
+-   `sip_order`: Polynomial order of the Simple Imaging Polynomial distortion (see https://irsa.ipac.caltech.edu/data/SPITZER/docs/files/spitzer/shupeADASS.pdf). `0` disables SIP distortion. `tune_up_logodds_threshold` must be `None` if `sip_order` is `0`.
+-   `sip_inverse_order`: Polynomial order of the inversee Simple Polynomial distortion. Usually equal to `sip_order`. `0` means "equal to `sip_order`".
+-   `distance_from_quad_bonus`: Assume that stars far from the matched quad will have larger positional variance.
+-   `positional_noise_pixels`: Expected error on the positions of stars.
+-   `distractor_ratio`: Fraction of distractors in the range `]0, 1]`.
+-   `code_tolerance_l2_distance`: Code tolerance in 4D codespace L2 distance.
+-   `minimum_quad_size_pixels`: Minimum size of field quads to try, `None` calculates the size automatically as `minimum_quad_size_fraction * min(Δx, Δy)`, where `Δx` (resp. `Δy`) is the maximum `x` distance (resp. `y` distance) between stars in the field.
+-   `minimum_quad_size_fraction`: Only used if `minimum_quad_size_pixels` is `None` (see above).
+-   `maximum_quad_size_pixels`: Maximum size of field quads to try, `0.0` means no limit.
+-   `maximum_quads`: Number of field quads to try, `0` means no limit.
+-   `maximum_matches`: Number of quad matches to try, `0` means no limit.
+-   `parity`: Parity.NORMAL does not flip the axes, Parity.FLIP does, and Parity.BOTH tries flipped and non-flipped axes (at the cost of doubling computations).
+-   `tune_up_logodds_threshold`: Matches whose log-odds are larger than this value are tuned-up (SIP distortion estimation) and accepted if their post-tune-up log-odds are larger than `output_logodds_threshold`. `None` disables tune-up and distortion estimation (SIP). The default Astrometry.net value is `math.log(1e6)`.
+-   `output_logodds_threshold`: Matches whose log-odds are larger than this value are immediately accepted (added to the solution matches). The default Astrometry.net value is `math.log(1e9)`.
+-   `slices_generator`: User-provided function that takes a number of stars as parameter and returns an iterable (such as list) of two-elements tuples representing ranges. The first tuple item (start) is included while the second tuple item (end) is not. The returned ranges can have a variable size and/or overlap. The algorithm compares each range with the star catalogue sequentially. Small ranges significantly speed up the algorithm but increase the odds of missing matches. `astrometry.batches_generator(n)` generates non-overlapping batches of `n` stars.
+-   `logodds_callback`: User-provided function that takes a list of matches log-odds as parameter and returns an `astrometry.Action` object. `astrometry.Action.CONTINUE` tells the solver to keep searching for matches whereas `astrometry.Action.STOP` tells the solver to return the current matches immediately. The log-odds list is sorted from highest to lowest value and should not be modified by the callback function.
+
+Accepted matches are always tuned up, even if they hit `tune_up_logodds_threshold` and were already tuned-up. Since log-odds are compared with the thresholds before the tune-up, the final log-odds are often significantly larger than `output_logodds_threshold`. Set `tune_up_logodds_threshold` to a value larger than or equal to `output_logodds_threshold` to disable the first tune-up, and `None` to disable tune-up altogether. Tune-up logic is equivalent to the following Python snippet:
+
+```py
+# This (pseudo-code) snippet assumes the following definitions:
+# match: candidate match object
+# log_odds: current match log-odds
+# add_to_solution: appends the match to the solution list
+# tune_up: tunes up a match object and returns the new match and the new log-odds
+if tune_up_logodds_threshold is None:
+    if log_odds >= output_logodds_threshold:
+        add_to_solution(match)
+else:
+    if log_odds >= output_logodds_threshold:
+        tuned_up_match, tuned_up_loggods = tune_up(match)
+        add_to_solution(tuned_up_match)
+    elif log_odds >= tune_up_logodds_threshold:
+        tuned_up_match, tuned_up_loggods = tune_up(match)
+        if tuned_up_loggods >= output_logodds_threshold:
+            tuned_up_twice_match, tuned_up_twice_loggods = tune_up(tuned_up_match)
+            add_to_solution(tuned_up_twice_match)
+```
+
+Astrometry.net gives the following description of the tune-up algorithm. See `tweak2` in _astrometry.net/solver/tweak2.c_ for the implementation.
+
+> Given an initial WCS solution, compute SIP polynomial distortions using an annealing-like strategy. That is, it finds matches between image and reference catalog by searching within a radius, and that radius is small near a region of confidence, and grows as you move away. That makes it possible to pick up more distant matches, but they are downweighted in the fit. The annealing process reduces the slope of the growth of the matching radius with respect to the distance from the region of confidence.
+>
+> -- _astrometry.net/include/astrometry/tweak2.h_
+
+## Solution
+
+```py
+@dataclasses.dataclass
+class Solution:
+    solve_id: str
+    matches: list[Match]
+
+    def has_match(self) -> bool: ...
+
+    def best_match(self) -> Match: ...
+
+    def to_json(self) -> str: ...
+
+    @classmethod
+    def from_json(cls, solution_as_json: str) -> Solution: ...
+
+```
+
+`matches` are sorted in descending log-odds order. `best_match` returns the first match in the list. `to_json` and `from_json` may be used to save and load solutions.
+
+## Match
+
+```py
+@dataclasses.dataclass
+class Match:
+    logodds: float
+    center_ra_deg: float
+    center_dec_deg: float
+    scale_arcsec_per_pixel: float
+    index_path: pathlib.Path
+    stars: tuple[Star, ...]
+    quad_stars: tuple[Star, ...]
+    wcs_fields: dict[str, tuple[typing.Any, str]]
+
+    def astropy_wcs(self) -> astropy.wcs.WCS: ...
+```
+
+-   `logodds`: Log-odds (https://en.wikipedia.org/wiki/Logit) of the match.
+-   `center_ra_deg`: Right ascension of the stars bounding box's center, in degrees and in the frame of reference of the index (J200 FK5 for Astrometry.net series).
+-   `center_dec_deg`: Declination of the stars bounding box's center in degrees and in the frame of reference of the index (J200 FK5 for Astrometry.net series).
+-   `scale_arcsec_per_pixel`: Pixel scale in arcsec per pixel.
+-   `index_path`: File system path of the index file used for this match.
+-   `stars`: List of visible index stars. This list is almost certainly going to differ from the input stars list.
+-   `quad_stars`: The index stars subset (usually 4 but can be 3 or 5) used in the hash code search step (see https://arxiv.org/pdf/0910.2233.pdf, 2. Methods).
+-   `wcs_fields`: WCS fields describing the transformation between pixel coordinates and world coordinates. This dictionary can be passed directly to `astropy.wcs.WCS`.
+
+`astropy_wcs` generates an Astropy WCS object. Astropy (https://pypi.org/project/astropy/) must be installed to use this method. See [Calculate field stars pixel positions with astropy](#calculate-field-stars-pixel-positions-with-astropy) for details.
+
+## Star
+
+```py
+@dataclasses.dataclass
+class Star:
+    ra_deg: float
+    dec_deg: float
+    metadata: dict[str, typing.Any]
+```
+
+`ra_deg` and `dec_deg` are in degrees and use the same frame of reference as the index files. Astrometry.net index files use J2000 FK5 (https://docs.astropy.org/en/stable/api/astropy.coordinates.FK5.html). ICRS and FK5 differ by less than 0.1 arcsec (https://www.iers.org/IERS/EN/Science/ICRS/ICRS.html).
+
+The contents of `metadata` depend on the data available in index files. See [Series](#series) for details.
+
+## Series
+
+```py
+@dataclasses.dataclass
+class Series:
+    name: str
+    description: str
+    scale_to_sizes: dict[int, tuple[int, ...]]
+    url_pattern: str
+
+    def size(self, scales: typing.Optional[set[int]] = None): ...
+
+    def size_as_string(self, scales: typing.Optional[set[int]] = None): ...
+
+    def index_files(
+        self,
+        cache_directory: typing.Union[bytes, str, os.PathLike],
+        scales: typing.Optional[set[int]] = None,
+    ) -> list[pathlib.Path]: ...
+```
+
+-   `name` defines the cache subdirectory name.
+-   `description` is a copy of the text description in http://data.astrometry.net.
+-   `scale_to_sizes` maps each available HEALPix resolution to index files sizes in bytes. The smaller the scale, the larger the number of HEALPix subdivisions.
+-   `url_pattern` is the base pattern used to generate file download links.
+-   `size` returns the cumulative file sizes for the given scales in bytes. If `scales` is `None`, all the scales available for the series are used.
+-   `size_as_string` returns a human-readable string representation of `size`.
+-   `index_files` returns index files paths for the given scales (or all available scales if `scales` is `None`). This function downloads files that are not already in the cache directory. `cache_directory` is created if it does not exist. Download automatically resumes for partially downloaded files.
+
+Change the constants `astrometry.CHUNK_SIZE`, `astrometry.DOWNLOAD_SUFFIX` and `astrometry.TIMEOUT` to configure the downloader parameters.
+
+## batches_generator
+
+```py
+def batches_generator(
+    batch_size: int,
+) -> typing.Callable[[int], typing.Iterable[tuple[int, int]]]:
+    ...
+```
+
+-   `batch_size` sets the size of the generated batches.
+
+`batches_generator` returns a slices generator compatible with `SolutionParameters.slices_generator`. The slices are non-overlapping and non-full slices are ignored. For instance, a batch size of `25` over `83` stars would generate the slices `(0, 25)`, `(25, 50)`, and `(50, 75)`.
+
+## SupportsFloatMapping
+
+```py
+class SupportsFloatMapping(typing.Protocol):
+    def __getitem__(self, index: typing.SupportsIndex, /) -> typing.SupportsFloat:
+        ...
+```
+
+# Contribute
+
+## Clone the repository
+
+Clone this repository and pull its submodule:
+
+```sh
+git clone --recursive https://github.com/neuromorphicsystems/astrometry.git
+cd astrometry
+cd astrometry.net
+git reset --hard 04e97d5365525ac429dca69b344f9f4d9070b739
+git apply ../astrometry.net.patch
+cd ..
+```
+
+or
+
+```sh
+git clone https://github.com/neuromorphicsystems/astrometry.git
+cd astrometry
+git submodule update --recursive
+cd astrometry.net
+git reset --hard 04e97d5365525ac429dca69b344f9f4d9070b739
+git apply ../astrometry.net.patch
+cd ..
+```
+
+After building, reset the patch changes to keep the submodule in a clean state
+
+```sh
+git reset --hard 04e97d5365525ac429dca69b344f9f4d9070b739
+```
+
+## Format and lint
+
+```sh
+clang-format -i astrometry_extension/astrometry_extension.c astrometry_extension/astrometry_extension_utilities.h
+pip install '.[lint]'
+isort .; black .; pyright .
+```
+
+## Build a local version
+
+```sh
+pip install -e . # use 'CC="ccache clang" pip install -e .' to speed up incremental builds
+```
+
+## Publish
+
+1. Bump the version number in _setup.py_.
+
+2. Create a new release on GitHub.
+
+## MSVC compatibility (work in progress)
+
+-   _fitsbin.c_, _kdtree_internal.c_, _kdtree_internal_fits.c_, _solver.c_: replace Variable Length Arrays (VAL) with \_alloca (`type name[size]` -> `type* name = _alloca(size)`)
+-   _fitsbin.c_, _fitsioutils.c_, _fitstable.c_: cast `void*` to `char*` to enable pointer arithmetic
+-   _anqfits.c_, _verify.c_: `#define debug(args...)` -> `#define debug(...)`
+-   _qfits_time.c_: remove `#include <pwd.h>`
+-   _log.h_, _keywords.h_: remove `__attribute__` directives
+-   _bl.c_: remove redundant bl.inc and bl_nl.c includes
+-   replace all POSIX calls (file IO, network, select...). This requires significant effort when targeting the entire Astrometry.net library. It might be less complicated with Astrometry, which uses only a subset of Astrometry.net.
