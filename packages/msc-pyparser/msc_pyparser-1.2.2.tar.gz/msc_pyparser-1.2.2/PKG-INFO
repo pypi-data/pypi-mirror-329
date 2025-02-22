@@ -1,0 +1,39 @@
+Metadata-Version: 2.2
+Name: msc_pyparser
+Version: 1.2.2
+Summary: A ModSecurity config parser for Python 3
+Home-page: https://github.com/digitalwave/msc_pyparser
+Author: Ervin Hegedus
+Author-email: airween@digitalwave.hu
+Maintainer: Ervin Hegedus
+Maintainer-email: airween@digitalwave.hu
+License: GPLv3
+Classifier: Topic :: Text Processing
+Requires-Python: >=3
+License-File: LICENSE
+License-File: COPYING
+License-File: AUTHORS
+Requires-Dist: ply>=3.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: license
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+
+msc_pyparser is a parser, which uses PLY (Python Lex and Yacc). It
+tokenizes the given text, and applies the language rules. If it's done, then
+builds an own structure: a list of dictionary items.
+
+The items contains the configuration directives from the original files, and
+the number of lines where it founded. Also the items contains other datas about
+the configuration line and structure.
+
+Therefore, you can make many transformations on the structured data, and can
+write back the modified config.
