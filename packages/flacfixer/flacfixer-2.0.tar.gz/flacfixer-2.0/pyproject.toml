@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flacfixer"
+version = "2.0"
+description = "Rename music files and album directories automatically"
+readme = "README.md"
+license = {text = "GPLv3"}
+requires-python = ">=3.9"
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License (GPL)"
+]
+dependencies = [
+    "mutagen ~= 1.46.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black ~= 22.6.0",
+    "ruff ~= 0.0.235",
+    "mypy ~= 0.971",
+    "pre-commit ~= 3.1.0",
+]
+build = [
+    "setuptools",
+    "build",
+    "twine",
+]
+
+[project.scripts]
+flacfixer = "flacfixer.cli:main"
+
+[project.urls]
+Homepage = "https://sr.ht:~rensoliemans/flacfixer"
+Repository = "https://git.sr.ht:~rensoliemans/flacfixer"
+Issues = "https://lists.sr.ht/~rensoliemans/flacfixer"
+CI = "https://builds.sr.ht/~rensoliemans/flacfixer"
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "I"]
+
+[tool.mypy]
+files = [
+    "flacfixer",
+]
