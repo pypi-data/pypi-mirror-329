@@ -1,0 +1,64 @@
+[project]
+name = "VectorCode"
+dynamic = []
+description = "A tool to vectorise repositories for RAG."
+authors = [
+    { name = "Davidyz", email = "hzjlyz@gmail.com" },
+]
+dependencies = [
+    "chromadb<=0.6.3",
+    "sentence-transformers>=3.2.0",
+    "pathspec",
+    "tabulate",
+    "shtab",
+    "numpy",
+    "psutil",
+    "httpx",
+]
+requires-python = ">=3.11,<3.14"
+readme = "README.md"
+version = "0.3.6"
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+homepage = "https://github.com/Davidyz/VectorCode"
+github = "https://github.com/Davidyz/VectorCode"
+documentation = "https://github.com/Davidyz/VectorCode/blob/main/docs/cli.md"
+
+[project.optional-dependencies]
+intel = [
+    "optimum[openvino]",
+]
+
+[project.scripts]
+vectorcode = "vectorcode.main:main"
+
+[build-system]
+requires = [
+    "pdm-backend",
+]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.version]
+source = "scm"
+write_to = "./vectorcode/_version.py"
+write_template = "__version__ = '{}'"
+
+[dependency-groups]
+dev = [
+    "ipython>=8.31.0",
+    "ruff>=0.9.1",
+    "viztracer>=1.0.0",
+    "pre-commit>=4.0.1",
+    "pytest>=8.3.4",
+    "pdm-backend>=2.4.3",
+]
+legacy = [
+    "numpy<2.0.0",
+    "torch<=2.2.2",
+]
