@@ -1,0 +1,21 @@
+def test_imports():
+    from amarium import (
+        read_file,
+        write_file,
+        prepare_file_name_saving,
+        insert_string_in_file_name,
+        make_date_file_name,
+        load_json_from_file,
+        save_json_to_file,
+        make_full_filename,
+        make_date_file_name,
+        delete_all_files_in_dir,
+        delete_empty_dir,
+        delete_file,
+        search_subdirs,
+        write_tar,
+        copy_file,
+        copy_dir,
+        convert_str_to_bool,
+        attach_slash,
+    )
