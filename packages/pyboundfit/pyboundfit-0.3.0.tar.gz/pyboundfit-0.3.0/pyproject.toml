@@ -1,0 +1,54 @@
+[build-system]
+# Minimum requirements for the build system to execute.
+# (include packages imported in the different modules; otherwise
+# a ModuleNotFoundError is raised when using $ pip install -e .)
+requires = ["setuptools >= 43.0.0", "wheel", "numpy",
+            "matplotlib", "scipy", "lmfit"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyboundfit"
+dynamic = ["version"]
+description = "Boundary fits using polynomials or splines"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "GPL-3.0-or-later"}
+authors = [
+  {name = "Nicolás Cardiel", email = "cardiel@ucm.es"},
+]
+classifiers = [
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
+
+dependencies = [
+    "lmfit",
+    "matplotlib",
+    "numpy",
+    "scipy",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+]
+
+[project.urls]
+Homepage = "https://github.com/nicocardiel/pyboundfit"
+Repository = "https://github.com/nicocardiel/pyboundfit.git"
+
+[tool.setuptools.dynamic]
+version = {attr = "pyboundfit.__version__"}
+
+# performs autodetection
+[tool.setuptools.packages.find]
+where = ["src"]
