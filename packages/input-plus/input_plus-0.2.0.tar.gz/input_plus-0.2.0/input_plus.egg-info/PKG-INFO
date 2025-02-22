@@ -1,0 +1,153 @@
+Metadata-Version: 2.2
+Name: input-plus
+Version: 0.2.0
+Summary: A Python package.
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: Levenshtein~=0.25.1
+Requires-Dist: python-Levenshtein~=0.25.1
+Requires-Dist: rapidfuzz~=3.9.2
+
+# Input-Plus
+
+Input-Plus is a Python library that provides advanced input handling functions. It extends the built-in input function with additional features such as date/time input, float and integer input, password input with masking, and more.
+
+## Base Input Function
+
+The `input_plus.input()` function allows for more advanced input handling than the built-in input function. All other functions in this library are built on top of this function.
+
+It takes four functions as arguments:
+- `printer`: A function that renders visual feedback to the user. Default prints with no formatting.
+- `selector`: A function that runs when the input is submitted. Default always returns True and the input string.
+- `validator`: A function that validates each character as it is typed. Default is None and does not validate.
+- `special_actions`: A function that takes user input string as bytes and performs a special action based on the input. Default is None and does nothing.
+
+### Function Arguments Signature
+
+#### `printer`
+Arguments:
+- `str`: This is the string that the user has typed so far.
+Returns:
+- `str | None`: If non-None is returned, the input string will be replaced with the returned string.
+
+#### `selector`
+Arguments:
+- `str`: This is the final string that the user has typed.
+Returns:
+- A tuple containing a boolean indicating if the input is valid and the final input string.
+  - `bool`: Indicates if the input is valid. If not true, the input will be blocked and user will keep control.
+  - `str`: The final input string.
+
+#### `validator`
+Arguments:
+- `str`: This is the string that the user has typed so far.
+Returns:
+- `bool`: If not true, the character will be blocked. (Not added/removed from the input string)
+
+#### `special_actions`
+Arguments:
+- `bytes`: The special key input.
+Returns:
+- `None`
+
+Note: the `selector` boolean and the `validator` boolean are used differently. The `selector` boolean is used to determine if the final input is valid, while the `validator` boolean is used to determine if each character is valid. If the `selector` boolean is False, the input will be blocked and the user will keep control. If the `validator` boolean is False, the character will be blocked (act as if it was never typed).
+
+## Input Functions
+
+### `input_plus.regex()`
+
+This function allows for input validation using a regular expression.
+
+Arguments:
+- `prompt`: The prompt to display to the user.
+- `regex`: The regular expression to validate the input.
+- `force_match`: If True, the input will be ignored if it does not match the regex. Default is False.
+    Will block mid-input if the input does not match the regex. Do not use if the input has to be typed completely before it is valid.
+    for example, a phone number input with '\d{3}-\d{3}-\d{4}' will block the first input since it does not match the regex. you would have to use 'd{0,10}' to allow the user to type the input.
+- `warn_error`: If True, the input will be displayed in red if it does not match the regex. Default is True.
+- `placeholder`: String to show as a gray text to show the expected format. Default is None.
+
+#### Sub-Functions
+
+These functions use the `input_plus.regex()` function with a pre-defined regular expression.
+
+##### `input_plus.integer()`
+
+This function allows for integer input.
+
+Arguments:
+- `prompt`: The prompt to display to the user.
+
+##### `input_plus.float()`
+
+This function allows for float input.
+
+Arguments:
+- `prompt`: The prompt to display to the user.
+
+##### `input_plus.email()`
+
+This function allows for email input.
+
+Arguments:
+- `prompt`: The prompt to display to the user.
+
+##### `input_plus.phone()`
+
+This function allows for phone number input.
+
+Arguments:
+- `prompt`: The prompt to display to the user.
+
+##### `input_plus.url()`
+
+This function allows for URL input.
+
+Arguments:
+- `prompt`: The prompt to display to the user.
+
+##### `input_plus.hex()`
+
+This function allows for hexadecimal input.
+
+Arguments:
+- `prompt`: The prompt to display to the user.
+
+### `input_plus.select()`
+
+This function allows for selecting an option from a list of options.
+
+Arguments:
+- `prompt`: The prompt to display before the input.
+- `options`: A list of options to select from. Can be a list of strings or a list of dictionaries with the keys 'Option' and 'Description'.
+    - `input_plus.option()`: A function that creates an option dictionary.
+- `list_size`: The number of options to display at once. Default is 5.
+- `fixed_order`: If True, the options will be displayed in the order they are provided and can not be searched. Default is False.
+
+#### Sub-Functions `input_plus.option()`
+
+This function creates an option dictionary.
+
+Arguments:
+- `option`: The option to display to the user.
+- `description`: The description of the option.
+
+### `input_plus.date()`
+
+This function allows for date input.
+
+Arguments:
+- `prompt`: The prompt to display to the user.
+- `type`: The type of input to get from the user. (date, time, datetime) Default is datetime.
+- `default_datetime`: The default date and time to display to the user. Default is the current date and time.
+- `hours`: The hour format to use. (12, 24) Default is 24.
+- `step_with_enter`: If True, the user will have to press enter to move to the next field. Default is False.
+
+### `input_plus.password()`
+
+This function allows for password input with masking.
+
+Arguments:
+- `prompt`: The prompt to display to the user.
+- `mask`: The character to display instead of the input. Default is ''. No character will be displayed.
+- `hash_function`: The function to hash the password with. Default is SHA-256.
