@@ -1,0 +1,86 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+authors = [{ name = "Hunter Hogan", email = "HunterHogan@pm.me" }]
+classifiers = [
+	"Development Status :: 5 - Production/Stable",
+	"Environment :: Console",
+	"Intended Audience :: Education",
+	"Intended Audience :: End Users/Desktop",
+	"Intended Audience :: Other Audience",
+	"Intended Audience :: Science/Research",
+	"Natural Language :: English",
+	"Operating System :: OS Independent",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3.11",
+	"Programming Language :: Python :: 3.12",
+	"Programming Language :: Python :: 3.13",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python",
+	"Topic :: Scientific/Engineering :: Mathematics",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+	"Typing :: Typed",]
+dependencies = ["numba", "numpy", "Z0Z_tools"]
+description = "Count distinct ways to fold a map (or a strip of stamps)"
+keywords = [
+	"A001415",
+	"A001416",
+	"A001417",
+	"A001418",
+	"A195646",
+	"combinatorics",
+	"folding",
+	"map folding",
+	"OEIS",
+	"optimization",
+	"stamp folding",]
+license = { 'text' = "CC-BY-NC-4.0" }
+name = "mapFolding"
+optional-dependencies = { testing = [
+	"autoflake",
+	"more_itertools",
+	"pytest-cov",
+	"pytest-env",
+	"pytest-xdist",
+	"pytest",
+	"python_minifier",
+	"pyupgrade",
+	"updateCitation",] }
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.10"
+scripts = { getOEISids = "mapFolding.oeis:getOEISids", clearOEIScache = "mapFolding.oeis:clearOEIScache", OEIS_for_n = "mapFolding.oeis:OEIS_for_n" }
+urls = { Donate = "https://www.patreon.com/integrated", Homepage = "https://github.com/hunterhogan/mapFolding", Repository = "https://github.com/hunterhogan/mapFolding.git" }
+version = "0.5.0"
+
+[tool.coverage]
+report = { exclude_lines = [
+	"if TYPE_CHECKING:",
+	"if __name__ == \"__main__\":",
+	"numba.jit_module",
+], ignore_errors = false }
+run = { branch = true, concurrency = [
+	"multiprocessing",
+], data_file = "tests/coverage/.coverage", omit = [
+	"tests/*",
+	"synthesizeModuleJAX.py",
+	"getLLVMforNoReason.py",
+	"Z0Z_*",
+], parallel = true, source = [
+	".",] }
+xml = { output = "tests/coverage/coverage.xml" }
+
+[tool.pytest.ini_options]
+log_auto_indent = ["On"]
+addopts = ["--color=yes", "-n 4"]
+env = ["NUMBA_DISABLE_JIT=1"]
+# env = ["NUMBA_JIT_COVERAGE=1"] # it doesn't work
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.updateCitation]
+filenameCitationDOTcff = 'CITATION.cff'
+pathFilenameCitationSSOT = "citations/CITATION.cff"
