@@ -1,0 +1,56 @@
+[package]
+name = "rnet"
+version = "0.6.1"
+description = "Asynchronous Python HTTP Client with Black Magic"
+edition = "2021"
+rust-version = "1.83.0"
+license = "GPL-3.0"
+repository = "https://github.com/0x676e67/rnet"
+authors = ["0x676e67 <gngppz@gmail.com>"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "rnet"
+crate-type = ["cdylib", "rlib"]
+doctest = false
+
+[features]
+logging = ["dep:pyo3-log", "dep:log"]
+
+[dependencies]
+tokio = { version = "1.0", features = ["sync"] }
+pyo3 = { version = "0.23.0", features = [
+    "anyhow",
+    "indexmap",
+    "multiple-pymethods",
+    "abi3-py39",
+    "generate-import-lib",
+    "experimental-inspect",
+] }
+pyo3-async-runtimes = { version = "0.23.0", features = ["tokio-runtime"] }
+pyo3-log = { version = "0.12.1", optional = true }
+pyo3-stub-gen = "0.7.0"
+log = { version = "0.4.25", optional = true }
+anyhow = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+mime = "0.3.17"
+indexmap = { version = "2.7.0", features = ["serde"] }
+cookie = "0.18.0"
+arc-swap = "1.7.1"
+url = "2.5"
+rquest = { version = "2.1.5", features = ["full", "multipart", "websocket", "hickory-dns"] }
+futures-util = { version = "0.3.0", default-features = false }
+
+[target.'cfg(not(target_env = "msvc"))'.dependencies]
+jemallocator = { package = "tikv-jemallocator", version = "0.6", features = [
+    "disable_initial_exec_tls",
+    "unprefixed_malloc_on_supported_platforms",
+] }
+
+[profile.release]
+lto = true
+opt-level = 3
+codegen-units = 1
+strip = true
+panic = "abort"

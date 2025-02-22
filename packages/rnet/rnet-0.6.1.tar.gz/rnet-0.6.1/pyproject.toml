@@ -1,0 +1,42 @@
+[build-system]
+requires = ["maturin>=1.7,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "rnet"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+description = "Asynchronous Python HTTP Client with Black Magic"
+readme = "README.md"
+dynamic = ["version"]
+license = { text = "GPL-3.0" }
+authors = [
+    { name = "0x676e67", email = "gngppz@gmail.com" }
+]
+keywords = ["http", "client", "async", "ffi", "rust"]
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+strip = true
+
+[project.urls]
+Documentation = "https://github.com/0x676e67/rnet/blob/main/rnet.pyi"
+Homepage = "https://github.com/0x676e67/rnet"
+Repository = "https://github.com/0x676e67/rnet"
+
+[tool.poetry.dev-dependencies]
+pytest = "^8.3.4"
+pytest-asyncio = "^0.25.3"
