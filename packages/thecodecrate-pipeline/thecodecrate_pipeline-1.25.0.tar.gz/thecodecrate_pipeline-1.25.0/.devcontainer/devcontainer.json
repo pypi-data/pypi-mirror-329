@@ -1,0 +1,108 @@
+{
+  "name": "Library python-pipeline",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "aaron-bond.better-comments",
+        "charliermarsh.ruff",
+        "DavidAnson.vscode-markdownlint",
+        "github.copilot",
+        "github.copilot-chat",
+        "github.vscode-github-actions",
+        "mikestead.dotenv",
+        "ms-python.debugpy",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "pkief.material-icon-theme",
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+        "ms-vscode.vscode-websearchforcopilot",
+        "ms-vscode.vscode-commander"
+      ],
+      "settings": {
+        "editor.linkedEditing": true,
+        "editor.formatOnSave": true,
+        "editor.rulers": [
+          88,
+          100
+        ],
+        "editor.guides.bracketPairs": true,
+        "editor.guides.highlightActiveIndentation": true,
+        "explorer.sortOrderLexicographicOptions": "upper",
+        "files.insertFinalNewline": true,
+        "files.trimTrailingWhitespace": true,
+        "ruff.nativeServer": "on",
+        "terminal.integrated.shell.linux": "/bin/zsh",
+        "workbench.iconTheme": "material-icon-theme",
+        // Jupyter Notebook
+        "notebook.formatOnSave.enabled": true,
+        "notebook.codeActionsOnSave": {
+          "notebook.source.fixAll": "explicit",
+          "notebook.source.organizeImports": "explicit"
+        },
+        // Python
+        "python.analysis.autoSearchPaths": true,
+        "python.analysis.diagnosticMode": "workspace",
+        "python.analysis.importFormat": "relative",
+        "python.analysis.autoImportCompletions": true,
+        "python.analysis.extraPaths": [
+          "${containerWorkspaceFolder}/src"
+        ],
+        "python.envFile": "${containerWorkspaceFolder}/.env",
+        "python.terminal.activateEnvironment": true,
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+        // Test (python)
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "python.testing.cwd": "${containerWorkspaceFolder}/tests",
+        "python.testing.pytestPath": "${containerWorkspaceFolder}/.venv/bin/pytest",
+        "python.testing.autoTestDiscoverOnSaveEnabled": true,
+        // MkDocs schema for the YAML extension
+        "yaml.schemas": {
+          "https://squidfunk.github.io/mkdocs-material/schema.json": "mkdocs.yml"
+        },
+        "yaml.customTags": [
+          "!ENV scalar",
+          "!ENV sequence",
+          "!relative scalar",
+          "tag:yaml.org,2002:python/name:material.extensions.emoji.to_svg",
+          "tag:yaml.org,2002:python/name:material.extensions.emoji.twemoji",
+          "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format",
+          "tag:yaml.org,2002:python/object/apply:pymdownx.slugs.slugify mapping"
+        ],
+        // Settings per file type
+        "[toml]": {
+          "editor.defaultFormatter": "tamasfe.even-better-toml",
+          "editor.formatOnSave": true
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+          "editor.formatOnSave": true,
+          "editor.wordWrap": "on"
+        },
+        "[python]": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.fixAll": "explicit"
+          }
+        }
+      }
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "configureZshAsDefaultShell": true
+    },
+    "ghcr.io/thecodecrate/devcontainer-features/bash-aliases:1": {},
+    "ghcr.io/thecodecrate/devcontainer-features/uv:1": {}
+  },
+  "remoteUser": "vscode",
+  "postCreateCommand": "zsh -i .devcontainer/scripts/post-create.sh",
+  "containerEnv": {
+    "PYTHONPATH": "${containerWorkspaceFolder}/src"
+  }
+}
