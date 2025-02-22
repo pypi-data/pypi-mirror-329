@@ -1,0 +1,68 @@
+Metadata-Version: 2.4
+Name: twat-task
+Version: 2.1.1
+Summary: Video processing task utilities using Prefect for workflow management
+Project-URL: Documentation, https://github.com/twardoch/twat-task#readme
+Project-URL: Issues, https://github.com/twardoch/twat-task/issues
+Project-URL: Source, https://github.com/twardoch/twat-task
+Author-email: Adam Twardoch <adam+github@twardoch.com>
+License-Expression: MIT
+License-File: LICENSE
+Keywords: audio,prefect,task,transcription,video,workflow
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.10
+Requires-Dist: prefect>=3.1.0
+Requires-Dist: pydantic>=2.0.0
+Requires-Dist: twat>=1.8.1
+Provides-Extra: all
+Requires-Dist: prefect>=3.1.0; extra == 'all'
+Requires-Dist: pydantic>=2.0.0; extra == 'all'
+Requires-Dist: twat>=1.8.1; extra == 'all'
+Provides-Extra: dev
+Requires-Dist: mypy>=1.15.0; extra == 'dev'
+Requires-Dist: pre-commit>=4.1.0; extra == 'dev'
+Requires-Dist: ruff>=0.9.6; extra == 'dev'
+Provides-Extra: test
+Requires-Dist: pytest-benchmark[histogram]>=5.1.0; extra == 'test'
+Requires-Dist: pytest-cov>=6.0.0; extra == 'test'
+Requires-Dist: pytest-xdist>=3.6.1; extra == 'test'
+Requires-Dist: pytest>=8.3.4; extra == 'test'
+Description-Content-Type: text/markdown
+
+# twat-task
+
+(work in progress)
+
+Video processing pipeline utilities using Prefect for workflow management. This package provides a set of tasks and flows for processing video files, including audio extraction and transcription.
+
+## Features
+
+- High-level interface for video processing pipelines
+- Built-in tasks for common operations:
+  - Audio extraction from video files
+  - Speech-to-text transcription
+- Workflow management using Prefect:
+  - Automatic retries for failed tasks
+  - Progress tracking and logging
+  - Task caching and resumability
+- Pydantic models for data validation
+- Type hints and modern Python features
+
+## Installation
+
+```bash
+pip install twat-task
+```
+
+TBD
+
+## License
+
+MIT License  
+.
