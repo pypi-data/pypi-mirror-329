@@ -1,0 +1,3 @@
+from __future__ import annotations
+
+def construct_tree(list_of_choices : list[list[list[int]]]) -> str: ...
