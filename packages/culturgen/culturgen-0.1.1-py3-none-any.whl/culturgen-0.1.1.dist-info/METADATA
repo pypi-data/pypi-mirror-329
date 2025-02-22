@@ -1,0 +1,65 @@
+Metadata-Version: 2.2
+Name: culturgen
+Version: 0.1.1
+Summary: Know Your Meme scraper, a rewrite of memedict.
+Author-email: dgw <dgw@technobabbl.es>
+License: MIT
+Project-URL: Homepage, https://github.com/dgw/culturgen
+Project-URL: Bug Tracker, https://github.com/dgw/culturgen/issues
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Topic :: Communications :: Chat
+Classifier: Topic :: Software Development :: Libraries
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests>=2.10
+Requires-Dist: beautifulsoup4>=4.5
+
+# culturgen
+
+`culturgen` is a Know Your Meme scraper.
+
+It's originally based on an older scraper package called
+`memedict` ([GitHub](https://github.com/Kraymer/memedict), [PyPI](https://pypi.org/project/memedict/)).
+
+## Install
+
+```sh
+pip install culturgen
+```
+
+## Usage
+
+Use `search()` to get a quick meme definition based on keywords:
+
+```pycon
+>>> import culturgen
+>>> culturgen.search('all your base')
+All Your Base Are Belong To Us. "All Your Base Are Belong to Us" is a popular
+engrish catchphrase that grew popular across the internet as early as in 1998.
+An awkward translation of "all of your bases are now under our control", the
+quote originally appeared in the opening dialogue of Zero Wing, a 16-bit
+shoot'em up game released in 1989. Marked by poor grammar, the "All Your Base"
+phrase and the dialogue scene went viral on popular discussion forums in 2000,
+spawning thousands of image macros and flash animations featuring the slogan
+both on the web and in real life.
+```
+
+## Changelog
+
+### 0.1.1
+
+* Made similarity threshold check case-insensitive
+
+### 0.1.0
+
+* Updated to fix apparent changes from KYM that broke the old library
+* Modernized package metadata
+* Made a few miscellaneous tweaks
