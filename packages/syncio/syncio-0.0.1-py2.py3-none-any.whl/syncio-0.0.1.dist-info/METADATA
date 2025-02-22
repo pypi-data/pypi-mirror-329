@@ -1,0 +1,36 @@
+Metadata-Version: 2.1
+Name: syncio
+Version: 0.0.1
+Summary: type safe for synchronous python concurrently
+Home-page: https://github.com/guangrei/syncio
+Author: guangrei
+Author-email: myawn@pm.me
+License: MIT
+Platform: any
+Description-Content-Type: text/markdown
+Requires-Dist: typing-extensions
+
+Syncio is inspired by `asyncio`. you can easy to create task and gather with `syncio.gather()` (multiprocessing) or `syncio.thread_gather()` (threading).
+
+## Example
+```python
+from syncio import create_task, gather
+
+
+def hello(n: int) -> str:
+    return f"hello {n + 1}"
+
+
+tasks = [create_task(hello)(i) for i in range(3)]
+results = gather(*tasks)
+print("output task_1:", results["task_1"])
+print("output task_2:", results["task_2"])
+print("output task_3:", results["task_3"])
+
+# or using iterator
+
+for result in results:
+    print(result)
+
+```
+author: guangrei.
