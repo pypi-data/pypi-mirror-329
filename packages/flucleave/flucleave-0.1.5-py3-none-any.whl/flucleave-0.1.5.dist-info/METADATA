@@ -1,0 +1,72 @@
+Metadata-Version: 2.1
+Name: flucleave
+Version: 0.1.5
+Summary: Deep learning prediction of Influenza A virus pathogenicity from H5 and H7 cleavage sites
+Author-email: Cameron Norris <cameron.norris@usda.gov>
+License: MIT
+Classifier: Operating System :: OS Independent
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: tensorflow>=2.8.0
+Requires-Dist: pandas>=1.4.0
+Requires-Dist: numpy>=1.21.0
+Requires-Dist: biopython>=1.79
+Requires-Dist: scikit-learn>=1.0.0
+Requires-Dist: click>=8.0.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: black>=22.0.0; extra == "dev"
+Requires-Dist: ruff>=0.1.0; extra == "dev"
+Requires-Dist: mypy>=1.0.0; extra == "dev"
+
+# FluCleave
+
+Deep learning prediction of influenza virus pathogenicity from HA cleavage sites for H5 and H7 variants.
+
+## Features
+
+-   Analyzes H5 and H7 hemagglutinin (HA) cleavage site sequences
+-   Predicts high/low pathogenicity using deep learning
+-   Handles both DNA and protein sequences
+-   Command-line interface for easy use
+-   Trained on curated dataset of known pathogenic sequences
+
+## Installation
+
+```bash
+pip install flucleave
+```
+
+## Usage
+
+Predict pathogenicity from FASTA file:
+
+```bash
+flucleave predict --fasta sequences.fasta --output-dir results/ --prefix sample_name
+```
+
+Train new model (optional):
+
+```bash
+flucleave train --training-csv data.csv
+```
+
+## Training Data
+
+This model was trained on data curated from 2 sources:
+
+-   [Offlu Influenza A Cleavage Sites Document for H5 and H7](https://www.offlu.org/wp-content/uploads/2022/01/Influenza-A-Cleavage-Sites-Final-04-01-2022.pdf)
+-   GISAID query of all [LPAI HA sequences](./flucleave/data/train/LPAI_HA_GISAID_20240221.fasta.gz) with complete cleavage sites (as of 2025-02-21)
+
+## Data Format
+
+Input FASTA should contain HA protein sequences in either amino acid or DNA format.
+
+## License
+
+FluCleave is licensed under the [MIT License](LICENSE).
