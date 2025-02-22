@@ -1,0 +1,89 @@
+Metadata-Version: 2.4
+Name: pdf2u
+Version: 0.0.3
+Summary: Yet Another Document Translator
+Project-URL: Homepage, https://github.com/atticuszeller/pdf2u
+Project-URL: Issues, https://github.com/atticuszeller/pdf2u/issues
+Author-email: "A.J.Zeller" <hello@atticux.me>
+Maintainer-email: "A.J.Zeller" <hello@atticux.me>
+License: MIT License
+        
+        Copyright (c) 2025 A.J.Zeller
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+License-File: LICENSE
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Python: <3.13,>=3.10
+Requires-Dist: bitstring>=4.3.0
+Requires-Dist: configargparse>=1.7
+Requires-Dist: httpx[socks]>=0.27.0
+Requires-Dist: huggingface-hub>=0.27.0
+Requires-Dist: msgpack>=1.1.0
+Requires-Dist: numpy>=2.0.2
+Requires-Dist: onnx>=1.17.0
+Requires-Dist: onnxruntime>=1.16.1
+Requires-Dist: openai>=1.59.3
+Requires-Dist: opencv-python>=4.10.0.84
+Requires-Dist: orjson>=3.10.14
+Requires-Dist: pdfminer-six>=20240706
+Requires-Dist: peewee>=3.17.8
+Requires-Dist: pymupdf==1.24.5
+Requires-Dist: rich>=13.9.4
+Requires-Dist: toml>=0.10.2
+Requires-Dist: tqdm>=4.67.1
+Requires-Dist: typer>=0.15.1
+Requires-Dist: xsdata[cli,lxml,soap]>=24.12
+Provides-Extra: gui
+Requires-Dist: streamlit-pdf-viewer>=0.0.21; extra == 'gui'
+Requires-Dist: streamlit>=1.42.2; extra == 'gui'
+Description-Content-Type: text/markdown
+
+# PDF2U
+
+📜PDF perfect translator to you.
+
+![help](docs/help.png)
+
+## Install
+
+### uv
+
+Windows
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Linux
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### pdf2u
+
+```bash
+uv tool install pdf2u
+```
