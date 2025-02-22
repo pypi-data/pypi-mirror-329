@@ -1,0 +1,100 @@
+body {
+    font-size: 100%;
+}
+
+button {
+    background-color: #0000;
+    font-size: 80%;
+}
+
+button:hover:enabled {
+    background-color: #ddd
+}
+
+#weave_direction:disabled {
+    background-color: #0000;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tabbar button {
+    border: 2px;
+    padding: 2px 2px;
+    font-size: 90%;
+}
+
+/* Create an active/current tablink class */
+.tabbar button.active {
+    font-weight: bold;
+}
+
+
+/* Pattern select area at top */
+
+div.flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: start;
+    gap: 5px;
+}
+
+#pattern_menu {
+    width: 200px;
+    /* the following doesn't seem to do anything, at least on on macOS Safari */
+    text-overflow: ellipsis;
+}
+
+/* Pattern canvas and the buttons to the right */
+
+#pattern_display_grid {
+    align-items: center;
+}
+
+#pattern_controls_grid {
+    flex-direction: column;
+}
+
+#threading_display_grid {
+    align-items: center;
+}
+
+#threading_controls_grid {
+    flex-direction: column;
+}
+
+canvas {
+    border: 1px solid #000000;
+    /* Setting height and width here affects the displayed size, but not the coordinate system
+      and thus not the width and height reported to JavaScript. This is a notorious misfeature.
+      I want the displayed size and coordinate system to match, so I set the canvas dimensions
+      in display.html_template. */
+}
+
+#goto_next_pick_spacer {
+    height: 20px;
+    opacity: 0;
+}
+
+#pick_color {
+    width: 30px;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0);
+    border-style: solid;
+    border-width: 1px;
+}
+
+#toggle_weave_direction {
+    font-size: 100%;
+}
+
+#thread_direction {
+    width: 30px;
+    height: 30px;
+    font-size: 120%;
+}
+
+#weave_direction {
+    width: 30px;
+    height: 30px;
+    font-size: 120%;
+}
