@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "net-command"
+version = "0.1.0"
+description = ""
+authors = ["Elinpf <365433079@qq.com>"]
+readme = "README.md"
+packages = [{include = "net_command"}]
+
+# [[tool.poetry.source]]
+# name = "tsinghua"
+# url = "https://mirrors.aliyun.com/pypi/simple/"
+
+
+
+[tool.poetry.dependencies]
+python = "^3.8"
+netmiko = "^4.4.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+netcmd = "net_command.cli:main"
