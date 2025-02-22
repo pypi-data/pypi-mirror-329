@@ -1,0 +1,47 @@
+{% extends "_shared/base.toml.j2" %}
+
+{% block header_comment %}# Plugin package configuration{% endblock %}
+
+{% set is_plugin = true %}
+
+{% block additional_config %}
+# Plugin-specific configuration
+[plugin.options]
+auto_discovery = {{ auto_discovery | default(true) | lower }}
+namespace_imports = {{ namespace_imports | default(true) | lower }}
+{% endblock %}
+
+[project]
+# List of packages to initialize
+packages = [
+    "{{ name }}"  # Your plugin name
+]
+
+# Plugin host package (required)
+plugin_host = "{{ plugin_host }}"
+
+# Output directory (optional, defaults to current directory)
+output_dir = "."
+
+[author]
+name = "{{ author_name }}"
+email = "{{ author_email }}"
+github_username = "{{ github_username }}"
+
+[package]
+description = "{{ description }}"
+min_python = "3.10"
+license = "MIT"
+development_status = "4 - Beta"
+
+[package.options]
+include_cli = true        # Include CLI boilerplate
+include_logging = true    # Include logging setup
+use_pydantic = true      # Use Pydantic for data validation
+use_rich = true          # Use Rich for terminal output
+
+[features]
+mkdocs = false           # Enable MkDocs documentation
+vcs = true              # Initialize Git repository
+github_actions = true   # Add GitHub Actions workflows
+
