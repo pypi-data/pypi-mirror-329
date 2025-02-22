@@ -1,0 +1,102 @@
+[tool.poetry]
+name = "rhesis-sdk"
+version = "0.1.5"
+description = "SDK for testing and validating LLM applications"
+authors = ["Engineering Team <engineering@rhesis.ai>", "Harry Cruz <harry@rhesis.ai>", "Nicolai Bohn <nicolai@rhesis.ai>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://rhesis.ai"
+repository = "https://github.com/rhesis-ai/rhesis-sdk"
+documentation = "https://rhesis-sdk.readthedocs.io"
+keywords = ["llm", "testing", "ai", "machine-learning"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+packages = [
+    { include = "rhesis", from = "src" },
+    { include = "rhesis/py.typed", from = "src" }
+]
+include = ["src/rhesis/py.typed"]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/rhesis-ai/rhesis-sdk/issues"
+
+[tool.poetry.group.dev.dependencies]
+types-requests = "^2.32.0"
+pandas-stubs = "^2.2.0.240218"
+pytest = "^8.3.4"
+sphinx = "^8.1.3"
+sphinx-autodoc-typehints = "^3.0.1"
+sphinx-rtd-theme = "^3.0.2"
+typing-extensions = "^4.12.2"
+pyarrow-stubs = {version = ">=17.16", markers = "python_version >= \"3.10\" and python_version < \"4.0\""}
+
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+    | \.mypy_cache
+    | \.pytest_cache
+    | \.venv
+    | build
+    | dist
+    | docs
+)/
+'''
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+ipykernel = "^6.29.5"
+pandas = "^2.2.3"
+python-dotenv = "^1.0.1"
+requests = "^2.31.0"
+pyarrow = ">=17.0.0"
+tiktoken = "^0.9.0"
+tqdm = "^4.67.1"
+types-tqdm = "^4.67.0.20241221"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.extras]
+examples = ["jupyter", "matplotlib", "pandas"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+# Add your package name here (without hyphens)
+packages = ["rhesis"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^8.1.3"
+sphinx-autodoc-typehints = "^3.0.1"
+sphinx-rtd-theme = "^3.0.2"
+myst-parser = "^4.0.0"
+
+[tool.poetry.scripts]
+rhesis = "rhesis.cli:main"
