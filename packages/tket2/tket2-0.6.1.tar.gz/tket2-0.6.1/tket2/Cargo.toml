@@ -1,0 +1,84 @@
+[package]
+name = "tket2"
+version = "0.7.2"
+edition = { workspace = true }
+rust-version = { workspace = true }
+
+license = { workspace = true }
+readme = "README.md"
+documentation = "https://docs.rs/tket2"
+homepage = { workspace = true }
+repository = { workspace = true }
+description = "Quantinuum's TKET2 Quantum Compiler"
+keywords = ["Quantum", "Quantinuum"]
+categories = ["compilers"]
+
+[lints]
+workspace = true
+
+[lib]
+bench = false
+name = "tket2"
+path = "src/lib.rs"
+
+[features]
+# Enables search and replace optimisation passes using the `portmatching` crate.
+portmatching = ["dep:portmatching", "dep:rmp-serde"]
+
+# Stores a trace of the applied rewrites
+rewrite-tracing = []
+
+# Support compressed binary encoded ECC files
+binary-eccs = ["dep:zstd"]
+
+default = ["binary-eccs"]
+
+[dependencies]
+lazy_static = { workspace = true }
+cgmath = { workspace = true }
+num-rational = { workspace = true }
+num-complex = { workspace = true, optional = true }
+tket-json-rs = { workspace = true }
+rayon = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+downcast-rs = { workspace = true }
+priority-queue = { workspace = true }
+smol_str = { workspace = true }
+typetag = { workspace = true }
+itertools = { workspace = true }
+petgraph = { workspace = true }
+portmatching = { workspace = true, optional = true, features = ["serde"] }
+derive_more = { workspace = true, features = [
+    "error",
+    "display",
+    "from",
+    "into",
+] }
+hugr = { workspace = true }
+hugr-core = { workspace = true }
+portgraph = { workspace = true, features = ["serde"] }
+strum_macros = { workspace = true }
+strum = { workspace = true }
+fxhash = { workspace = true }
+indexmap = { workspace = true }
+rmp-serde = { workspace = true, optional = true }
+delegate = { workspace = true }
+csv = { workspace = true }
+chrono = { workspace = true }
+bytemuck = { workspace = true }
+crossbeam-channel = { workspace = true }
+tracing = { workspace = true }
+pest = { workspace = true }
+pest_derive = { workspace = true }
+zstd = { workspace = true, optional = true }
+
+
+[dev-dependencies]
+rstest = { workspace = true }
+criterion = { workspace = true, features = ["html_reports"] }
+cool_asserts = { workspace = true }
+
+[[bench]]
+name = "bench_main"
+harness = false
