@@ -1,0 +1,27 @@
+[project]
+name = "colrev.wiley"
+description = "CoLRev package for wiley"
+version = "0.1.0"
+license = {text = "MIT"}
+authors = [
+    { name = "Gerit Wagner", email = "gerit.wagner@uni-bamberg.de" }
+ ]
+requires-python = ">=3.8, <4"
+
+[project.urls]
+repository = "https://github.com/CoLRev-Environment/colrev/tree/main/colrev/packages/wiley"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.colrev]
+colrev_doc_description = "Wiley"
+colrev_doc_link = "README.md"
+search_types = ["DB"]
+
+[project.entry-points.colrev]
+search_source = "colrev.packages.wiley.src.wiley:WileyOnlineLibrarySearchSource"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

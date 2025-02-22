@@ -1,0 +1,27 @@
+[project]
+name = "colrev.qualitative_systematic_review"
+description = "CoLRev package for qualitative_systematic_review"
+version = "0.1.0"
+license = {text = "MIT"}
+authors = [
+    { name = "Gerit Wagner", email = "gerit.wagner@uni-bamberg.de" }
+ ]
+requires-python = ">=3.8, <4"
+
+[project.urls]
+repository = "https://github.com/CoLRev-Environment/colrev/tree/main/colrev/packages/qualitative_systematic_review"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.colrev]
+colrev_doc_description = "Qualitative Systematic Review"
+colrev_doc_link = "README.md"
+search_types = []
+
+[project.entry-points.colrev]
+review_type = "colrev.packages.qualitative_systematic_review.src.qualitative_systematic_review:QualitativeSystematicReview"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

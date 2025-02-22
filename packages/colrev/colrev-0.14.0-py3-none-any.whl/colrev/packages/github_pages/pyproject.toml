@@ -1,0 +1,28 @@
+[project]
+name = "colrev.github_pages"
+description = "CoLRev package for github_pages"
+version = "0.1.0"
+license = {text = "MIT"}
+authors = [
+    { name = "Julian Prester", email = "julian.prester@sydney.edu.au" },
+    { name = "Gerit Wagner", email = "gerit.wagner@uni-bamberg.de" },
+]
+requires-python = ">=3.8, <4"
+
+[project.urls]
+repository = "https://github.com/CoLRev-Environment/colrev/tree/main/colrev/packages/github_pages"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.colrev]
+colrev_doc_description = "GitHub pages"
+colrev_doc_link = "README.md"
+search_types = []
+
+[project.entry-points.colrev]
+data = "colrev.packages.github_pages.src.github_pages:GithubPages"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

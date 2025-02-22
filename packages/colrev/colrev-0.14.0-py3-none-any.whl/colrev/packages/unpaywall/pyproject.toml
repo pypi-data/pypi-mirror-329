@@ -1,0 +1,28 @@
+[project]
+name = "colrev.unpaywall"
+description = "CoLRev package for unpaywall"
+version = "0.1.0"
+license = {text = "MIT"}
+authors = [
+    { name = "Gerit Wagner", email = "gerit.wagner@uni-bamberg.de" }
+ ]
+requires-python = ">=3.8, <4"
+
+[project.urls]
+repository = "https://github.com/CoLRev-Environment/colrev/tree/main/colrev/packages/unpaywall"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.colrev]
+colrev_doc_description = "Unpaywall"
+colrev_doc_link = "README.md"
+search_types = ["API"]
+
+[project.entry-points.colrev]
+pdf_get = "colrev.packages.unpaywall.src.unpaywall:Unpaywall"
+search_source = "colrev.packages.unpaywall.src.unpaywall_search_source:UnpaywallSearchSource"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

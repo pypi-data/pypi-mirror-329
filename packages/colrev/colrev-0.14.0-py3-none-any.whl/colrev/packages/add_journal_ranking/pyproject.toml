@@ -1,0 +1,31 @@
+[project]
+name = "colrev.add_journal_ranking"
+description = "CoLRev package for add_journal_ranking"
+version = "0.1.0"
+license = {text = "MIT"}
+authors = [
+    { name = "Alexa Steinheimer" },
+    { name = "Robert Ahr" },
+    { name = "Thomas Fleischmann" },
+    { name = "Anton Liam Frisch" },
+    { name = "Gerit Wagner", email = "gerit.wagner@uni-bamberg.de" },
+]
+requires-python = ">=3.8, <4"
+
+[project.urls]
+repository = "https://github.com/CoLRev-Environment/colrev/tree/main/colrev/packages/add_journal_ranking"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.colrev]
+colrev_doc_description = "Add Journal ranking information"
+colrev_doc_link = "README.md"
+search_types = []
+
+[project.entry-points.colrev]
+prep = "colrev.packages.add_journal_ranking.src.add_journal_ranking:AddJournalRanking"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
