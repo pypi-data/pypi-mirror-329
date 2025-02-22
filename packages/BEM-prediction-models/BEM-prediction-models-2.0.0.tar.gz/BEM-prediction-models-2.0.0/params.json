@@ -1,0 +1,46 @@
+{
+ "learning_algorithm":{
+    "XGBRegressor":{
+        "max_depth": [3, 4, 6, 5, 10],
+        "learning_rate": [0.01, 0.05, 0.1, 0.2, 0.3],
+        "n_estimators": [100, 300, 500, 700, 900, 1000],
+        "colsample_bytree": [0.3, 0.5, 0.7]
+        },
+    "LGBMRegressor":{
+        "max_depth": [3, 4, 6, 5, 10],
+        "num_leaves": [10, 20, 30, 40, 100, 120],
+        "learning_rate": [0.01, 0.05, 0.1, 0.2, 0.3],
+        "n_estimators": [50, 100, 300, 500, 700, 900, 1000],
+        "colsample_bytree": [0.3, 0.5, 0.7, 1]
+        }
+     },
+     "predictor_columns":[
+     "reporting_179_d.in_air_system_fan_power_minimum_flow_fraction",
+     "reporting_179_d.in_air_system_fan_total_efficiency",
+     "reporting_179_d.in_average_ext_wall_u_value_si",
+     "reporting_179_d.in_average_outdoor_air_fraction",
+     "reporting_179_d.in_average_roof_absorptance",
+     "reporting_179_d.in_average_roof_u_value_si",
+     "reporting_179_d.in_epd_elec_w_per_m_2",
+     "reporting_179_d.in_epd_gas_w_per_m_2",
+     "reporting_179_d.in_ext_wall_area_m_2",
+     "reporting_179_d.in_floor_area_sqft",
+     "reporting_179_d.in_people_per_m_2",
+     "reporting_179_d.in_window_u_value_si",
+     "reporting_179_d.in_window_vlt",
+     "reporting_179_d.in_wwr",
+     "reporting_179_d.in_weather_cdd_65_f",
+     "reporting_179_d.in_weather_hdd_65_f",
+     "reporting_179_d.in_window_area_m_2",
+     "reporting_179_d.in_window_shgc",
+     "reporting_179_d.in_wkdy_op_hrs_duration",
+     "reporting_179_d.in_wknd_op_hrs_duration",
+     "reporting_179_d.in_interior_lighting_lpd_w_per_m_2",
+     "reporting_179_d.in_swh_annual_hot_water_m_3",
+     "reporting_179_d.in_roof_area_m_2",
+     "reporting_179_d.in_infiltration_ach"
+     ],
+     "target_var": "reporting_179_d.out_total_electricity_179_d_gj",
+     "numberofsplits":4,
+     "test_size":100
+ }
