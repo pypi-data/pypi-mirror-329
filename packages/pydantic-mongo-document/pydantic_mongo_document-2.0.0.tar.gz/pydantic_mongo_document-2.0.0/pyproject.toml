@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "pydantic-mongo-document"
+version = "2.0.0"
+description = "Pydantic Async Mongo Document"
+authors = ["Yury Sokov (Yurzs) <me@yurzs.dev>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "pydantic_mongo_document"}]
+include = ["pydantic_mongo_document/py.typed"]
+
+[tool.poetry.dependencies]
+python = ">=3.11, <4.0"
+pydantic = ">=2.3.0, <3.0.0"
+pymongo = "^4.9"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.2"
+pytest-asyncio = "^0.21.1"
+mypy = "^1.5.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+extend-select = ["I"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+show_error_codes = true
+show_column_numbers = true
+show_error_context = true
+show_traceback = true
+pretty = true
+exclude = ["tests"]
