@@ -1,0 +1,147 @@
+Metadata-Version: 2.2
+Name: pyiron_database
+Version: 0.0.8
+Summary: pyiron_database - Database support for pyiron_workflow.
+Author-email: Sebastian Eibl <sebastian.eibl@mpcdf.mpg.de>
+License: BSD 3-Clause License
+        
+        Copyright (c) 2024, Max-Planck-Institut für Nachhaltige Materialien GmbH - Computational Materials Design (CM) Department
+        All rights reserved.
+        
+        Redistribution and use in source and binary forms, with or without
+        modification, are permitted provided that the following conditions are met:
+        
+        * Redistributions of source code must retain the above copyright notice, this
+          list of conditions and the following disclaimer.
+        
+        * Redistributions in binary form must reproduce the above copyright notice,
+          this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        
+        * Neither the name of the copyright holder nor the names of its
+          contributors may be used to endorse or promote products derived from
+          this software without specific prior written permission.
+        
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+        AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+        DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+        CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+        OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+        
+Project-URL: Homepage, https://pyiron.org/
+Project-URL: Documentation, https://pyiron_database.readthedocs.io
+Project-URL: Repository, https://github.com/pyiron/pyiron_database
+Keywords: pyiron_workflow
+Classifier: Development Status :: 3 - Alpha
+Classifier: Topic :: Scientific/Engineering
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Intended Audience :: Science/Research
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: <3.13,>=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: h5py==3.12.1
+Requires-Dist: pyiron_workflow==0.12.0
+Requires-Dist: setuptools==75.8.0
+Requires-Dist: versioneer[toml]==0.29
+Provides-Extra: neo4j
+Requires-Dist: neo4j-python-driver-rust-ext==5.25.0.0; extra == "neo4j"
+Provides-Extra: postgresql
+Requires-Dist: psycopg2==2.9.9; extra == "postgresql"
+Requires-Dist: sqlalchemy==2.0.38; extra == "postgresql"
+
+# Database extension for pyiron_workflow
+
+## Instance Database Interface
+```python
+def store_node_outputs(node: Node) -> str:
+    """
+    Store a node's outputs into an HDF5 file.
+
+    Args:
+        node (Node): The node whose outputs should be stored.
+
+    Returns:
+        str: The file path where the node's outputs are stored.
+
+    Raises:
+        ValueError: If any output of the node is NOT_DATA.
+    """
+
+def restore_node_outputs(node: Node) -> bool:
+    """
+    Restore a node's outputs from a stored HDF5 file, given by node.hash.
+
+    Args:
+        node (Node): the node whose outputs should be restored.
+
+    Returns:
+        bool: True if the outputs were restored, False if not.
+    """
+
+def store_node_in_database(
+    db: InstanceDatabase,
+    node: Node,
+    store_outputs: bool = False,
+    store_input_nodes_recursively: bool = False,
+) -> str:
+    """
+    Store a node in a database.
+
+    This function stores all the information that is required to restore a node from the
+    database. This includes the node's class, its inputs, its connected inputs and its
+    outputs.
+
+    Args:
+        db (InstanceDatabase): The database to store the node in.
+        node (Node): The node to store.
+        store_outputs (bool): Whether to store the outputs of the node as well.
+        store_input_nodes_recursively (bool): Whether to store all the nodes that are
+            connected to the inputs of the node recursively.
+
+    Returns:
+        str: The hash of the stored node.
+    """
+
+def restore_node_from_database(
+    db: InstanceDatabase, node_hash: str, parent: Workflow | None = None
+) -> Node:
+    """
+    Restore a node from the database.
+
+    The node is reconstructed from the database by calling recreate_node and
+    adding it to the given parent workflow. The node's inputs are then restored
+    either by connecting them to other nodes in the workflow or by setting their
+    values directly.
+
+    Args:
+        db (InstanceDatabase): The InstanceDatabase instance to read from.
+        node_hash (str): The hash of the node to restore.
+        parent (Workflow | None): The workflow to add the restored node to.
+
+    Returns:
+        Node: The restored node.
+
+    Raises:
+        RuntimeError: If the node with the given hash is not found in the database.
+    """
+
+def get_hash(obj_to_be_hashed: Node | JSONGroup) -> str:
+    """
+    Calculate the hash of a given node or JSONGroup.
+
+    Args:
+        obj_to_be_hashed (Node | JSONGroup): the object whose hash should be calculated.
+
+    Returns:
+        str: the SHA-256 hash of the object.
+    """
+```
