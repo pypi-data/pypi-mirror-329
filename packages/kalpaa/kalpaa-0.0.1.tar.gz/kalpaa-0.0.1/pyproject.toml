@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "kalpaa"
+version = "0.0.1"
+description = "Groups up and runs full run."
+authors = ["Deepak Mallubhotla <dmallubhotla+github@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<3.10"
+pdme = "^1.5.0"
+
+
+deepdog = "^1.5.0"
+tantri = "^1.3.0"
+tomli = "^2.0.1"
+[tool.poetry.group.dev.dependencies]
+black = "^24.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+stage01 = "kalpaa.stages.stage01:main"
+stage02 = "kalpaa.stages.stage02:main"
+stage03 = "kalpaa.stages.stage03:main"
+stage04 = "kalpaa.stages.stage04:main"
+kalpaa = "kalpaa.stages:main"
