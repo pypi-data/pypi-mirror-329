@@ -1,0 +1,108 @@
+Metadata-Version: 2.2
+Name: TMEImmune
+Version: 1.1.0
+Summary: Python package for calculating TME scores
+Home-page: https://github.com/qiluzhou/TMEImmune
+Author: Qilu Zhou
+Author-email: <qiluzhou@umass.edu>
+Keywords: python,TME score
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Education
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: cmapPy
+Requires-Dist: rnanorm
+Requires-Dist: gseapy
+Requires-Dist: inmoose
+Requires-Dist: lifelines
+Requires-Dist: scikit-learn
+Requires-Dist: matplotlib
+Requires-Dist: requests
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# TMEImmune
+
+`TMEImmune` is a Python package that implements the ESTIMATE algorithm, ISTMEscore method, NetBio method, and SIA method. The ESTIMATE and ISTMEscore methods were originally available only in R, and we've ported them to Python for broader accessibility. Additionally, the NetBio and SIA methods, which did not have existing packages, has been manually implemented in Python following the original publications and codes.
+
+## Features
+
+- Implementation of the ESTIMATE algorithm for estimating stromal, immune and estimate scores in tumor samples. Estimate tumor purity for Affymetrix platform data. 
+- Implementation of the ISTMEscore method for improved tumor microenvironment (TME) immune and stromal scoring. The ISTME TME subtypes are also provided.
+- Novel implementation of the NetBio and SIA method for comprehensive TME analysis.
+- Data pre-processing including normalization and batch correction for both unnormalized read counts and normalized data.
+- Performance evaluation for immune checkpoint inhibitor response prediction and survival prognosis.
+
+## Installation
+
+You can install the package via the following two commands:
+
+```bash
+pip install TMEImmune
+pip install git+https://github.com/qiluzhou/TMEImmune.git
+```
+
+
+## Usage
+
+Here are some basic usage examples:
+
+```
+# Example 1: Data Normalization
+from TMEImmune import data_processing
+import pandas as pd
+clin = pd.read_csv("data/example_clin.csv", index = 0)
+df = data_processing.normalization(path = "data/example_gene.csv", method = 'CPM', batch = clin, batch_col = "CANCER")
+
+# Example 2: Compute TME score
+from TMEImmune import TME_score
+scores = TME_score.get_score(df, method = ['ESTIMATE', 'ISTME', 'NetBio', 'SIA'])
+
+# Example 3: Performance comparison
+from TMEImmune import optimal
+outcome = optimal.get_performance(scores, metric = ['ICI', 'survival'], score_name = ['EST_stromal', 'EST_immune',
+    'IS_immune', 'IS_stromal', 'NetBio', 'SIA'], ICI_col = 'response', surv_col = ['time', 'delta'], df_clin = clin, surv_p = [0.33, 0.66])
+```
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for more details.
+
+## Contact
+If you have any questions or feedback, feel free to open an issue on GitHub Issues. We also welcome contributions for integrating new TME scores into our package. If you'd like to propose a method, please attach a link to its introduction in the Github issue, and we will evaluate it accordingly. 
+
+## Acknowledgements
+The ESTIMATE algorithm from Yoshihara et al.
+The ISTMEscore method from Zeng et al.
+The NetBio method from Kong et al.
+The SIA method from Mezheyeuski et al.
+
+## Citations
+
+If you use TMEscore in your research, please cite the following papers:
+
+Yoshihara, K., Shahmoradgoli, M., Martínez, E. et al. Inferring tumour purity and stromal and immune cell admixture from expression data. Nat Commun 4, 2612 (2013). https://doi.org/10.1038/ncomms3612
+
+Zeng, Z., Li, J., Zhang, J. et al. Immune and stromal scoring system associated with tumor microenvironment and prognosis: a gene-based multi-cancer analysis. J Transl Med 19, 330 (2021). https://doi.org/10.1186/s12967-021-03002-1
+
+Kong, J., Ha, D., Lee, J., Kim, I., Park, M., Im, S. H., ... & Kim, S. (2022). Network-based machine learning approach to predict immunotherapy response in cancer patients. Nature communications, 13(1), 3703. https://doi.org/10.1038/s41467-022-31535-6
+
+Mezheyeuski, A., Backman, M., Mattsson, J., Martín-Bernabé, A., Larsson, C., Hrynchyk, I., Hammarström, K., Ström, S., Ekström, J., Mauchanski, S., Khelashvili, S., Lindberg, A., Agnarsdóttir, M., Edqvist, P. H., Huvila, J., Segersten, U., Malmström, P. U., Botling, J., Nodin, B., Hedner, C., … Sjöblom, T. (2023). An immune score reflecting pro- and anti-tumoural balance of tumour microenvironment has major prognostic impact and predicts immunotherapy response in solid cancers. EBioMedicine, 88, 104452. https://doi.org/10.1016/j.ebiom.2023.104452
+
+
+
+
+
