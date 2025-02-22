@@ -1,0 +1,134 @@
+# NRP_K8S_UTILS
+
+`nrp_k8s_utils` is a utility package for researchers using the National Research Platform kubernetes cluster. Currently the package is general purpose and can be used for other kubernetes clusters but may be specialized in the future and may not be compatible with non NRP clusters in the future. 
+
+
+## Installation
+
+To install the package, clone the repository into your project directory. The package will eventually be available to install through anaconda:
+
+```sh
+pip install nrp_k8s_utils
+```
+
+# Dependencies
+NRP_K8S_Utils is built off of kubectl and runs kubectl commands using the subprocess module. Kubectl is required for the package to run. additionally, rsync and ssh is required to use the RSyncPodManager class.
+
+- `kubectl` 
+- `rsync`
+- `ssh`
+
+Python dependencies include cryptography and pyyaml, ensure both packages are installed in your conda environment
+
+- `cryptography`
+- `pyyaml`
+
+
+## Usage
+
+```python
+from nrp_k8s_utils import RSyncPodManager, PodManager
+```
+The package currently offers the RSyncPodManager, and PodManager classes, RSyncPodManager is a superset of PodManager and contains all of the functionality of the PodManager class. PodManager is able to monitor, run commands within a specified container Kubectl CP files,  and start and stop pods automatically. RSyncPodManager adds the Rsync sidecar to any manifest and automatically sets up ssh, portforwarding, and abstracts file transfer to a specified persistent volume.
+
+### Context
+
+The package runs kubectl commands using the subprocess module and uses the current context specified in kubectl. The ability to use a context different to the one set on the local machine will be implemented in the future. 
+
+### Instantiating a class
+
+```python
+
+manifest: str = "/path/to/manifest.yaml"
+manifest: dict = {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "name": "example-pod"
+    },
+    "spec": {
+        "containers": [],
+        "volumes": [
+            {
+                "name": "main",
+                "persistentVolumeClaim": {
+                    "claimName": "mdsmlvol"
+                }
+            }
+        ],
+        "restartPolicy": "Always"
+    },
+}
+```
+
+The both pod manager classes can take a python dict or path to a valid yaml file. Once the class is instantiated, the manifest is managed internally. If a yaml file was used, editing the yaml file after the class is instantiated will not change the manifest used by the class. 
+
+```python
+rsync_pod = RSyncPodManager(manifest=manifest, volume="main", logging_level=logging.INFO)
+rsync_pod.start_pod()
+
+pod = PodManager(manifest=manifest, logging_level=logging.DEBUG)
+pod.start_pod()
+```
+ RSyncPodManager must have a persistent volume specified to which the rsync-sidecar container will mount to. if volume is not specified and there is one persistent volume in the manifest, the rsync-sidebar will automatically mount to that one. logging_level is logging.INFO by default for both classes.
+
+
+### Transfering Files
+
+```python
+src_path = "/path/to/source/dir"
+dest_path = "/data" 
+
+rsync_pod.transfer_files(src_path=src_path, dest_path=dest_path)
+pod.kubectl_copy(container_name="my_container_name", src_path=src_path, dest_path=dest_path)
+```
+
+RSyncPodManager and PodManager can both transfer files using kubectl cp. However, `kubectl_copy()` should only be used for small files as running large transfer can overload the kubernetes control plane. `transfer_files()` can be used with the RSyncPodManager for long-running large file transfers. A container is not specified because the class can only RSync files to the RSyncSidecar. `dest_path` in the `transfer_files()` method refers to the destination path within the persistent volume that was specified, whereas in `kubectl_copy` dest_path is any path within any container in the pod. 
+
+### Monitoring and Logging
+
+```python
+pod.describe_pod()
+pod.get_pod_status()
+pod.print_logs(container="my_container_name")
+
+namespace: str = pod.get_current_namespace()
+context: str = pod.get_current_context()
+```
+All methods are accessible in both versions of PodManager. The above methods run kubectl commands `describe pod`, `get pod`, and `logs`. `get_current_context()` and `get_current_namespace()` returns strings containing currently selected kubectl context and namespace. 
+
+
+### Running Commands
+
+```python
+command = 'ls -l /data'
+rsync_pod.run_container_cmd(command=command, container="my_container_name")
+
+command = ['rm', '-rf', file_name]
+pod.run_container_cmd(command=command, container="my_container_name")
+```
+commands can be run by specifying a container name and command. A command can either be a list or a string. A list is useful if a parameter is a variable.
+
+```python
+command = ["get", "pods"]
+pod.run_kubectl_cmd(command)
+```
+the run_kubectl_cmd method includes all context information to run a kubectl command so only the arguments after kubectl can be included
+
+
+### Modifying the Manifest
+
+```python
+pod.add_volume(volume_dict)
+pod.add_container(container_dict)
+
+pod.delete_volume("Volume Name")
+pod.delete_container("Container Name")
+
+pod.overwrite_manifest(new_manifest)
+```
+
+The manifest is managed internally after the class is instantiated. To modify the manifest, the above methods can be used. 
+
+
+
