@@ -1,0 +1,48 @@
+[project]
+name = "deciphon"
+version = "1.0.10"
+description = "Individually annotate long, error-prone nucleotide sequences into proteins"
+authors = [{ name = "Danilo Horta", email = "horta@ebi.ac.uk" }]
+requires-python = "~=3.11"
+readme = "README.md"
+license = "MIT"
+dependencies = [
+  "cffi~=1.17",
+  "fasta-reader>=3.0.3,<4",
+  "hmmer~=3.4",
+  "ijson~=3.3",
+  "pydantic~=2.9",
+  "typer>=0.15,<0.16",
+  "rich~=13.8",
+  "deciphon-snap>=1.0.3,<2",
+  "more-itertools~=10.5",
+  "psutil>=6.1.0,<7",
+  "h3result>=1.0.3,<2",
+  "loguru>=0.7.2,<1",
+  "deciphon-schema>=0.2.0",
+  "h3daemon>=2.0.5",
+  "deciphon-worker>=0.5.3",
+  "pip>=24.3.1",
+  "deciphon-core>=1.0.17",
+  "paho-mqtt>=2.1.0",
+  "deciphon-poster>=0.2.4",
+]
+
+[project.scripts]
+deciphon = "deciphon.cli:app"
+
+[dependency-groups]
+dev = ["pytest~=8.2"]
+
+[tool.hatch.build.targets.sdist]
+include = ["deciphon"]
+
+[tool.hatch.build.targets.wheel]
+include = ["deciphon"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
