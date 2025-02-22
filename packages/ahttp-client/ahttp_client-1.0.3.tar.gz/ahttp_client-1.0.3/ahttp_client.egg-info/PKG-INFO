@@ -1,0 +1,103 @@
+Metadata-Version: 2.2
+Name: ahttp_client
+Version: 1.0.3
+Summary: A framework for easy asynchronous HTTP request calling with decorations
+Home-page: https://github.com/gunyu1019/ahttp-client
+Author: gunyu1019
+Author-email: gunyu1019@yhs.kr
+License: MIT
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: Korean
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Internet
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Utilities
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: aiohappyeyeballs==2.4.6
+Requires-Dist: aiohttp==3.11.12
+Requires-Dist: aiosignal==1.3.2
+Requires-Dist: async-timeout==5.0.1
+Requires-Dist: attrs==25.1.0
+Requires-Dist: charset-normalizer==3.4.1
+Requires-Dist: frozenlist==1.5.0
+Requires-Dist: idna==3.10
+Requires-Dist: multidict==6.1.0
+Requires-Dist: propcache==0.3.0
+Requires-Dist: yarl==1.18.3
+Provides-Extra: test
+Requires-Dist: pytest; extra == "test"
+Requires-Dist: pytest-cov; extra == "test"
+Provides-Extra: lint
+Requires-Dist: pycodestyle; extra == "lint"
+Requires-Dist: black; extra == "lint"
+Provides-Extra: docs
+Requires-Dist: Sphinx; extra == "docs"
+Requires-Dist: sphinxawesome-theme; extra == "docs"
+Requires-Dist: sphinx-intl; extra == "docs"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+ # ahttp-client
+ 
+![PyPI - Version](https://img.shields.io/pypi/v/ahttp-client?style=flat)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/ahttp-client?style=flat)
+![PyPI - License](https://img.shields.io/pypi/l/ahttp-client?style=flat)
+
+An ahttp-client is Python package that provides concise and aintuitive asynchronous HTTP request using [annotated type](https://docs.python.org/ko/3.9/library/typing.html#typing.Annotated) and `@decorator`. 
+
+**Key Feautre**
+- Defining a simple request method with decoration.
+- Managing HTTP Compoents using Annotated Types.
+- Providing Hooks before and after HTTP calls.
+
+## Getting Started
+
+Implement a `GithubService` class extended with `ahttp_client.Session`. 
+Then, create a `list_repositories` method using a request decorator.
+
+An `user` argument define HTTP-component (Path) through annotation types.
+
+```python
+class GithubService(Session):
+    def __init__(self):
+        super().__init__("https://api.github.com")
+
+    @request("GET", "/users/{user}/repos")
+    def list_repositories(
+        user: Annotated[str, Path]
+    ) -> dict[str, Any]:
+        return 
+```
+
+Using the asynchronous context manager(`async with`), create a GithubService instance.
+
+```python
+async with GithubService() as service:
+    result = await service.list_repoisitories(user = "gunyu1019")
+    print(result)
+```
+
+Client Session in GithubServices are terminated when leave the asynchronous context manager.
+
+## Documentaion
+* English: https://gunyu1019.github.io/ahttp-client/en/
+* Korean: https://gunyu1019.github.io/ahttp-client/ko/
