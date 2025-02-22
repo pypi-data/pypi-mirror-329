@@ -1,0 +1,187 @@
+# this_file: twat_mp/pyproject.toml
+
+# this_file: twat_mp/pyproject.toml
+
+# Build System Configuration
+# -------------------------
+# Specifies the build system and its requirements for packaging the project
+# Specifies the build backend and its requirements for building the package
+[build-system]
+requires = [
+    "hatchling>=1.27.0",     # Core build backend for Hatch
+    "hatch-vcs>=0.4.0",      # Version Control System plugin for Hatch
+]
+build-backend = "hatchling.build"  # Use Hatchling as the build backend
+
+# Project Metadata Configuration
+# ------------------------------
+# Comprehensive project description, requirements, and compatibility information
+[project]
+name = "twat-mp"
+dynamic = ["version"]  # Version is determined dynamically from VCS
+description = "Parallel processing utilities using Pathos mpprocessing library"
+readme = "README.md"
+requires-python = ">=3.10"  # Minimum Python version required
+license = "MIT"
+keywords = ["parallel", "mpprocessing", "pathos", "map", "pool"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+
+# Runtime Dependencies
+# -------------------
+# External packages required for the project to function
+dependencies = [
+    "pathos>=0.3.0",         # Parallel processing library
+    "twat>=1.8.1",           # Main twat package
+]
+
+[[project.authors]]
+name = "Adam Twardoch"
+email = "adam+github@twardoch.com"
+
+[project.urls]
+Documentation = "https://github.com/twardoch/twat-mp#readme"
+Issues = "https://github.com/twardoch/twat-mp/issues"
+Source = "https://github.com/twardoch/twat-mp"
+
+[project.entry-points."twat.plugins"]
+mp = "twat_mp"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/twat_mp"]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+version_scheme = "post-release"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/twat_mp/__version__.py"
+
+[tool.hatch.envs.default]
+dependencies = ["mypy>=1.0.0", "ruff>=0.1.0"]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-benchmark[histogram]>=4.0.0",
+    "pytest-xdist>=3.5.0",                # For parallel test execution
+    "pandas>=2.0.0",                      # Required by some test dependencies
+    "numpy>=1.24.0",                      # Required by pandas
+    "matplotlib>=3.7.0",                  # For benchmark visualization
+
+]
+
+dev = ["pre-commit>=3.6.0"]
+
+all = ["twat>=1.0.0", "pathos>=0.3.0"]
+
+[tool.hatch.envs.test]
+dependencies = [".[test]"]
+
+[tool.hatch.envs.test.scripts]
+# Regular tests can run in parallel
+test = "python -m pytest -n auto {args:tests}"
+test-cov = "python -m pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_mp --cov=tests {args:tests}"
+# Benchmarks must run sequentially
+bench = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only"
+bench-save = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only --benchmark-json=benchmark/results.json"
+bench-hist = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only --benchmark-histogram=benchmark/hist"
+bench-compare = "python -m pytest-benchmark compare benchmark/results.json --sort fullname --group-by func"
+
+[tool.hatch.envs.lint]
+detached = true
+dependencies = ["black>=23.1.0", "mypy>=1.0.0", "ruff>=0.1.0"]
+
+[tool.hatch.envs.lint.scripts]
+typing = "mypy --install-types --non-interactive {args:src/twat_mp tests}"
+style = ["ruff check {args:.}", "ruff format {args:.}"]
+fmt = ["ruff format {args:.}", "ruff check --fix {args:.}"]
+all = ["style", "typing"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+lint.extend-select = [
+    "I",   # isort
+    "N",   # pep8-naming
+    "B",   # flake8-bugbear
+    "RUF", # Ruff-specific rules
+]
+lint.ignore = [
+    "ARG001", # Unused function argument
+    "E501",   # Line too long
+    "I001",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+
+[tool.coverage.run]
+source_pkgs = ["twat_mp", "tests"]
+branch = true
+parallel = true
+omit = ["src/twat_mp/__about__.py"]
+
+[tool.coverage.paths]
+twat_mp = ["src/twat_mp", "*/twat-mp/src/twat_mp"]
+tests = ["tests", "*/twat-mp/tests"]
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+[tool.pytest.ini_options]
+markers = ["benchmark: marks tests as benchmarks (select with '-m benchmark')"]
+addopts = "-v -p no:briefcase"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.pytest-benchmark]
+min_rounds = 100
+min_time = 0.1
+histogram = true
+storage = "file"
+save-data = true
+compare = [
+    "min",    # Minimum time
+    "max",    # Maximum time
+    "mean",   # Mean time
+    "stddev", # Standard deviation
+    "median", # Median time
+    "iqr",    # Inter-quartile range
+    "ops",    # Operations per second
+    "rounds", # Number of rounds
+
+]
