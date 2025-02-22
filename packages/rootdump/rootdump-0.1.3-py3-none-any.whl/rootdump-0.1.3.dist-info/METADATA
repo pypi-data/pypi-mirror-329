@@ -1,0 +1,150 @@
+Metadata-Version: 2.2
+Name: rootdump
+Version: 0.1.3
+Summary: Directory content dumping utility
+Author-email: Hirotaka Hiraki <hirotakahiraki@gmail.com>
+License: MIT License
+        
+        Copyright (c) 2024
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/hirotakahiraki/rootdump
+Project-URL: Repository, https://github.com/hirotakahiraki/rootdump
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# rootdump
+
+[![PyPI version](https://badge.fury.io/py/rootdump.svg)](https://badge.fury.io/py/rootdump)
+[![Python Versions](https://img.shields.io/pypi/pyversions/rootdump.svg)](https://pypi.org/project/rootdump/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A Python library for dumping directory contents into a single organized text file. Perfect for code reviews, documentation, and project analysis.
+
+## Features
+
+✨ **Tree Structure** - Displays directory structure in a tree format  
+📝 **Content Dump** - Dumps the content of all text files  
+🔍 **Extension Filtering** - Filter files by extension  
+⚡ **Binary Detection** - Automatically excludes binary files  
+🔢 **Line Numbers** - Includes line numbers with a separator for easy reading.
+
+## Installation
+
+```bash
+pip install rootdump
+```
+
+## Quick Start
+
+### Command Line Usage
+
+Basic usage:
+```bash
+rootdump /path/to/source output.txt
+```
+
+With options:
+```bash
+# Exclude binary files
+rootdump /path/to/source output.txt --exclude-binary
+
+# Include only specific extensions
+rootdump /path/to/source output.txt --extensions .py .txt .md
+
+# Skip directory tree structure
+rootdump /path/to/source output.txt --no-tree
+
+# Exclude line numbers from the output
+rootdump /path/to/source output.txt --no-line-numbers
+```
+
+### Python API
+
+```python
+from rootdump import dump_directory
+
+# Basic usage
+dump_directory("source_dir", "output.txt")
+
+# With options
+dump_directory(
+    "source_dir",
+    "output.txt",
+    exclude_binary=True,
+    include_extensions=[".py", ".txt"],
+    show_tree=True,
+    show_line_numbers=True
+)
+```
+
+## Output Example
+
+```
+# Directory structure:
+# .
+# ├── src/
+# │   ├── __init__.py
+# │   └── main.py
+# ├── tests/
+# │   └── test_main.py
+# └── README.md
+
+## src/__init__.py
+
+1 | def hello():
+2 |     print("Hello from src/__init__.py")
+
+## src/main.py
+
+1 | def main():
+2 |     print("Hello from src/main.py")
+3 |
+4 | if __name__ == "__main__":
+5 |     main()
+```
+
+## Contributing
+
+Contributions are welcome! Feel free to:
+
+- Report issues
+- Suggest features
+- Submit pull requests
+
+## Acknowledgments
+
+This project was inspired by [uithub.com](https://uithub.com)'s project structure visualization.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
