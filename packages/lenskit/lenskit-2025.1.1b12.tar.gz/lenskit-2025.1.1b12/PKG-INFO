@@ -1,0 +1,190 @@
+Metadata-Version: 2.4
+Name: lenskit
+Version: 2025.1.1b12
+Summary: Toolkit for recommender systems research, teaching, and more.
+Project-URL: homepage, https://lenskit.org
+Project-URL: documentation, https://lkpy.lenskit.org
+Project-URL: source, https://github.com/lenskit/lkpy
+Author-email: Michael Ekstrand <mdekstrand@drexel.edu>
+License: Copyright (c) 2018–2023 Boise State University
+        Copyright (c) 2023-2024 Drexel University and contributors
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        > The above copyright notice and this permission notice shall be included in
+        > all copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+License-File: LICENSE.md
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Python: >=3.11
+Requires-Dist: click~=8.1
+Requires-Dist: humanize~=4.2
+Requires-Dist: more-itertools>=9.0
+Requires-Dist: numpy>=1.25
+Requires-Dist: pandas~=2.0
+Requires-Dist: prettytable~=3.14
+Requires-Dist: pyarrow>=15
+Requires-Dist: pydantic~=2.7
+Requires-Dist: pyzmq>=24
+Requires-Dist: rich~=13.5
+Requires-Dist: scipy>=1.11
+Requires-Dist: structlog>=23.2
+Requires-Dist: threadpoolctl>=3.0
+Requires-Dist: torch~=2.4
+Requires-Dist: typing-extensions~=4.12
+Provides-Extra: funksvd
+Requires-Dist: numba>=0.56; extra == 'funksvd'
+Provides-Extra: hpf
+Requires-Dist: hpfrec==0.2.*; extra == 'hpf'
+Provides-Extra: implicit
+Requires-Dist: implicit>=0.7.2; extra == 'implicit'
+Provides-Extra: notebook
+Requires-Dist: ipywidgets~=8.0; extra == 'notebook'
+Provides-Extra: ray
+Requires-Dist: ray~=2.42; extra == 'ray'
+Provides-Extra: sklearn
+Requires-Dist: scikit-learn~=1.2; extra == 'sklearn'
+Provides-Extra: test
+Requires-Dist: hypothesis>=6.16; extra == 'test'
+Requires-Dist: pyprojroot==0.3.*; extra == 'test'
+Requires-Dist: pytest-benchmark==4.*; extra == 'test'
+Requires-Dist: pytest-cov>=2.12; extra == 'test'
+Requires-Dist: pytest-doctestplus<2,>=1.2.1; extra == 'test'
+Requires-Dist: pytest-repeat>=0.9; extra == 'test'
+Requires-Dist: pytest<9,>=8.2; extra == 'test'
+Description-Content-Type: text/markdown
+
+# Python recommendation tools
+
+[![Automatic Tests](https://github.com/lenskit/lkpy/actions/workflows/test.yml/badge.svg)](https://github.com/lenskit/lkpy/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/lenskit/lkpy/graph/badge.svg?token=DaGn7NFM2P)](https://codecov.io/gh/lenskit/lkpy)
+[![PyPI - Version](https://img.shields.io/pypi/v/lenskit)](https://pypi.org/project/lenskit)
+![Conda Version](https://img.shields.io/conda/vn/conda-forge/lenskit)
+
+LensKit is a set of Python tools for experimenting with and studying recommender
+systems.  It provides support for training, running, and evaluating recommender
+algorithms in a flexible fashion suitable for research and education.
+
+LensKit for Python (LKPY) is the successor to the Java-based LensKit project.
+
+> [!IMPORTANT]
+> If you use LensKit for Python in published research, please cite:
+>
+> > Michael D. Ekstrand. 2020.
+> > LensKit for Python: Next-Generation Software for Recommender Systems Experiments.
+> > In <cite>Proceedings of the 29th ACM International Conference on Information and Knowledge Management</cite> (CIKM '20).
+> > DOI:[10.1145/3340531.3412778](https://dx.doi.org/10.1145/3340531.3412778).
+> > arXiv:[1809.03125](https://arxiv.org/abs/1809.03125) [cs.IR].
+
+> [!WARNING]
+> This is the `main` branch of LensKit, following new development in preparation
+> for the 2024 release.  It will be changing frequently and incompatibly. You
+> probably want to use a [stable release][release].
+
+[release]: https://lkpy.lenskit.org/en/stable/
+
+## Installing
+
+To install the current release with Anaconda (recommended):
+
+    conda install -c conda-forge lenskit
+
+If you use Pixi, you can add it to your project:
+
+    pixi add lenskit
+
+Or you can use `pip`:
+
+    pip install lenskit
+
+To use the latest development version, install directly from GitHub:
+
+    pip install -U git+https://github.com/lenskit/lkpy
+
+Then see [Getting Started](https://lkpy.lenskit.org/en/stable/GettingStarted.html)
+
+## Developing
+
+[issues]: https://github.com/lenskit/lkpy/issues
+[workflow]: https://github.com/lenskit/lkpy/wiki/DevWorkflow
+
+To contribute to LensKit, clone or fork the repository, get to work, and submit
+a pull request.  We welcome contributions from anyone; if you are looking for a
+place to get started, see the [issue tracker][issues].
+
+Our development workflow is documented in [the wiki][workflow]; the wiki also
+contains other information on *developing* LensKit. User-facing documentation is
+at <https://lkpy.lenskit.org>.
+
+[conda-lock]: https://github.com/conda-incubator/conda-lock
+[lkdev]: https://github.com/lenskit/lkdev
+
+We recommend using Pixi for developing LensKit.  Our `pixi.toml` file contains
+the development dependencies; to instal l dependencies for all of the LensKit
+packages (on Linux or macOS), use the `dev-full` environment:
+
+```console
+$ pixi install -e dev-full
+```
+
+You can use `pixi shell` to open a shell within this environment:
+
+```console
+$ pixi shell -e dev-full
+```
+
+If you are on Windows, use `dev-core` instead of `dev-full`; some LensKit
+packages will be missing dependencies (specifically Implicit, HPF, and FunkSVD).
+
+## Testing Changes
+
+You should always test your changes by running the LensKit test suite:
+
+    python -m pytest
+
+If you want to use your changes in a LensKit experiment, you can locally install
+your modified LensKit into your experiment's environment.  We recommend using
+separate environments for LensKit development and for each experiment; you will
+need to install the modified LensKit into your experiment's repository:
+
+    conda activate my-exp
+    conda install -c conda-forge
+    cd /path/to/lkpy
+    pip install -e . --no-deps
+
+You may need to first uninstall LensKit from your experiment repo; make sure that
+LensKit's dependencies are all still installed.
+
+Once you have pushed your code to a GitHub branch, you can use a Git repository as
+a Pip dependency in an `environment.yml` for your experiment, to keep using the
+correct modified version of LensKit until your changes make it in to a release.
+
+## Resources
+
+- [Documentation](https://lkpy.lenskit.org)
+- [Discussion and Announcements](https://github.com/orgs/lenskit/discussions)
+
+## Acknowledgements
+
+This material is based upon work supported by the National Science Foundation
+under Grant No. IIS 17-51278. Any opinions, findings, and conclusions or
+recommendations expressed in this material are those of the author(s) and do not
+necessarily reflect the views of the National Science Foundation.
