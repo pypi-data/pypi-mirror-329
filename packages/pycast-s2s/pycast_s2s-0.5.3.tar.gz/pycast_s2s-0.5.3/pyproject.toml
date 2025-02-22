@@ -1,0 +1,94 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pycast_s2s"
+dynamic = ["version"]
+authors = [
+  { name="Christian Chwala", email="Christian.Chwala@kit.edu" },
+  { name="Benjamin Fersch", email="Benjamin.Fersch@kit.edu" },
+  { name="Christof Lorenz", email="Christof.Lorenz@kit.edu" },
+  { name="Windmanagda Sawadogo", email="windmanagda.sawadogo@geo.uni-augsburg.de" },
+  { name="Jan Weber", email="jan.weber@kit.edu" },
+  { name="Rebecca Wiegels", email="rebecca.wiegels@kit.edu" },
+]
+description = "Python-based tools for post-processing seasonal climate forecasts"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pandas",
+    "dask[complete]",
+    "dask-jobqueue",
+    "xarray",
+    "numpy",
+    "netCDF4",
+    "scipy",
+    "surpyval",
+    "formulaic",
+    "s3fs",
+    "zarr",
+    "rechunker",
+    "tqdm",
+    "cdo",
+    "eccodes",
+    "cfgrib",
+    "python-dotenv",
+    "pytest",
+    "pre-commit",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "ipykernel",
+    "jupyterlab",
+]
+
+[tool.setuptools_scm]
+write_to = "src/pycast_s2s/_version.py"
+version_scheme = "post-release"
+local_scheme = "no-local-version"
+
+[project.urls]
+"Homepage" = "https://codebase.helmholtz.cloud/kit-seasonal-forecast-task-force/pycast-s2s"
+"Bug Tracker" = "https://codebase.helmholtz.cloud/kit-seasonal-forecast-task-force/pycast-s2s/-/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]  # Assuming your code is under `src`
+include = ["*"] 
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+src_paths = ["src", "tests"]
+
+[tool.mypy]
+python_version = "3.8"
+strict = true
+show_error_codes = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool", "redundant-cast", "unused-awaitable"]
+warn_unused_configs = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_optional = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -vv --cov=src --cov-report term-missing --color=yes --disable-warnings"
+testpaths = ["tests"]
+
+[project.scripts]
+process_global_forecasts = "pycast_s2s.cli.process_global_forecasts:main"
+process_regional_forecasts = "pycast_s2s.cli.process_regional_forecasts:main"
+run_bc = "pycast_s2s.cli.run_bc:main"
+register-kernel = "pycast_s2s.scripts.register_kernel:main"
+
+[tool.setuptools.package-data]
+pycast_s2s = ["conf/*.json"]
