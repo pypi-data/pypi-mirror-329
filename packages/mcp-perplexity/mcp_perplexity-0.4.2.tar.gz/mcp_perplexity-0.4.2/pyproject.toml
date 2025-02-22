@@ -1,0 +1,54 @@
+[project]
+name = "mcp-perplexity"
+version = "0.4.2"
+description = "MCP Server for the Perplexity API."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [ 
+    "mcp>=1.0.0",
+    "httpx",
+    "haikunator>=2.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/daniel-lxs/mcp-perplexity"
+Repository = "https://github.com/daniel-lxs/mcp-perplexity"
+
+[[project.authors]]
+name = "Daniel Riccio"
+email = "ricciodaniel98@gmail.com"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+mcp-perplexity = "mcp_perplexity:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["mcp_perplexity"]
+
+[tool.semantic_release]
+version_variable = ["src/mcp_perplexity/__init__.py:__version__"]
+branch = "main"
+upload_to_pypi = false
+upload_to_release = true
+build_command = "python -m build"
+changelog_components = "default"
+changelog_sections = [
+    { type = "feat", section = "What's New", hidden = false },
+    { type = "fix", section = "Bug Fixes", hidden = false },
+    { type = "perf", section = "Performance Improvements", hidden = false },
+    { type = "docs", section = "Documentation", hidden = false },
+    { type = "refactor", section = "Code Refactoring", hidden = false },
+    { type = "BREAKING", section = "Breaking Changes", hidden = false },
+    { type = "test", section = "Testing", hidden = true },
+    { type = "build", section = "Build System", hidden = true },
+    { type = "style", section = "Code Style", hidden = true },
+    { type = "chore", section = "Maintenance", hidden = false },
+    { type = "ci", section = "CI/CD", hidden = true }
+]
+commit_parser = "angular"
+major_on_zero = false
+tag_format = "v{version}"
