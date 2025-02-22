@@ -1,0 +1,97 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "llp-learn"
+description = "Learning from Label Proportions (LLP) methods in Python"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Gabriel Franco", email = "gvfranco@bu.edu" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "numpy ~= 1.24.2",
+  "scipy ~= 1.10.1",
+  "scikit-learn ~= 1.2.2",
+  "matplotlib ~= 3.7.1",
+  "pandas ~= 1.5.3",
+  "seaborn ~= 0.12.2",
+  "tqdm ~= 4.65.0",
+  "joblib ~= 1.2.0 ",
+  "torch ~= 2.0.1",
+]
+dynamic = ["version"]
+
+[project.urls]
+Documentation = "https://github.com/gaabrielfranco/llp-learn#readme"
+Issues = "https://github.com/gaabrielfranco/llp-learn/issues"
+Source = "https://github.com/gaabrielfranco/llp-learn"
+
+[tool.hatch.version]
+path = "src/llp_learn/__about__.py"
+
+[tool.hatch.envs.default]
+dependencies = [
+  "pytest",
+  "pytest-cov",
+]
+[tool.hatch.envs.default.scripts]
+cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=llp_learn --cov=tests {args}"
+no-cov = "cov --no-cov {args}"
+
+[[tool.hatch.envs.test.matrix]]
+python = ["38", "39", "310", "311"]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+omit = [
+  "llp_learn/__about__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+
+[tool.hatch.envs.docs]
+dependencies = [
+  "mkdocs",
+  "mkdocs-material~=8.5.6",
+  # Plugins
+  "mkdocs-minify-plugin~=0.5.0",
+  "mkdocs-git-revision-date-localized-plugin~=1.1.0",
+  "mkdocstrings-python~=0.7.1",
+  "mkdocs-redirects~=1.1.0",
+  "mkdocs-glightbox~=0.3.0",
+  # https://github.com/jimporter/mike/issues/82#issuecomment-1172913929
+  "mike @ https://github.com/jimporter/mike/archive/392d57b8bb9d14bcedf2451a0dc302709f8055eb.zip",
+  # Extensions
+  "mkdocs-click~=0.8.0",
+  "pymdown-extensions~=9.6.0",
+  # Necessary for syntax highlighting in code blocks
+  "pygments~=2.13.0",
+  # Validation
+  # https://github.com/linkchecker/linkchecker/pull/669#issuecomment-1267236287
+  "linkchecker @ git+https://github.com/linkchecker/linkchecker.git@d9265bb71c2054bf57b8c5734a4825d62505c779",
+]
+
+[tool.hatch.envs.docs.scripts]
+build = "mkdocs build --clean --strict"
+serve = "mkdocs serve --dev-addr localhost:8000"
