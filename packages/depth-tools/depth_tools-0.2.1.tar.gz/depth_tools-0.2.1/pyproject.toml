@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "depth_tools"
+version = "0.2.1"
+dependencies = [
+    "numpy",
+    "typing-extensions >= 4.0.0"
+]
+requires-python = ">= 3.10"
+description="A simple pure Python implementation of depth-related calculations."
+readme = "README.md"
+license = {text = "MIT License"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+]
+
+[project.urls]
+Homepage = "https://github.com/mntusr/depth_tools"
+
+[project.optional-dependencies]
+Datasets = ["scipy", "h5py", "Pillow", "pandas"]
+Plots = ["matplotlib", "plotly"]
+
+[tool.isort]
+profile = "black"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+depth_tools = ["*/*.txt", "*/*.csv"]
