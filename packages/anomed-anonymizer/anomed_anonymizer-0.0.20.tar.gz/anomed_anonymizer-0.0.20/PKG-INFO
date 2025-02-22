@@ -1,0 +1,115 @@
+Metadata-Version: 2.4
+Name: anomed-anonymizer
+Version: 0.0.20
+Summary: A library aiding to create anonymizers (privacy preserving machine learning models) for the AnoMed competition platform.
+Author-email: Yannik Potdevin <ypo.uzl@proton.me>
+Maintainer-email: Yannik Potdevin <ypo.uzl@proton.me>
+License: MIT License
+        
+        Copyright (c) 2024 Yannik Potdevin
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+License-File: LICENSE
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Developers
+Requires-Python: >=3.10
+Requires-Dist: anomed-utils
+Requires-Dist: falcon~=4.0
+Requires-Dist: numpy~=1.26
+Requires-Dist: requests~=2.32
+Provides-Extra: dev
+Requires-Dist: ruff~=0.7; extra == 'dev'
+Provides-Extra: test
+Requires-Dist: coverage~=7.6; extra == 'test'
+Requires-Dist: pytest-cov~=6.0; extra == 'test'
+Requires-Dist: pytest-mock~=3.14; extra == 'test'
+Requires-Dist: pytest~=8.3; extra == 'test'
+Requires-Dist: scikit-learn~=1.6; extra == 'test'
+Provides-Extra: tfkeras
+Requires-Dist: tf-keras~=2.18; extra == 'tfkeras'
+Description-Content-Type: text/markdown
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![pipeline status](https://git.uni-luebeck.de/its/anomed/anonymizer/badges/main/pipeline.svg?ignore_skipped=true)
+![coverage](https://git.uni-luebeck.de/its/anomed/anonymizer/badges/main/coverage.svg?job=run_tests)
+
+# Anonymizer
+
+A library aiding to create anonymizers (privacy preserving machine learning
+models) for the AnoMed competition platform.
+
+# Usage Example
+
+The following example will create a Falcon-based web app that encapsulates an
+anonymizer for an example challenge (which serves the famous iris dataset). The
+encapsulated anonymizer is differentially private Gaussian naive Bayes
+classifier, which aims to solve a 3-class classification problem.
+
+The web app offers these routes (some may have query parameters not mentioned
+here):
+
+- [GET] `/` (This displays an "alive message".)
+- [POST] `/fit` (This invokes fitting the Gaussian naive based classifier;
+  the web app will pull the training data from `training_data_url`.)
+- [POST] `/evaluate` (This invokes an intermediate, or final evaluation of the
+  classifier.)
+- [POST] `/predict` (This offers a way to use the fitted anonymizer to predict
+  the target values for arbitrary, but compatible, feature arrays.)
+
+```python
+import anomed_anonymizer as anon
+import numpy as np
+from diffprivlib.models import GaussianNB
+
+lower_bounds = 4 * [0.0]
+upper_bounds = [10.0, 5.0, 10.0, 5.0]
+estimator = GaussianNB(
+    bounds=(lower_bounds, upper_bounds),
+    priors=3 * [1.0 / 3.0],
+)
+
+
+def input_array_validator(feature_array: np.ndarray) -> None:
+    if feature_array.shape[1] != 4 or len(feature_array.shape) != 2:
+        raise ValueError("Feature array needs to have shape (n_samples, 4).")
+    if feature_array.dtype != np.float_:
+        raise ValueError("Feature array must be an array of floats.")
+
+
+example_anon = anon.WrappedAnonymizer(
+    anonymizer=estimator,
+    serializer=anon.pickle_anonymizer,
+    feature_array_validator=input_array_validator,
+)
+
+hostname = "example.com"
+
+# This is what GUnicorn expects
+application = anon.supervised_learning_anonymizer_server_factory(
+    anonymizer_identifier="example_anonymizer",
+    anonymizer_obj=example_anon,
+    model_filepath="anonymizer.pkl",
+    default_batch_size=64,
+    training_data_url=f"http://{hostname}/data/anonymizer/training",
+    tuning_data_url=f"http://{hostname}/data/anonymizer/tuning",
+    validation_data_url=f"http://{hostname}/data/anonymizer/training",
+    utility_evaluation_url=f"http://{hostname}/utility/anonymizer",
+    model_loader=anon.unpickle_anonymizer,
+)
+```
