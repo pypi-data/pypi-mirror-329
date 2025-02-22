@@ -1,0 +1,304 @@
+Metadata-Version: 2.4
+Name: twat
+Version: 2.1.1
+Project-URL: Documentation, https://github.com/twardoch/twat#readme
+Project-URL: Issues, https://github.com/twardoch/twat/issues
+Project-URL: Source, https://github.com/twardoch/twat
+Author-email: Adam Twardoch <adam+github@twardoch.com>
+License-Expression: MIT
+License-File: LICENSE
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.10
+Requires-Dist: fire>=0.7.0
+Requires-Dist: importlib-metadata>=8.6.1
+Requires-Dist: importlib-resources>=6.5.2
+Requires-Dist: loguru>=0.7.3
+Requires-Dist: pydantic>=2.10.6
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: rich>=13.9.4
+Requires-Dist: tomli>=2.2.1
+Requires-Dist: typing-extensions>=4.0.0; python_version < '3.10'
+Provides-Extra: all
+Requires-Dist: fire>=0.7.0; extra == 'all'
+Requires-Dist: importlib-metadata>=8.6.1; extra == 'all'
+Requires-Dist: importlib-resources>=6.5.2; extra == 'all'
+Requires-Dist: loguru>=0.7.3; extra == 'all'
+Requires-Dist: pydantic>=2.10.6; extra == 'all'
+Requires-Dist: python-dotenv>=1.0.1; extra == 'all'
+Requires-Dist: rich>=13.9.4; extra == 'all'
+Requires-Dist: tomli>=2.2.1; extra == 'all'
+Requires-Dist: twat-audio[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-cache[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-ez[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-fs[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-genai[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-hatch[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-image[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-labs[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-llm[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-mp[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-search[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-speech[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-task[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-text[all]>=1.8.1; extra == 'all'
+Requires-Dist: twat-video[all]>=1.8.1; extra == 'all'
+Requires-Dist: typing-extensions>=4.0.0; (python_version < '3.10') and extra == 'all'
+Provides-Extra: audio
+Requires-Dist: twat-audio[all]>=0.0.1; extra == 'audio'
+Provides-Extra: cache
+Requires-Dist: twat-cache[all]>=1.7.5; extra == 'cache'
+Provides-Extra: dev
+Requires-Dist: mypy>=1.0.0; extra == 'dev'
+Requires-Dist: pre-commit>=4.0.0; extra == 'dev'
+Requires-Dist: ruff>=0.1.0; extra == 'dev'
+Provides-Extra: ez
+Requires-Dist: twat-ez[all]>=1.7.5; extra == 'ez'
+Provides-Extra: fs
+Requires-Dist: twat-fs[all]>=1.7.5; extra == 'fs'
+Provides-Extra: genai
+Requires-Dist: twat-genai[all]>=1.7.5; extra == 'genai'
+Provides-Extra: hatch
+Requires-Dist: twat-hatch[all]>=1.7.5; extra == 'hatch'
+Provides-Extra: image
+Requires-Dist: twat-image[all]>=1.7.5; extra == 'image'
+Provides-Extra: labs
+Requires-Dist: twat-labs[all]>=1.7.5; extra == 'labs'
+Provides-Extra: llm
+Requires-Dist: twat-llm[all]>=0.0.1; extra == 'llm'
+Provides-Extra: mp
+Requires-Dist: twat-mp[all]>=1.7.5; extra == 'mp'
+Provides-Extra: search
+Requires-Dist: twat-search[all]>=0.0.1; extra == 'search'
+Provides-Extra: speech
+Requires-Dist: twat-speech[all]>=0.0.1; extra == 'speech'
+Provides-Extra: task
+Requires-Dist: twat-task[all]>=1.7.5; extra == 'task'
+Provides-Extra: test
+Requires-Dist: pytest-benchmark[histogram]>=5.1.0; extra == 'test'
+Requires-Dist: pytest-cov>=6.0.0; extra == 'test'
+Requires-Dist: pytest-xdist>=3.6.1; extra == 'test'
+Requires-Dist: pytest>=8.3.4; extra == 'test'
+Provides-Extra: text
+Requires-Dist: twat-text[all]>=0.0.1; extra == 'text'
+Provides-Extra: video
+Requires-Dist: twat-video[all]>=0.0.1; extra == 'video'
+Description-Content-Type: text/markdown
+
+# twat
+
+A plugin-based Python package system that provides a unified interface for various utilities.
+
+## Features
+
+- Plugin system for Python packages with standardized interfaces
+- Dynamic plugin loading and discovery
+- Modern Python packaging with PEP 621 compliance
+- Type hints and runtime type checking
+- Comprehensive test suite and documentation
+- CI/CD ready configuration
+
+## Installation
+
+```bash
+pip install twat
+```
+
+## Usage
+
+### As a Library
+
+```python
+import twat
+
+# Load a plugin
+fs = twat.fs  # Loads the twat-fs plugin
+
+# List available plugins
+from importlib.metadata import entry_points
+plugins = entry_points(group="twat.plugins")
+```
+
+### Command Line
+
+```bash
+# Run a plugin through the twat command
+twat fs --help
+
+# Or run the plugin directly if it provides a CLI
+twat-fs --help
+```
+
+## Plugin Development Guide
+
+To create a new plugin for the `twat` system, follow these guidelines. We'll use the `twat-fs` package as an example.
+
+### 1. Package Structure
+
+```
+twat-yourplugin/
+├── src/
+│   └── twat_yourplugin/
+│       ├── __init__.py      # Main package interface
+│       ├── __main__.py      # CLI entry point
+│       └── core.py          # Core functionality
+├── tests/
+├── pyproject.toml           # Package configuration
+├── README.md
+└── LICENSE
+```
+
+### 2. Package Configuration
+
+Your `pyproject.toml` should include:
+
+```toml
+[project]
+name = "twat-yourplugin"  # Use hyphen in package name
+dependencies = [
+    "twat",               # Always include the main package
+    # Your other dependencies
+]
+
+[project.scripts]
+twat-yourplugin = "twat_yourplugin.__main__:main"  # Optional CLI
+
+[project.entry-points."twat.plugins"]
+yourplugin = "twat_yourplugin"  # Register as a twat plugin
+```
+
+### 3. Package Interface
+
+Your `__init__.py` should expose a clean public API:
+
+```python
+# this_file: src/twat_yourplugin/__init__.py
+"""Package description."""
+
+from importlib import metadata
+
+__version__ = metadata.version(__name__)
+
+# Export your public API
+from .core import main_function, OtherClass
+
+__all__ = ["main_function", "OtherClass"]
+```
+
+### 4. CLI Support (Optional)
+
+If your plugin provides a command-line interface:
+
+```python
+# this_file: src/twat_yourplugin/__main__.py
+"""Command-line interface."""
+
+import sys
+from typing import NoReturn
+
+def main() -> NoReturn:
+    """CLI entry point."""
+    # Your CLI implementation
+    sys.exit(0)
+
+if __name__ == "__main__":
+    main()
+```
+
+### 5. Example Implementation
+
+Here's a minimal example based on `twat-fs`:
+
+```python
+# src/twat_yourplugin/__init__.py
+"""Your plugin description."""
+
+from importlib import metadata
+from .core import upload_file, ProviderType
+
+__version__ = metadata.version(__name__)
+__all__ = ["upload_file", "ProviderType"]
+
+# src/twat_yourplugin/__main__.py
+"""CLI interface."""
+
+import sys
+from typing import NoReturn
+import fire
+from loguru import logger
+
+from .core import upload_file
+
+def main() -> NoReturn:
+    """CLI entry point."""
+    try:
+        fire.Fire({
+            "upload": upload_file,
+            # other commands...
+        })
+        sys.exit(0)
+    except Exception as e:
+        logger.error(f"Error: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
+```
+
+### 6. Best Practices
+
+1. **Naming**:
+   - Package name: `twat-yourplugin` (with hyphen)
+   - Import name: `twat_yourplugin` (with underscore)
+   - Plugin entry point: `yourplugin` (no prefix)
+
+2. **Dependencies**:
+   - Always include `twat` as a dependency
+   - Use optional dependencies for provider-specific features
+   - Include development tools in `dev` extra
+
+3. **Documentation**:
+   - Include docstrings for all public APIs
+   - Provide a comprehensive README
+   - Include usage examples
+
+4. **Testing**:
+   - Write unit tests for core functionality
+   - Include integration tests if applicable
+   - Test both Python API and CLI interface
+
+5. **Type Hints**:
+   - Use type hints throughout your code
+   - Support Python 3.10+
+   - Follow PEP 484 and PEP 585
+
+### 7. Development Workflow
+
+```bash
+# Create development environment
+pip install hatch
+hatch shell
+
+# Install in development mode
+pip install -e '.[dev,test]'
+
+# Run tests
+hatch run test
+hatch run test-cov
+
+# Run linting
+hatch run lint
+
+# Format code
+hatch run format
+```
+
+## License
+
+MIT License  
+.
