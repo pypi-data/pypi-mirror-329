@@ -1,0 +1,59 @@
+<div class="section-area">
+ 
+	<div class="row">
+		<div class="col-md-12">
+			<table id="excel-table" class="table table-striped table-theme-blue">
+				<thead>
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Type</th>
+						<th scope="col">Download</th>
+						<th scope="col">Status Log</th>
+						<th scope="col">Upload</th>
+						<th scope="col">Run Job</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for row in data %}
+					<tr>
+						<td style="text-align: center;">{{ row.Name }}</td>
+						<td style="text-align: center;">{{ row.Type }}</td>
+						<td style="text-align: center;">
+							<a href="https://cdc.sharepoint.com/teams/OPHDST-DataHub/Shared%20Documents/CDH%20Support%20and%20Engineering/CDH%20Engineering/common_documents/{{ row.data_product_id }}/{{ row.data_product_id }}_analysis_config.xlsx" 
+								class="center-content">
+								<span class="x32 fill-p cdc-icon-excel icon-blue"></span>
+								<span>Download</span>
+							</a>
+						</td>
+						<td style="text-align: center;">
+							<a href="{{ request.script_root }}/cdh_observability/job_status_list/{{ row.data_product_id }}"
+								class="center-content">
+								<span class="x32 fill-p cdc-icon-paper_03 icon-blue"></span>
+								<span>Status Log</span>
+							</a>
+						</td>
+						<td style="text-align: center;">
+							<a href="{{ request.script_root }}/cdh_configuration/upload_codes/{{ row.data_product_id }}"
+								class="center-content">
+								<span class="x32 fill-p cdc-icon-arrow-alt-circle-up-solid icon-blue"></span>
+								<span>Upload {{row.data_product_id}}</span>
+							</a>
+						</td>
+						<td style="text-align: center;">
+							<a href="{{ url_for('cdh_orchestration.data_product_job', data_product_id=row.data_product_id) }}" <span
+								class="x32 fill-p cdc-icon-stopwatch icon-blue"></span>
+								<span>Run Job</span>
+							</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+</div>
+   
+
+
+ 

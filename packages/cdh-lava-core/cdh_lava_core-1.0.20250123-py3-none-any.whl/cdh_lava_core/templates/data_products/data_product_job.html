@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run Job</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .container {
+            display: inline-block;
+            text-align: left;
+        }
+
+        .dropdown {
+            margin-bottom: 20px;
+            position: relative;
+            display: block;
+        }
+
+        .dropdown select {
+            padding: 15px;
+            width: 600px;
+            height: 50px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            appearance: none;
+            background: #fff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .dropdown::after {
+            content: '\25BC';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+        .submit-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .submit-button:active {
+            background-color: #003b80;
+        }
+
+        .submit-button:disabled {
+            background-color: #cccccc;
+            color: #888888;
+            cursor: not-allowed;
+        }
+
+        .submit-button.confirm {
+            background-color: #28a745;
+        }
+
+        .submit-button.confirm:hover {
+            background-color: #218838;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .dropdown-label {
+            margin-bottom: 5px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .loader-container {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Run Job</h1>
+
+    <p id="dataProductId">pending</p>
+    <p>Select job and environment, then click <b>Go</b> to proceed</p>
+    <div class="container">
+        <form id="submitForm" enctype="multipart/form-data">
+            <input id="csrf_token" name="csrf_token" type="hidden" value="{{ csrf_token }}" />
+            <div>
+                <input id="lava_admin_user_or_role" type="hidden"   />
+            </div>
+            <div>
+                <input id="data_product_id" type="hidden" />
+            </div>
+            <div class="dropdown">
+           
+                <label class="dropdown-label" for="job_name">Select job to run</label>
+                <select id="job_name" name="job_name" onchange="updateLavaAdminUserOrRole();resetGoButton()">
+                    <option>Please select</option>
+                    {% for job in jobs %}
+                 
+                    <option data-role="{{ job['lava_admin_user_or_role'] }}" value="{{ job['job'] }}">{{ job['job']  }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="dropdown">
+                <label class="dropdown-label" for="environment">Select environment</label>
+                <select id="environment" name="environment" onchange="resetGoButton()">
+                    <option>Please select</option>
+                    {% for env in environments %}
+                    <option value="{{ env }}">{{ env }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="buttons">
+                <button id="goButton" class="submit-button" type="button" onclick="handleGoButton()">Go</button>
+                <button class="back-button" type="button" onclick="goBack()">Back</button>
+            </div>
+        </form>
+        <div id="feedbackContainer">
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+
+        <div class="loader-container" id="loaderContainer">
+            <div class="loader" id="spinner"></div>
+        </div>
+        <p id="userId">User ID: pending</p>
+    </div>
+
+    <script>
+        let isConfirmStep = false;
+
+        window.onload = function () {
+            // Get the user ID from the cookie or fallback to a default value
+            var userId = getCookie("user_id");
+            if (!userId) {
+                userId = "test@cdc.gov";
+                setCookie("user_id", userId)
+            }
+
+            // Try to read the data_product_id from the URL parameter by name
+            var dataProductId = getParameterByName("data_product_id");
+
+            // If data_product_id is not found, attempt to get it from the last part of the URL
+            if (!dataProductId) {
+                dataProductId = getLastPartOfURL();
+                console.log("Data Product ID from last part of URL: " + dataProductId);
+            }
+
+            // If data_product_id was found, save it in a cookie for future use
+            if (dataProductId) {
+                setCookie("data_product_id", dataProductId, 7); // Store for 7 days
+            } else {
+                // Try to get it from the cookie if not in the URL
+                dataProductId = getCookie("data_product_id");
+                console.log("Data Product ID from cookie: " + dataProductId);
+            }
+
+            // Update the UI to show the retrieved IDs
+            document.getElementById("userId").textContent = "User ID: " + userId;
+            document.getElementById("dataProductId").textContent = "Data Product ID: " + dataProductId;
+            document.getElementById("data_product_id").value = dataProductId;
+        };
+
+        function resetGoButton() {
+            const goButton = document.getElementById("goButton");
+            goButton.textContent = "Go";
+            goButton.classList.remove("confirm");
+            isConfirmStep = false;
+        }
+
+        function handleGoButton() {
+            const jobSelect = document.getElementById('job_name');
+            const envSelect = document.getElementById('environment');
+            const errorMessage = document.getElementById("errorMessage");
+            
+            if (jobSelect.value === "Please select" || envSelect.value === "Please select") {
+                errorMessage.textContent = "Both Job and Environment must be selected!";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            errorMessage.style.display = "none";
+
+            if (!isConfirmStep) {
+                // First click: change to confirm state
+                isConfirmStep = true;
+                const goButton = document.getElementById("goButton");
+                goButton.textContent = "Confirm";
+                goButton.classList.add("confirm");
+            } else {
+                // Second click: perform the job run
+                performRunJob();
+            }
+        }
+
+        function performRunJob() {
+            var data = new FormData();
+            data.append("user_id", getCookie("user_id"));
+            data.append("data_product_id", getCookie("data_product_id"));
+            data.append("job_name", document.getElementById('job_name').value);
+            data.append("environment", document.getElementById('environment').value);
+            data.append("lava_admin_user_or_role", document.getElementById('lava_admin_user_or_role').value)
+            var submitButton = document.getElementById("goButton");
+            var spinner = document.getElementById("spinner");
+            var feedbackContainer = document.getElementById("feedbackContainer");
+
+            // Check if spinner and feedbackContainer exist before accessing their properties
+            if (spinner) {
+                // Disable the button and show the spinner
+                submitButton.disabled = true;
+                spinner.style.display = "inline-block";
+            }
+
+            var job_url = `../../cdh_orchestration/job_run`;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", job_url, true);
+            const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+            xhr.setRequestHeader("X-CSRFToken", csrfToken);
+
+            xhr.onload = function () {
+                // Re-enable the button and hide the spinner if they exist
+                if (submitButton) submitButton.disabled = false;
+                if (spinner) spinner.style.display = "none";
+
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    var contentType = xhr.getResponseHeader("Content-Type");
+
+                    if (contentType && contentType.includes("application/json")) {
+                        try {
+                            var resp = JSON.parse(xhr.responseText);
+
+                            if (resp.data === "Success") {
+                                if (feedbackContainer) {
+                                    feedbackContainer.innerHTML = 'Success: Job successfully started. Trace ID: <a href="../../cdh_observability/dependency_graph/' 
+                                        + resp.trace_id + '/' 
+                                        + document.getElementById('data_product_id').value + '/' 
+                                        + document.getElementById('environment').value + '/1" target="_self">' + resp.trace_id + '</a>';
+                                    feedbackContainer.style.color = "green";
+                                }
+                                console.log(resp);
+                            } else {
+                                if (feedbackContainer) {
+                                    feedbackContainer.textContent = "Error: Job failed to start. Trace ID: " + resp.trace_id.toString();
+                                    feedbackContainer.style.color = "red";
+                                }
+                                console.error("Job failed to start:", resp);
+                            }
+                        } catch (error) {
+                            if (feedbackContainer) {
+                                feedbackContainer.textContent = "Error parsing server response.";
+                                feedbackContainer.style.color = "red";
+                            }
+                            console.error("Parsing error:", error);
+                        }
+                    } else {
+                        if (feedbackContainer) {
+                            feedbackContainer.textContent = "Unexpected response format. Please contact support.";
+                            feedbackContainer.style.color = "red";
+                        }
+                        console.error("Unexpected response:", xhr.responseText);
+                        alert("Unexpected response format received.");
+                    }
+                } else {
+                    if (feedbackContainer) {
+                        feedbackContainer.textContent = `Error: Server responded with status ${xhr.status}`;
+                        feedbackContainer.style.color = "red";
+                    }
+                    console.error("Server error:", xhr.responseText);
+                    alert("Error uploading file: " + xhr.responseText);
+                }
+            };
+
+            xhr.onerror = function () {
+                if (!feedbackContainer) feedbackContainer = document.getElementById("feedbackContainer");
+
+                var contentType = xhr.getResponseHeader("Content-Type");
+
+                if (contentType && contentType.includes("application/json")) {
+                    try {
+                        var resp = JSON.parse(xhr.responseText);
+                        if (feedbackContainer) {
+                            feedbackContainer.textContent = "Error: An error occurred during the upload. " + resp.data;
+                        }
+                    } catch (error) {
+                        if (feedbackContainer) {
+                            feedbackContainer.textContent = "Error parsing server response.";
+                        }
+                        console.error("Parsing error:", error);
+                    }
+                } else {
+                    if (feedbackContainer) {
+                        feedbackContainer.textContent = "Error: Network or server issue occurred.";
+                    }
+                }
+
+                if (feedbackContainer) feedbackContainer.style.color = "red";
+                if (submitButton) submitButton.disabled = false;
+                if (spinner) spinner.style.display = "none";
+                console.error("Connection error");
+                alert("Error uploading file");
+            };
+
+            xhr.send(data);
+        }
+
+
+        // Function to go back in browser history
+        function goBack() {
+            window.history.back();
+        }
+
+        // Function to get a cookie value by name
+        function getCookie(name) {
+            const value = "; " + document.cookie;
+            const parts = value.split("; " + name + "=");
+            if (parts.length == 2) {
+                return parts.pop().split(";").shift();
+            } else {
+                return undefined;
+            }
+        }
+
+        // Function to get a URL parameter by name
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, "\\$&");
+            const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        // Function to get the last part of the URL (after the last `/`)
+        function getLastPartOfURL(url = window.location.href) {
+            const urlParts = url.split('/');
+            const lastPart = urlParts[urlParts.length - 1];
+            return lastPart ? decodeURIComponent(lastPart) : null;
+        }
+
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+        // Function to update the lava_admin_user_or_role field based on the selected job
+        function updateLavaAdminUserOrRole() {
+            const jobSelect = document.getElementById('job_name');
+            const selectedOption = jobSelect.options[jobSelect.selectedIndex];
+            const lavaAdminUserOrRole = selectedOption.getAttribute('data-role');
+            document.getElementById('lava_admin_user_or_role').value = lavaAdminUserOrRole || '';
+        }
+    </script>
+</body>
+</html>

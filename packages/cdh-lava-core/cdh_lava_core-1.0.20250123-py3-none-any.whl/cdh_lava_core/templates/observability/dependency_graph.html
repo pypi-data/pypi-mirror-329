@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dependency Timeline</title>
+
+    <!-- Automatically refresh the page every 10 seconds -->
+    <meta http-equiv="refresh" content="10">
+
+    <style>
+        html,
+        body {
+          height: 100%;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          font-family: Arial, sans-serif;
+        }
+        .back-button-container {
+          margin-top: 10px;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+
+        .back-button {
+          display: inline-block;
+          padding: 10px 20px;
+          background-color: #ccc;
+          color: #333;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        .message {
+          margin-top: 20px;
+          color: #555;
+          font-size: 16px;
+          text-align: center;
+        }
+    </style>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</head>
+<body>
+    <h1>Dependency Timeline</h1>
+    
+    <!-- Display the message about the refresh and log output -->
+    <div class="message">
+        This page will refresh every 10 seconds.<br>
+        It may take up to 3 minutes for the log output to first display.
+    </div>
+
+    <!-- The chart is inserted here from the Flask view -->
+    {{ chart|safe }}
+
+    <div class="back-button-container">
+        <div>&nbsp;</div>
+        <br/>
+        <br/>
+        <div>
+          <button class="back-button" onclick="goBack()">Back</button>
+        </div>
+    </div>
+
+</body>
+</html>

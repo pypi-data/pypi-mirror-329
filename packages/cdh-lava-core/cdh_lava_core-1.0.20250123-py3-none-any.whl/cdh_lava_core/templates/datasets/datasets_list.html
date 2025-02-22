@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>CDC LAVA Portal</title>
+    {% include 'common/head_tables.html' %}
+    {% include 'common/head.html' %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+
+<body class="theme-blue">
+    <div id="main-container" class="container-fluid">
+        {% include 'common/sidebar.html' %}
+        <main id="main-area">
+            {% include 'common/header.html' %}
+            {% include 'datasets/datasets_list_breadcrumb.html' %}
+            {% include 'datasets/datasets_list_content.html' %}
+            <!-- Additional content sections can be added here following the same structure and guidelines -->
+        </main>
+    </div>
+    <!-- Scripts at the end for faster page loading -->
+    <script>
+        // Additional JavaScript can go here
+    </script>
+</body>
+
+</html>
+{% include 'common/foot.html' %}
+
+<script>
+
+    function goBack() {
+        window.history.back();
+    }
+
+
+
+</script>
+<script> var cdc_datatable_20997 = { "columns": [{ "display": "display", "sort": "true" }] };</script>
+<script>
+    $(document).ready(function () {
+        const noEditFields = [
+            '__meta_ingress_file_path',
+            'data_product_id',
+            'expected_values',
+            'crdy',
+            'edc',
+            'other',
+            'columns',
+        ];
+
+        // Initialize DataTable with specific configuration
+        const table = $('#excel-table').DataTable({
+            "paging": true,
+            "ordering": true,
+            "info": true,
+            "pageLength": 10,
+            "drawCallback": function () {
+                // Reapply contenteditable after table redraw
+                $('#excel-table tbody td').each(function () {
+                    if (!noEditFields.includes((this).getAttribute('data-name'))) {
+                        $(this).attr('contenteditable', 'true');
+                    }
+                });
+            },
+            "scrollX": "90vw",
+            "scrollY": "675px",
+        });
+
+        $(document).on('keydown', '.only-numbers', function (event) {
+            // Allow: backspace, delete, tab, escape, and enter
+            if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 ||  // Allow: Ctrl+A 
+                (event.keyCode == 65 && event.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (event.keyCode >= 35 && event.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            else {
+                // Ensure that it is a number and stop the keypress
+                if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105)) {
+                    event.preventDefault();
+                }
+            }
+        });
+
+        // Handle row clicking and highlighting
+        $('#excel-table tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected highlight');
+            } else {
+                table.$('tr.selected').removeClass('selected highlight');
+                $(this).addClass('selected highlight');
+            }
+
+            // Enable/disable buttons based on selection
+            const hasSelection = table.$('tr.selected').length > 0;
+            $('#copy-row, #delete-row').prop('disabled', !hasSelection);
+        });
+
+        // Handle adding a new row
+        $('#add-row').on('click', function () {
+            const emptyRow = Array(21).fill('').concat(Array(4).fill('To edit parameters, save this table.'));  
+
+            emptyRow[columnNames.indexOf('data_product_id')] = window.location.pathname.split('/').pop();
+            emptyRow[columnNames.indexOf('expected_values')] = 'To edit parameters, save this table.';
+
+            // Add the row using DataTables API
+            const newRow = table.row.add(emptyRow).draw();
+
+            // Make cells editable
+            $(newRow.node()).find('td').each(function (index) {
+                $(this)
+                    .attr('data-name', columnNames[index])
+                    .css('text-align', 'left');
+                if (noEditFields.includes(columnNames[index])) {
+                    $(this)
+                        .attr('contenteditable', 'false');
+                }
+            });
+
+            // Select the new row
+            table.$('tr.selected').removeClass('selected highlight');
+            $(newRow.node()).addClass('selected highlight');
+            $('#copy-row, #delete-row').prop('disabled', false);
+
+            // Scroll to the new row
+            $('html, body').animate({
+                scrollTop: $(newRow.node()).offset().top
+            }, 500);
+        });
+
+        const columnNames = [
+            '__meta_ingress_file_path','data_product_id', 'database', 'dataset_name', 'file_name', 'folder_name', 'folder_name_source', 'format', 'row_id_keys', 'column_ordinal_sort', 'dataset_friendly_name', 'dataset_description','dataset_notes','expected_row_count_min','expected_row_count_max','expected_values','expected_values_source','column_header_skip_rows','compare_filter','compare_table','compare_row_id_keys', 'crdy', 'edc', 'other', 'columns'
+        ];
+
+        const CRDYNames = [
+            'crdy_domain', 'crdy_is_sa_dataset', 'crdy_maximum_latency_hours', 'crdy_subdomain', 'crdy_subdomain2',
+        ];
+
+        const EDCNames = [
+            'edc_access_level', 'edc_alation_datasource_id', 'edc_alation_datasource_identifier', 'edc_alation_schema_id', 'edc_applicability_end_date',
+            'edc_applicability_start_date', 'edc_citation', 'edc_conform_to_standard', 'edc_homepage_url', 'edc_identifier', 'edc_is_containing_pii', 'edc_language',
+            'edc_license', 'edc_pii_comments', 'edc_pii_fields', 'edc_reference', 'edc_referenced_by', 'edc_release_date', 'edc_size', 'edc_submitting_user', 'edc_tags',
+            'edc_update_frequency',
+        ];
+
+        const otherColumnNames = [
+            'encoding', 'entity', 'excluded_environments', 'frequency', 'incremental', 'is_active', 'is_export_schema_required', 'is_multiline',
+            'is_refreshed', 'is_required_for_power_bi', 'optimize_columns', 'optimize_type', 'pii_columns', 'workflow_batch_group', 'data_product_id',
+            'remove_columns_with_no_metadata', 'row_id_core_columns', 'use_liquid_clustering', 'partition_by', 'sheet_name', 'source_abbreviation', 'source_dataset_name',
+            'source_json_path',
+        ];
+
+        // Store for copied row data
+        let copiedRowData = null;
+
+        // Handle selecting a row
+        $('#select-row').on('click', function () {
+            const selectedRows = table.rows('.selected').nodes();
+            if (selectedRows.length > 0) {
+                $('#copy-row, #delete-row').prop('disabled', false);
+                alert('Row selected successfully!');
+            } else {
+                alert('No row selected! Please click on a row first.');
+            }
+        });
+
+        // Handle copying a row
+        $('#copy-row').on('click', function () {
+            const selectedRow = table.row('.selected');
+            if (selectedRow.any()) {
+                // Get the actual DOM row
+                const $rowNode = $(selectedRow.node());
+
+                // Create a deep copy of the row data by getting text content
+                copiedRowData = Array.from($rowNode.find('td')).map(td => {
+                    if (noEditFields.includes(td.getAttribute('data-name'))) {
+                        if (td.getAttribute('data-name') === 'data_product_id') {
+                            return window.location.pathname.split('/').pop();
+                        }
+                        return 'To edit parameters, save this table.';
+                    } else {
+                        return $(td).text();
+                    }
+                });
+
+                $('#paste-row').prop('disabled', false);
+                alert('Row copied successfully!');
+            } else {
+                alert('No row selected!');
+            }
+        });
+
+        // Handle pasting a row
+        $('#paste-row').on('click', function () {
+            if (!copiedRowData) {
+                alert('No row copied! Please select and copy a row first.');
+                return;
+            }
+
+            // Get selected row or add new row if none selected
+            let targetRow;
+            const selectedRow = table.row('.selected');
+
+            if (selectedRow.any()) {
+                // Paste into selected row
+                targetRow = selectedRow;
+                selectedRow.data(copiedRowData).draw();
+            } else {
+                // Add new row with copied data
+                targetRow = table.row.add(copiedRowData).draw();
+            }
+
+            // Set up the cells with proper attributes
+            $(targetRow.node()).find('td').each(function (index) {
+                $(this)
+                    .attr('data-name', columnNames[index])
+                    .css('text-align', 'left');
+                if (!noEditFields.includes(columnNames[index])) {
+                    $(this)
+                        .attr('contenteditable', 'true');
+                }
+            });
+
+            // Select and scroll to the target row
+            table.$('tr.selected').removeClass('selected highlight');
+            $(targetRow.node()).addClass('selected highlight');
+
+            $('html, body').animate({
+                scrollTop: $(targetRow.node()).offset().top
+            }, 500);
+        });
+
+        // Handle deleting a row
+        $('#delete-row').on('click', function () {
+            const selectedRow = table.row('.selected');
+            if (selectedRow.any()) {
+                if (confirm('Are you sure you want to delete this row?')) {
+                    selectedRow.remove().draw();
+                    $('#copy-row, #delete-row').prop('disabled', true);
+                }
+            } else {
+                alert('No row selected! Please select a row to delete.');
+            }
+        });
+
+        // Handle saving changes
+        $('#save-changes').on('click', function () {
+            const data = [];
+            const required = [
+                'data_product_id',
+                'database',
+                'dataset_name',
+                'folder_name_source',
+                'format',
+                'is_active',
+                'source_abbreviation',
+            ];
+
+            // Iterate through all rows and collect data
+            table.rows().every(function () {
+                const $row = $(this.node());
+                // const rowId = $(this.node()).attr('id');
+                const rowData = {};
+
+                $row.find('td').each(function () {
+                    const columnName = $(this).attr('data-name');
+                    if (columnName === 'crdy') {
+                        if ($(this).text().trim() === 'To edit parameters, save this table.') {
+                            CRDYNames.forEach(function () {
+                                rowData[this] = '';
+                            });
+                        } else {
+                            $(this).find(':input').each(function () {
+                                const crdyColumnName = $(this).attr('data-name');
+                                rowData[crdyColumnName] = $(this).val().trim();
+                            });
+                        }
+                    } else if (columnName === 'edc') {
+                        if ($(this).text().trim() === 'To edit parameters, save this table.') {
+                            EDCNames.forEach(function () {
+                                rowData[this] = '';
+                            });
+                        } else {
+                            $(this).find(':input').each(function () {
+                                const edcColumnName = $(this).attr('data-name');
+                                rowData[edcColumnName] = $(this).val().trim();
+                            });
+                        }
+                    } else if (columnName === 'other') {
+                        if ($(this).text().trim() === 'To edit parameters, save this table.') {
+                            otherColumnNames.forEach(function () {
+                                rowData[this] = '';
+                            });
+                        } else {
+                            $(this).find(':input').each(function () {
+                                const otherColumnName = $(this).attr('data-name');
+                                rowData[otherColumnName] = $(this).val().trim();
+                            });
+                        }
+                    } else if (columnName === 'expected_values') {
+                        if ($(this).text().trim() === 'To edit parameters, save this table.') {
+                            rowData[columnName] = '';
+                        } else {
+                            const input = $(this).find('textarea').val().trim();
+                            rowData[columnName] = input;
+                        }
+                    } else if (columnName === 'columns' || columnName === "__meta_ingress_file_path") {
+                        // do nothing
+                    } else {
+                        const input = $(this).text().trim();
+
+                        rowData[columnName] = input;
+                        if (required.includes(columnName) && input === '') {
+                            $(this).addClass('table-danger');
+                            throw new ValidationError(columnName);
+                        }
+                    }
+                });
+                data.push(rowData);
+            });
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            // Send data to the backend
+            fetch(document.location.href, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ data: data })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        // Parse the JSON error message if the response status is not OK (400, 500, etc.)
+                        return response.json().then(errorData => {
+                            const errorMessage = formatErrorMessage(errorData);
+                            // Throw error with formatted message
+                            throw new Error(errorMessage);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    alert('Changes saved successfully!');
+                    location.reload()
+                })
+                .catch(error => {
+                    console.error('Error saving changes:', error);
+                    alert('Failed to save changes.');
+                });
+        });
+
+        // Helper function to format the error message
+        function formatErrorMessage(errorData) {
+            let message = errorData.message || "Unknown error occurred.";
+            if (errorData.errors) {
+                message += "\nValidation Errors:";
+                for (const [field, error] of Object.entries(errorData.errors)) {
+                    message += `\n- ${field}: ${error}`;
+                }
+            }
+            return message;
+        }
+    });
+
+    class ValidationError extends Error {
+        constructor(message = "", ...args) {
+            super(message, ...args);
+            this.message = `Validation failed: the column ${message} is required.`;
+            alert(this.message);
+        }
+    }
+</script>
+
+<!-- Add CSS for selected row highlighting -->
+<style>
+    .selected {
+        background-color: #d1ecf1;
+        /* Highlight color for selected row */
+    }
+
+    .highlight {
+        background-color: #f5f5f5;
+        /* Highlight color for row when clicked */
+    }
+
+    /* Table interaction styles */
+    #excel-table tbody tr.highlight {
+        background-color: #f5f5f5;
+    }
+
+    #excel-table tbody tr.selected {
+        background-color: #d1ecf1 !important;
+        /* Use !important to override DataTables styling */
+    }
+
+    /* Ensure proper spacing between buttons */
+    .btn {
+        margin-right: 8px;
+    }
+
+    /* Improve table cell padding for better editing */
+    #excel-table td {
+        padding: 8px;
+        vertical-align: middle;
+    }
+
+    /* Style for editable cells focus state */
+    #excel-table td[contenteditable="true"]:focus {
+        outline: 2px solid #007bff;
+        outline-offset: -2px;
+        background-color: #fff;
+    }
+
+    /* Delete button styling */
+    #delete-row {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    #delete-row:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    #delete-row:disabled {
+        background-color: #dc354580;
+        border-color: #dc354580;
+    }
+</style>

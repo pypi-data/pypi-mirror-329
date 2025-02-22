@@ -1,0 +1,120 @@
+<div class="section-area">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Back Button - Gray and Left Aligned -->
+            <div class="d-flex justify-content-start mb-2">
+                <button class="btn btn-primary" onclick="window.history.back();">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Add, Select, Copy and Paste Buttons -->
+            <div class="d-flex justify-content-start mb-2">
+                <button class="btn btn-secondary mr-2" id="add-row">Add Row</button>
+                <button class="btn btn-secondary mr-2" id="select-row">Select Row</button>
+                <button class="btn btn-info mr-2" id="copy-row" disabled>Copy Row</button>
+                <button class="btn btn-warning" id="paste-row" disabled>Paste Row</button>
+                <button class="btn btn-warning" id="delete-row" disabled>Delete Row</button>
+            </div>
+
+            <table id="excel-table" class="table table-striped table-theme-blue dt-responsive" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th scope="col">View Name</th>
+                        <th scope="col">Database</th>
+                        <th scope="col">Execute Flag</th>
+                        <th scope="col">Execute Results Flag</th>
+                        <th scope="col">Export Schema Metrics</th>
+                        <th scope="col">Workflow Batch Group</th>
+                        <th scope="col">Workflow Description</th>
+                        <th scope="col">Workflow Name</th>
+                        <th scope="col">Workflow Parameters</th>
+                        <th scope="col">Workflow Type</th>
+                        <th scope="col">Data Product ID</th>
+                        <th scope="col">Row ID Keys</th>
+                        <th scope="col">Save Flag</th>
+                        <th scope="col">Workflow Category</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body" class="text-left">
+                    {% for row in queries %}
+                    {% set outer_loop = loop %}
+                    <tr id="{{ loop.index }}">
+                        <td contenteditable="true" data-name="view_name">{{ row.view_name }}</td>
+                        <td contenteditable="false" data-name="database">{{ row.database }}</td>
+                        <td contenteditable="false" data-name="execute_flag">{{ row.execute_flag }}</td>
+                        <td contenteditable="false" data-name="execute_results_flag">{{ row.execute_results_flag }}</td>
+                        <td contenteditable="true" data-name="export_schema_metrics">{{ row.export_schema_metrics }}
+                        </td>
+                        <td contenteditable="true" data-name="workflow_batch_group" class="only-numbers">{{
+                            row.workflow_batch_group }}</td>
+                        <td contenteditable="true" data-name="workflow_description">{{ row.workflow_description }}</td>
+                        <td contenteditable="true" data-name="workflow_name">{{ row.workflow_name }}</td>
+                        <td contenteditable="false" data-name="workflow_parameters" class="text-center">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#workflow_parameters_{{ loop.index }}">Edit&nbsp;Parameters</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="workflow_parameters_{{ loop.index }}" tabindex="-1"
+                                aria-labelledby="workflow_parameters_{{ loop.index }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="workflow_parameters_{{ loop.index }}_label">
+                                                Workflow Parameters</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="parameter_group_{{ loop.index }}">
+                                                {% for parameter in row.workflow_parameters %}
+                                                <div class="input-group text-left"
+                                                    id="parameter_{{ outer_loop.index }}_{{ loop.index }}">
+                                                    <input type="text" class="form-control"
+                                                        id="parameter_name_{{ outer_loop.index }}_{{ loop.index }}"
+                                                        value="{{ parameter[0] }}">
+                                                    <input type="text" class="form-control"
+                                                        id="parameter_value_{{ outer_loop.index }}_{{ loop.index }}"
+                                                        value="{{ parameter[1] }}">
+                                                    <button class="btn btn-danger"
+                                                        id="delete_parameter_{{ outer_loop.index }}_{{ loop.index }}">&times;</button>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            <button class="btn btn-success"
+                                                id="add_parameter_{{ outer_loop.index }}">Add Parameter</button>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td contenteditable="true" data-name="workflow_type">{{ row.workflow_type }}</td>
+                        <td contenteditable="false" data-name="data_product_id">{{ request.path.rsplit('/', 1)[-1] }}
+                        </td>
+                        <td contenteditable="true" data-name="row_id_keys">{{ row.row_id_keys }}</td>
+                        <td contenteditable="true" data-name="save_flag">{{ row.save_flag }}</td>
+                        <td contenteditable="true" data-name="workflow_category">{{ row.workflow_category }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Save Button to trigger saving of changes -->
+            <div class="d-flex justify-content-end mt-2">
+                <button class="btn btn-success" id="save-changes">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<template id="parameter_input_group_template">
+    <div class="input-group text-left" data-template="parameter_input_group">
+        <input type="text" class="form-control" data-template="parameter_name">
+        <input type="text" class="form-control" data-template="parameter_value">
+        <button class="btn btn-danger" data-template="delete_parameter">&times;</button>
+    </div>
+</template>

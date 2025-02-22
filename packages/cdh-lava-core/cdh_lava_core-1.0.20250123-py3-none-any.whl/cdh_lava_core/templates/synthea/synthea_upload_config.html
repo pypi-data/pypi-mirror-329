@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Metadata Management - Excel Upload</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .instructions {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+
+    .back-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #ccc;
+      color: #333;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .submit-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .submit-button:hover {
+      background-color: #0056b3;
+    }
+
+    .submit-button:active {
+      background-color: #003b80;
+    }
+
+    .submit-button:disabled {
+      background-color: #cccccc;
+      color: #888888;
+      cursor: not-allowed;
+    }
+
+    .file-upload {
+      display: none;
+    }
+
+    .file-upload-label {
+      cursor: pointer;
+    }
+
+    .back-button-container {
+      margin-top: -30px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .loader-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.7);
+      z-index: 1;
+      pointer-events: none;
+      display: none;
+    }
+
+    .loader {
+      border: 4px solid rgba(0, 0, 0, 0.3);
+      border-top: 4px solid #4caf50;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 2s linear infinite;
+    }
+
+    .error-message {
+      color: red;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="instructions">
+    <h2>Upload Excel Codes Worksheet</h2>
+    <p>Click the "Upload" button below to upload an Excel metadata file.</p>
+    <p>
+      Please ensure the file follows the specified format and contains
+      accurate metadata information.
+    </p>
+    <div>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <div>
+          <span id="file-name"></span>
+        </div>
+        <p>
+          <label for="file-upload" class="button file-upload-label">Upload</label>
+          <input id="file-upload" type="file" class="file-upload" />
+          <button class="submit-button" type="submit">Submit</button>
+        </p>
+      </form>
+    </div>
+  </div>
+  <div class="loader-container" id="loaderContainer">
+    <div class="loader" id="spinner"></div>
+  </div>
+  <div class="error-message" id="errorMessage"></div>
+  <div class="back-button-container">
+    <div>
+      <button class="back-button" onclick="goBack()">Back</button>
+    </div>
+  </div>
+  <br /><br />
+  <div id="userId"></div>
+  <div id="dataProductId"></div>
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+
+    function getCookie(name) {
+      const value = "; " + document.cookie;
+      const parts = value.split("; " + name + "=");
+      if (parts.length == 2) return parts.pop().split(";").shift();
+    }
+
+    function setCookie(name, value, days) {
+      var expires = "";
+      if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+    function getParameterByName(name, url = window.location.href) {
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    window.onload = function () {
+      var userId = getCookie("user_id");
+      var dataProductId = getParameterByName("data_product_id");
+
+      if (dataProductId) {
+        setCookie("data_product_id", dataProductId, 7); // Store for 7 days
+      } else {
+        dataProductId = getCookie("data_product_id");
+      }
+
+      document.getElementById("userId").textContent = "User ID: " + userId;
+      document.getElementById("dataProductId").textContent = "Data Product ID: " + dataProductId;
+
+      document.getElementById("uploadForm").addEventListener("submit", performUpload);
+    };
+
+    document.getElementById("file-upload").addEventListener("change", function () {
+      var fileName = this.files[0].name;
+      document.getElementById("file-name").textContent = fileName;
+    });
+
+    function performUpload(event) {
+      event.preventDefault();
+      var submitButton = document.querySelector(".submit-button");
+      submitButton.disabled = true;
+      var spinner = document.getElementById("spinner");
+      spinner.style.display = "inline-block";
+
+      var file = document.getElementById("file-upload").files[0];
+      var data = new FormData();
+      data.append("file", file);
+      data.append("user_id", getCookie("user_id"));
+      data.append("data_product_id", getCookie("data_product_id"));
+
+      var upload_url = `../cdh_lava/metadata_excel_file_upload_codes`;
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", upload_url, true);
+
+      xhr.onload = function () {
+        submitButton.disabled = false;
+        spinner.style.display = "none";
+        if (xhr.status >= 200 && xhr.status < 400) {
+          var resp = JSON.parse(xhr.responseText);
+          console.log(resp);
+          alert("File uploaded successfully");
+          alert(JSON.stringify(resp));
+        } else {
+          console.error("Server error: ", xhr.responseText);
+          alert("Error uploading file: " + xhr.responseText);
+        }
+      };
+
+      xhr.onerror = function () {
+        submitButton.disabled = false;
+        spinner.style.display = "none";
+        console.error("Connection error");
+        alert("Error uploading file");
+      };
+
+      xhr.send(data);
+    }
+  </script>
+</body>
+
+</html>

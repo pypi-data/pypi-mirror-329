@@ -1,0 +1,48 @@
+ 
+
+
+    <div class="container">
+
+         
+        <table id="excel-table" class="table table-striped table-theme-blue">
+            <thead>
+                <tr>
+                    <th scope="col">Data Product</th>
+                    <th scope="col">Report Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Report URL</th>
+                    <th scope="col">Report ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td style="text-align: center;">{{ row['Data Product'] }}</td>
+                    <td style="text-align: center;">{{ row['Report Name'] }}</td>
+                    <td style="text-align: center;">{{ row.Type }}</td>
+                    <td style="text-align: center;">
+                        <a href="{{ row['Report URL'] }}" class="center-content">
+                            <span class="x32 fill-p cdc-icon-excel icon-blue"></span>
+                            <span>Open Report</span>
+                        </a>
+                    </td>
+                    <td style="text-align: center;">{{ row['Report ID'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <script> var cdc_datatable_20997 = { "columns": [{ "display": "display", "sort": "true" }] };</script>
+    <div class="row-fluid">
+        <div class="vc_empty_space col-12 pt-3 pb-1"><span class="vc_empty_space_inner"></span></div>
+    </div>
+
+
+    <div class="col-md-2"></div>
+
+
+
+</div>

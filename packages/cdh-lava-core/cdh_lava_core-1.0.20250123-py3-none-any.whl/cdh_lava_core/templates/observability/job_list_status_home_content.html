@@ -1,0 +1,47 @@
+
+<div class="container">
+
+    <div class="container">
+        <table id="excel-table" class="table table-striped table-theme-blue">
+            <thead>
+                <tr>
+                    <th scope="col">Data Product</th>
+                    <th scope="col">Job Name</th>
+                    <th scope="col">Environment</th>
+                    <th scope="col">Job Status URL</th>
+                    <th scope="col">Operation ID</th>
+                    <th scope="col">Duration</th> <!-- New column for Duration -->
+                    <th scope="col">Status</th>   <!-- New column for Status -->
+                    <th scope="col">Last Run</th>  <!-- New column for Max Time Stamp -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td style="text-align: center;">{{ row['dataProductId'] }}</td>
+                    <td style="text-align: center;">{{ row['jobName'] }}</td>
+                    <td style="text-align: center;">{{ row['environment'] }}</td>
+                    <td style="text-align: center;">
+                        <a href="{{ request.script_root }}/cdh_observability/dependency_graph/{{ row.operation_Id }}/{{ row.dataProductId }}/{{ row.environment }}/1" class="center-content">
+                            <span class="x32 fill-p cdc-icon-excel icon-blue"></span>
+                            <span>Open Status Log</span>
+                        </a>
+                    </td>
+                    <td style="text-align: center;">{{ row['operation_Id'] }}</td>
+                    <td style="text-align: center;">{{ row['duration'][:8] }}</td> <!-- Slice duration to HH:MM:SS -->
+                    <td style="text-align: center;">{{ row['status'] }}</td>    <!-- Display Status -->
+                    <td style="text-align: center;">{{ row['maxTimestamp']}}</td> <!-- Display formatted maxTimeStamp -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script> var cdc_datatable_20997 = { "columns": [{ "display": "display", "sort": "true" }] };</script>
+    <div class="row-fluid">
+        <div class="vc_empty_space col-12 pt-3 pb-1"><span class="vc_empty_space_inner"></span></div>
+    </div>
+
+    <div class="col-md-2"></div>
+
+</div>
