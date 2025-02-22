@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+packages = ["findus", "findus.analyzer", "findus.helper", "findus.firmware"]
+
+[tool.setuptools.package-data]
+"findus.firmware" = ["config_v1/config.json", "config_v2/config.json"]
+
+[project]
+name = "findus"
+description = "Library to perform fault injection attacks with the PicoGlitcher, Chipwhisperer Husky or Chipwhisperer Pro"
+version = "0.9.19"
+license = {file = "LICENSE"}
+authors = [{name = "Matthias Kesenheimer", email = "m.kesenheimer@gmx.net"}]
+dependencies = [
+  "setuptools",
+  "adafruit-ampy",
+  "pyserial",
+  "plotly",
+  "pandas",
+  "dash",
+  "dash_bootstrap_components",
+  "dash_ag_grid",
+  "matplotlib",
+  "scipy",
+]
+
+[project.scripts]
+analyzer = "findus.analyzer.analyzer:main"
+analyzer-new =  "findus.analyzer.analyzer_new:main"
+upload = "findus.helper.upload:main"
+power-cycle-and-read = "findus.helper.power_cycle_and_read:main"
+power-cycle = "findus.helper.power_cycle:main"
+power-on = "findus.helper.power_on:main"
+bootloader-com = "findus.BootloaderCom:main"
+pulse-editor = "findus.InteractivePchipEditor:main"
+pulse-calibration = "findus.helper.pulse_shaping_calibration:main"
+
+
+[project.urls]
+Homepage = "https://mkesenheimer.github.io"
+Documentation = "https://fault-injection-library.readthedocs.io/en/latest/"
+Repository = "https://github.com/MKesenheimer/fault-injection-library.git"
+Issues = "https://github.com/MKesenheimer/fault-injection-library/issues"
