@@ -1,0 +1,232 @@
+Metadata-Version: 2.2
+Name: gunter
+Version: 1.0.4
+Summary: Program to turn any image of glyphs into a .hex-like format, and that into a .bdf
+Author-email: sapero <sapero@icosahedr.online>
+Project-URL: Homepage, https://git.icosahedr.online/sapero/gunter
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pillow
+
+# Gunter
+
+**Gunter** is a collection of tools for processing GTR files. It provides utilities for converting images to GTR format, indexing GTR files, merging GTR files, and converting GTR files to BDF fonts.
+
+---
+
+## Installation
+
+You can install `gunter` using `pip`:
+
+```bash
+pip install gunter
+```
+
+Alternatively, you can install it from the source:
+
+1. Clone the repository:
+   ```bash
+   git clone https://git.icosahedr.online/sapero/gunter.git
+   cd gunter
+   ```
+
+2. Install the package:
+   ```bash
+   pip install .
+   ```
+
+---
+
+## Usage
+
+`gunter` provides several commands for processing GTR files. Each command can be accessed via the `gunter` command-line tool.
+
+### General Syntax
+```bash
+gunter <command> [options]
+```
+
+### Available Commands
+
+#### 1. **`sheet`**
+Convert an image containing cells with drawn characters into a `.gtr` file.
+
+**Usage:**
+```bash
+gunter sheet -i <input.png> -x <cell_width> -y <cell_height> -o <output.gtr>
+```
+
+**Options:**
+- `-i`, `--input`: Path to the input image file.
+- `-x`, `--width`: Width of a cell in the image.
+- `-y`, `--height`: Height of a cell in the image.
+- `-o`, `--output`: Path to the output `.gtr` file.
+
+**Example:**
+```bash
+gunter sheet -i characters.png -x 8 -y 16 -o font.gtr
+```
+
+Note: Empty cells are skipped, except if that empty cell is the first cell (if you want to have a dedicated SPACE character) of the image.
+
+---
+
+#### 2. **`draw`**
+Convert between a character drawn in a text file into a `gtr` string and back.
+
+**Usage:**
+```bash
+gunter draw <mode> -i <input>
+```
+
+**Modes:**
+- `txt`: Convert a text file into a `gtr` string.
+- `gtr`: Print the text a `.gtr` 
+
+**Options:**
+- `-i`, `--input`: Path to the input file OR input string.
+
+**Example:**
+```bash
+gunter draw gtr -i 5/00888888F820202000
+gunter draw txt -i character.txt
+```
+
+Note: The text file must consist out of hyphens and hashtags.
+
+---
+
+#### 3. **`index`**
+Reindex a `.gtr` file using a character list.
+
+**Usage:**
+```bash
+gunter index -g <input.gtr> -c <characters.txt> -o <output.gtr>
+```
+
+**Options:**
+- `-g`, `--gtr`: Path to the input `.gtr` file.
+- `-c`, `--char`: Path to the file containing the characters.
+- `-o`, `--out`: Path to the output `.gtr` file.
+
+**Example:**
+```bash
+gunter index -g font.gtr -c characters.txt -o reindex.gtr
+```
+
+Note: The character list file must be in UTF-8.
+
+---
+
+#### 4. **`merge`**
+Merge two `.gtr` files into one.
+
+**Usage:**
+```bash
+gunter merge -1 <gtr1.gtr> -2 <gtr2.gtr> -o <output.gtr>
+```
+
+**Options:**
+- `-1`, `--gtr1`: Path to the first `.gtr` file.
+- `-2`, `--gtr2`: Path to the second `.gtr` file.
+- `-o`, `--out`: Path to the output `.gtr` file.
+
+**Example:**
+```bash
+gunter merge -1 set1.gtr -2 set2.gtr -o merged.gtr
+```
+
+Note: Both GTR files may not contain characters on the same codepoint
+
+---
+
+#### 5. **`to_bdf`**
+Convert a `.gtr` file into a `.bdf` font using a JSON properties file.
+
+**Usage:**
+```bash
+gunter to_bdf -i <input.gtr> -j <properties.json> -o <output.bdf>
+```
+
+**Options:**
+- `-i`, `--input`: Path to the input `.gtr` file.
+- `-j`, `--json`: Path to the JSON properties file.
+- `-o`, `--output`: Path to the output `.bdf` file.
+
+**Example:**
+```bash
+gunter to_bdf -i merged.gtr -j props.json -o font.bdf
+```
+
+---
+
+## Example Workflow Script
+
+This is in a project with many images of different widths (and those images/character lists labelled with said width)
+
+```bash
+files=("1" "2" "3" "4" "5" "6")
+height=9
+
+echo -n > font.gtr
+for file in "${files[@]}"; do
+	gunter sheet -i res/${file}.png -x ${file} -y ${height} -o /tmp/${file}.gtr
+	gunter index -g /tmp/${file}.gtr -o /tmp/${file}.gtr -c res/${file}.txt
+	gunter merge -1 font.gtr -2 /tmp/${file}.gtr -o font.gtr
+done
+
+gunter to_bdf -i font.gtr -j res/props.json -o font.bdf
+```
+
+---
+
+## Properties.JSON
+
+The following JSON structure represents the default font properties used in Gunter:
+
+```json
+{
+    "version": "1.0.0",
+    "foundry": "author",
+    "family_name": "default",
+    "weight_name": "medium",
+    "slant": "R",
+    "pixel_size": 16,
+    "resolution_x": 72,
+    "resolution_y": 72,
+    "average_width": 80,
+    "charset_registry": "ISO10646",
+    "charset_encoding": "1",
+    "x_height": 8,
+    "font_ascent": 14,
+    "font_descent": 2,
+    "default_char": 32,
+    "right_margin": 0
+}
+```
+
+### Property Descriptions:
+- **version**: Version of the font metadata.
+- **foundry**: Author or creator of the font.
+- **family_name**: Name of the font family.
+- **weight_name**: Weight classification of the font (e.g., light, medium, bold).
+- **slant**: Slant style (e.g., "R" for regular, "I" for italic).
+- **pixel_size**: Size of the font in pixels.
+- **resolution_x / resolution_y**: Font resolution in DPI.
+- **average_width**: Average character width.
+- **charset_registry / charset_encoding**: Character encoding standard.
+- **x_height**: Height of lowercase letters like 'x'.
+- **font_ascent**: The ascent height of the font.
+- **font_descent**: The descent depth of the font.
+- **default_char**: Default character used for missing glyphs.
+- **right_margin**: Right-side spacing after each character.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

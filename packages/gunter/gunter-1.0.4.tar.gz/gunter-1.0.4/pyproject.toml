@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gunter"
+version = "1.0.4"
+description = "Program to turn any image of glyphs into a .hex-like format, and that into a .bdf"
+authors = [
+    { name = "sapero", email = "sapero@icosahedr.online" },
+]
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pillow"
+]
+
+[project.urls]
+Homepage = "https://git.icosahedr.online/sapero/gunter"
+
+[project.scripts]
+gunter = "gunter:main"
