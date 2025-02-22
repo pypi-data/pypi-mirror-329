@@ -1,0 +1,27 @@
+[build-system]
+requires = ["flit_core>=3.4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "mwt_games_manager"
+version = "1.0.14"
+authors = [
+  { name="Mani Fatemi", email="mani@milkywaytrail.ca" },
+]
+description = "Manages users game data in MWT games"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "firebase-admin",
+    "flask-bcrypt"
+]
+
+[tool.setuptools.packages.find]
+exclude = ["configs/*"]
+
+[tool.setuptools]
+dependencies = {file = ["requirements.txt"]}
