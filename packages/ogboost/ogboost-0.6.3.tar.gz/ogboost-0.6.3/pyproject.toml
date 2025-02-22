@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = { find = { include = ["ogboost*"] } }
+
+[project]
+name = "ogboost"
+version = "0.6.3"
+description = "Ordinal Gradient Boosting"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    { name = "Alireza S. Mahani, Mansour T.A. Sharabiani", email = "alireza.s.mahani@gmail.com" }
+]
+keywords = ["ordinal regression", "gradient boosting", "machine learning", "scikit-learn"]
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "scipy",
+    "pydantic",
+    "pytest",
+    "matplotlib"
+]
