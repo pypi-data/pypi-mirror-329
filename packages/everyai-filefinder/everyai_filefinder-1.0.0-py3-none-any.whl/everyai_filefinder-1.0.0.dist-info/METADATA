@@ -1,0 +1,259 @@
+Metadata-Version: 2.2
+Name: everyai_filefinder
+Version: 1.0.0
+Summary: A CLI tool for searching, filtering, and managing files.
+Home-page: https://github.com/yourusername/filefinder
+Author: Your Name
+Author-email: Frank Mashraqi <softwareengineer99@yahoo.com>
+License: MIT
+Project-URL: Homepage, https://github.com/everyai/everyai_filefinder
+Project-URL: Repository, https://github.com/everyai/everyai_filefinder
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: rich
+Dynamic: author
+Dynamic: home-page
+Dynamic: requires-python
+
+# EveryAI_FileFinder - A File Search & Management CLI
+
+**EveryAI_FileFinder** is a command-line tool for searching, filtering, and managing files efficiently.
+
+## Installation
+```bash
+pip install everyai_filefinder
+```
+
+
+## **1️⃣ Recursive Search for Files (`find_files_recursively`)**
+🔹 Instead of searching only in the given directory, allow searching in **subdirectories** as well.
+
+```python
+def find_files_recursively(directory: str, extension: str) -> List[str]:
+    """
+    Recursively searches for files with the specified extension in a given directory and its subdirectories.
+
+    Parameters:
+    directory (str): The base directory to search.
+    extension (str): The file extension to filter by (e.g., ".mp4").
+
+    Returns:
+    List[str]: A list of file paths with the specified extension.
+    """
+    if not os.path.isdir(directory):
+        logger.error(f"[bold red]Invalid directory:[/bold red] {directory}")
+        return []
+
+    try:
+        files = []
+        for root, _, filenames in os.walk(directory):
+            for filename in filenames:
+                if filename.endswith(extension):
+                    files.append(os.path.join(root, filename))
+        
+        if files:
+            logger.info(f"[bold green]Found {len(files)} file(s) with extension '{extension}' (including subdirectories).[/bold green]")
+        else:
+            logger.warning(f"[bold yellow]No matching files found in '{directory}' and its subdirectories.[/bold yellow]")
+
+        return files
+    except Exception as e:
+        logger.exception(f"[bold red]Error while searching files recursively in '{directory}': {e}[/bold red]")
+        return []
+```
+
+✅ **Enhancement**: Supports searching within **nested directories** (useful for large folder structures).
+
+---
+
+## **2️⃣ File Size Filtering (`filter_files_by_size`)**
+🔹 Some users may want to filter files by **minimum or maximum file size**.
+
+```python
+def filter_files_by_size(files: List[str], min_size_kb: int = 0, max_size_kb: int = float('inf')) -> List[str]:
+    """
+    Filters files based on a given size range.
+
+    Parameters:
+    files (List[str]): List of file paths to filter.
+    min_size_kb (int): Minimum file size in KB. Default is 0.
+    max_size_kb (int): Maximum file size in KB. Default is infinite.
+
+    Returns:
+    List[str]: List of file paths that match the size criteria.
+    """
+    filtered_files = []
+
+    for file in files:
+        try:
+            file_size_kb = os.path.getsize(file) / 1024  # Convert bytes to KB
+            if min_size_kb <= file_size_kb <= max_size_kb:
+                filtered_files.append(file)
+        except Exception as e:
+            logger.warning(f"[bold yellow]Could not check size for {file}: {e}[/bold yellow]")
+
+    logger.info(f"[bold cyan]Filtered {len(filtered_files)} file(s) in size range {min_size_kb}-{max_size_kb} KB.[/bold cyan]")
+    return filtered_files
+```
+
+✅ **Enhancement**: Users can now **filter files by size** to find large or small files efficiently.
+
+---
+
+## **3️⃣ File Hashing & Deduplication (`get_file_hash` + `remove_duplicate_files`)**
+🔹 In large datasets, duplicate files may exist. **MD5 hashing** helps identify duplicate files.
+
+### **Function to Generate Hash**
+```python
+import hashlib
+
+def get_file_hash(file_path: str) -> str:
+    """
+    Computes the MD5 hash of a file to detect duplicates.
+
+    Parameters:
+    file_path (str): The file path.
+
+    Returns:
+    str: The computed MD5 hash of the file.
+    """
+    try:
+        hasher = hashlib.md5()
+        with open(file_path, "rb") as f:
+            while chunk := f.read(4096):  # Read in chunks to handle large files
+                hasher.update(chunk)
+        return hasher.hexdigest()
+    except Exception as e:
+        logger.warning(f"[bold yellow]Error hashing file '{file_path}': {e}[/bold yellow]")
+        return None
+```
+
+### **Function to Remove Duplicates**
+```python
+def remove_duplicate_files(files: List[str]) -> List[str]:
+    """
+    Removes duplicate files based on MD5 hashing.
+
+    Parameters:
+    files (List[str]): List of file paths.
+
+    Returns:
+    List[str]: A unique list of file paths (duplicates removed).
+    """
+    unique_files = {}
+    duplicate_files = []
+
+    for file in files:
+        file_hash = get_file_hash(file)
+        if file_hash:
+            if file_hash in unique_files:
+                duplicate_files.append(file)
+            else:
+                unique_files[file_hash] = file
+
+    if duplicate_files:
+        logger.warning(f"[bold yellow]Found {len(duplicate_files)} duplicate file(s).[/bold yellow]")
+    else:
+        logger.info("[bold green]No duplicate files found.[/bold green]")
+
+    return list(unique_files.values())  # Return only unique files
+```
+
+✅ **Enhancement**: Helps users **identify and remove duplicate files** automatically.
+
+---
+
+## **4️⃣ Sort Files by Date (`sort_files_by_date`)**
+🔹 Allows users to sort files **by creation or modification date**.
+
+```python
+def sort_files_by_date(files: List[str], sort_by: str = "modified") -> List[str]:
+    """
+    Sorts files based on modification or creation date.
+
+    Parameters:
+    files (List[str]): List of file paths.
+    sort_by (str): 'modified' (default) or 'created'.
+
+    Returns:
+    List[str]: Sorted list of file paths.
+    """
+    try:
+        if sort_by == "created":
+            files.sort(key=lambda f: os.path.getctime(f))  # Creation time
+        else:
+            files.sort(key=lambda f: os.path.getmtime(f))  # Modification time (default)
+
+        logger.info(f"[bold green]Files sorted by {sort_by} date.[/bold green]")
+        return files
+    except Exception as e:
+        logger.warning(f"[bold yellow]Error sorting files by {sort_by} date: {e}[/bold yellow]")
+        return files
+```
+
+✅ **Enhancement**: Useful when finding **recently modified or created files**.
+
+---
+
+## **5️⃣ Move or Copy Files (`move_files` & `copy_files`)**
+🔹 Users may want to **move or copy** the found files to another directory.
+
+### **Move Files**
+```python
+import shutil
+
+def move_files(files: List[str], target_directory: str):
+    """
+    Moves files to a target directory.
+
+    Parameters:
+    files (List[str]): List of file paths.
+    target_directory (str): Destination folder.
+    """
+    if not os.path.exists(target_directory):
+        os.makedirs(target_directory)
+
+    for file in files:
+        try:
+            shutil.move(file, target_directory)
+            logger.info(f"[bold cyan]Moved {file} to {target_directory}[/bold cyan]")
+        except Exception as e:
+            logger.warning(f"[bold yellow]Error moving {file}: {e}[/bold yellow]")
+```
+
+### **Copy Files**
+```python
+def copy_files(files: List[str], target_directory: str):
+    """
+    Copies files to a target directory.
+
+    Parameters:
+    files (List[str]): List of file paths.
+    target_directory (str): Destination folder.
+    """
+    if not os.path.exists(target_directory):
+        os.makedirs(target_directory)
+
+    for file in files:
+        try:
+            shutil.copy(file, target_directory)
+            logger.info(f"[bold cyan]Copied {file} to {target_directory}[/bold cyan]")
+        except Exception as e:
+            logger.warning(f"[bold yellow]Error copying {file}: {e}[/bold yellow]")
+```
+
+✅ **Enhancement**: Useful for **organizing or backing up files**.
+
+---
+
+## **🔹 Summary of Enhancements**
+| Feature | Description |
+|---------|-------------|
+| 🔍 **Recursive Search** | Finds files in **subdirectories** |
+| 📏 **Filter by Size** | Finds large/small files |
+| 🔑 **Detect Duplicates** | Removes duplicate files using MD5 hash |
+| 📅 **Sort by Date** | Sorts by **creation/modification date** |
+| 🚀 **Move or Copy Files** | Organizes files into **another directory** |
+
+---
