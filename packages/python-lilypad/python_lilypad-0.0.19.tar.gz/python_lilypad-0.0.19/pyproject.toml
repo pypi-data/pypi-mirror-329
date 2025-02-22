@@ -1,0 +1,200 @@
+[project]
+name = "python-lilypad"
+version = "0.0.19"
+description = "An open-source prompt engineering framework."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [
+    { name = "William Bakst", email = "william@mirascope.io" },
+    { name = "Brendan Kao", email = "brendan@mirascope.io" },
+]
+maintainers = [{ name = "William Bakst", email = "william@mirascope.io" }]
+keywords = [
+    "prompt engineering",
+    "evaluation",
+    "llm",
+    "llm tools",
+    "developer tools",
+    "artificial intelligence",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: OpenTelemetry",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "mirascope>=1.9.5",
+    "sqlmodel>=0.0.22",
+    "psycopg2-binary>=2.9.9",
+    "fastapi[standard]>=0.114.0",
+    "opentelemetry-api>=1.29.0",
+    "opentelemetry-sdk>=1.29.0",
+    "opentelemetry-instrumentation>=0.49b1",
+    "typer>=0.12.5",
+    "itsdangerous>=2.2.0",
+    "python-jose[cryptography]>=3.3.0",
+    "pydantic-settings>=2.6.1",
+    "cryptography>=43.0.3",
+    "ruff>=0.9.5",
+    "requests>=2.32.3",
+    "pillow>=10.4.0",
+    "alembic>=1.14.0",
+    "posthog>=3.8.3",
+    "oxenai>=0.26.0",
+    "resend>=2.6.0",
+    "libcst>=1.6.0",
+    "alembic-postgresql-enum>=1.6.0",
+    "cachetools>=5.5.1",
+]
+
+[project.urls]
+Homepage = "https://lilypad.so"
+Documentation = "https://lilypad.so/docs"
+Repository = "https://github.com/Mirascope/lilypad"
+Issues = "https://github.com/Mirascope/lilypad/issues"
+Changelog = "https://github.com/Mirascope/lilypad/releases"
+
+[project.optional-dependencies]
+openai = ["openai>=1.57.0"]
+anthropic = ["anthropic>=0.36.0"]
+gemini = ["google-generativeai>=0.4.0,<1", "pillow>=10.4.0,<11"]
+bedrock = [
+    "aioboto3>=13.2.0",
+    "boto3>=1.35.36",
+    "boto3-stubs[bedrock-runtime]>=1.35.82",
+    "types-aioboto3[bedrock-runtime]>=13.2.0.post3",
+]
+evals = ["oxenai>=0.20.0"]
+mistral = ["mistralai>=1.0.0,<2"]
+outlines = ["outlines>=0.1.11"]
+vertex = ["google-cloud-aiplatform>=1.74.0"]
+
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.3.2",
+    "pyright>=1.1.394",
+    "pytest-asyncio>=0.23.8",
+    "pytest-cov>=5.0.0",
+    "pre-commit>=3.8.0",
+]
+
+[tool.uv.sources]
+
+
+[project.scripts]
+lilypad = "lilypad.cli.main:app"
+
+[tool.pytest.ini_options]
+filterwarnings = ["ignore::DeprecationWarning"]
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint.per-file-ignores]
+"lilypad/server/migrations/versions/*.py" = ["D103"]
+"__init__.py" = ["F401"]
+"tests/*.py" = ["S101", "ANN"]
+"tests/_utils/closure/closure_test_functions/main.py" = ["D101", "D212", "D402", "D403"]
+"tests/_utils/closure/closure_test_functions/other.py" = [
+    "D101",
+    "D102",
+    "D103",
+]
+"docs/*.py" = ["ANN401"]
+
+[tool.ruff.lint]
+select = [
+    "D",
+    "E",
+    "F",
+    "I",
+    "UP",
+    "YTT",
+    "B",
+    "T10",
+    "T20",
+    "C4",
+    "PYI006",
+    "SIM",
+    "ANN",
+]
+ignore = [
+    'D105',
+    'D107',
+    'D205',
+    'D415',
+    'E501',
+    'B011',
+    'B028',
+    'B904',
+    'ANN401',
+]
+fixable = ["ALL"]
+isort = { known-first-party = ['lilypad', 'tests', 'examples'] }
+pydocstyle = { convention = 'google' }
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.pyright]
+exclude = ["examples"]
+venvPath = "."
+venv = ".venv"
+
+[tool.codespell]
+skip = [".git", "*.lock", "./client/pnpm-lock.yaml", "./docs/pnpm-lock.yaml"]
+
+[tool.coverage.report]
+exclude_also = ["@overload", "@abstractmethod", "if TYPE_CHECKING:"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["lilypad"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/lilypad"]
+
+[tool.hatch.build.force-include]
+"lilypad/server/static" = "lilypad/server/static"
