@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-datashow"
+version = "0.1.6"
+description = "Present your datasets on your django site"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["django-admin-sortable2>=2", "django>=4.2", "markdown>=3.7"]
+
+[dependency-groups]
+dev = [
+    "djlint>=1.36.1",
+    "pytest>=8.3.4",
+    "pytest-django>=4.9.0",
+    "tox>=4.24.1",
+]
+
+[tool.hatch.build.targets.sdist]
+packages = ["datashow"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["datashow"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+FAIL_INVALID_TEMPLATE_VARS = true
