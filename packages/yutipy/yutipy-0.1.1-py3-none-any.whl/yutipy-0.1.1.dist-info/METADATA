@@ -1,0 +1,140 @@
+Metadata-Version: 2.2
+Name: yutipy
+Version: 0.1.1
+Summary: A simple package for retrieving music information from various music platforms APIs.
+Author: Cheap Nightbot
+Author-email: Cheap Nightbot <hi@cheapnightbot.slmail.me>
+Maintainer-email: Cheap Nightbot <hi@cheapnightbot.slmail.me>
+License: MIT License
+        
+        Copyright (c) 2025 Cheap Nightbot
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/CheapNightbot/yutipy
+Project-URL: Documentation, https://yutipy.readthedocs.io/
+Project-URL: Repository, https://github.com/CheapNightbot/yutipy.git
+Project-URL: Issues, https://github.com/CheapNightbot/yutipy/issues
+Project-URL: Changelog, https://github.com/CheapNightbot/yutipy/blob/master/CHANGELOG.md
+Project-URL: funding, https://ko-fi.com/cheapnightbot
+Keywords: music,API,Deezer,iTunes,Spotify,YouTube Music,search,retrieve,information,yutify
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: python-dotenv==1.0.1
+Requires-Dist: rapidfuzz==3.12.1
+Requires-Dist: requests==2.32.3
+Requires-Dist: ytmusicapi==1.10.1
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/CheapNightbot/yutipy/main/docs/_static/yutipy_header.png" alt="yutipy" />
+</p>
+
+<p align="center">
+<a href="https://github.com/CheapNightbot/yutipy/actions/workflows/tests.yml">
+<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/cheapnightbot/yutipy/pytest-unit-testing.yml?style=for-the-badge&label=Pytest">
+</a>
+    
+<a href="https://pypi.org/project/yutipy/">
+<img src="https://img.shields.io/pypi/v/yutipy?style=for-the-badge" alt="PyPI" />
+</a>
+<a href="https://yutipy.readthedocs.io/en/latest/">
+<img src="https://img.shields.io/readthedocs/yutipy?style=for-the-badge" alt="Documentation Status" />
+</a>
+<a href="https://github.com/CheapNightbot/yutipy/blob/master/LICENSE">
+<img src="https://img.shields.io/github/license/CheapNightbot/yutipy?style=for-the-badge" alt="License" />
+</a>
+<a href="https://github.com/CheapNightbot/yutipy/stargazers">
+<img src="https://img.shields.io/github/stars/CheapNightbot/yutipy?style=for-the-badge" alt="Stars" />
+</a>
+<a href="https://github.com/CheapNightbot/yutipy/issues">
+<img src="https://img.shields.io/github/issues/CheapNightbot/yutipy?style=for-the-badge" alt="Issues" />
+</a>
+</p>
+
+A _**simple**_ Python package for searching and retrieving music information from various music platforms APIs, including Deezer, iTunes, Spotify, and YouTube Music.
+
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Usage Example](#usage-example)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+- Simple & Easy integration with popular music APIs.
+- Search for music by artist and song title across multiple platforms.
+- Retrieve detailed music information, including album art, release dates, ISRC, and UPC codes.
+
+## Installation
+
+You can install the package using pip. Make sure you have Python 3.8 or higher installed.
+
+```bash
+pip install -U yutipy
+```
+
+## Usage Example
+
+Here's a quick example of how to use the `yutipy` package to search for a song:
+
+### Deezer
+
+```python
+from yutipy.deezer import Deezer
+
+with Deezer() as deezer:
+    result = deezer.search("Artist Name", "Song Title")
+    print(result)
+```
+
+For more usage examples, see the [Usage Examples](https://yutipy.readthedocs.io/en/latest/usage_examples.html) page in docs.
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Optionally, create an issue to discuss the changes you plan to make.
+3. Create a new branch linked to that issue.
+4. Make your changes in the new branch.
+5. Write tests if you add new functionality.
+6. Ensure all tests pass before opening a pull request.
+7. Open a pull request for review.
+
+Thank you for your contributions!
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
