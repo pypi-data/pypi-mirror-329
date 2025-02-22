@@ -1,0 +1,117 @@
+Metadata-Version: 2.2
+Name: nuvolos
+Version: 0.6.3
+Summary: The Nuvolos Python library for database connectivity
+Author-email: Alphacruncher <support@nuvolos.cloud>
+License: MIT
+Project-URL: homepage, https://github.com/nuvolos-cloud/python-connector
+Requires-Python: >=3.7
+Description-Content-Type: text/x-rst
+Requires-Dist: keyring>=24.1.0
+Requires-Dist: snowflake-connector-python[pandas]>=3.13.2
+Requires-Dist: snowflake-sqlalchemy>=1.7.3
+Requires-Dist: cryptography>=44.0.0
+Requires-Dist: pyarrow<19.0.0,>=18.1.0
+Provides-Extra: test
+Requires-Dist: pytest; extra == "test"
+
+nuvolos - The database connectivity library for Nuvolos
+=======================================================
+
+Installation
+============
+
+.. code:: bash
+
+    $ pip install --upgrade nuvolos
+
+Connecting to Snowflake with Nuvolos Connector
+==============================================
+
+1. Using SQLAlchemy with Username/Password
+------------------------------------------
+
+.. code-block:: python
+
+    from nuvolos import get_connection
+    from sqlalchemy import text
+
+    # Connect using username and password
+    conn = get_connection(
+        username="your_username",
+        password="your_password",
+        dbname="YOUR_DB",
+        schemaname="YOUR_SCHEMA"
+    )
+
+    try:
+        # Execute a query
+        result = conn.execute(text("SELECT * FROM YOUR_TABLE"))
+        for row in result:
+            print(row)
+    finally:
+        conn.close()
+
+2. Using SQLAlchemy with RSA Key
+--------------------------------
+
+.. code-block:: python
+
+    import os
+    from nuvolos import get_connection
+    from sqlalchemy import text
+    
+    # Set environment variables for RSA authentication
+    os.environ["SNOWFLAKE_RSA_KEY"] = "/path/to/rsa_key.p8"
+    os.environ["SNOWFLAKE_RSA_KEY_PASSPHRASE"] = "your_key_passphrase"  # Optional
+
+    # Connect using RSA key authentication
+    conn = get_connection(
+        username="YOUR_USERNAME",
+        dbname="YOUR_DB",
+        schemaname="YOUR_SCHEMA"
+    )
+
+    try:
+        # Execute a query
+        result = conn.execute(text("SELECT * FROM YOUR_TABLE"))
+        for row in result:
+            print(row)
+    finally:
+        conn.close()
+
+3. Using Raw Connector with Username/Password
+---------------------------------------------
+
+.. code-block:: python
+
+    from nuvolos import get_raw_connection
+
+    # Connect using username and password
+    conn = get_raw_connection(
+        username="your_username",
+        password="your_password",
+        dbname="YOUR_DB",
+        schemaname="YOUR_SCHEMA"
+    )
+
+4. Using Raw Connector with RSA Key
+-----------------------------------
+
+.. code-block:: python
+
+    import os
+    from nuvolos import get_raw_connection
+
+    # Set environment variables for RSA authentication
+    os.environ["SNOWFLAKE_RSA_KEY"] = "/path/to/rsa_key.p8"
+    os.environ["SNOWFLAKE_RSA_KEY_PASSPHRASE"] = "your_key_passphrase"  # Optional
+
+    # Connect using RSA key authentication
+    conn = get_raw_connection(
+        username="YOUR_USERNAME",
+        dbname="YOUR_DB",
+        schemaname="YOUR_SCHEMA"
+    )
+
+Documentation and examples available at: https://docs.nuvolos.cloud/data/access-data-from-applications#connecting-with-python
