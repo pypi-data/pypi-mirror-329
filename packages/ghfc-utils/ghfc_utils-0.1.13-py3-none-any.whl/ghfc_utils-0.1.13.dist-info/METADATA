@@ -1,0 +1,74 @@
+Metadata-Version: 2.4
+Name: ghfc-utils
+Version: 0.1.13
+Summary: Various genomics tools and scripts used in the GHFC lab
+Project-URL: Repository, https://gitlab.pasteur.fr/ghfc/ghfc-utils
+Project-URL: Issues, https://gitlab.pasteur.fr/ghfc/ghfc-utils/-/issues
+Project-URL: Changelog, https://gitlab.pasteur.fr/ghfc/ghfc-utils/-/blob/master/CHANGELOG.md
+Author-email: Freddy Cliquet <fcliquet@pasteur.fr>, Alexandre Mathieu <amathieu@pasteur.fr>
+License: MIT License
+        
+        Copyright (c) 2023 bourgeron-lab
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+License-File: LICENSE
+Keywords: WGS,de novo mutations,genomics,slivar,variant filtering
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Requires-Python: <3.13,>=3.10
+Requires-Dist: gwaslab==3.5.2
+Requires-Dist: numpy<2
+Requires-Dist: pandas>=2.2.3
+Requires-Dist: pyranges>=0.1.2
+Requires-Dist: python-docx>=1.1.2
+Requires-Dist: pyyaml>=6.0.2
+Requires-Dist: scikit-learn>=1.6.0
+Requires-Dist: scipy>=1.15.0
+Requires-Dist: setuptools>=75.7.0
+Requires-Dist: simple-slurm>=0.3.5
+Requires-Dist: statsmodels>=0.14.4
+Requires-Dist: tabulate>=0.9.0
+Requires-Dist: termcolor>=2.5.0
+Requires-Dist: tqdm>=4.67.1
+Description-Content-Type: text/markdown
+
+# ghfc-utils
+
+set of small tools designed to help automatize simple task locally or on Pasteur's cluster.
+
+- **slivar-reannotate** for the postprocessing of slivar files including filtering and geneset reannotation.
+- **slivar-dnm** for the computation of a prediction score about the veracity of *de novo* mutations
+
+## Installation
+
+```bash
+pip install ghfc-utils
+```
+
+PS. on maestro, do not forget to load Python first (not needed anymore once installed):
+
+```bash
+module load Python/3.9.16
+```
+
+### Installation using **uv**
+
+TODO
