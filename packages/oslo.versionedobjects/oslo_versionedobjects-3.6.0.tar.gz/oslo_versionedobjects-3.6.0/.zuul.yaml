@@ -1,0 +1,27 @@
+- project:
+    check:
+      jobs:
+        - oslo.versionedobjects-src-grenade-multinode
+    templates:
+      - check-requirements
+      - lib-forward-testing-python3
+      - openstack-python3-jobs
+      - periodic-stable-jobs
+      - publish-openstack-docs-pti
+      - release-notes-jobs-python3
+
+- job:
+    name: oslo.versionedobjects-src-grenade-multinode
+    parent: grenade-multinode
+    voting: false
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^doc/.*$
+      - ^releasenotes/.*$
+      - ^.git.*$
+      - ^.*/locale/.*po$
+      - ^(test-|)requirements.txt$
+      - ^setup.cfg$
+      - ^\.pre-commit-config\.yaml$
+    required-projects:
+      - opendev.org/openstack/oslo.versionedobjects
