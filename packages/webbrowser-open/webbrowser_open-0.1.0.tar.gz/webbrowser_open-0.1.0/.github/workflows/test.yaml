@@ -1,0 +1,60 @@
+name: Tests
+on:
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - ".github/workflows/*.yaml"
+      - "!.github/workflows/test.yaml"
+  push:
+    paths-ignore:
+      - "docs/**"
+      - ".github/workflows/*.yaml"
+      - "!.github/workflows/test.yaml"
+    branches:
+      - main
+    tags: ["**"]
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ${{ matrix.runs-on }}
+    timeout-minutes: 10
+    strategy:
+      # Keep running even if one variation of the job fail
+      fail-fast: false
+      matrix:
+        python:
+          - "3.9"
+          - "3.13"
+        runs-on:
+          - windows-2022
+          - ubuntu-24.04
+          - macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "${{ matrix.python }}"
+          cache: pip
+      - name: Install Python dependencies
+        run: |
+          pip install ".[test]"
+          pip list
+      - name: Linux setup
+        if: ${{ contains(matrix.runs-on, 'ubuntu') }}
+        # install gtk-launch, xdg-settings
+        run: |
+          sudo apt-get -y install libgtk-3-bin xdg-utils
+      - name: Linux pre-check
+        if: ${{ contains(matrix.runs-on, 'ubuntu') }}
+        continue-on-error: true
+        run: |
+          which gio
+          which gtk-launch
+          which xdg-settings
+          which xdg-mime
+          xdg-settings get default-web-browser
+      - name: Run tests
+        run: |
+          pytest
+      # GitHub action reference: https://github.com/codecov/codecov-action
+      - uses: codecov/codecov-action@v5
