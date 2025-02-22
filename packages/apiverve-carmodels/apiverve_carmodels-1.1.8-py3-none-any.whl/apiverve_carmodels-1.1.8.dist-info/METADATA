@@ -1,0 +1,227 @@
+Metadata-Version: 2.2
+Name: apiverve-carmodels
+Version: 1.1.8
+Summary: Car Models is a simple tool for getting information on cars. It returns information on various car models
+Author-email: APIVerve <hello@apiverve.com>
+Project-URL: Homepage, https://apiverve.com?utm_source=pypi
+Project-URL: Repository, https://github.com/apiverve/carmodels.Python-API
+Project-URL: Documentation, https://docs.apiverve.com/api/carmodels?utm_source=pypi
+Project-URL: Twitter, https://twitter.com/apivervehq
+Keywords: car models,car models api,car models tool,car models software,car models service
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Financial and Insurance Industry
+Classifier: Intended Audience :: Healthcare Industry
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Information Technology
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Utilities
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Education
+Classifier: Topic :: Internet :: WWW/HTTP :: Indexing/Search
+Classifier: Topic :: Internet :: WWW/HTTP :: Site Management
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Classifier: Topic :: Internet
+Classifier: Topic :: Communications
+Classifier: Topic :: Office/Business
+Classifier: Topic :: Text Processing
+Classifier: Topic :: Security
+Classifier: Topic :: Database
+Classifier: Topic :: Software Development :: Code Generators
+Classifier: Topic :: Software Development :: Pre-processors
+Classifier: Topic :: Software Development :: Quality Assurance
+Classifier: Topic :: Software Development :: Testing
+Classifier: Natural Language :: English
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+Car Models API
+============
+
+Car Models is a simple tool for getting information on cars. It returns information on various car models
+
+![Build Status](https://img.shields.io/badge/build-passing-green)
+![Code Climate](https://img.shields.io/badge/maintainability-B-purple)
+![Prod Ready](https://img.shields.io/badge/production-ready-blue)
+
+This is a Python API Wrapper for the [Car Models API](https://apiverve.com/marketplace/api/carmodels)
+
+---
+
+## Installation
+	pip install apiverve-carmodels
+
+---
+
+## Configuration
+
+Before using the carmodels API client, you have to setup your account and obtain your API Key.  
+You can get it by signing up at [https://apiverve.com](https://apiverve.com)
+
+---
+
+## Usage
+
+The Car Models API documentation is found here: [https://docs.apiverve.com/api/carmodels](https://docs.apiverve.com/api/carmodels).  
+You can find parameters, example responses, and status codes documented here.
+
+### Setup
+
+```
+# Import the client module
+from apiverve_carmodels.apiClient import CarmodelsAPIClient
+
+# Initialize the client with your APIVerve API key
+api = CarmodelsAPIClient("[YOUR_API_KEY]")
+```
+
+---
+
+
+### Perform Request
+Using the API client, you can perform requests to the API.
+
+###### Define Query
+
+```
+query = { "year": "2020",  "make": "Toyota",  "model": "Camry",  "trim": "LE" }
+```
+
+###### Simple Request
+
+```
+# Make a request to the API
+result = api.execute(query)
+
+# Print the result
+print(result)
+```
+
+###### Example Response
+
+```
+{
+  "status": "ok",
+  "error": null,
+  "data": {
+    "count": 4,
+    "filteredOn": [
+      "year",
+      "make",
+      "model"
+    ],
+    "cars": [
+      {
+        "Make": "Acura",
+        "CityMPG": "30",
+        "CityELEC": "0",
+        "CombMPG": "33",
+        "CombELEC": "0",
+        "Cyl": "4",
+        "Displace": "1.5",
+        "Drive": "Front-Wheel Drive",
+        "Fuel": "Premium",
+        "HighwELEC": "0",
+        "HighwMPG": "37",
+        "Trans": "Automatic (AV-S7)",
+        "Size": "Large Cars",
+        "Year": "2024",
+        "Trim": "Integra",
+        "Model": "Integra"
+      },
+      {
+        "Make": "Acura",
+        "CityMPG": "21",
+        "CityELEC": "0",
+        "CombMPG": "24",
+        "CombELEC": "0",
+        "Cyl": "4",
+        "Displace": "2",
+        "Drive": "Front-Wheel Drive",
+        "Fuel": "Premium",
+        "HighwELEC": "0",
+        "HighwMPG": "28",
+        "Trans": "Manual 6-spd",
+        "Size": "Large Cars",
+        "Year": "2024",
+        "Trim": "Integra",
+        "Model": "Integra"
+      },
+      {
+        "Make": "Acura",
+        "CityMPG": "26",
+        "CityELEC": "0",
+        "CombMPG": "30",
+        "CombELEC": "0",
+        "Cyl": "4",
+        "Displace": "1.5",
+        "Drive": "Front-Wheel Drive",
+        "Fuel": "Premium",
+        "HighwELEC": "0",
+        "HighwMPG": "36",
+        "Trans": "Manual 6-spd",
+        "Size": "Large Cars",
+        "Year": "2024",
+        "Trim": "Integra A-Spec",
+        "Model": "Integra"
+      },
+      {
+        "Make": "Acura",
+        "CityMPG": "29",
+        "CityELEC": "0",
+        "CombMPG": "32",
+        "CombELEC": "0",
+        "Cyl": "4",
+        "Displace": "1.5",
+        "Drive": "Front-Wheel Drive",
+        "Fuel": "Premium",
+        "HighwELEC": "0",
+        "HighwMPG": "36",
+        "Trans": "Automatic (AV-S7)",
+        "Size": "Large Cars",
+        "Year": "2024",
+        "Trim": "Integra A-Spec",
+        "Model": "Integra"
+      }
+    ]
+  },
+  "code": 200
+}
+```
+
+---
+
+## Customer Support
+
+Need any assistance? [Get in touch with Customer Support](https://apiverve.com/contact).
+
+---
+
+## Updates
+Stay up to date by following [@apiverveHQ](https://twitter.com/apiverveHQ) on Twitter.
+
+---
+
+## Legal
+
+All usage of the APIVerve website, API, and services is subject to the [APIVerve Terms of Service](https://apiverve.com/terms) and all legal documents and agreements.
+
+---
+
+## License
+Licensed under the The MIT License (MIT)
+
+Copyright (&copy;) 2025 APIVerve, and EvlarSoft LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
