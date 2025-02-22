@@ -1,0 +1,13 @@
+import os
+
+DEBUG = bool(int(os.environ.get("CRASHLESS_DEBUG", 0)))
+BACKEND_DOMAIN = 'http://localhost:8000' if DEBUG else 'https://api.peaku.io'
+
+AVG_CHARS_PER_WORD = 5 + 1  # this includes 1 space per word.
+SAFETY_FACTOR = 1.35
+AVG_WORDS_PER_TOKEN = 0.75
+
+MAX_TOKENS = 128_000
+MAX_WORDS = int(MAX_TOKENS * AVG_WORDS_PER_TOKEN)
+MAX_WORDS_WITH_BOUND = int(MAX_WORDS / SAFETY_FACTOR)
+MAX_CHAR_WITH_BOUND = MAX_WORDS_WITH_BOUND * AVG_CHARS_PER_WORD
