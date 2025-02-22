@@ -1,0 +1,48 @@
+# src/stratio/api/config/config_dev.yaml
+
+# Configuration for the Customer API
+customers:
+
+  # DynamoDB table filter regex for customers
+  table_filter_regex: "^MarketplaceSubscribers.*$"
+
+  # Session configuration for this environment
+  session:
+    profile:
+      name: "seller@dev"
+
+    # Alternatively, you can use credentials instead of profile
+    # credentials:
+    #   key_id: "YOUR_KEY_ID"
+    #   secret_key: "YOUR_SECRET_KEY"
+    #   account_id: "YOUR_ACCOUNT_ID"
+    #   region: "us-east-1"
+
+clusters:
+
+  # DynamoDB table filter regex for customers
+  table_filter_regex: "^MarketplaceSubscribers.*$"
+  workspaces_bucket_regex: ".*-automations-stratio-artifacts$"
+
+  keos:
+    workspaces_local_folder: /tmp
+    base_image: qa.int.stratio.com/stratio/keos-installer
+    vault_key: Stratio123
+    vault_key_env_var: VAULT_MASTER_KEY
+
+  lambdas:
+    marketplace_subscribers_prefix: "MarketplaceSubscribers"
+    start_stop_stratio_cluster_prefix: "StartStopStratioCluster"
+    start_stratio_applications_prefix: "StartStratioApplications"
+    remove_stratio_cluster_prefix: "RemoveStratioCluster"
+
+  # Session configuration for this environment
+  root:
+    profile:
+      name: "root@dev"
+  seller:
+    profile:
+      name: "seller@dev"
+  automations:
+    profile:
+      name: "automations@dev"
