@@ -1,0 +1,22 @@
+# custom_sklearn
+
+This is a simple example package.
+custom_sklearn()
+custom_import()
+decision_tree_classifier()
+elbow_method()
+k_medoids_clustering()
+k_means_clustering()
+dbscan_clustering()
+svm_classifier()
+random_forest_classifier()
+loocv()
+k_fold_cv()
+grid_search_cv()
+pca_analysis()
+knn_classifier()
+lda_classifier()
+linear_regression_model()
+naive_bayes_classifier()
+logistic_regression_model()
+plot()
