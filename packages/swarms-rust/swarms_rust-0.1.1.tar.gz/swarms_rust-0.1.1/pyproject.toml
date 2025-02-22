@@ -1,0 +1,27 @@
+[build-system]
+requires = ["poetry-maturin>=0.2", "poetry-core>=1.0.0"]
+build-backend = "poetry_maturin.build.backend"
+
+
+[tool.poetry]
+name = "swarms-rust"
+version = "0.1.1"
+description = "A Rust-powered Python extension for concurrency, file I/O, and async API requests."
+license = "MIT"
+authors = ["Kye Gomez <kye@kyegomez.com>"]
+readme = "README.md"
+repository = "https://github.com/the-swarms-corporation/swarms-rust"
+
+packages = [
+    { include = "swarms_rust" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<4.0"
+
+
+[tool.maturin]
+module-name = "swarms_rust"
+
+[tool.maturin.build]
+features = ["extension-module"]
