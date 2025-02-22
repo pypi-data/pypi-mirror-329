@@ -1,0 +1,18 @@
+[project]
+name = "satellite_py"
+version = "0.1.6"
+description = "utils for project"
+readme = "README.md"
+requires-python = "==3.13.2"
+dependencies = [
+  "pydantic==2.10.6",
+]
+
+[project.optional-dependencies]
+edgedb = ["edgedb==2.2.0"]
+
+[dependency-groups]
+edgedb = ["edgedb==2.2.0"]
+
+[tool.uv]
+default-groups = ["edgedb"]
