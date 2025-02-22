@@ -1,0 +1,62 @@
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "juham-watermeter"
+version = "0.0.4"
+description = "Built-in Test plugin"
+readme = {file = "docs/source/README.rst", content-type = "text/markdown"}
+requires-python = ">=3.8"
+license = {file = "docs/source/LICENSE.rst", content-type = "text/markdown"}
+keywords = ["object-oriented", "plugin", "framework", "watermeter", "home automation"]
+authors = [
+  {name = "J Meskanen", email = "juham.api@gmail.com" }
+]
+maintainers = [
+  {name = "J. Meskanen", email = "juham.api@gmail.com" }
+]
+
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.8",
+]
+
+dependencies = [
+  "juham-automation >= 0.0.2",
+  "opencv-python-headless >= 4.10.0",
+  "numpy",
+  "pytesseract >= 0.3.13",
+  "Pillow >= 10.4.0"
+]
+
+[project.optional-dependencies]
+dev = ["check-manifest"]
+
+
+[project.entry-points."juham.plugins"]
+ocr_plugin = "juham_watermeter:WaterMeterOCR"
+imgdiff_plugin = "juham_watermeter:WaterMeterImgDiff"
+ts_plugin = "juham_watermeter:WaterMeterTs"
+webcamera_plugin = "juham_watermeter:WebCamera"
+leakdetector_plugin = "juham_watermeter:LeakDetector"
+
+
+
+[project.urls]
+"Homepage" = "https://meskanen.com"
+"Bug Reports" = "https://meskanen.com"
+"Funding" = "https://meskanen.com"
+"Say Thanks!" = "http://meskanen.com"
+"Source" = "https://meskanen.com"
+
+
+
+[tool.mypy]
+files = ["juham_watermeter"]
+ignore_missing_imports = true
