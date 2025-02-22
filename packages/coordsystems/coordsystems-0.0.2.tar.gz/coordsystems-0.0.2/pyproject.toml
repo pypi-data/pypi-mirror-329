@@ -1,0 +1,39 @@
+[project]
+name = "coordsystems"
+version = "0.0.2"
+description = "A package for dealing with different coordinate reference system."
+readme = "README.md"
+authors = [{ name = "Heliton Martins", email = "helitonmrf@gmail.com" }]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>1.24.4",
+    "plum-dispatch",
+]
+#scripts = { "coordsystems" = "coordsystems.main:main" }
+
+[project.scripts]
+coordsystems = "coordsystems.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "coordsystems",
+    "tests"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["coordsystems"]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.13.0",
+    "ruff>=0.9.7",
+]
