@@ -1,0 +1,117 @@
+{
+"PROJECT_PATH":{ "type":"val",
+                 "value":"str"
+        },
+"METEO_SOURCE":{
+                "type":"opt",
+                "value":["GFS","ERA5","OPEN_DATA"]
+        },
+"LOCATION_SOURCE":{
+                "type":"opt",
+                "value":["MANUAL","FILE"]
+        },
+"AREA_NAME":{
+                "type":"val",
+                "value":"str",
+                "dependence": {
+                        "name": "LOCATION_SOURCE",
+                        "value": ["FILE"]
+                }
+        },
+"AREA_FILE":{
+                "type":"val",
+                "value":"str",
+                "dependence": {
+                        "name": "LOCATION_SOURCE",
+                        "value": ["FILE"]
+                }       
+        },
+"LON_RANGE":{
+                "type":"list",
+                "value":"lon",
+                "dependence": {
+                        "name": "LOCATION_SOURCE",
+                        "value": ["MANUAL"]
+                }
+        },
+"LAT_RANGE":{
+                "type":"list",
+                "value":"lat",
+                "dependence": {
+                        "name": "LOCATION_SOURCE",
+                        "value": ["MANUAL"]
+                }
+        },
+"RESOLUTION":{
+                "type":"val",
+                "value":"float"
+        },
+"TIME_SOURCE":{ 
+        "type":"opt",
+        "value":["MANUAL","AUTO"],
+         "dependence": {
+                 "name": "METEO_SOURCE",
+                 "value": ["GFS", "OPEN_DATA"]
+         }
+        }, 
+               
+"TIME_STEP":{
+        "type":"list",
+        "value":"int"
+        },
+"DATE":{
+                "type":"val",
+                "value":"date",
+                "format": "%d/%m/%Y",
+                "dependence": {
+                        "name": "TIME_SOURCE",
+                        "value": "MANUAL"
+                }
+                
+        },  
+"CYCLE":{
+                "type":"opt",
+                "value":["0","6","12","18"],
+                "dependence": {
+                        "name": "TIME_SOURCE",
+                        "value": "MANUAL"
+                }
+                
+        },
+"START_DATE":{
+                "type":"val",
+                "value":"date",
+                "format": "%d/%m/%Y",
+                "dependence": {
+                        "name": "METEO_SOURCE",
+                        "value": ["ERA5"]
+                }
+                
+},
+"END_DATE":{
+                "type":"val",
+                "value":"date",
+                "format": "%d/%m/%Y",
+                "dependence": {
+                        "name": "METEO_SOURCE",
+                        "value": ["ERA5"]
+                }
+                
+},
+"API_KEY":{
+                "type":"val",
+                "value":"str", 
+                "dependence": {
+                        "name": "METEO_SOURCE",
+                        "value": ["ERA5"]
+                }
+},       
+"TIME_RESOLUTION":{
+                "type":"val",
+                "value":"int"
+        },  
+"OUTPUT":{
+                "type":"val",
+                "value": "str"
+        }
+}
