@@ -1,0 +1,188 @@
+Metadata-Version: 2.2
+Name: corrct
+Version: 1.0.0rc4
+Summary: Physically corrected projectors for X-ray induced emission CT.
+Author-email: Nicola VIGANO <nicola.vigano@cea.fr>
+License: BSD 3-Clause License
+        
+        Copyright (c) 2019, Nicola VIGANÒ
+        All rights reserved.
+        
+        Redistribution and use in source and binary forms, with or without modification,
+        are permitted provided that the following conditions are met:
+        
+        * Redistributions of source code must retain the above copyright notice, this
+          list of conditions and the following disclaimer.
+        
+        * Redistributions in binary form must reproduce the above copyright notice, this
+          list of conditions and the following disclaimer in the documentation and/or
+          other materials provided with the distribution.
+        
+        * Neither the name of the copyright holder nor the names of its
+          contributors may be used to endorse or promote products derived from this
+          software without specific prior written permission.
+        
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+        ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+        WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+        IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+        INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+        BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+        DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+        OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+        OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+        OF THE POSSIBILITY OF SUCH DAMAGE.
+        
+        
+Project-URL: Homepage, https://github.com/cicwi/PyCorrectedEmissionCT
+Project-URL: Documentation, https://cicwi.github.io/PyCorrectedEmissionCT
+Project-URL: Changelog, https://cicwi.github.io/PyCorrectedEmissionCT/changelog
+Project-URL: Repository, https://github.com/cicwi/PyCorrectedEmissionCT
+Project-URL: Issues, https://github.com/cicwi/PyCorrectedEmissionCT/issues
+Project-URL: Discussions, https://github.com/cicwi/PyCorrectedEmissionCT/discussions
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Documentation
+Classifier: Topic :: Software Development
+Classifier: Topic :: Utilities
+Classifier: Typing :: Typed
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE.md
+Requires-Dist: numpy>=1.21
+Requires-Dist: scipy
+Requires-Dist: tqdm
+Requires-Dist: matplotlib
+Requires-Dist: scikit-image
+Requires-Dist: pywavelets
+Requires-Dist: xraylib
+Provides-Extra: dev
+Requires-Dist: editables>=0.5; extra == "dev"
+Requires-Dist: build>=1.2; extra == "dev"
+Requires-Dist: git-changelog>=2.4; extra == "dev"
+Requires-Dist: twine>=5.1; python_version < "3.13" and extra == "dev"
+Requires-Dist: isort; extra == "dev"
+Requires-Dist: pyupgrade; extra == "dev"
+Requires-Dist: pytest>=8.2; extra == "dev"
+Requires-Dist: pytest-cov>=5.0; extra == "dev"
+Requires-Dist: pytest-randomly>=3.15; extra == "dev"
+Requires-Dist: pytest-xdist>=3.6; extra == "dev"
+Requires-Dist: pylint; extra == "dev"
+Requires-Dist: black>=24.4; extra == "dev"
+Requires-Dist: sphinx; extra == "dev"
+Requires-Dist: sphinx_rtd_theme; extra == "dev"
+Requires-Dist: recommonmark; extra == "dev"
+Requires-Dist: pooch; extra == "dev"
+
+# PyCorrectedEmissionCT (corrct)
+
+[![Python package](https://github.com/cicwi/PyCorrectedEmissionCT/actions/workflows/pythonpackage.yml/badge.svg)](https://github.com/cicwi/PyCorrectedEmissionCT/actions/workflows/pythonpackage.yml)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/cicwi/PyCorrectedEmissionCT)
+![License](https://img.shields.io/github/license/cicwi/PyCorrectedEmissionCT)
+[![DOI](https://zenodo.org/badge/218092017.svg)](https://zenodo.org/badge/latestdoi/218092017)
+
+Physically corrected projectors for X-ray induced emission CT.
+PyCorrectedEmissionCT is usually abbreviated to its python module name: `corrct` (either pronounced "corr-C-T" or "correct").
+
+This package provides the following functionality:
+
+* Support for **attenuation correction** of the forward-projection and back-projection.
+* Various solvers (reconstruction algorithms):
+  - Simultaneous Iterative Reconstruction Technique (**SIRT**).
+  - Maximum Likelihood Estimation Maximisation (**MLEM**).
+  - Simultaneous Algebraic Reconstruction Technique (**SART**).
+  - Primal-dual optimization from Chambolle-Pock (Primal-Dual Hybrid Gradient - **PDHG**), with:
+    * Various data fitting terms, including **Gaussian and Poisson noise** modelling.
+    * Various optional regularization terms, including: **TV-min**, l1-min, laplacian, and **wavelet** l1-min.
+    * Multi-channel (collaborative) regularization terms, like: **TNV** (Total Nuclear Variation).
+  - Filtered Back-Projection (**FBP**), and its data-dependent filter learning variant
+(**[PyMR-FBP](https://github.com/dmpelt/pymrfbp)**).
+* Two projector backends, based on: [astra-toolbox](https://github.com/astra-toolbox/astra-toolbox) and
+[scikit-image](https://github.com/scikit-image/scikit-image).
+* Guided **regularization parameter selection**, through cross-validation and elbow method.
+* Projection **alignment** routines.
+
+It contains the code used for the following paper, which also provides a
+mathematical description of the attenuation correction concepts and algorithms used here:
+
+* N. Viganò and V. A. Solé, "Physically corrected forward operators for
+induced emission tomography: a simulation study," Meas. Sci. Technol., no.
+Advanced X-Ray Tomography, pp. 1–26, Nov. 2017.  
+[https://doi.org/10.1088/1361-6501/aa9d54](https://doi.org/10.1088/1361-6501/aa9d54)
+
+Other useful information:
+
+* Free software: BSD 3-Clause license
+* Documentation: [https://cicwi.github.io/PyCorrectedEmissionCT/](https://cicwi.github.io/PyCorrectedEmissionCT/)
+
+## Getting Started
+
+It takes a few steps to setup PyCorrectedEmissionCT on your
+machine. We recommend installing
+[Anaconda package manager](https://www.anaconda.com/download/) for
+Python 3.
+
+### Installing with conda
+
+Simply install with:
+```
+conda install -c n-vigano corrct
+```
+
+If you want fast tomographic projectors using the astra-toolbox:
+```
+conda install -c astra-toolbox astra-toolbox
+```
+
+### Installing from PyPI
+
+Simply install with:
+```
+pip install corrct
+```
+
+If you are on jupyter, and don't have the rights to install packages
+system-wide (e.g. on jupyter-slurm at ESRF), then you can install with:
+```
+! pip install --user corrct
+```
+
+### Installing from source
+
+To install PyCorrectedEmissionCT, simply clone this GitHub
+project. Go to the cloned directory and run PIP installer:
+```
+git clone https://github.com/cicwi/PyCorrectedEmissionCT.git corrct
+cd corrct
+pip install -e .
+```
+
+### Running the examples
+
+To learn more about the functionality of the package check out our
+examples folder.
+
+## Authors and contributors
+
+* **Nicola VIGANÒ** - *Main developer*
+* **Jerome LESAINT** - *Contributor*
+* **Patrick HARRISON** - *Contributor*
+
+See also the list of [contributors](https://github.com/cicwi/PyCorrectedEmissionCT/contributors) who participated in this project.
+
+## How to contribute
+
+Contributions are always welcome. Please submit pull requests against the `main` branch.
+
+If you have any issues, questions, or remarks, then please open an issue on GitHub.
+
+## License
+
+This project is licensed under the BSD license - see the [LICENSE.md](LICENSE.md) file for details.
