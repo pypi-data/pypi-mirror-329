@@ -1,0 +1,46 @@
+import click
+from dagster.version import __version__
+
+from dagster_components.cli.list import list_cli
+from dagster_components.cli.scaffold import scaffold_cli
+from dagster_components.core.component import BUILTIN_MAIN_COMPONENT_ENTRY_POINT
+from dagster_components.utils import CLI_BUILTIN_COMPONENT_LIB_KEY
+
+
+def create_dagster_components_cli():
+    commands = {
+        "scaffold": scaffold_cli,
+        "list": list_cli,
+    }
+
+    @click.group(
+        commands=commands,
+        context_settings={"max_content_width": 120, "help_option_names": ["-h", "--help"]},
+    )
+    @click.option(
+        "--builtin-component-lib",
+        type=str,
+        default=BUILTIN_MAIN_COMPONENT_ENTRY_POINT,
+        help="Specify the builitin component library to load.",
+    )
+    @click.version_option(__version__, "--version", "-v")
+    @click.pass_context
+    def group(ctx: click.Context, builtin_component_lib: str):
+        """Internal API for working with Dagster Components.
+
+        This CLI is private and can be considered an implementation detail for `dg`. It is called by
+        `dg` to execute commands related to Dagster Components in the context of a particular Python
+        environment. This is necessary because `dg` itself always runs in an isolated environment.
+        """
+        ctx.ensure_object(dict)
+        ctx.obj[CLI_BUILTIN_COMPONENT_LIB_KEY] = builtin_component_lib
+
+    return group
+
+
+ENV_PREFIX = "DG_CLI"
+cli = create_dagster_components_cli()
+
+
+def main():
+    cli(auto_envvar_prefix=ENV_PREFIX)
