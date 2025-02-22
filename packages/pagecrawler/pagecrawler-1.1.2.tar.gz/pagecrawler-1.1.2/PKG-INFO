@@ -1,0 +1,38 @@
+Metadata-Version: 2.3
+Name: pagecrawler
+Version: 1.1.2
+Summary: A simple webscraper
+Author: No1d3a
+Author-email: furids11@gmail.com
+Requires-Python: >=3.11,<4.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Dist: beautifulsoup4 (>=4.12.3,<5.0.0)
+Requires-Dist: requests (>=2.32.3,<3.0.0)
+Requires-Dist: selenium (==4.21.0)
+Requires-Dist: selenium_stealth (==1.0.6)
+Requires-Dist: webdriver_manager (==4.0.1)
+Description-Content-Type: text/markdown
+
+# PageCrawler
+
+## How to use
+### _request
+
+- call the _request() function, it will first try a request with the request libary and then with selenium
+- fill out these keywords: url: str, keyword: str, headers: dict = None, soup:bool=False, max_retry:int=2, wait:int=0
+- Explanation:
+	- url : request url
+	- keyword: the keyword that should be in the website to know whether or not it got the right website, use '' to ignore
+	- headers: request header in dicit form, use {} for no headers, leave empty for basic request header
+	- soup : Whether or not returned as a soup object
+	- max_retry: how often it reties the request (boath the normal and selenium) to get a response containing the keyword
+
+### multi_request
+- calls the _request in multiprocessing
+- the first argument just uses a list of lists of these 3 arguments: [url, keyword, headers] (lenght of list determines how many request are done)
+- new argument: process: int = 1, just determines how many processes are called at the same time
+- the rest are just the same as _request, but apply to every request
+
