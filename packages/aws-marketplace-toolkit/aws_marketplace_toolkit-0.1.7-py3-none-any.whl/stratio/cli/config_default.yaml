@@ -1,0 +1,27 @@
+clusters:
+  automations:
+    profile:
+      name: automations@dev
+  keos:
+    base_image: qa.int.stratio.com/stratio/keos-installer
+    vault_key: Stratio123
+    vault_key_env_var: VAULT_MASTER_KEY
+    workspaces_local_folder: /tmp
+  lambdas:
+    marketplace_subscribers_prefix: MarketplaceSubscribers
+    remove_stratio_cluster_prefix: RemoveStratioCluster
+    start_stop_stratio_cluster_prefix: StartStopStratioCluster
+    start_stratio_applications_prefix: StartStratioApplications
+  root:
+    profile:
+      name: root@dev
+  seller:
+    profile:
+      name: seller@dev
+  table_filter_regex: ^MarketplaceSubscribers.*$
+  workspaces_bucket_regex: .*-automations-stratio-artifacts$
+customers:
+  session:
+    profile:
+      name: seller@dev
+  table_filter_regex: ^MarketplaceSubscribers.*$
