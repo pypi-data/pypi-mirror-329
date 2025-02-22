@@ -1,0 +1,39 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[project]
+name = "uksic"
+version = "0.0.1"
+description = "UK Standard Industrial Classification (SIC)"
+readme = "README.md"
+requires-python = ">=3.11"
+
+authors = [{ name = "Voquis Limited", email = "opensource@voquis.com" }]
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+dependencies = [
+  "httpx",
+  "openpyxl",
+  "pandas"
+]
+
+[project.optional-dependencies]
+dev = [
+  "build",
+  "pylint",
+  "pytest",
+  "pytest-cov",
+  "pytest-httpx",
+  "ruff",
+  "twine"
+]
+
+[project.urls]
+Homepage = "https://github.com/acculayer/uksic"
+Issues = "https://github.com/acculayer/uksic/issues"
