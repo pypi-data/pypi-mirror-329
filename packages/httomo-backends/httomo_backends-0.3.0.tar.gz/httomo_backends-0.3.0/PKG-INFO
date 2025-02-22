@@ -1,0 +1,48 @@
+Metadata-Version: 2.2
+Name: httomo-backends
+Version: 0.3.0
+Summary: Supplementary files for HTTomo backends.
+Author: Garry ODonnell, Jacob Williamson
+Author-email: Daniil Kazantsev <daniil.kazantsev@diamond.ac.uk>, Yousef Moazzam <yousef.moazzam@diamond.ac.uk>, Jessica Verschoyle <jessica.verschoyle@diamond.ac.uk>, Naman Gera <naman.gera@diamond.ac.uk>, scientificsoftware@diamond.ac.uk
+License: BSD-3-Clause
+Project-URL: repository, https://github.com/DiamondLightSource/httomo-backends
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.10
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+Requires-Dist: numpy<2
+Requires-Dist: pyyaml
+Requires-Dist: cupy==12.3.0
+Requires-Dist: nvtx
+Requires-Dist: toml
+Requires-Dist: imageio
+Requires-Dist: h5py
+Requires-Dist: astra-toolbox
+Requires-Dist: tomobar
+Requires-Dist: scikit-image
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: pytest-mock; extra == "dev"
+
+HTTomo-backends
+---------------
+
+Purpose of HTTomo-backends
+==========================
+
+**HTTomo-backends** is a package to support `HTTomo <https://diamondlightsource.github.io/httomo/>`_ software and it contains the following elements:
+
+* YAML templates for `backends <https://diamondlightsource.github.io/httomo/backends/list.html>`_. Those include methods from those libraries. The YAML templates can be accessed directly in the environment where `httomo-backends` is installed. 
+* Scripts that automatically generate YAML templates during documentation build.
+* Supporting scripts to calculate memory, size and padding estimators of the methods
+
+
+Install HTTomo-backends
+=======================
+
+.. code-block:: console
+
+   $ pip install httomo-backends
+
