@@ -1,0 +1,51 @@
+[project]
+name = "jklm-client" # Required
+version = "1.0.3" # Required
+readme = "README.md"
+description = "Python client for the party game JKLM.fun" # Optional
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+keywords = ["JKLM.fun", "game", "client", "python", "async", "websocket"]
+
+authors = [
+    { name = "Joseph Gerald", email = "contact@jooo.tech" }, # Optional
+]
+
+maintainers = [
+    { name = "Joseph Gerald", email = "contact@jooo.tech" }, # Optional
+]
+
+classifiers = [ # Optional
+    # How mature is this project? Common values are
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Internet :: WWW/HTTP :: Session",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+dependencies = ["requests", "websocket_client"]
+
+#
+[project.urls]
+"Homepage" = "https://github.com/joseph-gerald/jklm-py-client"
+"Bug Reports" = "https://github.com/joseph-gerald/jklm-py-client/issues"
+"Source" = "https://github.com/joseph-gerald/jklm-py-client"
+
+
+[tool.setuptools]
+package-data = { "sample" = ["*.dat"] }
+
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["jklm"]
