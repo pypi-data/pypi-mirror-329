@@ -1,0 +1,199 @@
+Metadata-Version: 2.2
+Name: BEM-prediction-models
+Version: 2.0.0
+Summary: package implementing BEM prediction models
+Home-page: https://github.com/NREL/BEM-prediction-models/
+Author: vchinde, Alex Chapin, rchintala13
+Author-email: venkatesh.chinde@nrel.gov
+Maintainer: NREL
+Maintainer-email: venkatesh.chinde@nrel.gov
+Keywords: prediction models
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE.md
+Requires-Dist: numpy==1.24.4
+Requires-Dist: scikit-learn==1.2.2
+Requires-Dist: strenum
+Requires-Dist: pydantic~=2.10
+Provides-Extra: dev
+Requires-Dist: pytest~=8.3; extra == "dev"
+Requires-Dist: black~=24.8; extra == "dev"
+Requires-Dist: isort~=5.13; extra == "dev"
+Requires-Dist: pre-commit; extra == "dev"
+Requires-Dist: mypy; extra == "dev"
+Requires-Dist: pytest-cov; extra == "dev"
+Requires-Dist: flake8; extra == "dev"
+Requires-Dist: pandas[excel]~=2.0; extra == "dev"
+Requires-Dist: bump-my-version; extra == "dev"
+Requires-Dist: joblib-stubs; extra == "dev"
+Requires-Dist: pandas-stubs; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: Sphinx~=7.1; extra == "docs"
+Requires-Dist: autodoc_pydantic[erdantic]; extra == "docs"
+Requires-Dist: sphinx-rtd-theme; extra == "docs"
+Requires-Dist: rst2pdf; extra == "docs"
+
+# BEM Prediction Models
+
+## Setup Instructions
+
+Run `pip install -r requirements.txt` to install python packages.
+
+Developed using Python version 3.9.7.
+
+## Using this code as a library
+After running the setup instructions, import the package into your code and call the
+`calculate_savings(property_info)` function to calculate the savings for that property.
+
+#### Parameters
+`property_info` - a `PropertyInfo` instance.
+
+You can find more information:
+
+* See the [pydantic model](calculator_179d/data_types.py)
+* A schema at [calculator_179d_schema.json](calculator_179d/calculator_179d_schema.json)
+* The docs folder: `cd docs/` and then call `make html` or `sphinx-build -M html source/ build/` (or `make pdf`)
+    * `pip install -e .[docs]` if you are missing dependencies
+
+#### Driver program
+The following is a test program you can use to check if you have correctly installed the library:
+
+```
+python examples/calculate_savings.py
+```
+
+## Running the package as a standalone application
+You may run this package as a standalone application instead of importing it as a library. To do so,
+simply update the parameters in `calculator_179d/calculator_user_inputs.json` and execute the code using the
+following command:
+
+```
+    cd calculator_179d/
+    python3 main_calculator.py calculator_user_inputs.json
+```
+
+This will create an file at `calculator_179d/output_files/calculator_outputs.json` with the results from the models.
+
+## Development
+
+You can do `pip install -e .[dev,docs]` to install it in editable mode, and install the necessary development and documentation dependencies such as pytest, and the pre-commit modules.
+
+To install the pre-commit hooks, do `pre-commit install`.
+
+## Package Releasing and Publishing
+
+1. Merge everything to develop and then make a single merge from develop to main
+1. Update package version
+    * Run `bump-my-version bump patch` (possible: `major`, `minor`, `patch`, `pre_l`, `pre_n`; see `bump-my-version show-bump` beforehand).
+    * This will take care of updating the various files where the version is hard-coded.
+1. Make a release on GitHub (pointing to the main branch). List the updates that were made.
+    * the release.yml workflow is triggered and will publish to PyPi.
+    * That workflow also has a manual dispatch which will upload to TestPypi instead
+
+Releasing manually:
+
+1. Make the package: `python setup.py sdist`
+1. Install twine (if needed):  `pip install twine`
+1. Upload to pypi: `twine upload dist/<name of package you just made>`
+
+# CHANGELOG
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [2.0.0] - 2025-02-21
+
+- Major refactor (#17): implement Pydantic classes for inputs (with built-in validation) and pydantic classes for outputs
+- Largely renamed all inputs and outputs to convey intent and include units
+- The pydantic fields include description and units, and converts to a json schema
+- Changed most of the routines to take the appropriate inputs instead of passing a large dictionary everywhere
+- Moved calculation to their respective classes
+- Add documentation via sphinx
+- Add pytests
+- Add a pre-commit hook
+- Add CI workflows: lint and pytest
+- Tax deduction set to 0 when savings criteria is not met
+- Modified Tax Deduction Calculations to account for different tax years (#29)
+
+## [1.0.0] - 2024-11-15
+
+- Release of-BEM prediction models used in initial release of web portal
+- Fixed more inconsistent model file names for climate zones 7 and 8.
+
+## [0.3.4] - 2024-11-15
+
+- Fix model file names for climate zones 7 and 8
+- Updated surrogate models for small office and retail for the following system types: PSZ-AC with electric coil, PSZ-AC with gas coil, PSZ-HP
+- Floor area dependent outputs were using m^2 value. Update output calculations to use sq_ft.
+
+## [0.3.3] - 2024-10-28
+
+- Fix AHRI metric selection
+
+## [0.3.2] - 2024-10-17
+
+- Fixed ach_infiltration for Retail Stripmall
+- Added models for VRF-DOAS
+- Added models for Retail Stripmall PSZ-HP for climate zone 5B
+
+## [0.3.1] - 2024-10-17
+
+- Added models for Retail Stripmall
+
+## [0.3.0] - 2024-09-29
+
+- Updated models for Small Office
+
+## [0.2.2] - 2023-11-15
+
+- Updated model files in calculator_179d/model_files/ to use calculated ACH infiltration
+- Negative energy and cost savings set to 0.
+- Cost calculations updated to accept electricity_rate_cents_per_kwh in cents/kWh and natural_gas_rate_usd_per_therm in $/1000cubicfeet.
+
+## [0.2.1] - 2023-11-06
+
+- Fix packaging only
+
+## [0.2.0] - 2023-11-06
+
+- Prediction model for Small Office, PSC-AC with gas coil, all climate zones
+- Defined new inputs to calculate costs
+- Added new energy and cost outputs
+- Version 0.1.2 - Fix packaging again to make .json files accessible
+- Version 0.1.1 - Fix packaging so that model_files data are accessible
+
+## [0.1.0] - 2023-10-23
+
+- Initial Release
+
+[Unreleased]: https://github.com/NREL/BEM-prediction-models/compare/v1.0.0...HEAD
+[2.0.0-rc1]: https://github.com/NREL/BEM-prediction-models/compare/v1.0.0..v2.0.0-rc1
+[1.0.0]: https://github.com/NREL/BEM-prediction-models/compare/v0.3.4...v1.0.0
+[0.3.4]: https://github.com/NREL/BEM-prediction-models/compare/v0.3.3...v0.3.4
+[0.3.3]: https://github.com/NREL/BEM-prediction-models/compare/v0.3.2...v0.3.3
+[0.3.2]: https://github.com/NREL/BEM-prediction-models/compare/v0.3.1...v0.3.2
+[0.3.1]: https://github.com/NREL/BEM-prediction-models/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/NREL/BEM-prediction-models/compare/v0.2.2...v0.3.0
+[0.2.2]: https://github.com/NREL/BEM-prediction-models/compare/v0.2.1...v0.2.2
+[0.2.1]: https://github.com/NREL/BEM-prediction-models/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/NREL/BEM-prediction-models/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/NREL/BEM-prediction-models/releases/tag/v0.1.0
+
+Copyright (c) 2023-2024, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
