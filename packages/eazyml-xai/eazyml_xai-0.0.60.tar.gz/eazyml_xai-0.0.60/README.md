@@ -1,0 +1,71 @@
+## Eazyml Explainable AI
+![Python](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)  ![PyPI package](https://img.shields.io/badge/pypi%20package-0.0.60-brightgreen) ![Code Style](https://img.shields.io/badge/code%20style-black-black)
+
+![EazyML](https://github.com/EazyML/eazyml-docs/raw/refs/heads/master/EazyML_logo.png)
+
+`eazyml-xai` is a Python package designed to make machine learning predictions more transparent and interpretable. It provides human-readable explanations for predictions.
+
+### Features
+- Gain insights into **local feature importance and global feature impacts**.
+- Understand **why a specific prediction was made**.
+- Evaluate predictions with **explainability scores**.    
+
+`eazyml-xai` is a key tool for building trust in AI systems by providing clear, actionable explanations.
+
+## Installation
+### User installation
+The easiest way to install EazyML Explainable AI is using pip:
+```bash
+pip install -U eazyml-xai
+```
+### Dependencies
+Eazyml Augmented Intelligence requires :
+- pandas==2.0.3
+- scikit-learn==1.3.2
+- werkzeug==3.0.2
+- Unidecode==1.3.8
+- pydot==1.4.2
+- numpy==1.24.3
+- pyyaml
+
+## Usage
+Get explainability score for test data.
+```python
+from eazyml_augi import ez_init, ez_augi
+# Replace 'your_license_key' with your actual EazyML license key
+ez_init(license_key="your_license_key")
+response = ez_explain(
+            mode='classification',
+            outcome='target',
+            train_file_path='train.csv',
+            test_file_path='test.csv',
+            model=my_model,
+            data_type_dict=data_type_dict,
+            selected_features_list=lis_of_derived_features,
+            options={"data_source": "parquet", "record_number": [1, 2, 3]})
+explainations = response['explainations']
+```
+You can find more information in the [documentation](https://eazyml.readthedocs.io/en/latest/packages/eazyml_xai.html).
+
+
+## Useful links and similar projects
+- [Documentation](https://docs.eazyml.com)
+- [Homepage](https://eazyml.com)
+- If you have more questions or want to discuss a specific use case please book an appointment [here](https://eazyml.com/trust-in-ai)
+- Here are some other EazyML's packages :
+
+    - [eazyml](https://pypi.org/project/eazyml/): Eazyml provides a suite of APIs for training, testing and optimizing machine learning models with built-in AutoML capabilities, hyperparameter tuning, and cross-validation.
+    - [eazyml-dq](https://pypi.org/project/eazyml-dq/): `eazyml-dq` provides APIs for comprehensive data quality assessment, including bias detection, outlier identification, and data drift analysis.
+    - [eazyml-cf](https://pypi.org/project/eazyml-cf/): `eazyml-cf` provides APIs for counterfactual explanations, prescriptive analytics, and actionable insights to optimize predictive outcomes.
+    - [eazyml-augi](https://pypi.org/project/eazyml-augi/): `eazyml-augi` provides APIs to uncover patterns, generate insights, and discover rules from training datasets.
+    - [eazyml-xai](https://pypi.org/project/eazyml-xai/): `eazyml-xai` provides APIs for explainable AI (XAI), offering human-readable explanations, feature importance, and predictive reasoning.
+    - [eazyml-xai-image](https://pypi.org/project/eazyml-xai-image/): eazyml-xai-image provides APIs for image explainable AI (XAI).
+
+## License
+This project is licensed under the [Proprietary License](https://github.com/EazyML/eazyml-docs/blob/master/LICENSE).
+
+---
+
+*Maintained by [EazyML](https://eazyml.com)*  
+*© 2025 EazyML. All rights reserved.*
+
