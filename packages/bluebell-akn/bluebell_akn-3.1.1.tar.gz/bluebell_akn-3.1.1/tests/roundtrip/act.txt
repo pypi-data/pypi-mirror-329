@@ -1,0 +1,138 @@
+PREAMBLE.class-name
+
+  some preamble text
+
+BODY
+
+CHAP 1 - Heading
+
+  intro
+
+  SEC.custom-class{status edited} 1 - Section
+
+    emoji 😀
+
+    some **text** at //the start// with **multiple //types// of** markup
+
+    \***\*Notice**s\*\*
+
+    include {{^superscripts}} and {{_subscripts}} which are fun
+
+    an {{IMG /foo.png description}} image
+
+    some {{- deleted}} text
+
+    some {{+ inserted}} text
+
+    Part A should not be escaped
+
+    A {{*[remark]}} and one {{*without brackets}}
+
+    A {{*multi
+    
+    line
+    remark}}
+
+    SUBSEC 1
+
+      ITEMS.classname
+        list __intro__
+
+        ITEM (a)
+          item (a) with a {{>http://example.com link}}
+
+        ITEM (b)
+          ITEMS
+            ITEM (i) - heading
+              item (b)(i)
+
+            ITEM (ii)
+              SUBHEADING subheading
+              item (b)(ii)
+
+      TABLE.my-table
+        TR
+          TC{colspan 2|rowspan 3}
+            The Heading
+
+          TC
+            cell 1
+
+            with newlines
+
+          TC
+            cell 2
+
+      BLOCKS
+        some block text
+
+        ITEMS
+          ITEM 1
+            item 1
+
+          ITEM 2
+            item 2
+
+        tail
+
+  text in the middle
+
+  SEC 2
+
+    some text
+
+    BULLETS.classname
+      * item 1
+      * item 2
+        second line
+      * 
+      * empty line before
+      * 
+      * empty item before
+
+    some empty hierarchical elements follow below
+
+    SEC 3
+
+      ITEMS
+        ITEM 1
+          first item
+
+      CROSSHEADING crossheading
+
+    PART
+
+    SEC
+
+      CHAP
+
+      SUBPART
+        SUBHEADING a subheading
+
+    PART
+
+      CROSSHEADING.with-class a lonely crossheading
+
+    SEC - a heading
+
+    PART 99a
+
+  wrap up
+
+ANNEXURE.class-name Annex 1
+
+  Some content
+
+  Text with {{abbr{title Full Text} FT}} abbreviations.
+
+  Text with {{inline.class{name generic|title b} generic inlines}}.
+
+  Text with {{term{refersTo #foo} terms}}.
+
+  Text with {{em.foo emphasized text}} and {{em{title b} emphasized text with attrs}}.
+
+ANNEXURE Annex 2
+  SUBHEADING Subheading
+
+  Some content 2
+
