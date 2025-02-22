@@ -1,0 +1,7 @@
+__title__ = 'easys-ordermanager'
+__description__ = 'API definition of RH order manager for EasyS'
+__version__ = '3.2.2'
+__url__ = 'https://gitlab.herocentral.de/development/easys-ordermanager'
+__author__ = 'RegioHelden developers'
+__author_email__ = 'opensource@regiohelden.de'
+__license__ = 'GPL 3'
