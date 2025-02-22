@@ -1,0 +1,15 @@
+services:
+  timeplus:
+    image: d.timeplus.com/timeplus-io/proton:latest
+    ports:
+      - "8123:8123"
+      - "8463:8463"
+    volumes:
+      - timeplus-data:/var/lib/timeplusd
+    environment:
+      - TIMEPLUS_USER=default
+      - TIMEPLUS_PASSWORD=
+      - TIMEPLUS_DB=default
+
+volumes:
+  timeplus-data:

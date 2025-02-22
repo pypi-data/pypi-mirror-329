@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - timeplus
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      timeplus:
+        image: d.timeplus.com/timeplus-io/proton:latest
+        ports:
+          - 8123:8123
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Setup Python
+        run: uv python install 3.13
+
+      - name: Install Project
+        run: uv sync --all-extras --dev
+
+      - name: Run tests
+        env:
+          TIMEPLUS_HOST: "localhost"
+          TIMEPLUS_PORT: "8123"
+          TIMEPLUS_USER: "default"
+          TIMEPLUS_PASSWORD: ""
+          TIMEPLUS_SECURE: "false"
+          TIMEPLUS_VERIFY: "false"
+        run: |
+          uv run pytest tests
+
+      - name: Lint with Ruff
+        run: uv run ruff check .
