@@ -1,0 +1,50 @@
+Metadata-Version: 2.2
+Name: bitrixUtils
+Version: 0.1.0
+Summary: Uma biblioteca para facilitar a integração com a API do Bitrix24
+Home-page: https://github.com/RafaelZelak/bitrixUtils.git
+Author: Rafael Zelak Fernandes
+Author-email: rzf1503@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: requests
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# bitrixUtils
+
+**bitrixUtils** é uma biblioteca Python para facilitar a integração com a API do Bitrix24.
+Ela encapsula funções comuns para facilitar o uso dos endpoints da API, lidando com autenticação, manipulação de contatos, cards, endereços e mais.
+
+## 📌 Instalação
+```Bash
+pip install bitrixUtils
+```
+
+## 🚀 Como Usar
+```python
+from bitrixUtils import core
+
+BITRIX_WEBHOOK_URL = "https://setup.bitrix24.com.br/rest/629/c0q6gqm7og1bs91k/"
+cpf = "123.456.789-00"
+
+contact_id = core.verificarContato(cpf, BITRIX_WEBHOOK_URL)
+print(contact_id)
+```
+
+## 🔧 Funcionalidades
+- Verificar se um contato existe no Bitrix24
+- Criar e atualizar contatos
+- Criar e gerenciar cards no pipeline
+- Manipular endereços
+- Gerenciar etapas de pipeline
