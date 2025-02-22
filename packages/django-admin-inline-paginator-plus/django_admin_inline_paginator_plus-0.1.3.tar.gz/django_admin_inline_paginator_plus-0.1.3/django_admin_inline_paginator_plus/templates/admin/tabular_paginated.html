@@ -1,0 +1,14 @@
+{% extends 'admin/paginated_base.html' %}
+
+{% block content %}
+  <div
+    id="{{ inline_admin_formset.formset.prefix }}-group-wrapper-js"
+
+  >
+    {% include 'admin/edit_inline/tabular.html' %}
+
+    <div class="admin-tabular-inline-pagination">
+      {% include 'admin/tabular_paginator.html' %}
+    </div>
+  </div>
+{% endblock content %}
