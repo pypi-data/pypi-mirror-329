@@ -1,0 +1,3 @@
+"""
+Animo API resources
+""" 
