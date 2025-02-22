@@ -1,0 +1,87 @@
+[build-system]
+requires = [
+    "pdm-backend",
+]
+build-backend = "pdm.backend"
+
+[project]
+dependencies = [
+    "numpy>=1.20,<3",
+    "scipy>=1.8,<2",
+    "networkx>=3.0,<4",
+    "cclib>=1.7,<2",
+    "tomli>=2.0.1;python_version<'3.11'",
+    "plams==1.5.1",
+    "rdkit>=2022.9.1",
+    "pydantic>=2.5",
+    "typing-extensions>=4.12;python_version<'3.13'",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+]
+name = "ChemTraYzer"
+description = "Reaction models from molecular dynamics simulations."
+version = "3.0.0b4"
+keywords = [
+    "molecular dynamics",
+    "reaction mechanism",
+    "chemistry",
+    "reaction mechanism generation",
+    "quantum mechanics",
+    "automated workflows",
+    "reaction network",
+    "reaction kinetics",
+]
+maintainers = [
+    { name = "The ChemTraYzer Authors", email = "chemtrayzer@ltt.rwth-aachen.de" },
+]
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+repository = "https://git-ce.rwth-aachen.de/ltt/chemtrayzer/"
+documentation = "https://ltt.pages.git-ce.rwth-aachen.de/chemtrayzer/"
+
+[project.scripts]
+chemtrayzer = "chemtrayzer.ui.cli:main"
+
+[project.optional-dependencies]
+doc = [
+    "sphinx<7.0",
+    "sphinx-rtd-theme",
+    "myst-parser",
+    "somesy>=0.6.0",
+]
+dev-no-plumed = [
+    "pytest>=7.1.2,<8",
+    "somesy>=0.6.0",
+    "chemtrayzer[doc]",
+    "ruff>=0.6.0",
+]
+dev = [
+    "chemtrayzer[dev-no-plumed]",
+]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "UP035",
+    "W291",
+]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
