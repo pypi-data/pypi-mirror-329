@@ -1,0 +1,95 @@
+?start: l_cfi
+
+l_cfi: declar* stmt*
+
+declar: type var_list
+var_list: var ("," var)*
+
+type: BOOL | INT | FLOAT
+
+stmt: ("$" LABEL)? pred ":" inst
+
+pred: bools
+    | var
+
+inst: print_inst
+    | exp
+    | assign
+
+print_inst: "print" "(" STRING "," exp ")"
+    | "print" "(" exp ")"
+    | "print" "(" STRING ")"
+    | "print" "(" ")"
+
+
+?exp: or_exp
+
+?or_exp: and_exp
+       | or_exp OR and_exp           -> binop
+
+?and_exp: cmp_exp
+        | and_exp AND cmp_exp        -> binop
+
+?cmp_exp: sum
+        | sum cmp sum                -> cmpop
+
+?sum: product
+    | sum (PLUS | MINUS) product     -> binop
+
+?product: unary
+         | product (TIMES | DIVIDE | MODULO) unary -> binop
+
+?unary: NOT unary                    -> unaryop
+       | MINUS unary                 -> unaryop
+       | atom
+
+?atom: bools
+      | NUMBER
+      | FLOATINGNUMBER
+      | var
+      | "(" exp ")"
+
+assign: var "=" exp
+
+bools: TRUE
+     | FALSE
+
+cmp: LESS | LESS_EQ | GREATER | GREATER_EQ | EQUALS | NOT_EQUALS
+
+var: VAR
+
+// Tokens
+%import common.INT -> NUMBER
+%import common.FLOAT -> FLOATINGNUMBER
+%import common.WS
+
+%ignore WS
+
+BOOL: "bool"
+INT: "int"
+FLOAT: "float"
+
+TRUE: "true"
+FALSE: "false"
+
+LESS: "<"
+LESS_EQ: "<="
+GREATER: ">"
+GREATER_EQ: ">="
+EQUALS: "=="
+NOT_EQUALS: "!="
+
+PLUS: "+"
+MINUS: "-"
+TIMES: "*"
+DIVIDE: "/"
+MODULO: "%"
+
+NOT: "!"
+
+OR: "||"
+AND: "&&"
+
+VAR: /[a-zA-Z_][a-zA-Z0-9_]*/
+LABEL: /[a-zA-Z_][a-zA-Z0-9_]*/
+STRING: /"[^"]*"/
