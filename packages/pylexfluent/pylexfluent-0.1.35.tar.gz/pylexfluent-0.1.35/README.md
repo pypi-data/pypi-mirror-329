@@ -1,0 +1,308 @@
+# Libraire python Lexfluent RevolutionAI
+*Auteur Jacques MASSA*
+*Créé le 2 décembre 2024*
+
+---
+
+## Présentation
+Cette librairie permet:
+- la classification de documents selon le modèle jupiterB1
+- l'extraction de données contenu dans des documents de classes connues(Offre de prêts, IBAN, CNI, etc ...).
+
+
+## Installations Prérequises 
+
+``` 
+
+    pip install setuptools wheel 
+    pip install pdfplumber 
+    pip install spacy[cuda12x]
+    pip install tqdm 
+    pip install opencv-python
+    pip install pytesseract
+    pip install pdf2image
+    pip install pillow==10.0.1
+    pip install pandas
+    pip install scikit-learn
+    pip install matplotlib
+    pip install tensorflow
+    pip install tf-keras
+    pip install tensorflow_hub
+    pip install tensorrt
+    pip install langchain-community
+    pip install ocrmypdf
+    pip install nvidia-cudnn-cu12
+
+```
+ 
+## Téléchargement modèles 
+### SPACY 
+
+``` python -m spacy download fr_core_news_lg ```
+
+## Update et installations requises
+``` 
+    apt-get update 
+    apt-get upgrade
+    apt install software-properties-common -y
+    apt-get install poppler-utils -y
+    add-apt-repository ppa:alex-p/tesseract-ocr5
+    apt-get install libc6 -y
+    apt-get install poppler-utils -y
+    apt-get install tesseract-ocr -y
+    apt-get install tesseract-ocr-fra -y
+    apt-get install tesseract-ocr-eng -y
+    apt-get install tesseract-ocr-ita -y
+    apt-get install tesseract-ocr-spa -y
+    apt-get install tesseract-ocr-deu -y
+    apt-get install tesseract-ocr-cos -y
+    apt-get install tesseract-ocr-lat -y
+    apt-get install automake libtool -y
+    apt-get install libleptonica-dev -y
+    apt-get install ffmpeg libsm6 libxext6  -y
+    apt-get install ocrmypdf -y    
+
+``` 
+
+## GPU issue 
+Si problème : Successful NUMA node read from SysFS had negative value (-1) 
+
+```
+for a in /sys/bus/pci/devices/*; do echo 0 |  tee -a $a/numa_node; done
+
+```
+
+# Exemples d'utilisation 
+
+## Classification  
+
+### Code 
+```
+import logging
+import sys
+
+from lxf.services.measure_time import measure_time_async
+from lxf.services.try_safe import try_safe_execute_asyncio
+
+
+
+from lxf.ai.classification.classifier import get_classification
+from lxf.domain.predictions import  Predictions
+
+import lxf.settings as settings 
+from lxf.settings import set_looging_level, get_logging_level
+set_logging_level(logging.DEBUG)
+###################################################################
+
+logger = logging.getLogger('test classifier')
+fh = logging.FileHandler('./logs/test_classifier.log')
+fh.setLevel(get_logging_level())
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+logger.setLevel(get_logging_level())
+logger.addHandler(fh)
+#################################################################
+
+@measure_time_async
+async def do_test(file_name) -> Predictions :
+    """
+    """
+    return await get_classification(file_name=file_name,max_pages=10)
+
+
+if __name__ == "__main__":
+    sys.stdout.reconfigure(line_buffering=True) 
+    pdf_path = "data/ODP.pdf"
+    iban_pdf="data/RIBB.pdf"
+    result = try_safe_execute_asyncio(logger=logger,func=do_test,file_name=iban_pdf) #asyncio.run(do_test(iban_pdf))
+    print(result)    
+    result = try_safe_execute_asyncio(logger=logger,func=do_test,file_name=pdf_path) #asyncio.run(do_test(pdf_path))
+    print(result)
+
+```
+### Sortie
+```
+Spacy will use GPU
+Chargement du modèle SPACY : fr_core_news_lg 
+2024-12-16 15:52:56.758585: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:485] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2024-12-16 15:52:56.767893: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:8454] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2024-12-16 15:52:56.771255: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1452] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2024-12-16 15:52:56.780546: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-12-16 15:52:57.500470: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+Chargement inital de l'embedding universal-sentence-encoder-large/5 ...
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1734360781.333330  987068 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1734360781.333600  987068 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+2024-12-16 15:53:01.334132: W tensorflow/core/common_runtime/gpu/gpu_device.cc:2343] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+Chargement inital de universal-sentence-encoder-large/5 terminé
+DEBUG:Measures:get_text_and_tables_from_pdf executed in 0.0391 seconds 
+DEBUG:Keys words and phrases:Start measuring get_keys_words
+DEBUG:Measures:sanitize_text executed in 0.0004 seconds 
+DEBUG:Keys words and phrases:NLP document loaded in 1.0116 secondes
+DEBUG:Keys words and phrases:Freq_mots step 1 completed at 1.0123
+DEBUG:Keys words and phrases:Freq_mots completed at 1.0123
+DEBUG:Keys words and phrases:Threshold : 0.1
+DEBUG:Keys words and phrases:freq_mot threshold completed at 1.0124
+DEBUG:Keys words and phrases:freq_mot sorted at 1.0124
+DEBUG:Measures:get_key_words executed in 1.0125 seconds 
+DEBUG:MulticlassClassificationJupiterModel:No GPU found
+2024-12-16 15:53:14.363141: W tensorflow/core/framework/dataset.cc:993] Input of GeneratorDatasetOp::Dataset will not be optimized because the dataset does not implement the AsGraphDefInternal() method needed to apply optimizations.
+2024-12-16 15:53:14.854450: I tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+1/1 [==============================] - 1s 519ms/step
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_BPOP-PRET' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Facture_Fournisseur' with an accuracy of 7.90 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_Mandat-Creancier' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_Releve' with an accuracy of 0.02 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Facture_Honoraire' with an accuracy of 4.32 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Facture_Client' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Facture_Banque' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_Mandat-Pr\xc3\xa9l\xc3\xa8vement' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Acte_Vente' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Acte_Certificat-Urbanisme' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_PRET' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Administratif_Ursaff_D\xc3\xa9claration-Sociale-Nominative' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Courrier_LRAR_Accuse' with an accuracy of 0.01 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_IBAN-RIB' with an accuracy of 0.02 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Acte_Procuration' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Familles_Administratif_EHF' with an accuracy of 0.02 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Administratif_Etat-Civil_Actes' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_Appel-de-Fond' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Contrat_Accord-Confidentialit\xc3\xa9' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Technique_Expertise_Diagnostique' with an accuracy of 2.52 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Statut_KBis' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Administratif_Etat-Civil_CNI' with an accuracy of 85.19 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_AOP' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Statut_Soci\xc3\xa9t\xc3\xa9' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Convention_Honoraire' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Acte_Certificat Urbanisme' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:Best prediction  = b'Administratif_Etat-Civil_CNI' with an accuracy of 85.19 %
+DEBUG:Measures:inference executed in 2.8480 seconds 
+DEBUG:Measures:get_classification executed in 3.9015 seconds 
+DEBUG:Measures:do_test executed in 3.9015 seconds 
+EntityId='' Name='' ModelName='jupiterB0' PredictedAt='16/12/2024 15:53' BestPrediction=b'Administratif_Etat-Civil_CNI' BestPredictionConfidence=85.1897120475769 Results=[Prediction(Name='Finance_Banque_BPOP-PRET', Confidence=1.346630380989755e-10), Prediction(Name='Finance_Facture_Fournisseur', Confidence=7.904815673828125), Prediction(Name='Finance_Banque_Mandat-Creancier', Confidence=1.183977111561957e-16), Prediction(Name='Finance_Banque_Releve', Confidence=0.016190264432225376), Prediction(Name='Finance_Facture_Honoraire', Confidence=4.316940903663635), Prediction(Name='Finance_Facture_Client', Confidence=2.0615163309147026e-14), Prediction(Name='Finance_Facture_Banque', Confidence=0.0027119678634335287), Prediction(Name='Finance_Banque_Mandat-Prélèvement', Confidence=2.2250176200699038e-17), Prediction(Name='Juridique_Acte_Vente', Confidence=1.9271445461746075e-15), Prediction(Name='Juridique_Acte_Certificat-Urbanisme', Confidence=1.6825559026015409e-12), Prediction(Name='Finance_Banque_PRET', Confidence=2.9359794595507083e-07), Prediction(Name='Administratif_Ursaff_Déclaration-Sociale-Nominative', Confidence=0.0018376782463747077), Prediction(Name='Courrier_LRAR_Accuse', Confidence=0.009845012391451746), Prediction(Name='Finance_Banque_IBAN-RIB', Confidence=0.021908499184064567), Prediction(Name='Juridique_Acte_Procuration', Confidence=1.4654824486065276e-18), Prediction(Name='Familles_Administratif_EHF', Confidence=0.016761360166128725), Prediction(Name='Administratif_Etat-Civil_Actes', Confidence=9.54112522322248e-06), Prediction(Name='Finance_Banque_Appel-de-Fond', Confidence=2.107819613295092e-08), Prediction(Name='Juridique_Contrat_Accord-Confidentialité', Confidence=0.0011583175364648923), Prediction(Name='Technique_Expertise_Diagnostique', Confidence=2.5178860872983932), Prediction(Name='Juridique_Statut_KBis', Confidence=0.00022844324121251702), Prediction(Name='Administratif_Etat-Civil_CNI', Confidence=85.1897120475769), Prediction(Name='Finance_Banque_AOP', Confidence=1.9476845025678813e-06), Prediction(Name='Juridique_Statut_Société', Confidence=2.1588321408305688e-10), Prediction(Name='Juridique_Convention_Honoraire', Confidence=2.695727863155639e-07), Prediction(Name='Juridique_Acte_Certificat Urbanisme', Confidence=2.1959061305421024e-09)]
+DEBUG:Measures:get_text_and_tables_from_pdf executed in 0.5897 seconds 
+DEBUG:Keys words and phrases:Start measuring get_keys_words
+DEBUG:Measures:sanitize_text executed in 0.0034 seconds 
+DEBUG:Keys words and phrases:NLP document loaded in 0.9449 secondes
+DEBUG:Keys words and phrases:Freq_mots step 1 completed at 0.9494
+DEBUG:Keys words and phrases:Freq_mots completed at 0.9495
+DEBUG:Keys words and phrases:Threshold : 0.1
+DEBUG:Keys words and phrases:freq_mot threshold completed at 0.9496
+DEBUG:Keys words and phrases:freq_mot sorted at 0.9496
+DEBUG:Measures:get_key_words executed in 0.9497 seconds 
+DEBUG:MulticlassClassificationJupiterModel:No GPU found
+2024-12-16 15:53:16.727064: I tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+1/1 [==============================] - 0s 133ms/step
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_BPOP-PRET' with an accuracy of 1.22 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Facture_Fournisseur' with an accuracy of 9.45 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_Mandat-Creancier' with an accuracy of 0.02 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_Releve' with an accuracy of 2.03 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Facture_Honoraire' with an accuracy of 3.32 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Facture_Client' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Facture_Banque' with an accuracy of 0.17 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_Mandat-Pr\xc3\xa9l\xc3\xa8vement' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Acte_Vente' with an accuracy of 0.12 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Acte_Certificat-Urbanisme' with an accuracy of 0.15 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_PRET' with an accuracy of 31.10 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Administratif_Ursaff_D\xc3\xa9claration-Sociale-Nominative' with an accuracy of 0.15 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Courrier_LRAR_Accuse' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_IBAN-RIB' with an accuracy of 0.72 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Acte_Procuration' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Familles_Administratif_EHF' with an accuracy of 0.87 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Administratif_Etat-Civil_Actes' with an accuracy of 0.05 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_Appel-de-Fond' with an accuracy of 1.10 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Contrat_Accord-Confidentialit\xc3\xa9' with an accuracy of 36.90 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Technique_Expertise_Diagnostique' with an accuracy of 11.53 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Statut_KBis' with an accuracy of 0.03 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Administratif_Etat-Civil_CNI' with an accuracy of 1.03 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Finance_Banque_AOP' with an accuracy of 0.00 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Statut_Soci\xc3\xa9t\xc3\xa9' with an accuracy of 0.01 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Convention_Honoraire' with an accuracy of 0.03 %
+DEBUG:MulticlassClassificationJupiterModel:prediction = b'Juridique_Acte_Certificat Urbanisme' with an accuracy of 0.01 %
+DEBUG:MulticlassClassificationJupiterModel:Best prediction  = b'Juridique_Contrat_Accord-Confidentialit\xc3\xa9' with an accuracy of 36.90 %
+DEBUG:Measures:inference executed in 0.3315 seconds 
+DEBUG:Measures:get_classification executed in 1.8718 seconds 
+DEBUG:Measures:do_test executed in 1.8719 seconds 
+EntityId='' Name='' ModelName='jupiterB0' PredictedAt='16/12/2024 15:53' BestPrediction=b'Juridique_Contrat_Accord-Confidentialit\xc3\xa9' BestPredictionConfidence=36.89938485622406 Results=[Prediction(Name='Finance_Banque_BPOP-PRET', Confidence=1.224131602793932), Prediction(Name='Finance_Facture_Fournisseur', Confidence=9.451359510421753), Prediction(Name='Finance_Banque_Mandat-Creancier', Confidence=0.017751535051502287), Prediction(Name='Finance_Banque_Releve', Confidence=2.02501080930233), Prediction(Name='Finance_Facture_Honoraire', Confidence=3.3187299966812134), Prediction(Name='Finance_Facture_Client', Confidence=0.00010094288427353604), Prediction(Name='Finance_Facture_Banque', Confidence=0.174746906850487), Prediction(Name='Finance_Banque_Mandat-Prélèvement', Confidence=2.984501534797346e-06), Prediction(Name='Juridique_Acte_Vente', Confidence=0.11607391061261296), Prediction(Name='Juridique_Acte_Certificat-Urbanisme', Confidence=0.14639836736023426), Prediction(Name='Finance_Banque_PRET', Confidence=31.098634004592896), Prediction(Name='Administratif_Ursaff_Déclaration-Sociale-Nominative', Confidence=0.14745767693966627), Prediction(Name='Courrier_LRAR_Accuse', Confidence=0.000290640218736371), Prediction(Name='Finance_Banque_IBAN-RIB', Confidence=0.7238393183797598), Prediction(Name='Juridique_Acte_Procuration', Confidence=1.9729711198124278e-05), Prediction(Name='Familles_Administratif_EHF', Confidence=0.870391633361578), Prediction(Name='Administratif_Etat-Civil_Actes', Confidence=0.045667189988307655), Prediction(Name='Finance_Banque_Appel-de-Fond', Confidence=1.0968752205371857), Prediction(Name='Juridique_Contrat_Accord-Confidentialité', Confidence=36.89938485622406), Prediction(Name='Technique_Expertise_Diagnostique', Confidence=11.529157310724258), Prediction(Name='Juridique_Statut_KBis', Confidence=0.03401543654035777), Prediction(Name='Administratif_Etat-Civil_CNI', Confidence=1.0326274670660496), Prediction(Name='Finance_Banque_AOP', Confidence=0.0020591452994267456), Prediction(Name='Juridique_Statut_Société', Confidence=0.012454076204448938), Prediction(Name='Juridique_Convention_Honoraire', Confidence=0.026516334037296474), Prediction(Name='Juridique_Acte_Certificat Urbanisme', Confidence=0.006304969429038465)]
+
+```
+
+## Extraction de données 
+
+### Code 
+```
+import logging
+import asyncio
+import os
+import sys
+
+
+
+import lxf.settings as settings
+from lxf.setting import set_logging_level, get_logging_level
+set_logging_level(logging.DEBUG)
+settings.enable_tqdm=False
+
+from lxf.domain.loan import Pret
+from lxf.extractors.finance import odp_extractor
+from lxf.extractors.finance import iban_extractor
+
+from lxf.services.try_safe import  try_safe_execute_async
+
+
+
+###################################################################
+
+logger = logging.getLogger('test_finance')
+fh = logging.FileHandler('./logs/test_finance.log')
+fh.setLevel(get_logging_level())
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+logger.setLevel(get_logging_level())
+logger.addHandler(fh)
+#################################################################
+
+async def do_test_odp(file_path:str)->Pret:
+    result = await try_safe_execute_async(logger,odp_extractor.extract_data,file_path=file_path)
+    return result
+    
+async def do_test_iban(file_path:str)->str :
+    """
+    """
+    result = await try_safe_execute_async(logger,iban_extractor.extract_data,file_path=file_path)
+    return result
+
+if __name__ == "__main__":
+    sys.stdout.reconfigure(line_buffering=True) 
+    pdf_path = "data/ODP.pdf"
+    # pret:Pret=  asyncio.run(do_test_odp(file_path=pdf_path))
+    # if pret!=None:
+    #     print(pret.emprunteurs)
+    iban_pdf="data/rib pm.pdf"
+    txt = asyncio.run(do_test_iban(file_path=iban_pdf))
+    print(txt)
+    
+
+```
+
+### Sortie
+```
+Chargement du modèle SPACY : fr_core_news_lg 
+Angle à corriger -0.39474812150001526
+Facteur de correction d'angle retenue 0.8
+Angle finale retenue -0.31579849720001224
+Rotation
+Angle à corriger -0.39474812150001526
+Facteur de correction d'angle retenue 0.8
+Angle finale retenue -0.31579849720001224
+Rotation
+Angle à corriger -0.14542043209075928
+Facteur de correction d'angle retenue 0.8
+Angle finale retenue -0.11633634567260742
+Rotation
+[IbanCandidate(iban='FR76 XXXXXXXXXXXXXXXX', bic='XXXXX', branch='AG CORTE', bank='CRCAM DE LA CORSE', address='5 COURS PAOLI', city='CORTE', state=None, zip='20250', phone=None, fax=None, www=None, email=None, country='FRANCE', country_iso='FR', account='XXXXXXXXXX', bank_code='XXXXX', branch_code='00040', found='Yes', validation=True, error_msg='13/12/2024 16:46: IBAN.COM retourne le code de validation 001 => IBAN Check digit is correct'), IbanCandidate(iban='XXXXXXXXXX', bic='XXXXX', branch='AG CORTE', bank='CRCAM DE LA CORSE', address='5 COURS PAOLI', city='CORTE', state=None, zip='20250', phone=None, fax=None, www=None, email=None, country='FRANCE', country_iso='FR', account='XXXXXXX', bank_code='12006', branch_code='00040', found='Yes', validation=True, error_msg='13/12/2024 16:46: IBAN.COM retourne le code de validation 001 => IBAN Check digit is correct')]
+```
