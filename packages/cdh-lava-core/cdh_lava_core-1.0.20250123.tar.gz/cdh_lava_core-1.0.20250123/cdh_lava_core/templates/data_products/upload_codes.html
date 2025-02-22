@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Metadata Management - Excel Upload</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .instructions {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+
+    .submit-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .submit-button:hover {
+      background-color: #0056b3;
+    }
+
+    .submit-button:disabled {
+      background-color: #cccccc;
+      color: #888888;
+      cursor: not-allowed;
+    }
+
+    .file-upload {
+      display: none;
+    }
+
+    .file-upload-label {
+      cursor: pointer;
+    }
+
+    .loader-container {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.7);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .loader {
+      border: 4px solid rgba(0, 0, 0, 0.3);
+      border-top: 4px solid #4caf50;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 2s linear infinite;
+    }
+
+    .error-message {
+      color: red;
+    }
+
+
+    .buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+
+    .back-button {
+            background-color: #6c757d;
+            color: white;
+        }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="instructions">
+    <h2>Upload Excel Codes Worksheet</h2>
+    <p>Click the "Upload" button below to upload an Excel metadata file.</p>
+    <p>The default location for the file is: <span id="dynamic-link-container"></span> It is recommended to upload from OneDrive location mapped to:
+      <div id="dynamic-file-container"></div>
+    </p>
+
+    <!-- Updated form to directly submit -->
+    <form id="uploadForm" action="{{ url_for('cdh_configuration_metadata_excel_file_upload_codes', data_product_id=data_product_id) }}" method="POST" enctype="multipart/form-data">
+      
+      <input id="csrf_token" name="csrf_token" type="hidden" value="{{ csrf_token }}" />
+      <div>
+        <span id="file-name"></span>
+      </div>
+      <div>
+        <input id="data_product_id" name="data_product_id" type="hidden" value="{{ data_product_id }}" />
+        <input id="user_id" name="user_id" type="hidden" value="" />
+      </div>
+
+      
+      <div class="dropdown">
+        <label class="dropdown-label" for="environment">Select environment</label>
+        <select id="environment" name="environment" onchange="resetSubmitButton()">
+          <option value="default" selected>Please select</option>
+          {% for env in environments %}
+          <option value="{{ env }}">{{ env }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <p>
+        <label for="file-upload" class="button file-upload-label">Upload</label>
+        <input id="file-upload" name="file" type="file" class="file-upload" />
+        <button id="submitButton" class="submit-button" type="button" onclick="handleSubmitButton()">Submit</button>
+      </p>
+    </form>
+
+    <div id="feedbackContainer"></div>
+    <div class="loader-container" id="loaderContainer">
+      <div class="loader" id="spinner"></div>
+    </div>
+    <div class="error-message" id="errorMessage"></div>
+  </div>
+
+  <!-- Back Button Section -->
+  <div  class="buttons">
+    <button class="back-button" onclick="goBack()">Back</button>
+  </div>
+  <p>User ID: <span id="displayed-user-id"></span></p>
+
+  <script>
+    var isConfirmStep = false;
+
+    function resetSubmitButton() {
+      const submitButton = document.getElementById("submitButton");
+      submitButton.textContent = "Submit Upload";
+      submitButton.classList.remove("confirm");
+      isConfirmStep = false;
+    }
+
+    function handleSubmitButton() {
+      const envSelect = document.getElementById('environment');
+      const errorMessage = document.getElementById("errorMessage");
+      const submitButton = document.getElementById("submitButton");
+
+      // Validation Checks
+      if (envSelect.value === "default") {
+        errorMessage.textContent = "Environment must be selected!";
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      const fileInput = document.getElementById("file-upload");
+      if (!fileInput.files || !fileInput.files[0]) {
+        errorMessage.textContent = "File must be selected!";
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      errorMessage.style.display = "none";
+
+      if (!isConfirmStep) {
+        isConfirmStep = true;
+        submitButton.textContent = "Confirm";
+        submitButton.classList.add("confirm");
+      } else {
+        performUpload();  // Submit the form via JavaScript to handle response
+      }
+    }
+
+    function performUpload() {
+      const form = document.getElementById('uploadForm');
+      const formData = new FormData(form);
+
+      // Show loader
+      const submitButton = document.querySelector(".submit-button");
+      const spinner = document.getElementById("spinner");
+      submitButton.disabled = true;
+      spinner.style.display = "inline-block";
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", form.action, true);
+      // Add the CSRF token to the request headers
+      const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+      xhr.setRequestHeader("X-CSRFToken", csrfToken);
+
+      xhr.onload = function () {
+        submitButton.disabled = false;
+        spinner.style.display = "none";
+        const response = JSON.parse(xhr.responseText);
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+      if (response.data === "Success") {
+        // Handle success response
+        const feedbackContainer = document.getElementById("feedbackContainer");
+        feedbackContainer.innerHTML = `Success: File uploaded. Trace ID: <a href="../../cdh_observability/dependency_graph/${response.trace_id}/${formData.get('data_product_id')}/${formData.get('environment')}/1" target="_self">${response.trace_id}</a>`;
+        feedbackContainer.style.color = "green";
+      } else {
+        // Handle generic error response
+        handleErrorResponse("Error: Upload failed. Trace ID: " + response.trace_id);
+      }
+    } else if (xhr.status === 403) {
+      // Handle Permission Denied (403 Forbidden)
+      handleErrorResponse("Error 403: You do not have permission to perform this action.");
+    } else if (xhr.status === 500 && response.error && response.message.includes("does not have the required role")) {
+      // Handle PermissionError wrapped in a 500 response
+      handleErrorResponse(response.message);
+    } else {
+      // Handle other non-200 HTTP status codes
+      handleErrorResponse(`Error: Server responded with status ${xhr.status}. Please try again.`);
+    }
+      };
+
+      xhr.onerror = function () {
+        handleErrorResponse("Error: Network or server issue occurred.");
+      };
+
+      xhr.send(formData);
+    }
+
+    function handleErrorResponse(message) {
+      const feedbackContainer = document.getElementById("feedbackContainer");
+      feedbackContainer.textContent = message;
+      feedbackContainer.style.color = "red";
+
+      // Hide loader and re-enable submit button
+      const submitButton = document.querySelector(".submit-button");
+      const spinner = document.getElementById("spinner");
+      submitButton.disabled = false;
+      spinner.style.display = "none";
+    }
+
+    window.onload = function () {
+      var userId = getCookie("user_id");
+
+      // If the cookie does not exist, set a default value
+      if (typeof userId === "undefined" || userId === null) {
+        userId = "test@cdc.gov";
+        setCookie("user_id", userId, 7); // Store in cookie for 7 days
+      }
+
+      // Set the user_id in the hidden input field
+      document.getElementById("user_id").value = userId;
+      document.getElementById("displayed-user-id").textContent = userId;
+
+      document.getElementById("file-upload").addEventListener("change", function () {
+        var fileName = this.files[0].name;
+        document.getElementById("file-name").textContent = fileName;
+      });
+
+      var dataProductId = document.getElementById("data_product_id").value;
+      createDynamicLink(dataProductId);
+    };
+
+    function createDynamicLink(dataProductId) {
+      if (dataProductId) {
+        var linkContainer = document.getElementById("dynamic-link-container");
+        var link = document.createElement("a");
+        var linkTitle = `${dataProductId}_analysis_config.xlsx`;
+        var linkHref = `https://cdc.sharepoint.com/teams/OPHDST-DataHub/Shared%20Documents/CDH%20Support%20and%20Engineering/CDH%20Engineering/common_documents/${dataProductId}/${dataProductId}_analysis_config.xlsx`;
+
+        link.textContent = linkTitle;
+        link.href = linkHref;
+        link.target = "_blank";
+        linkContainer.appendChild(link);
+
+        var userId = getCookie("user_id");
+        var fileContainer = document.getElementById("dynamic-file-container");
+        var fileText = document.createTextNode(`C:\\Users\\${userId}\\OneDrive - CDC\\...\\${dataProductId}_analysis_config.xlsx`);
+        fileContainer.appendChild(fileText);
+      }
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function getCookie(name) {
+      const value = "; " + document.cookie;
+      const parts = value.split("; " + name + "=");
+      if (parts.length == 2) {
+        return parts.pop().split(";").shift();
+      } else {
+        return undefined;
+      }
+    }
+
+    function setCookie(name, value, days) {
+      var expires = "";
+      if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+  </script>
+</body>
+
+</html>

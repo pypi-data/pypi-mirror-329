@@ -1,0 +1,585 @@
+<div class="section-area">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Back Button - Gray and Left Aligned -->
+            <div class="d-flex justify-content-start mb-2">
+                <button class="btn btn-primary" onclick="window.history.back();">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Add, Select, Copy, Paste, and Delete Buttons -->
+            <div class="d-flex justify-content-start mb-2">
+                <button class="btn btn-secondary mr-2" id="add-row">Add Row</button>
+                <button class="btn btn-secondary mr-2" id="select-row">Select Row</button>
+                <button class="btn btn-info mr-2" id="copy-row" disabled>Copy Row</button>
+                <button class="btn btn-warning mr-2" id="paste-row" disabled>Paste Row</button>
+                <button class="btn btn-danger" id="delete-row" disabled>Delete Row</button>
+            </div>
+
+            <!-- CSV Table with Editable Cells -->
+            <table id="excel-table" class="table table-striped table-theme-blue table-bordered">
+                <thead>
+                    <tr>
+                        <th >Meta Ingress File Path</th>
+
+                        <th >Data Product ID</th>
+                        <th >Database</th>
+                        <th >Dataset Name</th>
+                        <th >File Name</th>
+                        <th >Folder Name</th>
+                        <th >Folder Name Source</th>
+                        <th >Format</th>
+                        <th >Row ID Keys</th>
+                        <th >Column Ordinal Sort</th>
+                        <th >Dataset Friendly Name</th>
+                        <th >Dataset Description</th>
+                        <th >Dataset Notes</th>
+                        <th >Expected Row Count Min</th>
+                        <th >Expected Row Count Max</th>
+                        <th >Expected Values</th>
+                        <th >Expected Values Source</th>
+                        <th >Column Header Skip Rows</th>
+                        <th >Compare Filter</th>
+                        <th >Compare Table</th>
+                        <th >Compare Row ID Keys</th>
+
+                        <th >CRDY</th>
+
+                        <th >EDC</th>
+
+                        <th >Other</th>
+
+                        <th >Columns</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    {% for row in datasets %}
+                    <tr id="{{ loop.index }}">
+                        <td contenteditable="false" data-name="__meta_ingress_file_path">
+                            {{ row.file_name }}
+                        </td>
+
+                        <td contenteditable="false" data-name="data_product_id">{{ row.data_product_id }}</td>
+                        <td contenteditable="true" data-name="database">{{ row.database }}</td>
+                        <td contenteditable="true" data-name="dataset_name">{{ row.dataset_name }}</td>
+                        <td contenteditable="true" data-name="file_name">{{ row.file_name }}</td>
+                        <td contenteditable="true" data-name="folder_name">{{ row.folder_name }}</td>
+                        <td contenteditable="true" data-name="folder_name_source">{{ row.folder_name_source }}</td>
+                        <td contenteditable="true" data-name="format">{{ row.format }}</td>
+                        <td contenteditable="true" data-name="row_id_keys">{{ row.row_id_keys }}</td>
+                        <td contenteditable="true" data-name="column_ordinal_sort">{{ row.column_ordinal_sort }}</td>
+                        <td contenteditable="true" data-name="dataset_friendly_name">{{ row.dataset_friendly_name }}
+                        </td>
+                        <td contenteditable="true" data-name="dataset_description">{{ row.dataset_description }}</td>
+                        <td contenteditable="true" data-name="dataset_notes">{{ row.dataset_notes }}</td>
+                        <td contenteditable="true" data-name="expected_row_count_min">{{ row.expected_row_count_min }}
+                        </td>
+                        <td contenteditable="true" data-name="expected_row_count_max">{{ row.expected_row_count_max }}
+                        </td>
+
+                        <td contenteditable="true" data-name="expected_values">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#expected_values_{{ loop.index }}">Edit</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="expected_values_{{ loop.index }}" tabindex="-1"
+                                aria-labelledby="expected_values_{{ loop.index }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="expected_values_{{ loop.index }}_label">
+                                                Expected  Values </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="expected_values_input_{{ loop.index }}">Expected Values</label>
+                                                <textarea class="form-control" data-name="expected_values"
+                                                    id="expected_values_input_{{ loop.index }}" aria-label="Expected Values">
+                                                    {{ row.expected_values }}
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td contenteditable="true" data-name="expected_values_source">{{ row.expected_values_source }}
+                        </td>
+                        <td contenteditable="true" data-name="column_header_skip_rows">{{ row.column_header_skip_rows }}
+                        </td>
+                        <td contenteditable="true" data-name="compare_filter">{{ row.compare_filter }}</td>
+                        <td contenteditable="true" data-name="compare_table">{{ row.compare_table }}</td>
+                        <td contenteditable="true" data-name="compare_row_id_keys">{{ row.compare_row_id_keys }}</td>
+
+                        <td contenteditable="false" data-name="crdy">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#crdy_parameters_{{ loop.index }}">Options</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="crdy_parameters_{{ loop.index }}" tabindex="-1"
+                                aria-labelledby="crdy_parameters_{{ loop.index }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="crdy_parameters_{{ loop.index }}_label">
+                                                CRDY </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="crdy_domain_{{ loop.index }}">CRDY Domain</label>
+                                                <input type="text" class="form-control" data-name="crdy_domain"
+                                                    id="crdy_domain_{{ loop.index }}" aria-label="CRDY Domain"
+                                                    value="{{ row.crdy_domain }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="crdy_is_sa_dataset_{{ loop.index }}">CRDY is SA
+                                                    Dataset</label>
+                                                <input type="text" class="form-control" data-name="crdy_is_sa_dataset"
+                                                    id="crdy_is_sa_dataset_{{ loop.index }}"
+                                                    aria-label="CRDY is SA Dataset"
+                                                    value="{{ row.crdy_is_sa_dataset }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="crdy_maximum_latency_hours_{{ loop.index }}">CRDY Maximum
+                                                    Latency Hours</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="crdy_maximum_latency_hours"
+                                                    id="crdy_maximum_latency_hours_{{ loop.index }}"
+                                                    aria-label="CRDY Maximum Latency Hours"
+                                                    value="{{ row.crdy_maximum_latency_hours }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="crdy_subdomain_{{ loop.index }}">CRDY Subdomain</label>
+                                                <input type="text" class="form-control" data-name="crdy_subdomain"
+                                                    id="crdy_subdomain_{{ loop.index }}" aria-label="CRDY Subdomain"
+                                                    value="{{ row.crdy_subdomain }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="crdy_subdomain2_{{ loop.index }}">CRDY Subdomain 2</label>
+                                                <input type="text" class="form-control" data-name="crdy_subdomain2"
+                                                    id="crdy_subdomain2_{{ loop.index }}" aria-label="CRDY Subdomain 2"
+                                                    value="{{ row.crdy_subdomain2 }}">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td contenteditable="false" data-name="edc">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#edc_parameters_{{ loop.index }}">Options</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="edc_parameters_{{ loop.index }}" tabindex="-1"
+                                aria-labelledby="edc_parameters_{{ loop.index }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="edc_parameters_{{ loop.index }}_label">
+                                                EDC </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="edc_access_level_{{ loop.index }}">EDC Access Level</label>
+                                                <input type="text" class="form-control" data-name="edc_access_level"
+                                                    id="edc_access_level_{{ loop.index }}" aria-label="EDC Access Level"
+                                                    value="{{ row.edc_access_level }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_alation_datasource_id_{{ loop.index }}">EDC Alation
+                                                    Datasource ID</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="edc_alation_datasource_id"
+                                                    id="edc_alation_datasource_id_{{ loop.index }}"
+                                                    aria-label="EDC Alation Datasource ID"
+                                                    value="{{ row.edc_alation_datasource_id }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_alation_datasource_identifier_{{ loop.index }}">EDC
+                                                    Alation Datasource Identifier</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="edc_alation_datasource_identifier"
+                                                    id="edc_alation_datasource_identifier_{{ loop.index }}"
+                                                    aria-label="EDC Alation Datasource Identifier"
+                                                    value="{{ row.edc_alation_datasource_identifier }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_alation_schema_id_{{ loop.index }}">EDC Alation Schema
+                                                    ID</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="edc_alation_schema_id"
+                                                    id="edc_alation_schema_id_{{ loop.index }}"
+                                                    aria-label="EDC Alation Schema ID"
+                                                    value="{{ row.edc_alation_schema_id }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_applicability_end_date_{{ loop.index }}">EDC
+                                                    Applicability End Date</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="edc_applicability_end_date"
+                                                    id="edc_applicability_end_date_{{ loop.index }}"
+                                                    aria-label="EDC Applicability End Date"
+                                                    value="{{ row.edc_applicability_end_date }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_applicability_start_date_{{ loop.index }}">EDC
+                                                    Applicability Start Date</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="edc_applicability_start_date"
+                                                    id="edc_applicability_start_date_{{ loop.index }}"
+                                                    aria-label="EDC Applicability Start Date"
+                                                    value="{{ row.edc_applicability_start_date }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_citation_{{ loop.index }}">EDC Citation</label>
+                                                <input type="text" class="form-control" data-name="edc_citation"
+                                                    id="edc_citation_{{ loop.index }}" aria-label="EDC Citation"
+                                                    value="{{ row.edc_citation }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_conform_to_standard_{{ loop.index }}">EDC Conform to
+                                                    Standard</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="edc_conform_to_standard"
+                                                    id="edc_conform_to_standard_{{ loop.index }}"
+                                                    aria-label="EDC Conform to Standard"
+                                                    value="{{ row.edc_conform_to_standard }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_homepage_url_{{ loop.index }}">EDC Homepage URL</label>
+                                                <input type="text" class="form-control" data-name="edc_homepage_url"
+                                                    id="edc_homepage_url_{{ loop.index }}" aria-label="EDC Homepage URL"
+                                                    value="{{ row.edc_homepage_url }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_identifier_{{ loop.index }}">EDC Identifier</label>
+                                                <input type="text" class="form-control" data-name="edc_identifier"
+                                                    id="edc_identifier_{{ loop.index }}" aria-label="EDC Identifier"
+                                                    value="{{ row.edc_identifier }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_is_containing_pii_{{ loop.index }}">EDC is Containing
+                                                    PII</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="edc_is_containing_pii"
+                                                    id="edc_is_containing_pii_{{ loop.index }}"
+                                                    aria-label="EDC is Containing PII"
+                                                    value="{{ row.edc_is_containing_pii }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_language_{{ loop.index }}">EDC Language</label>
+                                                <input type="text" class="form-control" data-name="edc_language"
+                                                    id="edc_language_{{ loop.index }}" aria-label="EDC Language"
+                                                    value="{{ row.edc_language }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_license_{{ loop.index }}">EDC License</label>
+                                                <input type="text" class="form-control" data-name="edc_license"
+                                                    id="edc_license_{{ loop.index }}" aria-label="EDC License"
+                                                    value="{{ row.edc_license }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_pii_comments_{{ loop.index }}">EDC PII Comments</label>
+                                                <input type="text" class="form-control" data-name="edc_pii_comments"
+                                                    id="edc_pii_comments_{{ loop.index }}" aria-label="EDC PII Comments"
+                                                    value="{{ row.edc_pii_comments }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_pii_fields_{{ loop.index }}">EDC PII Fields</label>
+                                                <input type="text" class="form-control" data-name="edc_pii_fields"
+                                                    id="edc_pii_fields_{{ loop.index }}" aria-label="EDC PII Fields"
+                                                    value="{{ row.edc_pii_fields }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_reference_{{ loop.index }}">EDC Reference</label>
+                                                <input type="text" class="form-control" data-name="edc_reference"
+                                                    id="edc_reference_{{ loop.index }}" aria-label="EDC Reference"
+                                                    value="{{ row.edc_reference }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_referenced_by_{{ loop.index }}">EDC Referenced
+                                                    By</label>
+                                                <input type="text" class="form-control" data-name="edc_referenced_by"
+                                                    id="edc_referenced_by_{{ loop.index }}"
+                                                    aria-label="EDC Referenced By" value="{{ row.edc_referenced_by }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_release_date_{{ loop.index }}">EDC Release Date</label>
+                                                <input type="text" class="form-control" data-name="edc_release_date"
+                                                    id="edc_release_date_{{ loop.index }}" aria-label="EDC Release Date"
+                                                    value="{{ row.edc_release_date }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_size_{{ loop.index }}">EDC Size</label>
+                                                <input type="text" class="form-control" data-name="edc_size"
+                                                    id="edc_size_{{ loop.index }}" aria-label="EDC Size"
+                                                    value="{{ row.edc_size }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_submitting_user_{{ loop.index }}">EDC Submitting
+                                                    User</label>
+                                                <input type="text" class="form-control" data-name="edc_submitting_user"
+                                                    id="edc_submitting_user_{{ loop.index }}"
+                                                    aria-label="EDC Submitting User"
+                                                    value="{{ row.edc_submitting_user }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_tags_{{ loop.index }}">EDC Tags</label>
+                                                <input type="text" class="form-control" data-name="edc_tags"
+                                                    id="edc_tags_{{ loop.index }}" aria-label="EDC Tags"
+                                                    value="{{ row.edc_tags }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edc_update_frequency_{{ loop.index }}">EDC Update
+                                                    Frequency</label>
+                                                <input type="text" class="form-control" data-name="edc_update_frequency"
+                                                    id="edc_update_frequency_{{ loop.index }}"
+                                                    aria-label="EDC Update Frequency"
+                                                    value="{{ row.edc_update_frequency }}">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td contenteditable="false" data-name="other">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#other_parameters_{{ loop.index }}">Options</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="other_parameters_{{ loop.index }}" tabindex="-1"
+                                aria-labelledby="other_parameters_{{ loop.index }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="other_parameters_{{ loop.index }}_label">
+                                                Other </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="column_header_skip_rows_{{ loop.index }}">Column Header Skip
+                                                    Rows</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="column_header_skip_rows"
+                                                    id="column_header_skip_rows_{{ loop.index }}"
+                                                    aria-label="Column Header Skip Rows"
+                                                    value="{{ row.column_header_skip_rows }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="compare_filter_{{ loop.index }}">Compare Filter</label>
+                                                <input type="text" class="form-control" data-name="compare_filter"
+                                                    id="compare_filter_{{ loop.index }}" aria-label="Compare Filter"
+                                                    value="{{ row.compare_filter }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="compare_table_{{ loop.index }}">Compare Table</label>
+                                                <input type="text" class="form-control" data-name="compare_table"
+                                                    id="compare_table_{{ loop.index }}" aria-label="Compare Table"
+                                                    value="{{ row.compare_table }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="encoding_{{ loop.index }}">Encoding</label>
+                                                <input type="text" class="form-control" data-name="encoding"
+                                                    id="encoding_{{ loop.index }}" aria-label="Encoding"
+                                                    value="{{ row.encoding }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="entity_{{ loop.index }}">Entity</label>
+                                                <input type="text" class="form-control" data-name="entity"
+                                                    id="entity_{{ loop.index }}" aria-label="Entity"
+                                                    value="{{ row.entity }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="excluded_environments_{{ loop.index }}">Excluded
+                                                    Environments</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="excluded_environments"
+                                                    id="excluded_environments_{{ loop.index }}"
+                                                    aria-label="Excluded Environments"
+                                                    value="{{ row.excluded_environments }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="frequency_{{ loop.index }}">Frequency</label>
+                                                <input type="text" class="form-control" data-name="frequency"
+                                                    id="frequency_{{ loop.index }}" aria-label="Frequency"
+                                                    value="{{ row.frequency }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="incremental_{{ loop.index }}">Incremental</label>
+                                                <input type="text" class="form-control" data-name="incremental"
+                                                    id="incremental_{{ loop.index }}" aria-label="Incremental"
+                                                    value="{{ row.incremental }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="is_active_{{ loop.index }}">Is Active</label>
+                                                <input type="text" class="form-control" data-name="is_active"
+                                                    id="is_active_{{ loop.index }}" aria-label="Is Active"
+                                                    value="{{ row.is_active }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="is_export_schema_required_{{ loop.index }}">Is Export Schema
+                                                    Required</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="is_export_schema_required"
+                                                    id="is_export_schema_required_{{ loop.index }}"
+                                                    aria-label="Is Export Schema Required"
+                                                    value="{{ row.is_export_schema_required }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="is_multiline_{{ loop.index }}">Is Multiline</label>
+                                                <input type="text" class="form-control" data-name="is_multiline"
+                                                    id="is_multiline_{{ loop.index }}" aria-label="Is Multiline"
+                                                    value="{{ row.is_multiline }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="is_refreshed_{{ loop.index }}">Is Refreshed</label>
+                                                <input type="text" class="form-control" data-name="is_refreshed"
+                                                    id="is_refreshed_{{ loop.index }}" aria-label="Is Refreshed"
+                                                    value="{{ row.is_refreshed }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="is_required_for_power_bi_{{ loop.index }}">Is Required for
+                                                    Power BI</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="is_required_for_power_bi"
+                                                    id="is_required_for_power_bi_{{ loop.index }}"
+                                                    aria-label="Is Required for Power BI"
+                                                    value="{{ row.is_required_for_power_bi }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="optimize_columns_{{ loop.index }}">Optimize Columns</label>
+                                                <input type="text" class="form-control" data-name="optimize_columns"
+                                                    id="optimize_columns_{{ loop.index }}" aria-label="Optimize Columns"
+                                                    value="{{ row.optimize_columns }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="optimize_type_{{ loop.index }}">Optimize Type</label>
+                                                <input type="text" class="form-control" data-name="optimize_type"
+                                                    id="optimize_type_{{ loop.index }}" aria-label="Optimize Type"
+                                                    value="{{ row.optimize_type }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="pii_columns_{{ loop.index }}">PII Columns</label>
+                                                <input type="text" class="form-control" data-name="pii_columns"
+                                                    id="pii_columns_{{ loop.index }}" aria-label="PII Columns"
+                                                    value="{{ row.pii_columns }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="workflow_batch_group_{{ loop.index }}">Workflow Batch
+                                                    Group</label>
+                                                <input type="text" class="form-control" data-name="workflow_batch_group"
+                                                    id="workflow_batch_group_{{ loop.index }}"
+                                                    aria-label="Workflow Batch Group"
+                                                    value="{{ row.workflow_batch_group }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="remove_columns_with_no_metadata_{{ loop.index }}">Remove
+                                                    Columns with No Metadata</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="remove_columns_with_no_metadata"
+                                                    id="remove_columns_with_no_metadata_{{ loop.index }}"
+                                                    aria-label="Remove Columns with No Metadata"
+                                                    value="{{ row.remove_columns_with_no_metadata }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="row_id_core_columns_{{ loop.index }}">Row ID Core
+                                                    Columns</label>
+                                                <input type="text" class="form-control" data-name="row_id_core_columns"
+                                                    id="row_id_core_columns_{{ loop.index }}"
+                                                    aria-label="Row ID Core Columns"
+                                                    value="{{ row.row_id_core_columns }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="use_liquid_clustering_{{ loop.index }}">Use Liquid
+                                                    Clustering</label>
+                                                <input type="text" class="form-control"
+                                                    data-name="use_liquid_clustering"
+                                                    id="use_liquid_clustering_{{ loop.index }}"
+                                                    aria-label="Use Liquid Clustering"
+                                                    value="{{ row.use_liquid_clustering }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="partition_by_{{ loop.index }}">Partition By</label>
+                                                <input type="text" class="form-control" data-name="partition_by"
+                                                    id="partition_by_{{ loop.index }}" aria-label="Partition By"
+                                                    value="{{ row.partition_by }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="sheet_name_{{ loop.index }}">Sheet Name</label>
+                                                <input type="text" class="form-control" data-name="sheet_name"
+                                                    id="sheet_name_{{ loop.index }}" aria-label="Sheet Name"
+                                                    value="{{ row.sheet_name }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="source_abbreviation_{{ loop.index }}">Source
+                                                    Abbreviation</label>
+                                                <input type="text" class="form-control" data-name="source_abbreviation"
+                                                    id="source_abbreviation_{{ loop.index }}"
+                                                    aria-label="Source Abbreviation"
+                                                    value="{{ row.source_abbreviation }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="source_dataset_name_{{ loop.index }}">Source Dataset
+                                                    Name</label>
+                                                <input type="text" class="form-control" data-name="source_dataset_name"
+                                                    id="source_dataset_name_{{ loop.index }}"
+                                                    aria-label="Source Dataset Name"
+                                                    value="{{ row.source_dataset_name }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="source_json_path_{{ loop.index }}">Source JSON Path</label>
+                                                <input type="text" class="form-control" data-name="source_json_path"
+                                                    id="source_json_path_{{ loop.index }}" aria-label="Source JSON Path"
+                                                    value="{{ row.source_json_path }}">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td contenteditable="false" data-name="columns">
+                            <a href="{{ request.script_root }}/cdh_orchestration/datasets_list/{{ row.data_product_id }}/datasets_column/{{ row.dataset_name }}"
+                                class="btn btn-primary">Edit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Save Button to trigger saving of changes -->
+            <div class="d-flex justify-content-end mt-2">
+                <button class="btn btn-success" id="save-changes">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>

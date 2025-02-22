@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="version" content="01.00.00.59">
+  <title>CDC LAVA Portal</title>
+  {% include 'common/head_tables.html' %}
+  {% include 'common/head.html' %}
+</head>
+<body class="theme-blue">
+  <div id="main-container">
+    {% include 'common/sidebar.html' %}
+    <main id="main-area">
+      {% include 'common/header.html' %}
+      {% include 'modules/modules_home_breadcrumb.html' %}
+      {% include 'modules/modules_home_content.html' %}  
+    </div>
+      <!-- Additional content sections can be added here following the same structure and guidelines -->
+    </main>
+  </div>
+  <!-- Scripts at the end for faster page loading -->
+  <script>
+    // Additional JavaScript can go here
+  </script>
+</body>
+</html>
+{% include 'common/foot.html' %}
+
+ 
+
+<script>
+	$(document).ready(function () {
+		$('#excel-table').DataTable({
+			"paging": true,
+			"ordering": true,
+			"info": true
+		});
+	});
+
+	function goBack() {
+		window.history.back();
+	}
+</script>
+<script> var cdc_datatable_20997 = { "columns": [{ "display": "display", "sort": "true" }] };</script>

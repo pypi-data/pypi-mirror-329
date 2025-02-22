@@ -1,0 +1,34 @@
+<div class="section-area">
+  <div class="row">
+    <div class="col-md-12">
+      <table id="excel-table" class="table table-striped table-theme-blue">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+
+            <th scope="col">Datasets</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in data %}
+          <tr>
+            <td style="text-align: left">{{ row.Name }}</td>
+            <td style="text-align: center">{{ row.Type }}</td>
+
+            <td style="text-align: center">
+              <a
+                href="{{ request.script_root }}/cdh_orchestration/datasets_list/{{ row.data_product_id }}"
+                class="center-content"
+              >
+                <span class="x32 fill-p cdc-icon-paper_03 icon-blue"></span>
+                <span>Manage Datasets</span>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

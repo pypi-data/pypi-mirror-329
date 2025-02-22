@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>CDC LAVA Portal</title>
+    {% include 'common/head_tables.html' %}
+    {% include 'common/head.html' %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+
+<body class="theme-blue">
+    <div id="main-container" class="container-fluid">
+        {% include 'common/sidebar.html' %}
+        <main id="main-area">
+            {% include 'common/header.html' %}
+            {% include 'datasets/datasets_columns_breadcrumb.html' %}
+            {% include 'datasets/datasets_columns_content.html' %}
+            <!-- Additional content sections can be added here following the same structure and guidelines -->
+        </main>
+    </div>
+    <!-- Scripts at the end for faster page loading -->
+    <script>
+        // Additional JavaScript can go here
+    </script>
+</body>
+
+</html>
+{% include 'common/foot.html' %}
+
+<script>
+    $(document).ready(function () {
+        const noEditFields = [
+            '__meta_ingress_file_path',
+            'database_name',
+            'dataset_name',
+            'data_product_id',
+        ];
+
+        // Initialize DataTable with specific configuration
+        const table = $('#excel-table').DataTable({
+            "paging": true,
+            "ordering": true,
+            "info": true,
+            "pageLength": 10,
+            "drawCallback": function () {
+                // Reapply contenteditable after table redraw
+                $('#excel-table tbody td').each(function () {
+                    if (!noEditFields.includes((this).getAttribute('data-name'))) {
+                        $(this).attr('contenteditable', 'true');
+                    }
+                });
+            },
+            "scrollX": "90vw",
+            "scrollY": "675px",
+        });
+
+        $(document).on('keydown', '.only-numbers', function (event) {
+            // Allow: backspace, delete, tab, escape, and enter
+            if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 ||  // Allow: Ctrl+A 
+                (event.keyCode == 65 && event.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (event.keyCode >= 35 && event.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            else {
+                // Ensure that it is a number and stop the keypress
+                if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105)) {
+                    event.preventDefault();
+                }
+            }
+        });
+
+        // Handle row clicking and highlighting
+        $('#excel-table tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected highlight');
+            } else {
+                table.$('tr.selected').removeClass('selected highlight');
+                $(this).addClass('selected highlight');
+            }
+
+            // Enable/disable buttons based on selection
+            const hasSelection = table.$('tr.selected').length > 0;
+            $('#copy-row, #delete-row').prop('disabled', !hasSelection);
+        });
+
+        // Handle adding a new row
+        $('#add-row').on('click', function () {
+            const emptyRow = Array(23).fill('');  // 23 empty cells
+            
+            const dataset_for_inherit = {{dataset | tojson}}[0]; 
+
+            emptyRow[columnNames.indexOf('__meta_ingress_file_path')] = dataset_for_inherit['file_name'];
+            emptyRow[columnNames.indexOf('database_name')] = dataset_for_inherit['database'];
+            emptyRow[columnNames.indexOf('dataset_name')] = dataset_for_inherit['dataset_name'];
+
+            // Add the row using DataTables API
+            const newRow = table.row.add(emptyRow).draw();
+
+            // Make cells editable
+            $(newRow.node()).find('td').each(function (index) {
+                $(this)
+                    .attr('data-name', columnNames[index])
+                    .css('text-align', 'left');
+                if (noEditFields.includes(columnNames[index])) {
+                    $(this).attr('contenteditable', 'false');
+                }
+            });
+
+            // Select the new row
+            table.$('tr.selected').removeClass('selected highlight');
+            $(newRow.node()).addClass('selected highlight');
+            $('#copy-row, #delete-row').prop('disabled', false);
+
+            // Scroll to the new row
+            $('html, body').animate({
+                scrollTop: $(newRow.node()).offset().top
+            }, 500);
+        });
+
+        // Store for copied row data
+        let copiedRowData = null;
+
+        // Handle selecting a row
+        $('#select-row').on('click', function () {
+            const selectedRows = table.rows('.selected').nodes();
+            if (selectedRows.length > 0) {
+                $('#copy-row, #delete-row').prop('disabled', false);
+                alert('Row selected successfully!');
+            } else {
+                alert('No row selected! Please click on a row first.');
+            }
+        });
+
+        // Handle copying a row
+        $('#copy-row').on('click', function () {
+            const selectedRow = table.row('.selected');
+            if (selectedRow.any()) {
+                // Get the actual DOM row
+                const $rowNode = $(selectedRow.node());
+
+                // Create a deep copy of the row data by getting text content
+                copiedRowData = Array.from($rowNode.find('td')).map(td => $(td).text());
+
+                $('#paste-row').prop('disabled', false);
+                alert('Row copied successfully!');
+            } else {
+                alert('No row selected!');
+            }
+        });
+
+        // Handle pasting a row
+        $('#paste-row').on('click', function () {
+            if (!copiedRowData) {
+                alert('No row copied! Please select and copy a row first.');
+                return;
+            }
+
+            // Get selected row or add new row if none selected
+            let targetRow;
+            const selectedRow = table.row('.selected');
+
+            if (selectedRow.any()) {
+                // Paste into selected row
+                targetRow = selectedRow;
+                selectedRow.data(copiedRowData).draw();
+            } else {
+                // Add new row with copied data
+                targetRow = table.row.add(copiedRowData).draw();
+            }
+
+            // Set up the cells with proper attributes
+            $(targetRow.node()).find('td').each(function (index) {
+                $(this)
+                    .attr('data-name', columnNames[index])
+                    .css('text-align', 'left');
+                if (!noEditFields.includes(columnNames[index])) {
+                    $(this)
+                        .attr('contenteditable', 'true');
+                }
+            });
+
+            // Select and scroll to the target row
+            table.$('tr.selected').removeClass('selected highlight');
+            $(targetRow.node()).addClass('selected highlight');
+
+            $('html, body').animate({
+                scrollTop: $(targetRow.node()).offset().top
+            }, 500);
+        });
+
+        // Handle deleting a row
+        $('#delete-row').on('click', function () {
+            const selectedRow = table.row('.selected');
+            if (selectedRow.any()) {
+                if (confirm('Are you sure you want to delete this row?')) {
+                    selectedRow.remove().draw();
+                    $('#copy-row, #delete-row').prop('disabled', true);
+                }
+            } else {
+                alert('No row selected! Please select a row to delete.');
+            }
+        });
+
+        const columnNames = [
+                '__meta{_ingress_file_path','column_batch_group','column_group','column_name','column_label',
+                'column_description','compare_filter','compare_table','compare_row_id_keys','compare_row_columns',
+                'column_name_new','custom_function','database_name','dataset_name','date_format','function',
+                'data_product_id','expected_percent_null','expected_percent_to_not_be_null',
+                'expect_column_values_to_be_in_set','expect_column_values_to_not_be_in_set',
+                'apply_expectations_by_date','apply_expectations_for_n_dates_back'
+            ];
+
+        // Handle saving changes
+        $('#save-changes').on('click', function () {
+            const data = [];
+            const required = [
+                'column_batch_group',
+                'column_group',
+                'column_name',
+                'column_label',
+                'database_name',
+                'dataset_name',
+                'data_product_id',
+            ];
+
+            // Iterate through all rows and collect data
+            table.rows().every(function () {
+                const $row = $(this.node());
+                // const rowId = $(this.node()).attr('id');
+                const rowData = {};
+
+                $row.find('td').each(function () {
+                    const columnName = $(this).attr('data-name');
+                    const input = $(this).text().trim();
+
+                    rowData[columnName] = input;
+                    if (required.includes(columnName) && input === '') {
+                        $(this).addClass('table-danger');
+                        throw new ValidationError(columnName);
+                    }
+                });
+                data.push(rowData);
+            });
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            // Send data to the backend
+            fetch(document.location.href, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ data: data })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        // Parse the JSON error message if the response status is not OK (400, 500, etc.)
+                        return response.json().then(errorData => {
+                            const errorMessage = formatErrorMessage(errorData);
+                            // Throw error with formatted message
+                            throw new Error(errorMessage);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    alert('Changes saved successfully!');
+                    location.reload()
+                })
+                .catch(error => {
+                    console.error('Error saving changes:', error);
+                    alert('Failed to save changes.');
+                });
+        });
+
+        // Helper function to format the error message
+        function formatErrorMessage(errorData) {
+            let message = errorData.message || "Unknown error occurred.";
+            if (errorData.errors) {
+                message += "\nValidation Errors:";
+                for (const [field, error] of Object.entries(errorData.errors)) {
+                    message += `\n- ${field}: ${error}`;
+                }
+            }
+            return message;
+        }
+    });
+
+    function goBack() {
+        window.history.back();
+    }
+    
+    class ValidationError extends Error {
+        constructor(message = "", ...args) {
+            super(message, ...args);
+            this.message = `Validation failed: the column ${message} is required.`;
+            alert(this.message);
+        }
+    }
+
+    $('[data-toggle="popover"]').popover({
+        container: 'body'
+    });
+</script>
+<script> var cdc_datatable_20997 = { "columns": [{ "display": "display", "sort": "true" }] };</script>

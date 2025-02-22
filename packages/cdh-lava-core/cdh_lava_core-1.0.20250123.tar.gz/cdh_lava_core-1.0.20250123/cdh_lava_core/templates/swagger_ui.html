@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom API Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.52.5/swagger-ui.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.52.5/swagger-ui-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.52.5/swagger-ui-standalone-preset.js"></script>
+    <script>
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');  // Retrieve CSRF token from the meta tag
+        const ui = SwaggerUIBundle({
+            url: "swagger.json", // Update this URL to where your actual Swagger JSON is located
+            dom_id: '#swagger-ui',
+            deepLinking: true,
+            presets: [
+                SwaggerUIBundle.presets.apis,
+                SwaggerUIStandalonePreset
+            ],
+            plugins: [
+                SwaggerUIBundle.plugins.DownloadUrl
+            ],
+            layout: "StandaloneLayout",
+            requestInterceptor: function(request) {
+                    // Add the CSRF token to the request headers
+                    request.headers['X-CSRFToken'] = csrfToken;
+                    return request;
+                }
+        });
+    
+    
+    </script>
+
+    
+</body>
+</html>

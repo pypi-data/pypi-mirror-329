@@ -1,0 +1,87 @@
+<!-- Include jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Include Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<!-- Include Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/js/bootstrap.min.js"></script>
+<!-- DataTables JS -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.2.1/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+  function navigateToSwagger() {
+    // Get the current pathname
+    var currentPath = window.location.pathname;
+
+    // Split the pathname into parts
+    var pathParts = currentPath.split('/');
+
+    // We know that '/s/{id}/p/{id}/' has 5 parts, so we slice up to the 5th element
+    var sIndex = pathParts.indexOf('s');
+    var pIndex = pathParts.indexOf('p');
+
+    // Ensure we have found the 's' and 'p' parts and they are in the correct sequence
+    if (sIndex !== -1 && pIndex === sIndex + 2) {
+      // Keep up to and including 'p/{id}'
+      pathParts = pathParts.slice(0, pIndex + 2);
+    }
+
+    // Join the path parts to form the base path
+    var basePath = pathParts.join('/');
+
+    // Ensure the base path ends with a '/'
+    if (!basePath.endsWith('/')) {
+      basePath += '/';
+    }
+
+    // Navigate to the new path relative to the app root directory
+    document.location.href = basePath + 'api/swagger';
+  }
+</script>
+
+<script>
+  $(document).ready(function () {
+    // Hide submenus initially
+    $('#sidebar-container .collapse').collapse('hide');
+
+    // Sidebar toggle functionality
+    $('#hamburger-area').click(function () {
+      SidebarCollapse();
+    });
+
+    function SidebarCollapse() {
+      $('.menu-collapsed').toggleClass('d-none');
+      $('.sidebar-submenu').toggleClass('d-none');
+      $('.submenu-icon').toggleClass('d-none');
+      $('#sidebar-container').toggleClass('sidebar-expanded sidebar-collapsed');
+      // Treating d-flex/d-none on separators with title
+      var SeparatorTitle = $('.sidebar-separator-title');
+      if (SeparatorTitle.hasClass('d-flex')) {
+        SeparatorTitle.removeClass('d-flex');
+      } else {
+        SeparatorTitle.addClass('d-flex');
+      }
+      // Collapse/Expand icon
+      $('#collapse-icon').toggleClass('fa-bars fa-angle-double-right');
+    }
+
+    // Website status indicator
+    var websiteStatus = "development"; // or "production"
+    var statusElement = document.getElementById("status-icon");
+    if (statusElement) {
+      var iconElement = statusElement.querySelector(".fa");
+      var anchorElement = statusElement.querySelector("a");
+      if (websiteStatus === "development") {
+        iconElement.classList.add("fa-wrench");
+        anchorElement.textContent = " Development";
+        iconElement.style.color = "orange";
+        anchorElement.style.color = "orange";
+      } else if (websiteStatus === "production") {
+        iconElement.classList.add("fa-check-circle");
+        anchorElement.textContent = " Production";
+        iconElement.style.color = "green"; // Assuming you want to manually set the text-success color
+        anchorElement.style.color = "green";
+      }
+    }
+  });
+</script>

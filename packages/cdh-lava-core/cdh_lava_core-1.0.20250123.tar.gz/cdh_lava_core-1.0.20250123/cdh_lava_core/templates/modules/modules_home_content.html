@@ -1,0 +1,53 @@
+<div class="section-area">
+	<div class="row">
+		<div class="col-md-10">
+
+			<table id="excel-table" class="table table-striped table-theme-blue">
+				<thead>
+					<tr>
+						<th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+							aria-label="Name: activate to sort column ascending" scope="col">
+							Name</th>
+						<th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+							aria-label="Type: activate to sort column ascending" scope="col">
+							Type</th>
+						<th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+							aria-label="Data Product ID: activate to sort column ascending" scope="col">
+							Data Product ID</th>
+						<th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+							aria-label="Environment: activate to sort column ascending" scope="col">
+							Environment</th>
+						<th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+							aria-label="View Module: activate to sort column ascending" scope="col"
+							style="text-align:righ; width:115px">View Module</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					{% for row in data %}
+
+					<tr>
+						<td style="text-align: left;">{{ row.Name }}</td>
+						<td style="text-align: center;">{{ row.Type }}</td>
+						<td style="text-align: center;">{{ row.data_product_id }}</td>
+						<td style="text-align: center;">{{ row.environment }}</td>
+						<td style="text-align: center;">
+							<a href="{{ url_for('modules.module', module_name=row.Name) }}" class="center-content">
+								<span class="x32 fill-p cdc-icon-link icon-blue"></span>
+								<span>View Module</span>
+							</a>
+						</td>
+					</tr>
+
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<script> var cdc_datatable_20997 = { "columns": [{ "display": "display", "sort": "true" }] };</script>
+		<div class="row-fluid">
+			<div class="vc_empty_space col-12 pt-3 pb-1"><span class="vc_empty_space_inner"></span></div>
+		</div>
+		<div class="col-md-2"></div>
+	</div>
+</div>
+ 
