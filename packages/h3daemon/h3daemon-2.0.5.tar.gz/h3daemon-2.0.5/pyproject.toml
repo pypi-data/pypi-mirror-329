@@ -1,0 +1,33 @@
+[project]
+name = "h3daemon"
+version = "2.0.5"
+description = "HMMER server"
+authors = [{ name = "Danilo Horta", email = "horta@ebi.ac.uk" }]
+requires-python = "~=3.9"
+readme = "README.md"
+license = "MIT"
+dependencies = [
+    "psutil>=6.1.1,<7",
+    "hmmer>=3.4.0.2,<4",
+    "python-daemon>=3.1.0,<4",
+    "pidlockfile>=0.3,<0.4",
+    "deciphon-schema>=0.2.0",
+    "tenacity>=9.0.0,<10",
+    "loguru>=0.7.3",
+]
+
+[project.optional-dependencies]
+cli = ["typer>=0.15.0,<0.16"]
+
+[project.scripts]
+h3daemon = "h3daemon.cli:app"
+
+[dependency-groups]
+dev = [
+    "pytest-repeat>=0.9.3,<0.10",
+    "pytest>=8.3.4,<9",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
