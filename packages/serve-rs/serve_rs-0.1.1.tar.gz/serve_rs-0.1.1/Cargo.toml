@@ -1,0 +1,20 @@
+[package]
+name = "serve-rs"
+version = "0.1.1"
+edition = "2021"
+
+[lib]
+name = "servers"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+hyper = { version = "0.14.28", features = ["full", "server"] }
+pyo3 = { version = "0.23.4", features = ["extension-module"] }
+tokio = { version = "1.43.0", features = ["full"] }
+tracing = "0.1.40"
+tracing-opentelemetry = "0.27.0"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+opentelemetry = "0.26.0"
+opentelemetry-otlp = { version = "0.26.0", features = ["default", "tracing"] }
+opentelemetry_sdk = { version = "0.26.0", features = ["rt-tokio"] }
+tracing-test = "0.2.5"
