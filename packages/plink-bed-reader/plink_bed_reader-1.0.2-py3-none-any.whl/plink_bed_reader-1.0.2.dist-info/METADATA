@@ -1,0 +1,65 @@
+Metadata-Version: 2.1
+Name: plink-bed-reader
+Version: 1.0.2
+Summary: Lightweight and memory efficient reader for PLINK BED files. It supports both SNP-major and individual-major formats. Written in pure Python.
+Author-email: Rapsssito <contact@rodrigomartin.dev>
+License: MIT
+Project-URL: homepage, https://github.com/Computational-Genomics-BSC/plink-bed-reader
+Project-URL: issues, https://github.com/Computational-Genomics-BSC/plink-bed-reader/issues
+Project-URL: repository, https://github.com/Computational-Genomics-BSC/plink-bed-reader.git
+Project-URL: documentation, https://computational-genomics-bsc.github.io/plink-bed-reader/
+Keywords: bed,plink,genetics,bioinformatics,variant,indel,snv,genotype
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy>=1.20.0
+Provides-Extra: build
+Requires-Dist: build~=1.2; extra == "build"
+Provides-Extra: docs
+Requires-Dist: sphinx; extra == "docs"
+Requires-Dist: sphinx-rtd-theme; extra == "docs"
+Requires-Dist: myst-parser; extra == "docs"
+
+# PLINK BED reader<!-- omit in toc -->
+**Lightweight and memory efficient reader for PLINK BED files**. It supports both SNP-major and individual-major formats. Written in Python 3. Check the [available documentation](https://computational-genomics-bsc.github.io/plink-bed-reader/) for more information.
+
+## Table of contents<!-- omit in toc -->
+- [Getting started](#getting-started)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Dependencies](#dependencies)
+
+
+## Getting started
+### Installation
+`plink-bed-reader` is available on PyPI and can be installed using `pip`:
+```bash
+pip install plink-bed-reader
+```
+
+## Usage
+```python
+# Import the package
+from plink_bed_reader import PLINKBEDReader, BEDMode
+
+# Load the PLINK BED file (we include the mode for sanity check, but it is optional)
+bed = PLINKBEDReader('./input_test_data/test.bed', mode=BEDMode.SNP_MAJOR)
+
+# Print the number of SNPs and samples
+print('Number of SNPs:', bed.snp_count)
+print('Number of samples:', bed.sample_count)
+# Print the first SNP
+first_snp = bed[0]
+print('First SNP:', first_snp, first_snp.dtype)
+# Print the first 3 SNPs
+print('First 3 SNPs:', bed[:3])
+```
+
+## Dependencies
+
+The dependencies are covered by their own respective licenses as follows:
+
+* [Python/NumPy package](https://numpy.org/)
