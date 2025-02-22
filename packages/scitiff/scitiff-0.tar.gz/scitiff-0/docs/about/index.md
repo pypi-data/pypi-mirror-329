@@ -1,0 +1,34 @@
+# About
+
+## Development
+
+SciTiff is an open source project by the [European Spallation Source ERIC](https://europeanspallationsource.se/) (ESS).
+
+## License
+
+SciTiff is available as open source under the [BSD-3 license](https://opensource.org/licenses/BSD-3-Clause).
+
+## Citing SciTiff
+
+Please cite the following:
+
+[![DOI](https://zenodo.org/badge/FIXME.svg)](https://zenodo.org/doi/10.5281/zenodo.FIXME)
+
+To cite a specific version of SciTiff, select the desired version on Zenodo to get the corresponding DOI.
+
+## Older versions of the documentation
+
+<<<<<<< before updating
+Older versions of the documentation pages can be found under the assets of each [release](https://github.com/ESS-DMSC-DRAM/scitiff/releases).
+=======
+Older versions of the documentation pages can be found under the assets of each [release](https://github.com/ess-dmsc-dram/scitiff/releases).
+>>>>>>> after updating
+Simply download the archive, unzip and view locally in a web browser.
+
+## Source code and development
+
+<<<<<<< before updating
+SciTiff is hosted and developed [on GitHub](https://github.com/ESS-DMSC-DRAM/scitiff).
+=======
+SciTiff is hosted and developed [on GitHub](https://github.com/ess-dmsc-dram/scitiff).
+>>>>>>> after updating
