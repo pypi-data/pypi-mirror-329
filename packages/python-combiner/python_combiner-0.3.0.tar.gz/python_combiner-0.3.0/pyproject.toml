@@ -1,0 +1,28 @@
+[project]
+name = "python-combiner"
+version = "0.3.0"
+authors = [
+  { name = "zabackary", email = "137591653+zabackary@users.noreply.github.com" },
+]
+description = "Smoosh Python modules into one big one."
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+]
+license = { text = "MIT" }
+
+[project.optional-dependencies]
+minifier = ["python-minifier"]
+
+[project.scripts]
+python-combiner = "python_combiner.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/zabackary/python-combiner"
+Issues = "https://github.com/zabackary/python-combiner/issues"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
