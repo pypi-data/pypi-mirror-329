@@ -1,0 +1,112 @@
+Metadata-Version: 2.1
+Name: eazyml-insight
+Version: 0.0.43
+Summary: eazyml-insight provides APIs to uncover patterns, generate insights, and discover rules from training datasets.
+Home-page: https://eazyml.com/
+Author: Eazyml
+Author-email: admin@ipsoftlabs.com
+Project-URL: Documentation, https://docs.eazyml.com/
+Project-URL: Homepage, https://eazyml.com/
+Project-URL: Contact Us, https://eazyml.com/trust-in-ai
+Project-URL: eazyml, https://pypi.org/project/eazyml/
+Project-URL: eazyml-cf, https://pypi.org/project/eazyml-cf/
+Project-URL: eazyml-xai, https://pypi.org/project/eazyml-xai/
+Project-URL: eazyml-xai-image, https://pypi.org/project/eazyml-xai-image/
+Project-URL: eazyml-insight, https://pypi.org/project/eazyml-insight/
+Project-URL: eazyml-dq, https://pypi.org/project/eazyml-dq/
+Keywords: pattern-discovery,rule-mining,data-insights,insight-generation,augmented-intelligence,data-analysis,rule-discovery,data-patterns,machine-learning,data-science,ml-api,training-data-analysis,interpretable-ai
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: Other/Proprietary License
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Information Technology
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Operating System :: Unix
+Classifier: Operating System :: Microsoft :: Windows
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: werkzeug
+Requires-Dist: unidecode
+Requires-Dist: pandas
+Requires-Dist: scikit-learn
+Requires-Dist: nltk
+Requires-Dist: getmac
+Requires-Dist: cryptography
+Requires-Dist: pyyaml
+Requires-Dist: requests
+
+## Eazyml Augmented Intelligence
+![Python](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)  ![PyPI package](https://img.shields.io/badge/pypi%20package-0.0.43-brightgreen) ![Code Style](https://img.shields.io/badge/code%20style-black-black)
+
+![EazyML](https://github.com/EazyML/eazyml-docs/raw/refs/heads/master/EazyML_logo.png)
+
+A collection of APIs to discover patterns, generate insights, and uncover
+rules in training datasets. Each discovered pattern is expressed as a set of
+rules/conditions on feature variables, allowing users to analyze and apply
+these insights to their data. Ideal for pattern recognition, interpretable AI,
+and augmented intelligence workflows
+
+### Features
+- **Pattern Mining**: Discover meaningful rules in datasets.
+- **Insight Generation**: Generate high-value insights with associated scores.
+- **Application of Rules**: Apply discovered patterns to datasets for further analysis.
+
+Ideal for use cases like interpretability, training data analysis, and building augmented intelligence solutions.
+
+## Installation
+### User installation
+The easiest way to install augmented intelligence is using pip:
+```bash
+pip install -U eazyml-augi
+```
+### Dependencies
+Eazyml Augmented Intelligence requires :
+- werkzeug,
+- unidecode,
+- pandas,
+- scikit-learn,
+- nltk,
+- pyyaml,
+- requests
+
+## Usage
+Augmented Intelligence can be used by initalizing EazyML and then getting insights for given training data.
+
+```python
+from eazyml_augi import ez_init, ez_augi
+# Replace 'your_license_key' with your actual EazyML license key
+ez_init(license_key="your_license_key")
+# Perform data insights for given training data using EazyML.
+response = ez_augi(mode='classification',
+            outcome='target',
+            train_file_path='train.csv')
+```
+You can find more information in the [documentation](https://eazyml.readthedocs.io/en/latest/packages/eazyml_augi.html).
+
+
+## Useful links and similar projects
+- [Documentation](https://docs.eazyml.com)
+- [Homepage](https://eazyml.com)
+- If you have more questions or want to discuss a specific use case please book an appointment [here](https://eazyml.com/trust-in-ai)
+- Here are some other EazyML's packages :
+
+    - [eazyml](https://pypi.org/project/eazyml/): Eazyml provides a suite of APIs for training, testing and optimizing machine learning models with built-in AutoML capabilities, hyperparameter tuning, and cross-validation.
+    - [eazyml-dq](https://pypi.org/project/eazyml-dq/): `eazyml-dq` provides APIs for comprehensive data quality assessment, including bias detection, outlier identification, and data drift analysis.
+    - [eazyml-cf](https://pypi.org/project/eazyml-cf/): `eazyml-cf` provides APIs for counterfactual explanations, prescriptive analytics, and actionable insights to optimize predictive outcomes.
+    - [eazyml-augi](https://pypi.org/project/eazyml-augi/): `eazyml-augi` provides APIs to uncover patterns, generate insights, and discover rules from training datasets.
+    - [eazyml-xai](https://pypi.org/project/eazyml-xai/): `eazyml-xai` provides APIs for explainable AI (XAI), offering human-readable explanations, feature importance, and predictive reasoning.
+    - [eazyml-xai-image](https://pypi.org/project/eazyml-xai-image/): eazyml-xai-image provides APIs for image explainable AI (XAI).
+
+## License
+This project is licensed under the [Proprietary License](https://github.com/EazyML/eazyml-docs/blob/master/LICENSE).
+
+---
+
+*Maintained by [EazyML](https://eazyml.com)*  
+*Â© 2025 EazyML. All rights reserved.*
