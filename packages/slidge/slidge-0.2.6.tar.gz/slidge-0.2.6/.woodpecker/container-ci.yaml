@@ -1,0 +1,29 @@
+# Build a container with a virtualenv that can be used for tests and to build docs.
+
+when:
+  event: [ manual, cron ]
+
+depends_on: [ container-cache ]
+
+matrix:
+  PYTHON_VERSION:
+    - "3.11"
+    - "3.12"
+    - "3.13"
+
+steps:
+  build-and-push:
+    image: woodpeckerci/plugin-docker-buildx
+    settings:
+      repo: codeberg.org/${CI_REPO_OWNER}/woodpecker-${CI_REPO_NAME}
+      registry: codeberg.org
+      build_args:
+        PYTHONVER: "${PYTHON_VERSION}"
+      tag: ${PYTHON_VERSION}
+      target: woodpecker-${CI_REPO_NAME}
+      username: slidge
+      password:
+        from_secret: CODEBERG_TOKEN
+      cache_from: codeberg.org/slidge/slidge-builder:buildcache-base-amd64
+      cache_images:
+        - codeberg.org/slidge/woodpecker-slidge:buildcache-${PYTHON_VERSION}

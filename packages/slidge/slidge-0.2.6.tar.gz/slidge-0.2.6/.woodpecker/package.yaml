@@ -1,0 +1,56 @@
+# Build a source dist and a wheel.
+
+when:
+  event: [ push, tag, pull_request ]
+  path: [ "slidge/**/*", "pyproject.toml", "uv.lock", "README.md" ]
+
+# We do not need to build several packages for several python versions
+# since slidge is pure python.
+variables:
+  - &image codeberg.org/slidge/woodpecker-${CI_REPO_NAME}:3.13
+
+steps:
+  version:
+    image: codeberg.org/slidge/woodpecker-version
+
+  changelog:
+    image: codeberg.org/slidge/woodpecker-generate-changelog
+    pull: true
+
+  build:
+    image: *image
+    commands:
+      - uv build
+
+  codeberg-pypi:
+    when:
+      event: [ push, tag ]
+    image: *image
+    environment:
+      CODEBERG_TOKEN:
+        from_secret: CODEBERG_TOKEN
+    commands:
+      - uv publish --index codeberg --token $CODEBERG_TOKEN
+
+  pypi:
+    when:
+      branch: main
+      event: tag
+    image: *image
+    environment:
+      PYPI_TOKEN:
+        from_secret: PYPI_TOKEN
+    commands:
+      - uv publish --token $PYPI_TOKEN
+
+  codeberg-release:
+    when:
+      branch: main
+      event: tag
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - dist/slidge*
+      api_key:
+        from_secret: CODEBERG_TOKEN
+      note: CHANGELOG

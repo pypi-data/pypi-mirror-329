@@ -1,0 +1,71 @@
+# Generate build caches for containers used by the legacy modules and the CI images
+
+# We cannot do it directly in the container workflow, because buildx does not "magically"
+# merge multi-arch build caches, cf https://github.com/docker/buildx/discussions/1382#discussioncomment-4159926
+
+when:
+  event: [ manual, cron ]
+
+variables:
+  - &settings
+    username: slidge
+    registry: codeberg.org
+    password:
+      from_secret: CODEBERG_TOKEN
+    dry_run: true
+  - &when
+    when:
+      branch: main
+      path:
+        - Dockerfile
+        - pyproject.toml
+        - uv.lock
+
+matrix:
+  PLATFORM:
+    - arm64
+    - amd64
+
+steps:
+  builder-base:
+    image: woodpeckerci/plugin-docker-buildx
+    <<: *when
+    settings:
+      platforms: linux/${PLATFORM}
+      target: builder-base
+      cache_images:
+        - codeberg.org/slidge/slidge-builder:buildcache-base-${PLATFORM}
+      <<: *settings
+
+  builder:
+    image: woodpeckerci/plugin-docker-buildx
+    <<: *when
+    settings:
+      platforms: linux/${PLATFORM}
+      target: builder
+      cache_from: codeberg.org/slidge/slidge-builder:buildcache-base-${PLATFORM}
+      cache_images:
+        - codeberg.org/slidge/slidge-builder:buildcache-${PLATFORM}
+      <<: *settings
+
+  base:
+    image: woodpeckerci/plugin-docker-buildx
+    <<: *when
+    settings:
+      platforms: linux/${PLATFORM}
+      target: base
+      cache_from: codeberg.org/slidge/slidge-builder:buildcache-${PLATFORM}
+      cache_images:
+        - codeberg.org/slidge/slidge-base:buildcache-${PLATFORM}
+      <<: *settings
+
+  dev:
+    image: woodpeckerci/plugin-docker-buildx
+    <<: *when
+    settings:
+      platforms: linux/${PLATFORM}
+      target: dev
+      cache_from: codeberg.org/slidge/slidge-base:buildcache-${PLATFORM}
+      cache_images:
+        - codeberg.org/slidge/slidge-dev:buildcache-${PLATFORM}
+      <<: *settings

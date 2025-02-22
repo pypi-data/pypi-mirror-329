@@ -1,0 +1,49 @@
+# Build the containers used as bases by the legacy modules
+
+variables:
+  - &platforms linux/arm64/v8,linux/amd64
+  - settings: &settings
+      platforms: *platforms
+      cache_from: codeberg.org/slidge/slidge-${TARGET}:buildcache-arm64
+      # TODO: also pull cache from :buildcache-amd64
+      # cf https://codeberg.org/woodpecker-plugins/docker-buildx/pulls/212
+
+depends_on: [ container-cache ]
+
+when:
+  event: [ cron, manual ]
+  branch: main
+  path: [ Dockerfile, uv.lock, "slidge/**/*" ]
+
+matrix:
+  TARGET:
+    - builder
+    - base
+    - dev
+
+steps:
+  version:
+    image: codeberg.org/slidge/woodpecker-version
+
+  build-and-push:
+    image: woodpeckerci/plugin-docker-buildx
+    pull: true
+    settings:
+      repo: codeberg.org/slidge/slidge-${TARGET}
+      registry: codeberg.org
+      auto_tag: true
+      target: ${TARGET}
+      username: slidge
+      password:
+        from_secret: CODEBERG_TOKEN
+      <<: *settings
+    when:
+      event: [ push, tag ]
+
+  build:
+    image: woodpeckerci/plugin-docker-buildx
+    settings:
+      dry-run: true
+      <<: *settings
+    when:
+      event: pull_request
