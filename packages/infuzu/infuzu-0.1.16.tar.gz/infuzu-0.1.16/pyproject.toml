@@ -1,0 +1,90 @@
+[project]
+name = "infuzu"
+description = "Python SDK for Infuzu API"
+dynamic = ["readme", "version"]
+license = "Apache-2.0"
+authors = [
+    {name = "Infuzu", email = "support@infuuz.com"}
+]
+dependencies = [
+    "httpx>=0.23.0, <1",
+    "pydantic>=2.0,<3"
+]
+requires-python= ">= 3.8"
+classifiers = [
+    "Typing :: Typed",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "License :: OSI Approved :: Apache Software License"
+]
+keywords = [
+    "chat", "sdk", "api", "infuzu", "ims", "intelligent model selection", "python", "ai", "artificial intelligence"
+]
+
+[tool.hatch.version]
+source = "regex"
+path = ".package-version"
+pattern = '^(?P<version>\d+\.\d+\.\d+)$'
+
+[project.urls]
+Homepage = "https://github.com/Infuzu/infuzu-python"
+Repository = "https://infuzu.com#api"
+Documentation = "https://docs.infuzu.com"
+
+[tool.hatch.build]
+include = [
+    "src/*",
+    "LICENSE"
+]
+
+[build-system]
+requires = ["hatchling", "hatch-fancy-pypi-readme"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata.hooks.fancy-pypi-readme]
+content-type = "text/markdown"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+path = "README.md"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
+pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)'
+replacement = '[\1](https://github.com/Infuzu/infuzu-python/tree/main/\g<2>)'
+
+[tool.hatch.build.targets.sdist]
+include = ["src/*", "README.md", "LICENSE"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/infuzu"]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0"
+]
+
+[tool.hatch.envs.default]
+dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0"
+]
+
+[tool.hatch.envs.test]
+dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0"
+]
+
+[tool.hatch.envs.test.scripts]
+test = "pytest tests/ --cov=infuzu --cov-report=term-missing"
+cov = "coverage html"
