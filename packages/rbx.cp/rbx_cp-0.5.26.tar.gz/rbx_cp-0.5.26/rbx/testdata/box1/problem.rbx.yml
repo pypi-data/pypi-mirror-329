@@ -1,0 +1,39 @@
+---
+name: "test-problem"
+timeLimit: 1000
+memoryLimit: 256
+outputLimit: 100 # 100 kb
+generators:
+  - name: "gen1"
+    path: "gen1.cpp"
+  - name: "gen2"
+    path: "gen2.cpp"
+validator:
+  path: "validator.cpp"
+testcases:
+  - name: "gen1"
+    testcaseGlob: "tests/*.in"
+    subgroups:
+      - name: "gen"
+        generators:
+          - name: "gen1"
+          - name: "gen2"
+            args: "424242"
+      - name: "genScript"
+        generatorScript:
+          path: "genScript.py"
+solutions:
+  - path: "sol.cpp"
+    outcome: "ac"
+  - path: "wa.sol.cpp"
+    outcome: "fail"
+  - path: "re.sol.cpp"
+    outcome: "rte"
+  - path: "tle.sol.cpp"
+    outcome: "tle"
+  - path: "tle-and-incorrect.sol.cpp"
+    outcome: "tle"
+  - path: "hard-tle.sol.cpp"
+    outcome: "tle"
+  - path: "ole.cpp"
+    outcome: "ole"
