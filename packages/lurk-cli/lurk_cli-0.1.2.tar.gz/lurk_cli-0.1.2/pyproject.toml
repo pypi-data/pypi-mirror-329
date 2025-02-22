@@ -1,0 +1,52 @@
+[project]
+name = "lurk-cli"
+version = "0.1.2"
+description = "A CLI tool to check product stock across multiple stores."
+authors = [
+    { name="Robert Martinez", email="rdmm404@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "curl-cffi>=0.7.4",
+    "mypy>=1.14.1",
+    "nodriver>=0.39",
+    "pydantic>=2.10.6",
+    "requests>=2.32.3",
+    "rich>=13.9.4",
+    "typer>=0.15.1",
+    "pyyaml>=6.0.2",
+    "types-pyyaml>=6.0.12.20241230",
+    "aiogram>=3.18.0",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Utilities",
+]
+
+[project.urls]
+Homepage = "https://github.com/rdmm123/lurk"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+only-include = ["lurk"]
+exclude = [
+    "lurk/checkers/*_wip.py",
+    ".yaml"
+]
+
+[project.scripts]
+lurk = "lurk.cli:app"
+
+[tool.mypy]
+strict = true
+explicit_package_bases = true
