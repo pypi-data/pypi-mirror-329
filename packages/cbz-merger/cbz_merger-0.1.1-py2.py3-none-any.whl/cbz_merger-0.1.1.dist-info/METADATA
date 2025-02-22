@@ -1,0 +1,42 @@
+Metadata-Version: 2.4
+Name: cbz_merger
+Version: 0.1.1
+Summary: Merges multiple CBZ/CBR files into one
+Author-email: Jury Razumau <mail@razumau.net>
+License-Expression: MIT
+Requires-Dist: build>=1.2.2.post1
+Requires-Dist: rarfile>=4.2
+Description-Content-Type: text/markdown
+
+# cbz_merger
+
+Merges multiple CBZ/CBR files into one, so that 
+```
+comic/
+├── 01.cbz
+├── 02.cbz
+└── 03.cbz
+```
+
+becomes
+
+```
+comic/
+├── 01.cbz
+├── 02.cbz
+├── 03.cbz
+└── result.cbz
+```
+
+## Installation and usage
+Run it with uvx:
+
+```
+uvx cbz_merger [-r result_filename] folder_name
+```
+
+Or install with pip/pipx:
+
+```
+pipx install cbz_merger
+```
