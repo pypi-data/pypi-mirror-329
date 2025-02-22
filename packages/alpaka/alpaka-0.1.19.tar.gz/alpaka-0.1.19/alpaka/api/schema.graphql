@@ -1,0 +1,112 @@
+"""Make string uppercase"""
+directive @upper on FIELD
+
+directive @replace(old: String!, new: String!) on FIELD
+
+"""Make get stuff uppercase"""
+directive @relation(on: String!) on FIELD
+
+type Query {
+  rooms(filters: RoomFilter, pagination: OffsetPaginationInput): [Room!]!
+  room(id: ID!): Room!
+}
+
+"""Room(id, title, description, creator)"""
+type Room {
+  id: ID!
+
+  """The Title of the Room"""
+  title: String!
+  description: String!
+  messages(filters: MessageFilter, pagination: OffsetPaginationInput): [Message!]!
+  agents(pagination: OffsetPaginationInput): [Agent!]!
+}
+
+"""Message represent the message of an agent on a room"""
+type Message {
+  id: ID!
+  title: String!
+
+  """A clear text representation of the rich comment"""
+  text: String!
+
+  """The user that created this comment"""
+  agent: Agent!
+  attachedStructures(pagination: OffsetPaginationInput): [Structure!]!
+}
+
+"""Agent(id, room, name, app, user)"""
+type Agent {
+  id: ID!
+  room: Room!
+}
+
+"""Structure(id, identifier, object)"""
+type Structure {
+  id: ID!
+
+  """The object id of the object, on its associated service"""
+  object: ID!
+
+  """The identifier of the object. Consult the documentation for the format"""
+  identifier: String!
+}
+
+input OffsetPaginationInput {
+  offset: Int! = 0
+  limit: Int
+}
+
+"""Message represent the message of an agent on a room"""
+input MessageFilter {
+  ids: [ID!]
+  search: String
+  AND: MessageFilter
+  OR: MessageFilter
+  NOT: MessageFilter
+  DISTINCT: Boolean
+}
+
+"""Room(id, title, description, creator)"""
+input RoomFilter {
+  search: String
+  ids: [ID!]
+  AND: RoomFilter
+  OR: RoomFilter
+  NOT: RoomFilter
+  DISTINCT: Boolean
+}
+
+type Mutation {
+  createRoom(input: CreateRoomInput!): Room!
+  send(input: SendMessageInput!): Message!
+}
+
+input CreateRoomInput {
+  description: String = null
+  title: String = null
+}
+
+input SendMessageInput {
+  room: ID!
+  agentId: String!
+  text: String!
+  parent: ID = null
+  notify: Boolean = null
+  attachStructures: [StructureInput!] = null
+}
+
+input StructureInput {
+  object: ID!
+  identifier: String!
+}
+
+type Subscription {
+  room(room: ID!, agentId: ID!, filterOwn: Boolean! = true): RoomEvent!
+}
+
+type RoomEvent {
+  message: Message
+  join: Agent
+  leave: Agent
+}
