@@ -1,0 +1,53 @@
+# OpenFV
+
+A Python package for computer vision in Frequency Domain.
+
+## Installation
+
+You can install the package using pip:
+
+```bash
+pip install openfv
+
+## Usage
+
+Here's a basic example of how to use the package:
+
+import cv2
+import openfv as fv
+
+# Load an image
+image = cv2.imread('your_image.png')
+
+## Compute amplitude spectrum
+spectrum = fv.ww_amplitude_spectrum(image)
+filtered = fv.ww_homomorphic_filter(image)
+
+## Or with parametrs
+filtered = fv.ww_homomorphic_filter(image, d0=30, rh=1.5, rl=0.9, c=2)
+
+## Input/Output
+Input
+NumPy array representing an image
+Supports both 2D (grayscale) and 3D (RGB) arrays
+RGB images are automatically converted to grayscale
+Output
+NumPy array containing the normalized amplitude spectrum
+Values are scaled to the range [0, 1]
+
+## Dependencies
+numpy >= 1.19.0
+scipy >= 1.15.1
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Author
+Wonwoo Park (bemore.one@gmail.com)
+
+## Version History
+0.1.9: amplitude spectrum added
+0.1.5: homomorphic filter added
+0.1.0: Initial release
