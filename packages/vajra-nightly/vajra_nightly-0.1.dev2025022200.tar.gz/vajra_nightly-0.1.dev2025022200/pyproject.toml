@@ -1,0 +1,40 @@
+[build-system]
+requires = [
+    "cmake>=3.26",
+    "ninja",
+    "packaging",
+    "setuptools>=61",
+    "setuptools-scm>=8.0",
+    "torch >= 2.5",
+    "wheel",
+    "flashinfer-python",
+    "vidur",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.isort]
+profile = "black"
+known_first_party = "vajra"
+known_third_party = "wandb"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--strict-markers"
+]
+testpaths = [
+    "test"
+]
+markers = [
+    "performance: Performance benchmarking tests. Part of the functional test suite.",
+    "correctness: Correctness tests. Part of the functional test suite.",
+    "unit: Unit tests.",
+    "integration: Integration tests.",
+]
+
+[tool.pyright]
+include = ["vajra", "test"]
+exclude = [
+    "**/__pycache__",
+    "vajra/core/scheduler/", # To be replaced with a C++ implementation
+]
+reportMissingImports = false
