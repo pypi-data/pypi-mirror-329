@@ -1,0 +1,40 @@
+[project]
+name = "m2c2_datakit"
+version = "0.1.11"
+description = "Data management and scoring tools for the M2C2 project"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "matplotlib",
+    "seaborn",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=24.10.0",
+    "flake8>=7.1.1",
+    "isort>=5.13.2",
+    "mypy>=1.13.0",
+    "pandas-stubs>=2.2.3.241126",
+    "types-psutil>=6.1.0.20241102",
+    "ipykernel>=6.29.5",
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages]
+find = { where = ["."], include = ["m2c2_datakit*"], exclude = ["notebooks*", "tests*", "scripts*", "data*"] }
+
+[tool.uv.sources]
+m2c2-datakit = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "m2c2-datakit",
+]
