@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=64.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "damagescanner"
+version = "0.9-beta.13"
+authors = [
+    {name = "Elco Koks", email = "elco.koks@vu.nl"},
+    {name = "Jens de Bruijn", email = "jens.de.bruijn@vu.nl"},
+]
+
+license = {text = "MIT License"}
+description = "Direct damage assessments for natural hazards"
+keywords = ["GIS", "natural hazards", "damage assessment", "remote sensing", "raster", "vector", "geospatial"]
+classifiers=[
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python",
+        "Operating System :: OS Independent",
+        "Topic :: Scientific/Engineering :: GIS",
+        "Topic :: Utilities",
+    ]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "geopandas",
+    "matplotlib",	
+    "numpy",
+    "pyproj",
+    "rasterio",
+    "xarray",
+    "rioxarray",
+    "packaging",
+    "pandas",
+    "shapely >= 2.0",
+    "tqdm",
+    "pyyaml",
+    "exactextract",
+]
+
+[tool.setuptools.package-data]
+"*" = ["*.ini"]
+
+[project.optional-dependencies]
+tests = ["pytest"]
+docs = ["jupyter"]
+examples = ["osm-flex"]
+
+[project.urls]
+"Homepage" = "https://github.com/ElcoK/DamageScanner"
+"Documentation" = "https://damagescanner.readthedocs.io/en/latest/"
