@@ -1,0 +1,86 @@
+[project]
+authors = [
+    { name = "David Chanin", email = "chanindav@gmail.com" },
+    { name = "Daniel Tan", email = "dtch009@gmail.com" },
+]
+requires-python = "<4.0,>=3.10"
+dependencies = [
+    "transformers<5.0.0,>=4.35.2",
+    "tqdm<5.0.0,>=4.1.0",
+    "scikit-learn<2.0.0,>=1.4.0",
+]
+name = "steering-vectors"
+version = "0.12.2"
+description = "Steering vectors for transformer language models in Pytorch / Huggingface"
+readme = "README.md"
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+homepage = "https://steering-vectors.github.io/steering-vectors"
+repository = "https://github.com/steering-vectors/steering-vectors"
+
+[tool.ruff]
+exclude = [
+    "dist",
+    "docs",
+]
+
+[tool.ruff.lint]
+extend-select = [
+    "UP",
+    "TID",
+    "I",
+    "F",
+    "E",
+    "ARG",
+]
+ignore = [
+    "E203",
+    "E501",
+    "E731",
+]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api."typing.Union"]
+msg = "Use `|` instead"
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api."typing.Optional"]
+msg = "Use `| None` instead"
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api."typing.Dict"]
+msg = "Use `dict` instead"
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api."typing.List"]
+msg = "Use `list` instead"
+
+[tool.isort]
+profile = "black"
+
+[tool.semantic_release]
+version_variables = [
+    "steering_vectors/__init__.py:__version__",
+    "pyproject.toml:version",
+]
+branch = "main"
+build_command = "pip install pdm && pdm build"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "mypy<2.0.0,>=1.8.0",
+    "pytest<8.0.0,>=7.4.4",
+    "furo<2024.0.0,>=2023.9.10",
+    "pygments<3.0.0,>=2.17.2",
+    "torch<3.0.0,>=2.1.2",
+    "protobuf<5.0.0,>=4.25.2",
+    "sentencepiece<1.0.0,>=0.1.99",
+    "sphinx-autodoc-typehints<2.0.0,>=1.25.2",
+    "ruff<1.0.0,>=0.2.2",
+    "pytest-cov<6.0.0,>=5.0.0",
+]
+
+[build-system]
+requires = [
+    "pdm-backend",
+]
+build-backend = "pdm.backend"
