@@ -1,0 +1,515 @@
+CHANGES
+=======
+
+3.6.0
+-----
+
+* Skip installation to speed up pep8
+* deprecate eventlet monkey patching within oslo.privsep.daemon
+* Remove guard for non-windows operating systems
+* reno: Update master for unmaintained/2023.1
+
+3.5.0
+-----
+
+* Add note about requirements lower bounds
+* Run pyupgrade to clean up Python 2 syntaxes
+* pre-commit: Bump versions
+* Remove Python 3.8 support
+* Declare Python 3.12 support
+* Bump oslo.log to >=5.0.2
+* Update master for stable/2024.2
+* Python 3.13: do not use removed module "pipes"
+
+3.4.0
+-----
+
+* reno: Update master for unmaintained/zed
+* Remove old excludes
+* Update master for stable/2024.1
+* reno: Update master for unmaintained/xena
+* reno: Update master for unmaintained/wallaby
+* reno: Update master for unmaintained/victoria
+
+3.3.0
+-----
+
+* Display coverage report
+* reno: Update master for unmaintained/yoga
+* Bump hacking
+* Update python classifier in setup.cfg
+* add new kernel capabilities
+* Fix wrong path in coveragerc
+* fix broken links in readme
+* Update master for stable/2023.2
+
+3.2.0
+-----
+
+* Imported Translations from Zanata
+* Bump bandit
+* Revert "Moves supported python runtimes from version 3.8 to 3.10"
+* Moves supported python runtimes from version 3.8 to 3.10
+* setgid should be called before setuid
+* Update master for stable/2023.1
+
+3.1.0
+-----
+
+* Setup logging without fixing evenlet logging
+* Add Python3 antelope unit tests
+* Update master for stable/zed
+
+3.0.1
+-----
+
+* Remove logic for Python < 3.8
+
+3.0.0
+-----
+
+* Drop python3.6/3.7 support in testing runtime
+
+2.8.0
+-----
+
+* Remove unnecessary unicode prefixes
+* Add note explaining max\_buffer\_size value
+* Fix formatting of release list
+* Add Python3 zed unit tests
+* Update master for stable/yoga
+
+2.7.0
+-----
+
+* Remove six
+* Bump max\_buffer\_size for Deserializer
+* Add Python3 yoga unit tests
+* Update master for stable/xena
+
+2.6.2
+-----
+
+
+2.6.1
+-----
+
+* Add except path with exception debug to send\_recv
+
+2.6.0
+-----
+
+* Add timeout to PrivContext and entrypoint\_with\_timeout decorator
+* Changed minversion in tox to 3.18.0
+* Upgrade the pre-commit-hooks version
+* setup.cfg: Replace dashes with underscores
+* Allow finer grained log levels
+* Add Python3 xena unit tests
+* Update master for stable/wallaby
+* Fix requirements issues
+* Use TOX\_CONSTRAINTS\_FILE
+* Use py3 as the default runtime for tox
+
+2.5.0
+-----
+
+* Add Python3 wallaby unit tests
+* Update master for stable/victoria
+* Adding pre-commit
+
+2.4.0
+-----
+
+* [goal] Migrate testing to ubuntu focal
+* Bump bandit version
+
+2.3.0
+-----
+
+* Undo the eventlet monkey patch for the privileged daemon
+
+2.2.1
+-----
+
+* Replace assertItemsEqual with assertCountEqual
+* Fix pygments style
+
+2.2.0
+-----
+
+* Fix hacking min version to 3.0.1
+* Switch to newer openstackdocstheme and reno versions
+* Remove the unused coding style modules
+* Remove translation sections from setup.cfg
+* Align contributing doc with oslo's policy
+* Bump default tox env from py37 to py38
+* Add py38 package metadata
+* Add release notes links to doc index
+* Add Python3 victoria unit tests
+* Update master for stable/ussuri
+
+2.1.1
+-----
+
+* Update hacking for Python3
+* Use unittest.mock instead of third party mock
+
+2.1.0
+-----
+
+* Make compatible with msgpack 1.0.0
+* Bring sanity to lower-constraints
+* Disable logger validation during unit testing
+* Add lock around channel creation
+* trivial: Cleanup Sphinx config file, setup.cfg
+* tox: Add missing 'deps' for releasenotes testenv
+
+2.0.0
+-----
+
+* remove outdated header
+* [ussuri][goal] Drop python 2.7 support and testing
+
+1.34.0
+------
+
+* tox: Trivial cleanup
+* Add functional tests
+* Bump the openstackdocstheme extension to 1.20
+* tox: Keeping going with docs
+* Switch to Ussuri jobs
+* Update the constraints url
+* Update master for stable/train
+
+1.33.3
+------
+
+* Reno for SIGHUP fix
+
+1.33.2
+------
+
+* Self-resetting PrivContext
+* Add Python 3 Train unit tests
+* Move doc related modules to doc/requirements.txt
+
+1.33.1
+------
+
+* Pass correct arguments to six.reraise
+* Cap Bandit below 1.6.0 and update Sphinx requirement
+* Replace git.openstack.org URLs with opendev.org URLs
+
+1.33.0
+------
+
+* OpenDev Migration Patch
+* Add more usage documentation
+* Convert dict keys received in \_ClientChannel from byte to str
+* Update master for stable/stein
+* Add sample\_default for thread\_pool\_size Opt
+
+1.32.1
+------
+
+* add python 3.7 unit test job
+* Update hacking version
+
+1.32.0
+------
+
+
+1.31.1
+------
+
+* Expose privsep options for config-generator
+
+1.31.0
+------
+
+* Use template for lower-constraints
+* Set unicode\_errors handler to 'surrogateescape' in msgpack
+* Add futures as a requirement for Python 2
+* Update mailinglist from dev to discuss
+* Use threads to process target function
+* Clean up .gitignore references to personal tools
+* Don't quote {posargs} in tox.ini
+
+1.30.1
+------
+
+* Replace assertRaisesRegexp with assertRaisesRegex
+* Avoids calling ffi.dlopen(None) on Windows
+* add lib-forward-testing-python3 test job
+* add python 3.6 unit test job
+* Remove PyPI downloads
+* import zuul job settings from project-config
+* Add that 'Release Notes' in README
+* Update reno for stable/rocky
+* Switch to stestr
+* fix tox python3 overrides
+* Added example blogposts
+* Trivial: Update pypi url to new url
+
+1.29.0
+------
+
+* set default python to python3
+* fix lower constraints and uncap eventlet
+* Skip unit tests in bandit scan
+* add lower-constraints job
+* Updated from global requirements
+
+1.28.0
+------
+
+* Updated from global requirements
+* Imported Translations from Zanata
+* Update links in README
+* Imported Translations from Zanata
+* Update reno for stable/queens
+* Updated from global requirements
+* Updated from global requirements
+* Updated from global requirements
+* msgpack-python has been renamed to msgpack
+
+1.26.0
+------
+
+* Updated from global requirements
+
+1.25.0
+------
+
+* Expose caps values/names as int enum
+* add bandit to pep8 job
+
+1.24.0
+------
+
+* Remove -U from pip install
+* Avoid tox\_install.sh for constraints support
+* Updated from global requirements
+* Remove setting of version/release from releasenotes
+* Updated from global requirements
+* Updated from global requirements
+* Imported Translations from Zanata
+* Updated from global requirements
+* Updated from global requirements
+
+1.23.0
+------
+
+* Updated from global requirements
+* Imported Translations from Zanata
+* Updated from global requirements
+* Update reno for stable/pike
+* Updated from global requirements
+* Update capabilities from current kernel source
+
+1.22.0
+------
+
+* Updated from global requirements
+* Update URLs in documents according to document migration
+* add sphinx instructions to build API reference docs
+* switch from oslosphinx to openstackdocstheme
+* rearrange existing documentation to follow the new standard layout
+
+1.21.1
+------
+
+* Enable some off-by-default checks
+
+1.21.0
+------
+
+* Updated from global requirements
+* Updated from global requirements
+* Remove pbr warnerrors in favor of sphinx check
+* Updated from global requirements
+* Using assertIsNone(xxx) instead of assertEqual(None, xxx)
+* Updated from global requirements
+* Updated from global requirements
+* Updated from global requirements
+
+1.20.0
+------
+
+* Updated from global requirements
+* Add test to verify log record can be formatted
+* Updated from global requirements
+
+1.19.0
+------
+
+* Remove log translations
+
+1.18.0
+------
+
+* Use iterable object for 'args' in log record
+* Updated from global requirements
+
+1.17.0
+------
+
+* Updated from global requirements
+* [Fix gate]Update test requirement
+* Updated from global requirements
+* pbr.version.VersionInfo needs package name (oslo.xyz and not oslo\_xyz)
+* Update reno for stable/ocata
+* Remove references to Python 3.4
+
+1.16.0
+------
+
+* Add Constraints support
+* Show team and repo badges on README
+
+1.15.0
+------
+
+* Updated from global requirements
+* Don't use deprecated method logger.warn
+* Updated from global requirements
+* Imported Translations from Zanata
+* Updated from global requirements
+
+1.14.0
+------
+
+* Enable release notes translation
+* Updated from global requirements
+* Updated from global requirements
+* modify the home-page info with the developer documentation
+* Ignore timeout error when receiving message from sockect
+* Update reno for stable/newton
+* Deal with CONF.config\_dir correctly
+* Preserve all LogRecord fields from privileged side
+
+1.13.0
+------
+
+* Report underlying integer for unknown capabilities
+* Updated from global requirements
+
+1.12.0
+------
+
+* Add Python 3.5 classifier and venv
+* Fixes unit tests on Windows
+* More sophisticated logging on privileged side
+
+1.11.0
+------
+
+* Updated from global requirements
+* Use default value for undefined caps in fmt\_caps
+
+1.10.0
+------
+
+* Updated from global requirements
+* Add reno for release notes management
+* Updated from global requirements
+* Updated from global requirements
+
+1.9.0
+-----
+
+* Provide way to "initialise" oslo.privsep
+* PrivContext: Sets client\_mode to False on Windows
+* Imported Translations from Zanata
+
+1.8.0
+-----
+
+* Updated from global requirements
+* Drop python3.3 support in classifier
+
+1.7.0
+-----
+
+
+1.6.0
+-----
+
+* Imported Translations from Zanata
+* Remove unused py27 socketpair/makefile workaround
+* Remove direct dependency on babel
+* Updated from global requirements
+
+1.5.0
+-----
+
+* Updated from global requirements
+* Updated from global requirements
+* Switch to msgpack for serialization
+* Updated from global requirements
+
+1.3.0
+-----
+
+* Updated from global requirements
+
+1.2.0
+-----
+
+* Updated from global requirements
+* fdopen: Use better "is using eventlet" test
+* Ensure fdopen uses greenio object under eventlet
+
+1.1.0
+-----
+
+* UnprivilegedPrivsepFixture: Clear capabilities config
+* Change name of privsep\_helper to match code
+
+1.0.0
+-----
+
+* Ignore --config-dir when value is None
+* Add version and download badges to README
+* Update translation setup
+* Updated from global requirements
+* Updated from global requirements
+* Updated from global requirements
+* Imported Translations from Zanata
+* Updated from global requirements
+* Update/make better the README.rst long description
+
+0.3.0
+-----
+
+* Improve \`helper\_command' config default
+* Updated from global requirements
+* Replace deprecated LOG.warn with LOG.warning
+* Updated from global requirements
+* Use logging intead of oslo\_log
+* Remove unused file openstack-common.conf
+* remove python 2.6 trove classifier
+
+0.2.0
+-----
+
+* Updated from global requirements
+* Updated from global requirements
+* Removes MANIFEST.in as it is not needed explicitely by PBR
+* Remove python 2.6 and tox.ini cleanup
+* Don't fail badly on windows
+
+0.1.0
+-----
+
+* Updated from global requirements
+* Updated from global requirements
+* Imported Translations from Zanata
+* Add support for Linux capabilities
+* Enable translations
+* Initial basic privsep functionality
+* Tell git to ignore /.eggs dir too
+* Updated from global requirements
+* oslo.i18n boilerplate
+* Initial cookiecutter project
+* Added .gitreview
