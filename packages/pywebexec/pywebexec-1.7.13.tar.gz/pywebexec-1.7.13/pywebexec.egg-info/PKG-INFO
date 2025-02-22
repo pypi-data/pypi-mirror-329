@@ -1,0 +1,208 @@
+Metadata-Version: 2.2
+Name: pywebexec
+Version: 1.7.13
+Summary: Simple Python HTTP Exec Server
+Home-page: https://github.com/joknarf/pywebexec
+Author: Franck Jouvanceau
+Maintainer: Franck Jouvanceau
+License: MIT License
+        
+        Copyright (c) 2025 joknarf
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/joknarf/pywebexec
+Project-URL: Documentation, https://github.com/joknarf/pywebexec/blob/main/README.md
+Project-URL: Repository, https://github.com/joknarf/pywebexec.git
+Keywords: http,server,remote commands,api,website
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Unix
+Classifier: Operating System :: MacOS
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: System :: Clustering
+Classifier: Topic :: System :: Networking
+Classifier: Topic :: System :: Systems Administration
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: python-daemon>=2.3.2
+Requires-Dist: cryptography>=40.0.2
+Requires-Dist: Flask>=2.0.3
+Requires-Dist: Flask-HTTPAuth>=4.8.0
+Requires-Dist: pexpect>=4.9.0
+Requires-Dist: gunicorn>=21.2.0
+Requires-Dist: ldap3>=2.9.1
+Requires-Dist: pyte>=0.8.1
+
+[![Pypi version](https://img.shields.io/pypi/v/pywebexec.svg)](https://pypi.org/project/pywebexec/)
+![example](https://github.com/joknarf/pywebexec/actions/workflows/python-publish.yml/badge.svg)
+[![Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](https://shields.io/)
+[![PyPI Downloads](https://static.pepy.tech/badge/pywebexec)](https://pepy.tech/projects/pywebexec)
+[![Python versions](https://img.shields.io/badge/python-3.6+-blue.svg)](https://shields.io/)
+
+# pywebexec
+Simple Python HTTP(S) API/Web Command Launcher and Terminal sharing
+
+## Install
+```
+$ pip install pywebexec
+```
+
+## Quick start
+
+* share terminal
+```shell
+$ pywebexec shareterm
+```
+
+* serve executables
+  * put in a directory the scripts/commands/links to commands you want to expose
+  * start http server serving current directory executables listening on 0.0.0.0 port 8080
+```shell
+$ pywebexec -d <dir>
+```
+
+* Launch commands with params/view live output/Status using browser
+* Share your terminal output using `pywebexec -d <dir> term`
+
+![pywebexecnew11](https://github.com/user-attachments/assets/5acb15a7-92a4-4711-9de7-630721cbf47a)
+
+all commands output / statuses are available in the executables directory in subdirectory `.web_status`
+
+## features
+
+* Serve executables in a directory
+* Launch commands with params from web browser or API call
+* multiple share terminal output
+* Follow live output
+* Replay terminal history
+* Stop command
+* Relaunch command
+* HTTPS support
+* HTTPS self-signed certificate generator
+* Basic Auth
+* LDAP(S) password check/group member
+* Safe url token generation
+* Can be started as a daemon (POSIX)
+* Uses gunicorn to serve http/https
+* Linux/MacOS compatible
+
+## Customize server
+```shell
+$ pywebexec --dir ~/myscripts --listen 0.0.0.0 --port 8080 --title myscripts
+$ pywebexec -d ~/myscripts -l 0.0.0.0 -p 8080 -t myscripts
+```
+
+## Sharing terminals
+
+* start server and share tty in one command
+```shell
+$ pywebexec -d ~/webshare shareterm
+```
+* share tty with an already pywebexec server started
+```shell
+$ pywebexec -d ~/webshare term
+```
+if another user need to share his terminal, he need to have write permission on `<dir>/.web_status` directory.
+
+## Safe url token
+
+* generate safe url, use the url to access the server
+```shell
+$ pywebexec -T
+$ pywebexec --tokenurl
+Starting server:
+http://<host>:8080?token=jSTWiNgEVkddeEJ7I97x2ekOeaiXs2mErRSKNxm3DP0
+http://x.x.x.x:8080?token=jSTWiNgEVkddeEJ7I97x2ekOeaiXs2mErRSKNxm3DP0
+```
+
+## Basic auth
+
+* single user/password
+```shell
+$ pywebexec --user myuser [--password mypass]
+$ pywebexec -u myuser [-P mypass]
+```
+Generated password is given if no `--pasword` option
+
+* ldap(s) password check / group member
+ldap server must accept memberOf attribute for group members
+```shell
+$ export PYWEBEXEC_LDAP_SERVER=ldaps://ldap.mydomain.com:389
+$ export PYWEBEXEC_LDAP_BIND_DN="cn=read-only-admin,dc=example,dc=com"
+$ export PYWEBEXEC_LDAP_BIND_PASSWORD="password"
+$ export PYWEBEXEC_LDAP_BASE_DN="dc=example,dc=com"
+$ export PYWEBEXEC_LDAP_USER_ID="uid" # sAMAccountName for AD
+$ export PYWEBEXEC_LDAP_GROUPS="ou=mathematicians,dc=example,dc=com ou=scientists,dc=example,dc=com"
+$ pywebexec
+```
+## HTTPS server
+
+* Generate auto-signed certificate and start https server
+```shell
+$ pywebexec --gencert
+$ pywebexec --g
+```
+
+* Start https server using existing certificate
+```shell
+$ pywebexec --cert /pathto/host.cert --key /pathto/host.key
+$ pywebexec -c /pathto/host.cert -k /pathto/host.key
+```
+
+## Launch server as a daemon
+
+```shell
+$ pywebexec start
+$ pywebexec status
+$ pywebexec stop
+```
+* log of server are stored in directory `~/[.config/].pywebexec/pywebexec_<listen>:<port>.log`
+
+## Launch command through API
+
+```shell
+$ curl http://myhost:8080/run_command -H 'Content-Type: application/json' -X POST -d '{ "command":"myscript", "params":["param1", ...]}'
+$ curl http://myhost:8080/command_status/<command_id>
+$ curl http://myhost:8080/command_output/<command_id> -H "Accept: text/plain"
+```
+
+## API reference
+
+
+| method    | route                       | params/payload     | returns
+|-----------|-----------------------------|--------------------|---------------------|
+| POST      | /run_command                | command: str<br>params: array[str]<br>rows: int<br>cols: int       | command_id: uuid<br>message: str    |
+| POST      | /stop_command/command_id    |                    | message: str        |
+| GET       | /command_status/command_id  |                    | command_id: uuid<br>command: str<br>params: array[str]<br>start_time: isotime<br>end_time: isotime<br>status: str<br>exit_code: int<br>last_output_line: str      |
+| GET       | /commands                   |                    | array of<br>command_id: uuid<br>command: str<br>start_time: isotime<br>end_time: isotime<br>status: str<br>exit_code: int<br>last_output_line: str      |
+| GET       | /executables                |                    | array of str        |
+| GET       | /command_output/command_id  | offset: int        | output: str<br>status: str<br>links: { next: str }         |
+| GET       | /command_output_raw/command_id  | offset: int        | output: stream raw output until end of command<br>curl -N -s http://srv/command_output_raw/command_id|
