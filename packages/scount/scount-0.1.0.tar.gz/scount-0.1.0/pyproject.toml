@@ -1,0 +1,26 @@
+[project]
+name = "scount"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Nipun Talukdar"}
+]
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+scount="scount.sourcelines:main"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+
+[tool.poetry]
+include = [
+  "data/syntax_haskell_js.json"
+]
