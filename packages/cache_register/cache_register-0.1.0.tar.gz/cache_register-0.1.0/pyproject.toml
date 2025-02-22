@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cache_register"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "Aran Borkum" }
+]
+dependencies = [
+    "django>=5.1.6",
+]
+
+[tool.setuptools]
+packages = ["cache_register"]
+package-dir = { "" = "./src"}
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0",
+    "ruff>=0.9.6",
+]
+
+
+[tool.ruff]
+preview = true
+line-length = 88
+exclude = [
+    ".git",
+    ".venv",
+    "**/migrations/",
+    "**project/settings.py"
+]
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "I",
+    "F",
+    "E",
+    "W",
+    "Q",
+    "UP",
+    "FAST",
+    "LOG",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "tests",
+]
+
+[tool.django-stubs]
+django_settings_module = "django_app.project.settings"
+
+[tool.mypy]
+exclude = [
+    ".venv/",
+    "migrations/",
+]
+ignore_missing_imports = true
+mypy_path = "src/"
+#plugins = ["mypy_django_plugin.main"]
