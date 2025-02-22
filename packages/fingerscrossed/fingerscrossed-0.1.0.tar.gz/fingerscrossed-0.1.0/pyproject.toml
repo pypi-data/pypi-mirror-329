@@ -1,0 +1,111 @@
+[build-system]
+requires = [
+    "pdm-backend",
+    "pdm-build-locked",
+]
+build-backend = "pdm.backend"
+
+[project]
+name = "fingerscrossed"
+description = "Logging handler wrapper, to buffer the logs and flush them only if something goes wrong"
+requires-python = ">=3.10"
+dynamic = []
+readme = "pypi_readme.md"
+authors = [
+    { name = "Alexey Shokov" },
+]
+keywords = [
+    "logging",
+    "structlog",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+    "Topic :: Software Development",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = []
+version = "0.1.0"
+
+[project.urls]
+homepage = "https://github.com/alexeyshockov/fingerscrossed"
+changelog = "https://github.com/alexeyshockov/fingerscrossed/blob/main/CHANGELOG.md"
+
+[project.license]
+text = "MIT"
+
+[dependency-groups]
+dev = [
+    "python-dotenv",
+    "structlog",
+    "loguru",
+    "rich",
+    "anyio ~=4.8",
+    "fastapi",
+    "uvicorn",
+]
+unit-tests = [
+    "pytest ~=8.1",
+    "pytest-mock ~=3.14",
+    "pytest-cov ~=6.0",
+    "coverage[toml] ~=7.6",
+]
+
+[tool.pyright]
+include = [
+    "fingerscrossed",
+]
+
+[tool.mypy]
+overrides = [
+    { follow_untyped_imports = true },
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "C",
+    "B",
+    "Q",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.version]
+source = "scm"
+write_to = "fingerscrossed/_version.py"
+write_template = "__version__ = '{}'"
+
+[tool.pdm.build]
+excludes = [
+    "./**/.git",
+    "tests",
+    "examples",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = [
+    "tests",
+]
+python_files = [
+    "*.py",
+]
