@@ -1,0 +1,54 @@
+[project]
+name = "regexplain"
+authors = [
+    { name = "Aalap Shah (aka fishfin)", email = "shah.aalap@gmail.com" },
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+]
+dependencies = []
+description = "Build and explain Python Regex patterns in a human-friendly way"
+dynamic = []
+keywords = [
+    "regex",
+]
+readme = "README.rst"
+requires-python = ">=3.10"
+version = "0.1.0a2"
+
+[project.license]
+file = "LICENSE"
+
+[project.urls]
+Homepage = "https://gitlab.com/shah-aalap/regexplain"
+
+[build-system]
+requires = [
+    "pdm-backend",
+]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.version]
+source = "scm"
+write_to = "regexplain/version.py"
+write_template = "__version__ = '{}'"
+
+[dependency-groups]
+dev = [
+    "twine>=6.1.0",
+]
