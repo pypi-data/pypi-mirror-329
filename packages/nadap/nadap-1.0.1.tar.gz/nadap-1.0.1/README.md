@@ -1,0 +1,39 @@
+# nadap
+
+**N**amespace **A**ware **D**ata V**a**lidator and **P**re-processor
+
+> Project under construction!
+> Not a running code base yet!
+
+## Introduction
+
+**nadap** can validate and pre-process a given data structure.
+Data can be one single data object or many objects,
+which are validated and pre-processed one by one.
+
+**Validation** means
+
+- checking if given data structure matches the defined data schema,
+- checking if given data values matches the defined data types
+and values or value ranges, and
+- checking if given data values reference correctly to each other.
+
+Referencing can check if a value at a point in the data structure
+is unique (i.e. ID)
+and/or if a value is defined (produced) at a point in the data
+structure, when it is used (consumed) at another point in the data structure.
+At a *producing* point in the data structure the reference may be defined
+with *credits*.
+A *consuming* point in the data structure can also be defined with credits. If so,
+each value, which is produced adds credits to that value, and each value, which
+is consumed subtracts credits from that value. Produced credits must be more or evan
+to consumed credits.
+
+**Pre-processing** provides the option to add default values to
+the data structure while validating it. Thus, it can substitute
+the default value handling within the application code.
+
+## License
+
+This project is licensed under GPLv3.
+See LICENSE file within this project.
