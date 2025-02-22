@@ -1,0 +1,103 @@
+Metadata-Version: 2.2
+Name: juham-automation
+Version: 0.0.7
+Summary: Juha's Ultimate Home Automation Masterpiece
+Author-email: J Meskanen <juham.api@gmail.com>
+Maintainer-email: "J. Meskanen" <juham.api@gmail.com>
+License: LICENSE
+        =======
+        
+        Copyright (c) 2024, Juha Meskanen
+        
+        Permission is hereby granted, free of charge, to any person obtaining
+        a copy of this software and associated documentation files (the
+        "Software"), to deal in the Software without restriction, including
+        without limitation the rights to use, copy, modify, merge, publish,
+        distribute, sublicense, and/or sell copies of the Software, and to
+        permit persons to whom the Software is furnished to do so, subject to
+        the following conditions:
+         
+        **The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.**
+        
+         
+        ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+        EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+        MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+        IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+        CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+        TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+        SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. **
+        
+        
+Project-URL: Homepage, https://gitlab.com/juham/juham/juham-automation.git
+Project-URL: Bug Reports, https://gitlab.com/juham/juham/juham-automation.git
+Project-URL: Funding, https://meskanen.com
+Project-URL: Say Thanks!, http://meskanen.com
+Project-URL: Source, https://gitlab.com/juham/juham/juham-automation.git
+Keywords: home,automation,juham
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development
+Classifier: License :: Public Domain
+Classifier: Programming Language :: Python :: 3.8
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE.rst
+Requires-Dist: masterpiece>=0.1.21
+Requires-Dist: masterpiece_influx>=0.0.2
+Requires-Dist: masterpiece_pahomqtt>=0.0.3
+Requires-Dist: juham_core>=0.0.7
+Requires-Dist: requests>=2.31
+Requires-Dist: pytz>=2024.1
+Requires-Dist: importlib-metadata
+Provides-Extra: dev
+Requires-Dist: check-manifest; extra == "dev"
+Requires-Dist: types-pyz; extra == "dev"
+
+Welcome to Juham™ - Juha's Ultimate Home Automation Masterpiece
+================================================================
+
+Project Description
+-------------------
+
+This package extends the ``juham_core`` package, providing home automation building blocks that cover most common needs.
+It consists of two main sub-modules:
+
+- ``automation``
+  * **spothintafi**: Acquires electricity prices in Finland.
+  * **watercirculator**: Automates a water circulator pump based on hot water temperature and motion detection.
+  * **hotwateroptimizer**: Controls hot water radiators based on temperature sensors and electricity price data.
+  * **energycostcalculator**: Monitors power consumption and electricity prices, and computes the energy balance in euros.
+
+
+- ``ts``
+  * This folder contains time series recorders that listen for Juham™ topics and store the data in a time series database 
+  for later inspection.
+
+
+Project Status
+--------------
+
+**Current State**: **Pre-Alpha (Status 2)**
+
+All classes have been tested to some extent, and no known bugs have been reported. However, the code still requires work in
+terms of design and robustness. For instance, electricity prices are currently hard-coded to use euros, but this should be
+configurable to support multiple currencies.
+
+
+Special Thanks
+--------------
+
+This project would not have been possible without the generous support of two exceptional individuals: Teppo K. and Mahi.
+
+Teppo K. provided the initial spark for this project by donating a Raspberry Pi, a temperature sensor, and giving an inspiring
+demonstration of his own home automation system—effectively dragging me down the rabbit hole of endless tinkering.
+
+Mahi has been instrumental in translating my half-baked ideas into Python code, offering invaluable support and
+encouragement—while also ensuring that every time I thought I was done, I wasn’t.
+
+Because of these two gentlemen, my already minimal spare time dropped into the negatives as I desperately tried to push the
+system to some semblance of professionalism.
+
+I’m truly grateful to both—really. 😅
