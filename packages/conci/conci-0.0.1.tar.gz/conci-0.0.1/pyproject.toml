@@ -1,0 +1,81 @@
+[project]
+name = "conci"
+version = "0.0.1"
+description = "A Python library for enabling self-awareness in machines."
+# Corrected authors format: Use a list of inline tables.  Each table MUST have name and email.
+authors = [
+    { name = "Kevin Saltarelli", email = "kevinqz@gmail.com" }
+]
+requires-python = ">=3.8"
+dependencies = [
+    "pydantic>=2.10.6",
+    "requests>=2.25",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=22.0",
+    "ruff>=0.1",
+    "mypy>=1.0",
+]
+test = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0"
+]
+docs = [
+    # "sphinx>=4.0",
+    # "sphinx-rtd-theme>=1.0",
+    # "myst-parser>=0.15",
+]
+all = [
+    "conci[dev,test,docs]", # A shortcut to install all optional dependencies.
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/conci/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/conci"]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
+pythonpath = [
+  "src"
+]
+
+[tool.ruff]
+line-length = 88
+select = [
+    "E",
+    "F",
+    "W",
+    "I",
+    "UP",
+    "C",
+    "B",
+]
+ignore = [
+    "E501",
+    "B008",
+]
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests/*"
+disallow_untyped_defs = false
+
+# Remove the [tool.poetry] section entirely.  It's not needed and is causing conflicts.
