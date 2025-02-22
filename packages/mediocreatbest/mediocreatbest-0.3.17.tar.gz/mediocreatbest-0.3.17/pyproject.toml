@@ -1,0 +1,37 @@
+[project]
+name = "mediocreatbest"
+version = "0.3.17"
+description = "A mediocre at best utility library for Python"
+readme = "README.md"
+authors = [{name = "https://github.com/player1537"}]
+license = {text = "wtfpl"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "requests",
+    "pandas",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/player1537/mediocreatbest"
+Issues = "https://github.com/player1537/mediocreatbest/issues"
+
+[project.entry-points.console_scripts]
+mediocreatbest-aider-update-model-metadata = "mediocreatbest.cli.aider_update_model_metadata:cli"
+mediocreatbest-encrypt = "mediocreatbest.cli.encrypt:cli"
+mediocreatbest-decrypt = "mediocreatbest.cli.decrypt:cli"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
