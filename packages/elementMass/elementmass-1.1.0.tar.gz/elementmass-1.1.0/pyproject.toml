@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "elementMass"
+version = "1.1.0"
+authors = [{ name = "Thomas van Gerve" }]
+description = "elementMass is a compact Python library for calculating atomic weights of chemical compounds"
+readme = "README.rst"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["pandas", "pyarrow"]
+
+[project.urls]
+Homepage = "https://github.com/TDGerve/elements"
+
+[tool.setuptools.package-data]
+"elementMass.data" = ["*.parquet"]
