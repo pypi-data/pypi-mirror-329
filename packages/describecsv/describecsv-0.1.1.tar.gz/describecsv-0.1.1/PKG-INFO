@@ -1,0 +1,73 @@
+Metadata-Version: 2.4
+Name: describecsv
+Version: 0.1.1
+Summary: A tool for analyzing and describing CSV files
+Project-URL: Homepage, https://github.com/nealcaren/describecsv
+Project-URL: Bug Tracker, https://github.com/nealcaren/describecsv/issues
+Author-email: Neal Caren <neal.caren@unc.edu>
+License-File: LICENSE
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3.10
+Requires-Dist: chardet>=5.0.0
+Requires-Dist: numpy>=1.24.0
+Requires-Dist: pandas>=2.0.0
+Requires-Dist: python-dateutil>=2.8.0
+Requires-Dist: pytz>=2023.3
+Requires-Dist: tqdm>=4.65.0
+Requires-Dist: tzdata>=2023.3
+Description-Content-Type: text/markdown
+
+# DescribeCSV
+
+A Python tool for analyzing and describing CSV files. It provides detailed information about file structure, data types, missing values, and statistical summaries.
+
+## Features
+
+- Automatic encoding detection
+- Handles large files through chunked processing
+- Detailed column analysis including:
+  - Data types
+  - Missing values
+  - Unique value counts
+  - Statistical summaries for numeric columns
+  - Top values for categorical columns
+- Detection of numeric data stored as strings
+- Duplicate row detection
+- File metadata information
+
+## Installation
+
+```bash
+pip install describecsv
+```
+
+## Usage
+
+From the command line:
+
+```bash
+describecsv path/to/your/file.csv
+```
+
+This will create a JSON file with the analysis results in the same directory as your CSV file.
+
+## Output
+
+The tool generates a detailed JSON report including:
+
+- Basic file information (size, encoding, etc.)
+- Row and column counts
+- Missing value analysis
+- Column-by-column analysis including:
+  - Data types
+  - Unique values
+  - Missing values
+  - Statistical summaries for numeric columns
+  - Most common values for categorical columns
+  - Suggestions for data quality improvements
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
