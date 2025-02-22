@@ -1,0 +1,73 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  create_release:
+    if: github.event.pull_request.merged == true  # Only run on merged PRs to main
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          lfs: true  # Ensure LFS files are checked out
+
+      # Step 2: Set up Git environment
+      - name: Set up Git
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      # Step 3: Get the latest tag version
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Latest tag: $latest_tag"
+          echo "::set-output name=tag::$latest_tag"
+
+      # Step 4: Bump the version to create the next version
+      - name: Bump version
+        id: bump_version
+        run: |
+          latest_version="${{ steps.get_tag.outputs.tag }}"
+          IFS='.' read -r -a version_parts <<< "$latest_version"
+          # Increment the patch version
+          new_patch=$((version_parts[2] + 1))
+          new_version="v${version_parts[0]}.${version_parts[1]}.$new_patch"
+          echo "New version: $new_version"
+          echo "::set-output name=new_version::$new_version"
+
+      # Step 5: Create tarball of the data folder with the correct name
+      - name: Create tarball of the data folder
+        run: |
+          tar -czvf tutorial_data.tar.gz ./tests/testing_data/anonymized_testing_data/anonymized_data
+
+      # Step 6: Create a new release
+      - name: Create GitHub release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.bump_version.outputs.new_version }}
+          release_name: "Release ${{ steps.bump_version.outputs.new_version }}"
+          body: "Automatic release for version ${{ steps.bump_version.outputs.new_version }}."
+          draft: false
+          prerelease: false
+
+      # Step 7: Upload tarball to the release
+      - name: Upload tarball to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./tutorial_testing_data.tar.gz
+          asset_name: tutorial_testing_data.tar.gz
+          asset_content_type: application/gzip
