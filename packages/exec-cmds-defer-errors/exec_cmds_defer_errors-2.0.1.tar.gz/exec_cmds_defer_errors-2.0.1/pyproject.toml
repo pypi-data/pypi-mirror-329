@@ -1,0 +1,113 @@
+[project]
+
+name = "exec-cmds-defer-errors"
+
+description = ""
+
+authors = [
+  {name = "Tim Schwenke", email = "tim@trallnag.com"},
+]
+
+version = "2.0.1"
+
+license = "ISC"
+
+license-files = ["LICENSE"]
+
+requires-python = ">= 3.12"
+
+dependencies = [
+  "click == 8.1.8",
+]
+
+readme = "README.md"
+
+[project.urls]
+
+Homepage = "https://github.com/trallnag/exec-cmds-defer-errors"
+Documentation = "https://github.com/trallnag/exec-cmds-defer-errors"
+Repository = "https://github.com/trallnag/exec-cmds-defer-errors.git"
+Issues = "https://github.com/trallnag/exec-cmds-defer-errors/issues"
+Changelog = "https://github.com/trallnag/exec-cmds-defer-errors/blob/master/CHANGELOG.md"
+
+[project.scripts]
+
+# Note that before building package distributions, the prefix "_" must be
+# removed. It is here to avoid conflicts with globally installed packages.
+exec-cmds-defer-errors = "exec_cmds_defer_errors.exec_cmds_defer_errors:exec_cmds_defer_errors"
+
+[dependency-groups]
+
+dev = [
+  "mypy >= 1.14.1",
+  "pytest-cov >= 6.0.0",
+  "pytest >= 8.3.4",
+  "ruff >= 0.8.4",
+  "types-pyyaml >= 6.0.12.20241230",
+]
+
+[build-system]
+
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+
+package = true
+
+[tool.ruff]
+
+cache-dir = ".cache/ruff"
+
+exclude = [
+  "scripts/filter_pre_commit_hooks.py",
+  "scripts/exec_cmds_defer_errors.py",
+]
+
+[tool.ruff.lint]
+
+select = ["ALL"]
+
+ignore = [
+  "B026",    # Star-arg unpacking after a keyword arg is fine.
+  "COM812",  # Redundant rule. Ruff recommends disabling it.
+  "D100",    # Missing docstring in public module is fine.
+  "D104",    # Missing docstring in public package is fine.
+  "D200",    # One-line docstring on separate line is fine.
+  "D202",    # Blank line after docstring is preferred.
+  "D203",    # Blank line before docstring not required.
+  "D205",    # Blank line between summary and desc not required.
+  "D212",    # First line in doc string must not be used.
+  "EXE003",  # Python script with uv shebang is fine.
+  "INP001",  # Implicit namespace package is fine.
+  "ISC001",  # Redundant rule. Ruff recommends disabling it.
+]
+
+[tool.ruff.lint.extend-per-file-ignores]
+
+"tests/**/*.py" = [
+  "ARG",   # Unused function args are fine.
+  "S101",  # Asserts are fine.
+]
+
+[tool.mypy]
+
+cache_dir = ".cache/mypy"
+
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_unused_ignores = true
+
+[tool.pytest]
+
+cache_dir = ".cache/pytest"
+
+[tool.coverage.run]
+
+branch = true
+
+source = ["src"]
+
+omit = ["tests/*"]

@@ -1,0 +1,78 @@
+name: Release
+
+#
+# This workflow releases a new version of this project.
+#
+# Make sure to prepare the project for a new release (see docs for more).
+#
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    environment:
+      name: PyPI
+      url: https://pypi.org/project/${{ github.event.repository.name }}
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Determine release-version
+        id: release-version
+        run: |
+          value=$(echo "${GITHUB_REF#refs/*/}" | cut -c 2-)
+          echo "value=$value" | tee -a $GITHUB_OUTPUT
+
+      - name: Determine release-name
+        id: release-name
+        run: |
+          value="${{ steps.release-version.outputs.value }} / $(date +%Y-%m-%d)"
+          echo "value=$value" | tee -a $GITHUB_OUTPUT
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: pyproject.toml
+
+      - name: Install mdformat
+        run: uv tool install mdformat
+
+      - name: Create release notes
+        run: ./scripts/create-release-notes.bash
+
+      - name: Remove prefix from script
+        run: sed --in-place 's/^_//g' pyproject.toml
+
+      - name: Build distributions
+        run: uv build --out-dir=.tmp/dist
+
+      - name: Publish distributions
+        uses: pypa/gh-action-pypi-publish@v1.12.4
+        with:
+          packages-dir: .tmp/dist
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ steps.release-name.outputs.value }}
+          body_path: .tmp/release-notes.md
+          draft: true
