@@ -1,0 +1,98 @@
+[project]
+name = "odoo-addon-converter"
+description = "Odoo addon to convert records to and from plain data structures"
+dynamic = ["version"]
+readme = "README.rst"
+requires-python = ">=3.11"
+license = { file = "LICENSE", name = "GNU Affero General Public License v3" }
+keywords = ["odoo"]
+authors = [{ name = "XCG Consulting" }]
+classifiers = [
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Framework :: Odoo",
+  "Framework :: Odoo :: 18.0",
+  "License :: OSI Approved :: GNU Affero General Public License v3",
+]
+dependencies = ["odoo==18.0.*", "fastjsonschema"]
+
+[project.optional-dependencies]
+doc = ["sphinx"]
+test = []
+
+[project.urls]
+repository = "https://orus.io/xcg/odoo-modules/converter"
+changelog = "https://orus.io/xcg/odoo-modules/converter/-/blob/branch/18.0/NEWS.rst"
+
+[build-system]
+requires = ["hatchling >=1.19", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+exclude = [
+  "/doc/",
+  "/.editorconfig",
+  "/eslint.config.cjs",
+  "/.gitlab-ci.yml",
+  "/.hgignore",
+  "/.hgtags",
+  "/prettier.config.cjs",
+  "/.yamllint.yaml",
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+  "py.typed",
+  "*.csv",
+  "/i18n/",
+  "/static/",
+  "README.rst",
+  "*.xml",
+  "*.py",
+  "*.svg",
+  "*.png",
+  "*.json",
+]
+
+[tool.hatch.build.targets.wheel.sources]
+"" = "odoo/addons/converter"
+
+[tool.hatch.version]
+source = "vcs"
+fallback-version = "18.0.0.0.0"
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+extend-select = [
+  "B",
+  "C90",
+  "E501", # line too long (default 88)
+  "I",    # isort
+  "UP",   # pyupgrade
+
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "I001"] # ignore unused and unsorted imports in __init__.py
+"__manifest__.py" = ["B018"]     # useless expression
+
+[tool.ruff.lint.mccabe]
+max-complexity = 16
+
+[tool.isort]
+section-order = [
+  "future",
+  "standard-library",
+  "third-party",
+  "odoo",
+  "odoo-addons",
+  "first-party",
+  "local-folder",
+]
+
+[tool.isort.sections]
+"odoo" = ["odoo"]
+"odoo-addons" = ["odoo.addons"]
