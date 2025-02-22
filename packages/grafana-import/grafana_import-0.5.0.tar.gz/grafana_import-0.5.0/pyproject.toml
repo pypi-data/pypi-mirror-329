@@ -1,0 +1,112 @@
+[tool.black]
+line-length = 120
+
+[tool.ruff]
+line-length = 120
+
+lint.select = [
+  # Builtins
+  "A",
+  # Bugbear
+  "B",
+  # comprehensions
+  "C4",
+  # Pycodestyle
+  "E",
+  # eradicate
+  "ERA",
+  # Pyflakes
+  "F",
+  # isort
+  "I",
+  # pandas-vet
+  "PD",
+  # return
+  "RET",
+  # Bandit
+  "S",
+  # print
+  "T20",
+  "W",
+  # flake8-2020
+  "YTT",
+]
+
+lint.extend-ignore = [
+]
+
+lint.per-file-ignores."grafana_import/cli.py" = [
+  "T201",  # `print` found
+]
+
+lint.per-file-ignores."examples/*" = [
+  "T201",  # `print` found
+]
+
+# ===================
+# Tasks configuration
+# ===================
+lint.per-file-ignores."tests/*" = [
+  # Use of `assert` detected
+  "S101",
+]
+
+[tool.pytest.ini_options]
+addopts = "-rA --verbosity=3 --cov --cov-report=term-missing --cov-report=xml"
+minversion = "2.0"
+log_level = "DEBUG"
+log_cli_level = "DEBUG"
+log_format = "%(asctime)-15s [%(name)-24s] %(levelname)-8s: %(message)s"
+testpaths = [
+  "grafana_import",
+  "tests",
+]
+xfail_strict = true
+markers = [
+]
+
+[tool.coverage.run]
+branch = false
+omit = [
+  "tests/*",
+]
+source = [ "grafana_import" ]
+
+[tool.coverage.report]
+fail_under = 0
+show_missing = true
+
+[tool.mypy]
+packages = [ "grafana_import" ]
+install_types = true
+ignore_missing_imports = true
+implicit_optional = true
+non_interactive = true
+
+[tool.poe.tasks]
+
+check = [
+  "lint",
+  "test",
+]
+
+format = [
+  { cmd = "black ." },
+  # Configure Ruff not to auto-fix (remove!) unused variables (F841) and `print` statements (T201).
+  { cmd = "ruff check --fix --ignore=ERA --ignore=F401 --ignore=F841 --ignore=T20 ." },
+  { cmd = "pyproject-fmt --keep-full-version pyproject.toml" },
+]
+
+lint = [
+  { cmd = "ruff check ." },
+  { cmd = "black --check ." },
+  { cmd = "validate-pyproject pyproject.toml" },
+  { cmd = "mypy grafana_import" },
+]
+
+release = [
+  { cmd = "python -m build" },
+  { cmd = "twine upload --skip-existing dist/*" },
+]
+
+test = { cmd = "pytest" }
