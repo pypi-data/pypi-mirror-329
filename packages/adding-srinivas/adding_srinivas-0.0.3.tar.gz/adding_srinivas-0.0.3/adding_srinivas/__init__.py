@@ -1,0 +1,1 @@
+from index2 import add 
