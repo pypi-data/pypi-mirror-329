@@ -1,0 +1,28 @@
+{
+  "$id": "./schemas/v2/save_manifest_schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "coldLocation": {
+      "type": "string"
+    },
+    "saves": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "coldName": {
+            "type": "string"
+          },
+          "hotLocation": {
+            "type": "string"
+          }
+        },
+        "required": ["coldName", "hotLocation"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["coldLocation", "saves"],
+  "additionalProperties": false
+}
