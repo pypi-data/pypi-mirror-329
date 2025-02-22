@@ -1,0 +1,57 @@
+[project]
+name = "code-zipper"
+version = "0.1.2"
+readme = "README.md"
+license = { text = "MIT" }
+keywords = ["cli", "chatGPT", "productivity"]
+description = "A tool to copy multiple files into the clipboard for efficient use with chat GPT."
+authors = [
+    { name = "Bent Mueller", email = "bentmuller.ai@gmail.com" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pyperclip",
+    "rich",
+]
+
+# https://packaging.python.org/en/latest/specifications/dependency-groups/
+# Run: `uv sync --all-extras`
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "isort",
+    "mypy",
+    "invoke"
+]
+
+[project.urls]
+Homepage = "https://github.com/data-stepper/code-zipper"
+
+[project.scripts]
+code-zipper = "cli:main"
+
+#[build-system]
+#requires = ["setuptools>=75.1.0", "versioningit"]
+#build-backend = "setuptools.build_meta"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+#packages = ["src/cli"]
+sources = ["src"]
+
+[tool.hatch.build]
+#targets.wheel = { packages = ["src/cli"] }
+#targets
+include = [
+    "/src/**",
+    "README.md",
+    "LICENSE"
+]
