@@ -1,0 +1,21 @@
+---
+import Hero from "../components/Hero.astro";
+import type { Frontmatter } from "../consts";
+import SplashLayout from "../layouts/SplashLayout.astro";
+
+let frontmatter: Frontmatter = {
+	title: "anywidget",
+	description: "reusable widgets made easy",
+	layout: "splash",
+};
+---
+
+<SplashLayout frontmatter={frontmatter}>
+	<Hero />
+</SplashLayout>
+
+<script is:inline>
+	// Redirect your homepage to the first page of documentation.
+	// If you have a landing page, remove this script and add it here!
+	// window.location.pathname = `/en/getting-started`;
+</script>
