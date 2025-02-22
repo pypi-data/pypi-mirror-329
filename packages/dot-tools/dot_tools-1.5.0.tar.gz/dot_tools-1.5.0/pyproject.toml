@@ -1,0 +1,108 @@
+[project]
+name = 'dot-tools'
+description = 'Dot files automation'
+author = 'cybergrind@gmail.com'
+author_email = 'cybergrind@gmail.com'
+license = 'MIT'
+url = 'https://github.com/_/dot-tools'
+readme = 'README.md'
+authors = [
+  { name = 'cybergrind', email = 'cybergrind+pypi@gmail.com' }
+]
+classifires = [
+  'Development Status :: 5 - Production/Stable',
+  'Intended Audience :: Developers',
+  'License :: OSI Approved :: MIT License',
+  'Natural Language :: English',
+  'Operating System :: OS Independent',
+  'Programming Language :: Python :: 3.8',
+  'Programming Language :: Python :: 3.9',
+  'Programming Language :: Python :: 3.10',
+  'Programming Language :: Python :: 3.11',
+  'Programming Language :: Python :: 3.12',
+  'Programming Language :: Python :: 3.13',
+  'Programming Language :: Python :: Implementation :: CPython',
+]
+dependencies = [ 'fan_tools>=3.7.0' ]
+dynamic = ['version']
+metadata-version = 2.4
+
+[dependency-groups]
+dev = [
+    'pre-commit>=4.1.0',
+    'ruff>=0.9.7',
+    "tox-uv>=1.25.0",
+    "tox>=4.24.1",
+    "pytest>=8.3.4",
+]
+
+[project.urls]
+github = 'https://github.com/cybergrind/dot-tools'
+
+[project.scripts]
+'release.py' = 'dot_tools.scripts.release:main'
+handle_envrc = 'dot_tools.scripts.handle_envrc:main'
+add_dot_files = 'dot_tools.scripts.add_dot_files:main'
+traefik_run = 'dot_tools.scripts.traefik_run:main'
+cpuniq = 'dot_tools.scripts.cpuniq:main'
+
+[requires]
+python_version = ['3.5', '3.6', '3.7']
+
+[build-system]
+requires = ['setuptools', 'wheel', 'hatchling']
+build-backend = 'hatchling.build'
+
+[tool.hatch.build]
+exclude = ['.*', 'tst']
+
+[tool.hatch.commands]
+prerelease = 'hatch build'
+
+[tool.hatch.version]
+path = 'dot_tools/__init__.py'
+
+[tool.ruff]
+line-length = 100
+target-version = 'py313'
+indent-width = 4
+exclude = ['.venv', '.git']
+
+[tool.ruff.format]
+quote-style = 'single'
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+known-first-party = ['snapshot_manager']
+lines-after-imports = 2
+
+[tool.ruff.lint]
+ignore = [
+  'T201', # print
+  'G004', # logging format
+  'Q000', # quotes
+  'Q001', # quotes
+  'Q003', # quotes
+]
+fixable = ['ALL']
+select = [
+  'E',     # pycodestyle
+  'F',     # pyflakes
+  'I',     # isort
+  'G',     # flake8-logging-format
+  'ASYNC', # flake8-async
+  'PIE',   # flake8-pie
+  'T20',   # flake8-print
+  'PT',    # flake8-pytest-style
+  'Q',     # flake8-quotes
+  'RUF',
+]
+exclude = ['alembic/*']
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = 'double'
+inline-quotes = 'single'
+multiline-quotes = 'single'
+
+[tool.uv.workspace]
+members = ["aaa"]
