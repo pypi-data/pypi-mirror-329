@@ -1,0 +1,60 @@
+Metadata-Version: 2.1
+Name: benchmarkLLM
+Version: 0.1.0
+Summary: A benchmarking tool for LM Studio inference
+Home-page: https://github.com/chenyuan99/benchmarkLLM
+Author: Yuan Chen
+Author-email: Yuan.Chen@sojoai.com
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests>=2.31.0
+Requires-Dist: psutil>=5.9.5
+Requires-Dist: numpy>=1.26.0
+Requires-Dist: pandas>=2.1.0
+Requires-Dist: matplotlib>=3.8.0
+Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: tqdm>=4.65.0
+
+# LM Studio Inference Benchmark
+
+This project provides tools to benchmark inference performance for LM Studio models. It measures various metrics including:
+- Inference latency
+- Tokens per second
+- Memory usage
+- Response generation time
+
+## Requirements
+- Python 3.8+
+- LM Studio running locally
+- Required Python packages (see requirements.txt)
+
+## Installation
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+```bash
+python main.py --model "your_model_name" --prompt "your_test_prompt"
+```
+
+## Features
+- Measures inference latency across different prompt lengths
+- Supports multiple model comparisons
+- Generates detailed performance reports
+- Memory usage tracking
+- Configurable test parameters
+
+## License
+MIT License
