@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "torch-kde"
+version = "0.1.3"
+description = "A differentiable implementation of kernel density estimation in PyTorch"
+readme = "README_PyPI.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Klaus-Rudolf Kladny", email = "kkladny@tuebingen.mpg.de" }
+]
+keywords = ["density estimation", "kde", "pytorch", "differentiable"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+dependencies = [
+    "numpy>=2.2.0",
+    "scipy>=1.14.7",
+    "torch>=2.5.1"
+]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["torchkde*"]
+
+[project.urls]
+"Homepage" = "https://github.com/rudolfwilliam/torch-kde"
