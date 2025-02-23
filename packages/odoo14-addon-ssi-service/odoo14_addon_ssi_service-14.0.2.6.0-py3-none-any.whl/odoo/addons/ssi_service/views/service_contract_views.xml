@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2021 OpenSynergy Indonesia
+     Copyright 2021 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="service_contract_view_tree" model="ir.ui.view">
+    <field name="name">service.contract tree</field>
+    <field name="model">service.contract</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="partner_id" />
+                <field name="title" />
+                <field name="type_id" />
+                <field name="manager_id" />
+                <field name="date" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="amount_untaxed" sum="Total Untaxed" />
+                <field name="amount_tax" sum="Total Tax" />
+                <field name="amount_total" sum="Total" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="service_contract_view_search" model="ir.ui.view">
+    <field name="name">service.contract search</field>
+    <field name="model">service.contract</field>
+    <field name="mode">primary</field>
+    <field
+            name="inherit_id"
+            ref="ssi_transaction_mixin.mixin_transaction_view_search"
+        />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="partner_id" />
+                <field name="contact_partner_id" />
+                <field name="sale_team_id" />
+                <field name="salesperson_id" />
+                <field name="source_document_id" />
+                <field name="type_id" />
+                <field name="manager_id" />
+                <field name="date" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="currency_id" />
+                <field name="pricelist_id" />
+                <field name="title" />
+            </xpath>
+            <xpath expr="//filter[@name='grp_responsible']" position="after">
+                <filter
+                        name="grp_partner"
+                        string="Partner"
+                        context="{'group_by':'partner_id'}"
+                    />
+                <filter
+                        name="grp_contact"
+                        string="Contact"
+                        context="{'group_by':'contact_partner_id'}"
+                    />
+                <filter
+                        name="grp_sale_team"
+                        string="Sale Team"
+                        context="{'group_by':'sale_team_id'}"
+                    />
+                <filter
+                        name="grp_salesperson"
+                        string="Salesperson"
+                        context="{'group_by':'salesperson_id'}"
+                    />
+                <filter
+                        name="grp_type"
+                        string="Type"
+                        context="{'group_by':'type_id'}"
+                    />
+                <filter
+                        name="grp_manager"
+                        string="Manager"
+                        context="{'group_by':'manager_id'}"
+                    />
+                <filter name="grp_date" string="Date" context="{'group_by':'date'}" />
+                <filter
+                        name="grp_date_start"
+                        string="Date Start"
+                        context="{'group_by':'date_start'}"
+                    />
+                <filter
+                        name="grp_date_end"
+                        string="Date End"
+                        context="{'group_by':'date_end'}"
+                    />
+                <filter
+                        name="grp_currency"
+                        string="Currency"
+                        context="{'group_by':'currency_id'}"
+                    />
+                <filter
+                        name="grp_pricelist"
+                        string="Pricelist"
+                        context="{'group_by':'pricelist_id'}"
+                    />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="service_contract_view_form" model="ir.ui.view">
+    <field name="name">service.contract form</field>
+    <field name="model">service.contract</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="ssi_transaction_mixin.mixin_transaction_view_form" />
+    <field name="arch" type="xml">
+        <data>
+
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="partner_id" />
+                <field
+                        name="allowed_contact_ids"
+                        widget="many2many_tags"
+                        invisible="1"
+                    />
+                <field
+                        name="contact_partner_id"
+                        domain="[('id','in',allowed_contact_ids)]"
+                    />
+                <separator string="Sales Info" colspan="2" />
+                <field name="sale_team_id" />
+                <field
+                        name="allowed_salesperson_ids"
+                        widget="many2many_tags"
+                        invisible="1"
+                    />
+                <field
+                        name="salesperson_id"
+                        domain="[('id','in',allowed_salesperson_ids)]"
+                    />
+                <field name="source_document_res_id" invisible="1" />
+                <field name="source_document_model_id" invisible="1" />
+                <field name="source_document_model" invisible="1" />
+                <field name="source_document_id" />
+            </xpath>
+            <xpath expr="//group[@name='header_right']" position="inside">
+                <field name="type_id" />
+                <field
+                        name="fix_item_allowed_product_ids"
+                        widget="many2many_tags"
+                        invisible="1"
+                    />
+                <field
+                        name="fix_item_allowed_product_categ_ids"
+                        widget="many2many_tags"
+                        invisible="1"
+                    />
+                <field name="manager_id" />
+                <field name="date" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="currency_id" />
+                <field
+                        name="allowed_pricelist_ids"
+                        widget="many2many_tags"
+                        invisible="1"
+                    />
+                <field
+                        name="pricelist_id"
+                        domain="[('id','in',allowed_pricelist_ids)]"
+                    />
+            </xpath>
+            <xpath expr="//group[@name='header_center']" position="inside">
+                <label for="title" colspan="2" />
+                <field name="title" colspan="2" nolabel="1" />
+            </xpath>
+            <xpath expr="//page[1]" position="before">
+                <page name="fix_item" string="Contract Items">
+                    <separator string="Payment Terms" />
+                    <field name="fix_item_payment_term_ids" colspan="2" nolabel="1">
+                        <tree>
+                            <field name="sequence" widget="handle" />
+                            <field name="name" />
+                            <field name="date_invoice" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="amount_untaxed" />
+                            <field name="amount_tax" />
+                            <field name="amount_total" />
+                            <field name="invoice_id" />
+                            <field name="state" />
+                            <button
+                                    name="action_create_invoice"
+                                    tile="Create Invoice"
+                                    type="object"
+                                    icon="fa-cogs"
+                                    states="uninvoiced"
+                                />
+                            <button
+                                    name="action_delete_invoice"
+                                    tile="Delete Invoice"
+                                    type="object"
+                                    icon="fa-eraser"
+                                    states="invoiced"
+                                />
+                            <button
+                                    name="action_disconnect_invoice"
+                                    tile="Disconnect Invoice"
+                                    type="object"
+                                    icon="fa-unlink"
+                                    states="invoiced"
+                                />
+                            <button
+                                    name="action_mark_as_manual"
+                                    tile="Mark as Manual"
+                                    type="object"
+                                    icon="fa-square-o"
+                                    states="uninvoiced"
+                                />
+                            <button
+                                    name="action_unmark_as_manual"
+                                    tile="Unmark as Manual"
+                                    type="object"
+                                    icon="fa-check-square-o"
+                                    states="manual"
+                                />
+                        </tree>
+                        <form>
+                            <group name="fix_item_2_1" colspan="4" col="2">
+                                <field name="name" />
+                                <field name="sequence" />
+                                <field name="date_invoice" />
+                                <field name="currency_id" invisible="1" />
+                                <field
+                                        name="fix_item_allowed_product_ids"
+                                        widget="many2many_tags"
+                                        invisible="1"
+                                    />
+                                <field
+                                        name="fix_item_allowed_product_categ_ids"
+                                        widget="many2many_tags"
+                                        invisible="1"
+                                    />
+                                <field name="detail_ids" colspan="2" nolabel="1">
+                                    <tree>
+                                        <field name="sequence" widget="handle" />
+                                        <field name="product_id" invisible="1" />
+                                        <field name="name" />
+                                        <field name="account_id" />
+                                        <field name="currency_id" invisible="1" />
+                                        <field name="pricelist_id" invisible="1" />
+                                        <field name="price_unit" />
+                                        <field name="uom_quantity" string="Quantity" />
+                                        <field name="uom_id" />
+                                        <field name="quantity" invisible="1" />
+                                        <field name="price_subtotal" />
+                                        <field name="tax_ids" widget="many2many_tags" />
+                                        <field name="price_tax" />
+                                        <field name="price_total" />
+                                    </tree>
+                                    <form>
+                                        <header />
+                                        <sheet>
+                                            <group
+                                                    name="fix_item_2_1_1"
+                                                    colspan="4"
+                                                    col="2"
+                                                >
+                                                <group
+                                                        name="fix_item_2_1_1_1"
+                                                        colspan="1"
+                                                        col="2"
+                                                    >
+                                                    <field name="sequence" />
+                                                    <field
+                                                            name="product_id"
+                                                            domain="['|',('id','in',parent.fix_item_allowed_product_ids),('categ_id','in',parent.fix_item_allowed_product_categ_ids)]"
+                                                        />
+                                                    <field name="name" />
+                                                    <field name="usage_id" />
+                                                    <field name="account_id" />
+                                                </group>
+                                                <group
+                                                        name="fix_item_2_1_2"
+                                                        colspan="1"
+                                                        col="2"
+                                                    >
+                                                    <field
+                                                            name="allowed_uom_ids"
+                                                            widget="many2many_tags"
+                                                            invisible="1"
+                                                        />
+                                                    <label
+                                                            for="uom_quantity"
+                                                            string="Quantity"
+                                                        />
+                                                    <div>
+                                                        <field
+                                                                name="uom_quantity"
+                                                                class="oe_inline"
+                                                            />
+                                                        <field
+                                                                name="uom_id"
+                                                                domain="[('id','in',allowed_uom_ids)]"
+                                                                attrs="{'required':[('product_id','!=',False)]}"
+                                                                class="oe_inline"
+                                                            />
+                                                    </div>
+                                                    <field
+                                                            name="quantity"
+                                                            invisible="1"
+                                                        />
+                                                    <field
+                                                            name="currency_id"
+                                                            force_save="1"
+                                                        />
+                                                    <field
+                                                            name="allowed_pricelist_ids"
+                                                            widget="many2many_tags"
+                                                            invisible="1"
+                                                        />
+                                                    <field
+                                                            name="pricelist_id"
+                                                            domain="[('id','in',allowed_pricelist_ids)]"
+                                                            force_save="1"
+                                                        />
+                                                    <field name="price_unit" />
+                                                    <field name="price_subtotal" />
+                                                    <field
+                                                            name="tax_ids"
+                                                            widget="many2many_tags"
+                                                        />
+                                                    <field name="price_tax" />
+                                                    <field name="price_total" />
+                                                </group>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
+                                <field name="amount_untaxed" />
+                                <field name="amount_tax" />
+                                <field name="amount_total" />
+                            </group>
+                        </form>
+                    </field>
+                    <separator string="Items" />
+                    <field name="fix_item_ids">
+                        <tree>
+                            <field name="product_id" />
+                            <field name="name" />
+                            <field name="price_unit" />
+                            <field name="quantity" />
+                            <field name="uom_id" />
+                            <field name="amount_untaxed" />
+                            <field name="amount_tax" />
+                            <field name="amount_total" />
+                        </tree>
+                    </field>
+                    <group name="fix_item_3" colspan="4" col="2">
+                        <field name="amount_untaxed" />
+                        <field name="amount_tax" />
+                        <field name="amount_total" />
+                    </group>
+                </page>
+                <page name="accounting" string="Accounting">
+                    <group name="accounting_1" colspan="4" col="2">
+                        <separator string="Fix Item" colspan="2" />
+                        <field name="fix_item_receivable_journal_id" string="Journal" />
+                        <field
+                                name="fix_item_receivable_account_id"
+                                string="Receivable Account"
+                            />
+                        <field
+                                name="allowed_partner_bank_ids"
+                                widget="many2many_tags"
+                                invisible="1"
+                            />
+                        <field
+                                name="partner_bank_id"
+                                domain="[('id','in',allowed_partner_bank_ids)]"
+                            />
+                    </group>
+                </page>
+                <page name="analytic" string="Analytic &amp; Project">
+                    <group name="analytic" colspan="4" col="2">
+                        <field name="analytic_group_id" />
+                        <field name="analytic_account_id" />
+                    </group>
+                </page>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="service_contract_action" model="ir.actions.act_window">
+    <field name="name">Contracts</field>
+    <field name="res_model">service.contract</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem
+        id="menu_service_contract"
+        name="Contracts"
+        parent="menu_root_service"
+        groups="service_contract_viewer_group"
+        action="service_contract_action"
+        sequence="20"
+    />
+
+</odoo>
