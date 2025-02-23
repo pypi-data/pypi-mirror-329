@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pi-vae-pytorch"
+dependencies = ["torch>=2.0"]
+requires-python = ">= 3.9"
+authors = [
+    {name = "Marlan McInnes-Taylor", email = "mmcinnestaylor@gmail.com"}
+]
+maintainers = [
+    {name = "Marlan McInnes-Taylor", email = "mmcinnestaylor@gmail.com"}
+]
+description = "A Pytorch implementation of Poisson Identifiable VAE (pi-VAE), a variational auto encoder used to construct latent variable models of neural activity while simultaneously modeling the relation between the latent and task variables."
+readme = "README.md"
+keywords = [
+    "artificial intelligence",
+    "deep learning",
+    "vae",
+    "variational autoencoder",
+    "pi-vae",
+    "poisson identifiable vae",
+    "poisson identifiable variational autoencoder",
+    "identifiable vae",
+    "identifiable variational autoencoder"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/mmcinnestaylor/pi-vae-pytorch"
+Documentation = "https://mmcinnestaylor.github.io/pi-vae-pytorch/"
+Download = "https://github.com/mmcinnestaylor/pi-vae-pytorch/tags"
+Repository = "https://github.com/mmcinnestaylor/pi-vae-pytorch.git"
+Issues = "https://github.com/mmcinnestaylor/pi-vae-pytorch/issues"
+
+[tool.setuptools_scm]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
