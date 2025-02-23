@@ -1,0 +1,136 @@
+[workspace]
+resolver = "2"
+members = ["vegafusion-common", "vegafusion-core", "vegafusion-runtime", "vegafusion-python"]
+
+[workspace.dependencies]
+async-trait = "0.1.73"
+futures = "0.3.21"
+url = "2.3.1"
+cfg-if = "1.0.0"
+
+[profile.release]
+opt-level = 3
+
+[profile.release-dev]
+inherits = "release"
+opt-level = 3
+
+[profile.release-opt]
+inherits = "release"
+opt-level = 3
+codegen-units = 1
+lto = "fat"
+strip = "debuginfo"
+
+[profile.release-small]
+inherits = "release"
+opt-level = "z"
+codegen-units = 1
+
+[workspace.dependencies.arrow]
+version = "53.2.0"
+default-features = false
+
+[workspace.dependencies.sqlparser]
+version = "0.51.0"
+
+[workspace.dependencies.chrono]
+version = "0.4.35"
+default-features = false
+
+[workspace.dependencies.ahash]
+version = "0.8.11"
+
+[workspace.dependencies.chrono-tz]
+version = "0.9.0"
+features = [ "case-insensitive", "filter-by-regex",]
+
+[workspace.dependencies.reqwest]
+version = "0.12.8"
+default-features = false
+
+[workspace.dependencies.tonic]
+version = "0.12.3"
+
+[workspace.dependencies.tonic-web]
+version = "0.12.3"
+
+[workspace.dependencies.tonic-build]
+version = "0.12.3"
+
+[workspace.dependencies.tokio]
+version = "1.36.0"
+
+[workspace.dependencies.pyo3]
+version = "0.22.4"
+
+[workspace.dependencies.pythonize]
+version = "0.22"
+
+[workspace.dependencies.pyo3-arrow]
+version = "0.5.1"
+default-features = false
+
+[workspace.dependencies.prost]
+version = "0.13.3"
+
+[workspace.dependencies.prost-types]
+version = "0.13.3"
+
+[workspace.dependencies.prost-build]
+version = "0.13.3"
+
+[workspace.dependencies.object_store]
+version = "0.11.0"
+
+[workspace.dependencies.object-store-wasm]
+version = "0.0.6"
+
+[workspace.dependencies.lazy_static]
+version = "1.5"
+
+[workspace.dependencies.serde_json]
+version = "1.0.91"
+default-features = false
+
+[workspace.dependencies.datafusion]
+version = "43.0.0"
+default-features = false
+features = [ "nested_expressions",]
+
+[workspace.dependencies.datafusion-common]
+version = "43.0.0"
+default-features = false
+
+[workspace.dependencies.datafusion-expr]
+version = "43.0.0"
+
+[workspace.dependencies.datafusion-proto]
+version = "43.0.0"
+default-features = false
+features = [ "parquet",]
+
+[workspace.dependencies.datafusion-proto-common]
+version = "43.0.0"
+default-features = false
+
+[workspace.dependencies.datafusion-physical-expr]
+version = "43.0.0"
+default-features = false
+
+[workspace.dependencies.datafusion-optimizer]
+version = "43.0.0"
+default-features = false
+
+[workspace.dependencies.datafusion-functions]
+version = "43.0.0"
+default-features = false
+
+[workspace.dependencies.datafusion-functions-nested]
+version = "43.0.0"
+
+[workspace.dependencies.datafusion-functions-aggregate]
+version = "43.0.0"
+
+[workspace.dependencies.datafusion-functions-window]
+version = "43.0.0"
