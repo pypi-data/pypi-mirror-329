@@ -1,0 +1,88 @@
+Metadata-Version: 2.4
+Name: mock-it-adapter
+Version: 1.0.0
+Summary: A Python mock_it_adapter for Mock IT API
+Project-URL: Homepage, https://github.com/AlekseiSuzume/mock_it_adapter_py
+Author-email: Vorobev Aleksei <aleksei.suzume@gmail.com>
+License-File: LICENSE
+Requires-Python: >=3.10.0
+Description-Content-Type: text/markdown
+
+# Mock IT Adapter
+
+Адаптер для взаимодействия с API Mock IT.
+
+
+## Установка
+
+```bash
+pip install mock-it-adapter
+```
+## Использование
+
+Создайте клиент для подключения к серверу Mock IT:
+```doctest
+from mock_it_adapter import MockITClient
+
+client = MockITClient(base_url)
+""" Создает клиент.
+
+    Аргументы:
+        base_url [str]: Адрес сервера Mock IT.
+    
+    Возвращает:
+        Сессию Requests.
+"""
+```
+
+```doctest
+create_mock(name, method, endpoint, status, response_body, matcher)
+""" Создает новый мок.
+
+    Аргументы:
+        method: [str] = HTTP-метод запроса для мока.
+        endpoint: [str] = Эндпоинт мока.
+        name: Optional[str] = Имя мока. Если не указано, генерируется по шаблону: "{endpoint}_{matcher.value}".
+        status: Optional[str] = Код статуса ответа мока. По умолчанию - 200.
+        response_body: Optional[str] = Тело ответа мока.
+        matcher: Optional[Matcher] = Условие для срабатывания запроса.
+        
+    Возвращает:
+        Созданную модель мока.
+"""
+```
+
+### Пример использования:
+```doctest
+from mock_it_adapter import MockITClient
+
+client = MockITClient(base_url="http://localhost:20000")
+
+client.create_mock(
+    method="POST",
+    endpoint="/new_mock_endpoint",
+    name="example_mock_name_without_matcher",
+    response_body="default mock body"
+)
+```
+Можно создать несколько моков для одного и того же эндпоинта:
+```doctest
+client.create_mock(
+    method="POST",
+    endpoint="/new_mock_endpoint",
+    name="example_mock_name_with_matcher",
+    status=201,
+    response_body="{\"Morpheus\": \"Wake up, Neo... The Matrix has you... Follow the white rabbit...\"}"
+    matcher=Matcher(
+        matcher_type=MatcherType.KEY_TO_VALUE,
+        key="name",
+        value="Neo"
+    )
+)
+```
+#### Как это работает
+Созданный URL мока: http://localhost:20000/new_mock_endpoint
+
+Если запрос содержит `key="name"` со значением `value="Neo"`, то в ответе мы получим: `"{"Morpheus": "Wake up, Neo... The Matrix has you... Follow the white rabbit..."}"`
+
+Если ключ и значение запроса не совпадают, мы получим ответ по умолчанию: `default mock body`
