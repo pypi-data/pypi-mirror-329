@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "just-agents-core"
+version = "0.6.0"  # This will be replaced by poetry-dynamic-versioning
+description = "Just Agents - Base Package"
+authors = [
+    "Alex Karmazin <karmazinalex@gmail.com>",
+    "Newton Winter <isoutthere@gmail.com>",
+    "Anton Kulaga <antonkulaga@gmail.com>"
+]
+maintainers = [
+    "Anton Kulaga <antonkulaga@gmail.com>",
+    "Newton Winter <isoutthere@gmail.com>"
+]
+readme = "README.md"
+packages = [
+    { include = "just_agents" }
+]
+license = "MIT"
+keywords = ["python", "llm", "science", "review", "agents", "AI", "longevity", "biology", "coding", "web", "tools", "router"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: Unix",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.15"
+litellm = ">=1.61.13"
+pydantic = ">=2.0.0,<3.0.0"
+Deprecated = ">=1.2.15"
+requests = "*"
+numpydoc = "*"
+python-dotenv = ">=1.0.1"
+rich = ">=13.9.4"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.3.4"
+poetry-dynamic-versioning = ">=1.0.0,<2.0.0"
+
+
+[tool.poetry.urls]
+Homepage = "https://github.com/longevity-genie/just-agents"
+"Bug Tracker" = "https://github.com/longevity-genie/just-agents/issues"
+Documentation = "https://just-agents.readthedocs.io/"
+
+[build-system]
+requires = ["poetry-core>=2.0.0", "poetry-dynamic-versioning>=1.4.1"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry-dynamic-versioning]
+enable = false
+vcs = "git"
+style = "semver"
+strict = true
