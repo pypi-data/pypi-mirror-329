@@ -1,0 +1,268 @@
+# this_file: pyproject.toml
+[build-system]
+requires = ["setuptools>=45", "setuptools-scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nyord-vpn"
+version = "0.1.0"
+description = "NordVPN client with API fallback support"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+keywords = ["vpn", "nordvpn", "security"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+
+dependencies = [
+    "njord>=0.0.1",
+    "tenacity>=8.0.0",
+    "backoff>=2.0.0",
+    "rich>=13.4.2",
+    "fire>=0.7.0",
+    "pydantic>=2.10.6",
+    "pydantic-settings>=2.8.0",
+    "requests>=2.31.0",
+    "keyring>=24.2.0",
+    "pycountry>=24.6.1",
+    "psutil>=5.9.5",
+    "python-dotenv>=1.0.0",
+    "aiohttp>=3.11.0",
+    "cryptography>=42.0.0",
+    "black>=23.7.0",
+    "bleach>=6.0.0",
+    "build>=0.10.0",
+    "certifi>=2023.5.7",
+    "charset-normalizer>=3.2.0",
+    "click>=8.1.5",
+    "docutils>=0.20.1",
+    "idna>=3.4",
+    "importlib-metadata>=6.8.0",
+    "jaraco-classes>=3.3.0",
+    "markdown-it-py>=3.0.0",
+    "mdurl>=0.1.2",
+    "more-itertools>=9.1.0",
+    "mypy-extensions>=1.0.0",
+    "packaging>=23.1",
+    "pathspec>=0.11.1",
+    "pkginfo>=1.9.6",
+    "platformdirs>=3.9.1",
+    "pygments>=2.15.1",
+    "pyproject-hooks>=1.0.0",
+    "readme-renderer>=40.0",
+    "requests-toolbelt>=1.0.0",
+    "rfc3986>=2.0.0",
+    "six>=1.16.0",
+    "tomli>=2.0.1",
+    "twine>=4.0.2",
+    "typing-extensions>=4.7.1",
+    "urllib3>=2.0.3",
+    "webencodings>=0.5.1",
+    "zipp>=3.16.2",
+    "loguru>=0.7.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit>=3.6.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pyupgrade>=3.19.0",
+]
+
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-asyncio>=0.25.0",
+    "pytest-mock>=3.12.0",
+    "pytest-timeout>=2.3.0",
+    "pytest-xdist>=3.5.0",
+]
+
+[project.scripts]
+nyord-vpn = "nyord_vpn.__main__:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["nyord_vpn"]
+package-data = {"nyord_vpn" = ["data/*.json"]}
+
+[[project.authors]]
+name = "Adam Twardoch"
+email = "adam+github@twardoch.com"
+
+[project.urls]
+Documentation = "https://github.com/twardoch/nyord-vpn#readme"
+Issues = "https://github.com/twardoch/nyord-vpn/issues"
+Source = "https://github.com/twardoch/nyord-vpn"
+
+[tool.coverage.paths]
+nyord_vpn = ["src/nyord_vpn", "*/nyord-vpn/src/nyord_vpn"]
+tests = ["tests", "*/nyord-vpn/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "no cov",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.coverage.run]
+source_pkgs = ["nyord_vpn", "tests"]
+branch = true
+parallel = true
+omit = [
+    "src/nyord_vpn/__about__.py",
+]
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/nyord_vpn/__version__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nyord_vpn"]
+
+[tool.hatch.envs.default]
+dependencies = [
+]
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.10", "3.11", "3.12"]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/nyord_vpn --cov=tests {args:tests}"
+type-check = "mypy src/nyord_vpn tests"
+lint = ["ruff check src/nyord_vpn tests", "ruff format --respect-gitignore src/nyord_vpn tests"]
+fix = ["ruff check  --fix --unsafe-fixes src/nyord_vpn tests", "ruff format --respect-gitignore src/nyord_vpn tests"]
+
+[tool.hatch.envs.lint]
+detached = true
+dependencies = [
+]
+
+[tool.hatch.envs.lint.scripts]
+typing = "mypy --install-types --non-interactive {args:src/nyord_vpn tests}"
+style = ["ruff check {args:.}", "ruff format --respect-gitignore {args:.}"]
+fmt = ["ruff format --respect-gitignore {args:.}", "ruff check --fix {args:.}"]
+all = ["style", "typing"]
+
+[tool.hatch.envs.test]
+dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-asyncio>=0.25.0",
+    "pytest-mock>=3.12.0",
+    "pytest-timeout>=2.3.0",
+    "pytest-xdist>=3.5.0",
+]
+
+[tool.hatch.envs.test.scripts]
+test = "python -m pytest {args:tests}"
+test-cov = "python -m pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/nyord_vpn --cov=tests {args:tests}"
+bench = "python -m pytest -v tests/test_benchmark.py --benchmark-only"
+bench-save = "python -m pytest -v tests/test_benchmark.py --benchmark-only --benchmark-json=benchmark/results.json"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+version_scheme = "post-release"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+extend-select = [
+    "A",
+    "ARG",
+    "B",
+    "C",
+    "DTZ",
+    "E",
+    "EM",
+    "F",
+    "FBT",
+    "I",
+    "ICN",
+    "ISC",
+    "N",
+    "PLC",
+    "PLE",
+    "PLR",
+    "PLW",
+    "Q",
+    "RUF",
+    "S",
+    "T",
+    "TID",
+    "UP",
+    "W",
+    "YTT",
+]
+ignore = ["ARG001", "E501", "I001", "RUF001", "PLR2004", "EXE003", "ISC001"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+
+[tool.pytest.ini_options]
+addopts = "-v --durations=10 -p no:briefcase --timeout=30 -n auto"
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "function"
+console_output_style = "progress"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+    "ignore::pytest.PytestDeprecationWarning",
+]
+log_cli = true
+log_cli_level = "INFO"
+markers = [
+    "benchmark: marks tests as benchmarks (select with '-m benchmark')",
+    "unit: mark a test as a unit test",
+    "integration: mark a test as an integration test",
+    "async_test: mark a test as an async test",
+    "config: mark a test as a configuration test",
+    "connection: mark a test as a connection test",
+    "security: mark a test as a security test",
+]
+testpaths = ["tests"]
+timeout = 30
+
+[tool.pytest-benchmark]
+min_rounds = 100
+min_time = 0.1
+histogram = true
+storage = "file"
+save-data = true
+compare = [
+    "min",    # Minimum time
+    "max",    # Maximum time
+    "mean",   # Mean time
+    "stddev", # Standard deviation
+    "median", # Median time
+    "iqr",    # Inter-quartile range
+    "ops",    # Operations per second
+    "rounds", # Number of rounds
+] 
