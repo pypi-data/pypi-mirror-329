@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mkdocs-madlibs"
+authors = [
+    {name = "Sam Gaudet", email = "sam.m.gaudet@gmail.com"}
+]
+maintainers = [
+    {name = "Sam Gaudet", email = "sam.m.gaudet@gmail.com"}
+]
+description = "Code templating with user inputs for MkDocs superfences."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["mkdocs", "madlibs", "template", "snippets"]
+dynamic = ["version"]
+dependencies = [
+    "beautifulsoup4",
+    "mkdocs-material",
+    "pymdown-extensions",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "mkdocs_madlibs.__version__"}
+
+[project.urls]
+Homepage = "http://mkdocs-madlibs.readthedocs.io/"
+Documentation = "http://mkdocs-madlibs.readthedocs.io/"
+Repository = "https://github.com/samgaudet/mkdocs-madlibs.git"
+Issues = "https://github.com/samgaudet/mkdocs-madlibs/issues"
+Changelog = "https://github.com/samgaudet/mkdocs-madlibs/blob/main/CHANGELOG.md"
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+src_paths = ["mkdocs_madlibs", "tests"]
+line_length = 88
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.flake8]
+exclude = [
+    "venv/*"
+]
+per-file-ignores = [
+    "tests/unit/test_fence.py:E501",
+]
+max-line-length = 88
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
