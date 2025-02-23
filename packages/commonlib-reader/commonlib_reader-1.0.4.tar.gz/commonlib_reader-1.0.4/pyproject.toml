@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "commonlib-reader"
+version = "1.0.4"
+description = "Reader for Equinor commonlibapi."
+authors = ["Åsmund Våge Fannemel <asmf@equinor.com>"]
+readme = "README.md"
+packages = [{ include = "commonlib_reader" }]
+repository = "https://github.com/equinor/commonlib-reader.git"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+msal_bearer = ">=1.1.4,<2.0.0"
+pandas = "^2.1.4"
+requests = "^2.31.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.4"
+pytest-cov = "^6.0.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.1.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
