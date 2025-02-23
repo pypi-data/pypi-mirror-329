@@ -1,0 +1,56 @@
+[project]
+name = "dij"
+version = "0.0.6"
+description = "💉 dij » dependency dijection library"
+authors = [
+    { name = "Lucas Colombo", email = "lucas@lucode.dev" }
+]
+license = "MIT"
+readme = "README.md"
+keywords = ["dependency", "injection", "di"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+]
+
+requires-python = ">=3.9,<4.0"
+
+dependencies = [
+    "requests>=2.32.3,<3.0.0",
+    "typing-extensions>=4.12.2,<5.0.0",
+]
+
+[project.urls]
+homepage = "https://github.com/lucodear/dij"
+documentation = "https://github.com/lucodear/dij#readme"
+repository = "https://github.com/lucodear/dij"
+"Bug Tracker" = "https://github.com/lucodear/dij/issues"
+
+[tool.poetry]
+packages = [{ include = "dij" }]
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.9"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.3"
+nox-poetry = "^1.0.3"
+pytest-asyncio = "^0.24.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.8"
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
