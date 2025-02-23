@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools==75.3.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project]
+name = "progron"
+readme = "README.md"
+version = "0.1.0"
+description = "A lightweight Python library that provides a convenient API for tracking the progress of various processes."
+requires-python = ">=3.12"
+authors = [
+  { name="ightingale", email="nightintgale@example.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: Apache Software License",
+]
+dependencies = [
+    "adaptix>=3.0.0b9",
+    "msgspec>=0.19.0",
+    "redis>=5.2.1",
+]
+license = { text = "Apache-2.0" }
+
+[project.urls]
+Homepage = "https://github.com/ightingale/progron"
+Issues = "https://github.com/ightingale/progron/issues"
