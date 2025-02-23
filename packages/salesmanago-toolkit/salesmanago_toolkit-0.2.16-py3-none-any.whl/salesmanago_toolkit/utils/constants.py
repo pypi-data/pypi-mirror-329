@@ -1,0 +1,5 @@
+export_url = "https://app3.salesmanago.pl/api/contact/export/data"
+job_status_url = "https://app3.salesmanago.pl/api/job/status"
+import_url = "https://app3.salesmanago.pl/api/contact/batchupsertv2"
+export_pages_url = "https://app3.salesmanago.pl/api/contact/paginatedContactList/export"
+contact_list_url = "https://app3.salesmanago.pl/api/contact/list"
