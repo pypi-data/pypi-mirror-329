@@ -1,0 +1,191 @@
+[project]
+name = "archipy"
+description = "Architecture + Python – perfect for structured design."
+authors = [
+    { name = "Mehdi Einali", email = "einali@gmail.com" },
+    { name = "Hossein Nejati", email = "hosseinnejati14@gmail.com" }
+]
+readme = "README.md"
+version = "0.5.0" # This vesrion set on publish flow!
+requires-python = ">=3.13,<4"
+dependencies = [
+    "pydantic>=2.10.6",
+    "pydantic-settings>=2.7.1",
+    "requests>=2.32.3",
+    "jdatetime (>=5.2.0,<6.0.0)",
+]
+license = { file = "LICENSE" }
+
+[project.optional-dependencies]
+redis = ["redis (>=5.1.1)"]
+elastic-apm = ["elastic-apm (>=6.23.0)"]
+fastapi = ["fastapi[all] (>=0.115.5)"]
+jwt = ["pyjwt (>=2.10.1)"]
+kavenegar = ["kavenegar (>=1.1.2)"]
+prometheus = ["prometheus-client (>=0.21.0)"]
+sentry = ["sentry-sdk (>=2.19.0)"]
+dependency-injection = ["dependency-injector (>=4.45.0)"]
+scheduler = ["apscheduler (>=3.11.0)"]
+grpc = ["grpcio (>=1.68.1)", "grpcio-health-checking (>=1.68.1)", "protobuf (>=5.29.2)"]
+postgres = ["psycopg[binary,pool] (>=3.2.3)", "sqlalchemy (>=2.0.37)"]
+aiosqlite = ["aiosqlite (>=0.21.0)"]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+pytest-asyncio = "^0.23.7"
+private-package = "^1.1.0"
+pre-commit = "^3.7.1"
+pre-commit-hooks = "^4.6.0"
+codespell = "^2.4.1"
+autoflake = "^2.3.1"
+ruff = "^0.7.4"
+black = "^24.4.2"
+add-trailing-comma = "^3.1.0"
+validate-pyproject = "^0.18"
+mypy = "^1.14.1"
+behave = "^1.2.6"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = 'tests'
+markers = []
+filterwarnings = [
+    'error',
+    'ignore:This is a placeholder until pydantic-settings.*:UserWarning',
+    'ignore::UserWarning',
+    'ignore::DeprecationWarning'
+]
+
+[[tool.poetry.source]]
+name = "arad"
+url = "https://repo-arad.darkube.app"
+priority = "supplemental"
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[project.urls]
+Homepage = "https://github.com/SyntaxArc/ArchiPy"
+
+[tool.black]
+color = true
+line-length = 120
+target-version = ["py313"]
+skip-string-normalization = true
+extend-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+fix = false
+lint.select = [
+    "B", # flake8-bugbear
+    "C", # flake8-comprehensions
+    "C4", # comprehensions
+    "E", # pycodestyle errors
+    "F", # pyflakes
+    "I", # isort
+    "INT", # flake8-gettext
+    "ISC", # implicit string concatenation
+    "PGH", # pygrep-hooks
+    "PIE", # misc lints
+    "PLC", "PLE", "PLR", "PLW", # pylint
+    "PYI", # flake8-pyi
+    "Q", # flake8-quotes
+    "RUF", # Ruff-specific rules
+    "T10", # flake8-debugger
+    "TCH", # type-checking imports
+    "TID", # tidy imports
+    "W", # pycodestyle warnings
+    "YTT", # flake8-2020
+]
+lint.ignore = [
+    "C901", # too complex
+    "RUF001", "RUF003", # String contains ambiguous
+    "PLR2004", # Magic value used in comparison
+    "Q000", # ignore single quotes
+    "TCH002",
+    "B008",
+    "PLR0913", # too many argument for function "swagger fastapi",
+    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar` in runtime confige ALLOW_ORIGINS = ["*"]
+    "E501",
+    "F811"
+]
+src = ["archipy", "tests", "features"]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint.per-file-ignores]
+# ignore F811 Redefinition of function in steps implementations
+"features/steps/*" = ["F811"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pylint]
+max-args = 5
+max-branches = 16
+max-returns = 16
+max-statements = 50
+
+[tool.autoflake]
+check = false
+in-place = true
+recursive = true
+remove-all-unused-imports = true
+ignore-init-module-imports = true
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+known-first-party = ["archipy"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = false
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = false
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+follow_imports = "silent"
+no_implicit_reexport = true
+pretty = true
+python_version = "3.13"
+show_error_codes = true
+show_error_context = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = []
+ignore_missing_imports = true
+
+[tool.bandit]
+exclude_dirs = ["tests", "features"]
+skips = ["B101", "B403", "B301"]
+
+[tool.config]
+pyproject_root_var = "pyproject"
