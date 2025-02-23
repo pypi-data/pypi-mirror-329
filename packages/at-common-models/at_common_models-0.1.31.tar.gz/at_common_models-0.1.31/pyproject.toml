@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "at-common-models"
+version = "0.1.31"
+description = "SQLAlchemy models for stock market data"
+requires-python = ">=3.11"
+authors = [
+    {name = "Rui Chen"}
+]
+dependencies = [
+    "sqlalchemy>=2.0.0",
+    "typing_extensions>=4.12.2",
+    "greenlet>=3.1.1",
+]
+readme = "README.md"
+
+[project.urls]
+"Homepage" = "https://github.com/apex-trader/at-common-models"
+"Bug Tracker" = "https://github.com/apex-trader/at-common-models/issues"
+
+[tool.setuptools]
+packages = [
+    "at_common_models",
+    "at_common_models.system",
+    "at_common_models.user",
+]
+
+[tool.setuptools.package-data]
+"at_common_models" = ["py.typed"]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.3.3",
+    "iniconfig>=2.0.0",
+    "packaging>=24.2",
+    "pluggy>=1.5.0"
+]
