@@ -1,0 +1,41 @@
+
+
+
+[project]
+
+name = "encommon"
+description = "Enasis Network Common Library"
+
+readme = "README.md"
+
+license.text = "MIT"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"]
+
+requires-python = ">= 3.11"
+
+dynamic = ["version", "dependencies"]
+
+
+
+[project.urls]
+
+Source = "https://github.com/enasisnetwork/encommon"
+Documentation = "https://enasisnetwork.github.io/encommon/sphinx"
+
+
+
+[tool.setuptools.dynamic]
+
+version.attr = "encommon.__version__"
+
+dependencies.file = ["require/install.txt"]
+
+
+
+[tool.setuptools.packages.find]
+
+include = ["encommon", "encommon.*"]
