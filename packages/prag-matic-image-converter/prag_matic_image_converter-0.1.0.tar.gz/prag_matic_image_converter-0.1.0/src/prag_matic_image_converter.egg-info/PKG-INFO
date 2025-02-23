@@ -1,0 +1,73 @@
+Metadata-Version: 2.2
+Name: prag-matic-image-converter
+Version: 0.1.0
+Summary: A tool for optimizing images and converting to WebP format
+Home-page: https://github.com/pktikkani/image_converter
+Author: Pavan Tikkani
+Author-email: pavan@prag-matic.com
+Project-URL: Bug Tracker, https://github.com/pktikkani/image_converter/issues
+Keywords: image,converter,webp,conversion,image processing
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Multimedia :: Graphics
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: Pillow>=9.0.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: project-url
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# image_converter
+
+A Python package for optimizing images and converting them to WebP format.
+
+## Installation
+
+```bash
+pip install image_converter
+```
+
+### Usage
+
+```python
+
+from image_converter import ImageOptimizer
+
+# Create an optimizer instance
+optimizer = ImageOptimizer(quality=85)
+
+# Convert a single image
+optimizer.convert_to_webp('input.jpg', 'output.webp')
+
+# Convert all images in a folder
+optimizer.batch_optimize('input_folder', 'output_folder')
+
+```
+
+### Features
+
+- Convert images to WebP format
+- Batch processing support
+- Quality control for optimization
+- Handles RGBA images
+- Supports PNG, JPG, JPEG, TIFF, BMP formats
+
+
+### License
+MIT License
