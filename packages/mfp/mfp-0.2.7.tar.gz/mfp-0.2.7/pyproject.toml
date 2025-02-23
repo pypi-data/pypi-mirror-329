@@ -1,0 +1,44 @@
+[project]
+name = "mfp"
+version = "0.2.7"
+description = "My first package"
+readme = "README.md"
+authors = [
+    { name = "Ben van Vliet"}
+]
+requires-python = ">=3.12"
+license = { text = "MIT License" }
+dependencies = [
+    "loguru>=0.7.3",
+    "pandas>=2.2.3",
+    "polars>=1.22.0",
+    "psycopg2>=2.9.10",
+    "python-dotenv>=1.0.1",
+    "requests>=2.32.3",
+    "ruff>=0.9.7",
+    "scikit-learn>=1.6.1",
+    "sqlalchemy>=2.0.38",
+    "tabulate>=0.9.0",
+]
+keywords = ['mfp']
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
