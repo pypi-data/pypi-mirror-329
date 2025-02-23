@@ -1,0 +1,64 @@
+Metadata-Version: 2.2
+Name: controlled_vocabulary_utils
+Version: 0.1.0
+Summary: A package for evaluating values for terms in a controlled vocabulary.
+Home-page: https://github.com/jai-python3/controlled-vocabulary-utils
+Author: Jaideep Sundaram
+Author-email: jai.python3@gmail.com
+Keywords: controlled_vocabulary_utils
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.10
+License-File: AUTHORS.rst
+Requires-Dist: Click>=7.0
+Requires-Dist: PyYAML
+Requires-Dist: Rich
+Requires-Dist: singleton-decorator
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+===========================
+Controlled Vocabulary Utils
+===========================
+
+A package for evaluating values for terms in a controlled vocabulary.
+
+Usage
+-----
+
+.. code-block:: python
+
+    from controlled_vocabulary_utils import Manager as ValidationManager
+
+    config_file = "conf/controlled_vocabulary.yaml"
+
+    vm = ValidationManager(
+        config_file=config_file,
+        verbose=verbose,
+    )
+
+    term = "zygosity"
+    val = "mosaic"
+    if vm.is_valid(term, val):
+        print(f"'{val}' is a valid value for term '{term}'")
+    else:
+        print(f"'{val}' is NOT a valid value for term '{term}'")
+
+
+=======
+History
+=======
+
+0.1.0 (2025-02-22)
+------------------
+
+* First release on PyPI.
