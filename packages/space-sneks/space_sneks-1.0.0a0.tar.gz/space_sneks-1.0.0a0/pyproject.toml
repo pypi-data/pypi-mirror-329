@@ -1,0 +1,156 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sneks"]
+exclude = [
+    "src/sneks/backend",
+    "src/sneks/infrastructure",
+]
+
+[tool.hatch.build.targets.sdist]
+packages = ["src/sneks"]
+exclude = [
+    "src/sneks/backend",
+    "src/sneks/infrastructure",
+]
+
+[project]
+name = "space-sneks"
+version = "1.0.0a0"
+description = "Sneks in SPACE"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [
+    {name = "Nathaniel Schaaf", email = "nathaniel.schaaf@gmail.com"}
+]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+dependencies = [
+    "pytest",
+    "pygame>=2.6.1",
+]
+
+[project.optional-dependencies]
+docs = [
+    "requests",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "myst-parser",
+]
+types = [
+    "boto3-stubs-lite[essential,sns,stepfunctions,cognito-idp]",
+    "types-requests",
+]
+dev = [
+    "space-sneks[docs,types]",
+    "pyright",
+    "ruff",
+]
+infra = [
+    "aws-cdk-lib>=2.164.1",
+    "aws-cdk.aws-cognito-identitypool-alpha",
+    "constructs>=10",
+]
+record = [
+    "boto3",
+    "moviepy",
+    "imageio_ffmpeg",
+]
+
+[project.scripts]
+cdk-app = "sneks.infrastructure.app:main"
+validate = "sneks.engine.validator.main:main"
+run = "sneks.engine.engine.runner:main"
+demo = "sneks.engine.engine.runner:demo"
+poster = "sneks.engine.gui.poster:main"
+
+# Ruff
+
+[tool.ruff]
+extend-exclude = [
+    "src/webapp",
+]
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+extend-select = ["I", "N", "UP"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+# Pyright
+
+[tool.pyright]
+include = ["src"]
+exclude = ["src/webapp"]
+
+# Hatch envs
+
+[tool.hatch.envs.default]
+path = ".venv"
+python = "3.13"
+installer = "uv"
+skip-install = false
+features = ["dev", "infra", "record"]
+
+[tool.hatch.envs.hatch-test]
+template = "default"
+
+[tool.hatch.envs.hatch-static-analysis]
+template = "default"
+
+# Test matrix
+
+[[tool.hatch.envs.hatch-test.matrix]]
+python = ["3.10", "3.11", "3.12", "3.13"]
+
+# Scripts
+
+[tool.hatch.envs.hatch-static-analysis.scripts]
+format-check = [
+    "ruff format --check",
+    "cd src/webapp && npm run lint",
+]
+format-fix = [
+    "ruff format",
+    "cd src/webapp && npm run format",
+]
+lint-check = [
+    "ruff check",
+    "pyright",
+]
+lint-fix = [
+    "ruff check --fix",
+]
+
+[tool.hatch.envs.default.scripts]
+check = [
+    "ruff check",
+    "ruff format --check",
+    "pyright",
+    "cd src/webapp && npm install",
+    "cd src/webapp && npm run lint",
+]
+
+format = [
+    "ruff check --fix",
+    "ruff format",
+    "cd src/webapp && npm install",
+    "cd src/webapp && npm run format",
+]
+
+build = [
+    "cd src/webapp && npm install",
+    "cd src/webapp && npm run build",
+    "npx -y cdk@latest synth",
+]
