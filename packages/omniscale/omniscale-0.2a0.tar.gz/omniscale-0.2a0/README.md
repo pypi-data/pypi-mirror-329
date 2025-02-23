@@ -1,0 +1,71 @@
+# 📦 Omniscale
+
+**Omniscale** is a Python package that provides various unit conversion functions, including temperature, distance, weight, speed, and time conversions.
+
+## 🚀 Installation
+
+You can install the package directly from PyPI using:
+
+```sh
+pip install omniscale==0.1
+```
+
+## 🛠 Usage
+
+Import the package and use the available functions:
+
+```python
+import omniscale
+
+# Convert Celsius to Fahrenheit
+print(omniscale.celsius_to_fahrenheit(0))  # Output: 32.0
+print(omniscale.celsius_to_fahrenheit(100))  # Output: 212.0
+
+# Convert Fahrenheit to Celsius
+print(omniscale.fahrenheit_to_celsius(98.6))  # Output: 37.0
+
+# Convert meters to feet
+print(omniscale.meters_to_feet(1))  # Output: 3.28084
+
+# Convert feet to meters
+print(omniscale.feet_to_meters(3.28084))  # Output: 1.0
+
+# Convert kilograms to pounds
+print(omniscale.kg_to_pounds(10))  # Output: 22.05
+
+# Convert pounds to kilograms
+print(omniscale.pounds_to_kg(22.05))  # Output: 10.0
+
+# Convert kilometers per hour to miles per hour
+print(omniscale.kmh_to_mph(100))  # Output: 62.14
+
+# Convert miles per hour to kilometers per hour
+print(omniscale.mph_to_kmh(62.14))  # Output: 100.0
+
+# Convert minutes to seconds
+print(omniscale.minutes_to_seconds(5))  # Output: 300
+
+# Convert seconds to minutes
+print(omniscale.seconds_to_minutes(300))  # Output: 5.0
+```
+
+## 📌 Available Conversions
+
+- `celsius_to_fahrenheit(celsius)`: Converts Celsius to Fahrenheit.
+- `fahrenheit_to_celsius(fahrenheit)`: Converts Fahrenheit to Celsius.
+- `meters_to_feet(meters)`: Converts meters to feet.
+- `feet_to_meters(feet)`: Converts feet to meters.
+- `kg_to_pounds(kg)`: Converts kilograms to pounds.
+- `pounds_to_kg(pounds)`: Converts pounds to kilograms.
+- `kmh_to_mph(kmh)`: Converts kilometers per hour to miles per hour.
+- `mph_to_kmh(mph)`: Converts miles per hour to kilometers per hour.
+- `minutes_to_seconds(minutes)`: Converts minutes to seconds.
+- `seconds_to_minutes(seconds)`: Converts seconds to minutes.
+
+## 🤝 Contributing
+
+Feel free to fork this repository, make improvements, but don't forget to say my name!
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
