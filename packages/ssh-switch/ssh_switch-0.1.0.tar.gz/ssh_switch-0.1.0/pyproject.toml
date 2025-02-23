@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ssh-switch"
+version = "0.1.0"
+description = "A command-line tool for switching SSH keys"
+readme = "README.md"
+authors = [
+    { name = "Ramkumar Manickam", email = "ramkumarm.eng@gmail.com" }
+]
+license = { text = "MIT" }
+dependencies = [
+    "questionary"
+]
+requires-python = ">=3.6"
+
+[project.urls]
+Homepage = "https://github.com/mramkumar/ssh-switch"
+
+[project.scripts]
+ssh-switch = "ssh_switch.main:main"
+
+[tool.setuptools]
+packages = ["ssh_switch"]
