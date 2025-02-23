@@ -1,0 +1,76 @@
+[project]
+name = "newssurvey"
+version = "0.11.0"
+description = "Write a survey report using a supported news site and GPT-4 LLM "
+authors = [
+    { name = "Ouroboros Chrysopoeia", email = "impredicative@users.noreply.github.com" }
+]
+dependencies = [
+    "click>=8.1.8",
+    "diskcache>=5.6.3",
+    "hext>=1.0.12",  # https://github.com/html-extract/hext/releases
+    "locket>=1.0.0",
+    "numpy>=2.2.3",  # https://github.com/numpy/numpy/releases https://numpy.org/doc/stable/release.html https://numpy.org/news/
+    "openai>=1.64.0",  # https://github.com/openai/openai-python/releases
+    "pathvalidate>=3.2.3",  # https://github.com/thombashi/pathvalidate/releases
+    "python-dotenv>=1.0.1",
+    "reportlab>=4.3.1",  # Tested with 4.2.2.
+    "requests>=2.32.3",
+    "scipy>=1.15.2",  # https://github.com/scipy/scipy/releases https://docs.scipy.org/doc/scipy/release.html
+    "tiktoken>=0.9.0",  # https://github.com/openai/tiktoken/blob/main/CHANGELOG.md
+]
+readme = "README.md"
+requires-python = ">= 3.12"
+keywords = ["news", "news-summarization", "GPT-4o"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Natural Language :: English",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: News/Diary",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Linguistic",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+    "Programming Language :: Python :: 3.12"
+]
+
+[build-system]
+requires = ["hatchling==1.26.3"]  # Without a version spec, hatchling==1.27.0 is used which fails to publish. Ref: https://github.com/astral-sh/rye/issues/1446#issuecomment-2545154562
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+universal = true
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/newssurvey"]
+
+[project.scripts]
+newssurvey = "newssurvey.__main__:main"
+
+[project.urls]
+Repository = "https://github.com/impredicative/newssurvey"
+
+[tool.rye.scripts]  # Run as "rye run <command>"
+check = { chain = ["check-lint", "check-fmt" ] }
+"check-lint" = "rye lint"
+"check-fmt" = "rye fmt --check"
+fix = { chain = ["fix-lint", "fix-fmt" ] }
+"fix-lint" = "rye lint --fix"
+"fix-fmt" = "rye fmt"
+lockup = "rye lock --update-all"
+syncup = "rye sync --update-all"
+build = "rye build --clean --verbose"
+publish = "rye publish --verbose"
+release = { chain = ["check", "build", "publish"]}
+
+[tool.hatch.build]
+exclude = [".env", "analysis/", "archive/", "docs/", "samples/", "scripts/", "work/"]
+
+[tool.ruff]
+line-length = 999
+
+[tool.ruff.lint]
+ignore = ["E731"]
