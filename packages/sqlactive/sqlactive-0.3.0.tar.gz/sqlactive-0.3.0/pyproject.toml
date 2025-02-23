@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sqlactive"
+dynamic = ["version"]
+authors = [
+    { name="Dairo Mosquera", email="dairoandres115@outlook.com" },
+]
+description = "SQLActive is a lightweight and asynchronous ActiveRecord-style wrapper for SQLAlchemy. Bring Django-like queries, automatic timestamps, nested eager loading, and serialization/deserialization for SQLAlchemy models."
+readme = "README.md"
+requires-python = ">=3.10"
+keywords=[
+    "sqlalchemy",
+    "active record",
+    "activerecord",
+    "orm",
+    "django-like",
+    "django queries",
+    "eager load",
+    "timestamps",
+    "serialization",
+]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Database",
+]
+dependencies = [
+    "sqlalchemy>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/daireto/sqlactive"
+Documentation = "https://daireto.github.io/sqlactive/"
+Issues = "https://github.com/daireto/sqlactive/issues"
+Repository = "https://github.com/daireto/sqlactive"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["sqlactive*"]
+exclude = ["docs*", "tests*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "sqlactive.__version__"}
