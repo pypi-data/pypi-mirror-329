@@ -1,0 +1,23 @@
+[project]
+name = "mariadb-mcp-server"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "HeejunShin", email = "abel9851@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "mariadb>=1.1.12",
+    "mcp[cli]>=1.3.0",
+    "mysql-connector-python>=9.2.0",
+    "pytest>=8.3.4",
+    "python-dotenv>=1.0.1",
+]
+
+[project.scripts]
+mariadb-mcp-server = "mariadb_mcp_server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
