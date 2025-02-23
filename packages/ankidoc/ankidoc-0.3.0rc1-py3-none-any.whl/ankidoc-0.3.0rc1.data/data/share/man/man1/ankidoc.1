@@ -1,0 +1,173 @@
+.TH ANKIDOC 1 2025-02-21 "ankidoc v0.3.0-rc1"
+.
+.SH NAME
+
+ankidoc \- convert asciidoc notes to anki notes
+.
+.SH SYNOPSIS
+.
+.SY ankidoc
+.B \-h, \-\-help
+.YS
+.
+.SY ankidoc
+.B \-v, \-\-version
+.YS
+.
+.SY ankidoc
+.RB "[ " \-d " | " \-l " | " \-n " ]"
+.RB [ \-a
+.IR ATTR ]
+.RB [ \-D
+.IR DECK ]
+.RB [ \-L
+.IR LV ]
+.RB [ \-N
+.IR TYPE ]
+.RB [ \-o
+.IR OUT ]
+.I files
+.
+.SH DESCRIPTION
+.
+\fBankidoc\fP is a short python script intended to make writing anki notes in
+asciidoc easier. It can be used to generate a text file for import into anki
+from notes written in asciidoc.
+.
+.P
+The asciidoc notes need to be in a specific format in order for the script to
+be able to work with them; Every note needs to be a directory with its name
+ending in \fI.anote\fP. The name of this directory (excluding the extension),
+will become the ID of the note in the final import file.
+.
+.P
+For everything to work correctly, this directory must contain three files:
+.
+.TP
+.I front.adoc
+An asciidoc file containing everything that should be on the front side of the
+note.
+.
+.TP
+.I back.adoc
+An asciidoc file containing everything that should be on the back side of the
+note.
+.
+.TP
+.I tags.txt
+A text file containing space-separated tags for the note. This file is
+optional, but its absence _will_ throw a warning.
+.
+.P
+In its default operating mode, \fBankidoc\fP will take a list of such anote
+directories as input and generate a single anki import file out of them.
+.
+.SS MODES
+.
+Besides the default mode described above, \fBankidoc\fP supports additional
+modes that work slightly differently.
+.
+.TP
+.B Notegen mode
+In notegen mode \(em selected by specifying the \fB-n\fP option \(em
+\fBankidoc\fP will only take in one single anote directory and output a
+\(dqnote\(dq file, which essentially corresponds to a single note how it would
+appear in the final import file generated in default mode. These note files can
+then be linked into an anki import file using the link mode.
+.
+.TP
+.B Link mode
+In link mode \(em selected by specifying the \fB-l\fP option \(em \fBankidoc\fP
+will treat the input files as \(dqnote\(dq files and link them into an anki
+import file.
+.
+.TP
+.B Docgen mode
+Similarly to the notegen mode, when running in docgen mode, \fBankidoc\fP will
+only take in a single anote directory, but instead of producing HTML formatted
+as a note file, it produces an asciidoc document.
+.
+.TP
+.B Preview mode
+Similarly to the docgen mode, when running in preview mode, \fBankidoc\fP will
+only take in a single anote directory, but instead of producing an asciidoc
+document, it will produce a HTML file that can be opened using a browser to
+preview the note.
+.
+.SH OPTIONS
+.
+.TP
+.BI "\-a, \-\-attributes " ATTR
+Specify any asciidoc(tor) attributes. Whatever string is specified here will be
+passed on as\-is to the \fB-a\fP argument of the 
+.BR asciidoctor (1)
+command.
+.
+.TP
+.B \-d, \-\-docgen
+Run \fBankidoc\fP in docgen mode.
+.
+.TP
+.BI "\-D, \-\-deck " DECK
+Specify a deck name, which will be set as default deck in the import file.
+.
+.TP
+.B \-f, \-\-front\-matter
+When running in docgen mode, add front matter in TOML to the output, for use in
+static site generators like HUGO or 11ty.
+.
+.TP
+.B \-l, \-\-link
+Run \fBankidoc\fP in link mode.
+.
+.TP
+.BI "\-L, \-\-loglevel " LV
+Select a logging level from \(dqDEBUG\(dq, \(dqINFO\(dq, \(dqWARNING\(dq,
+\(dqERROR\(dq, \(dqCRITICAL\(dq.
+.
+.TP
+.B \-n, \-\-notegen
+Run \fBankidoc\fP in notegen mode.
+.
+.TP
+.BI "\-N, \-\-notetype " TYPE
+Specify a note type, which will be set as default note type in the import file.
+.
+.TP
+.BI "\-o, \-\-output " OUT
+Specify the desired output filename.
+.
+.TP
+.B \-v, \-\-version
+Display version information.
+.
+.TP
+.I files
+Specify the files to operate on. Note that these generally have to be one ore
+multiple \fI.anote\fP directories in oder for \fBankidoc\fP to work. When
+operating in link mode, however, these files have to be \fI.note\fP files.
+.
+.SH EXIT STATUS
+.
+.TP
+.B 0
+Success.
+.
+.TP
+.B 1
+Failure.
+.
+.SH NOTES
+For \fBankidoc\fP to work you'll have to have
+.BR asciidoctor (1)
+installed, as this is the program \fBankidoc\fP uses to convert the asciidoc to
+HTML.
+.
+.SH SEE ALSO
+.
+.nh
+.BR asciidoctor (1)
+.
+.P
+.UR https://asciidoctor.org
+.UE
