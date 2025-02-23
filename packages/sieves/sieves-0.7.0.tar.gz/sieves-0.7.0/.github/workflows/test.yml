@@ -1,0 +1,62 @@
+name: Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - sieves/**
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install tesseract-ocr
+        uv venv
+        uv pip install -e ".[all,test]"
+
+    - name: Set up ollama
+      run: |
+        curl -fsSL https://ollama.ai/install.sh | sh
+        # Run as daemon if ollama default port is free (port usage fails if Ollama has been launched on this machine 
+        # before otherwise). 
+        ((! nc -z 127.0.0.1 11434) && (ollama serve &)) || true
+        ollama pull smollm:135m 
+
+    - name: Run tests
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      run: |
+        source .venv/bin/activate
+        pytest --cov --cov-report=xml -m "not slow"
+
+    - name: Debug
+      run: |
+        ls -lh 
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: coverage.xml
