@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>AutoTrans - 自动翻译</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="static/custom.css">
+</head>
+<body>
+
+<svg id="goto-prev" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#FFF" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+<svg  id="goto-next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#FFF" d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
+
+<span id="notification"></span>
+<div id="slides">
+    <div class="slide active">
+        <div class="slide-content">
+            <h1>AutoTrans</h1>
+            <h2>（翻译全流程自动化）</h2>
+
+            <div class="flex-container">
+                <div class="grid">
+                    <h3>Step 0: 输入英文原文（为了便于处理，不同段落之间应有至少一个空行）</h3>
+                    <label for="english_article">英文原文：</label>
+                    <textarea id="english_article" xml-label="article|p" rows="15" cols="100" placeholder="示例:&#10;&#10;Machine translation is use of computational techniques to translate text or speech from one language to another, including the contextual, idiomatic and pragmatic nuances of both languages.&#10;&#10;Early approaches were mostly rule-based or statistical. These methods have since been superseded by neural machine translation[1] and large language models.[2]"></textarea>
+
+                    <span>
+                        <button class="save-Button small-button" textarea-id="english_article" data-filename="英文原文.md">下载文本到本地</button>
+                        <input type="file" textarea-id="english_article"><button class="load-Button small-button">由本地上传文本</button>
+                        <button class="small-button format_article" textarea-id="english_article">确保文本符合格式</button>
+                        <!-- <button class="small-button unformat_article" textarea-id="english_article">去除格式标记</button> -->
+                    </span>
+
+                    <span>
+                        <h3>选项1：<button id="auto_step_all" class="important automation">自动化完成所有流程</button></h3>
+                        <h3>选项2：点击后面各个步骤中的（红色）按钮，逐步执行</h3>
+                        <span>Prompt长度限制:<input type="text" id="length_limit" size="8" value="32000"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide">
+        <h2>Step 1: 文章翻译 <button id="auto_step1" class="important automation">自动化Step 1全流程</button></h2>
+        <div class="flex-container">
+            <div class="grid">
+                <h3>1.1 创建词汇表</h3>
+                <h5>必要信息：英文原文</h5>
+                <label for="">参考词汇表:</label>
+                <textarea id="glossary" rows="10" cols="50" placeholder="示例：&#10;&#10;| 英文 | 领域 | 翻译 |&#10;|---|---|---|&#10;| LLM | AI | 大语言模型 |"></textarea>
+                
+                <button id="fetch_online_glossary" class="important" textarea-id="glossary">检索在线数据库，自动生成词汇表</button>
+                <button id="update_online_glossary" textarea-id="glossary">
+                更新在线数据库：将词汇表格式化为可直接粘贴的格式，并进入数据库</button>
+            </div>
+            <div class="grid">
+                <h3>1.2 让LLM总结重要信息</h3>
+                <h5>必要信息：英文原文</h5>
+                <label for="editor_prompt">Prompt模板:</label>
+                <textarea id="editor_prompt" rows="10" cols="50" style="background-color: #FFFBE6"></textarea>
+                <span><button class="process_prompt_general important" prompt-textarea-id="editor_prompt" article-textarea-id="english_article">复制prompt（请手动操作ChatGPT网页）</button>
+                <button id="editor_prompt_button" class="process_prompt_general important automation" prompt-textarea-id="editor_prompt" article-textarea-id="english_article" result-textarea-id="chinese_annotation" automation='true'>自动执行prompt</button></span>
+            </div>
+
+            <div class="grid">
+                <h3>1.3 在ChatGPT中用Ctrl(CMD)+Shift+C复制输出，粘贴到下方</h3>
+                <h3>（并按需修改翻译词汇表和不可译项）</h3>
+                <label for="chinese_annotation">中文注释：</label>
+                <textarea id="chinese_annotation" xml-label="注释" rows="10" cols="40" placeholder="示例：&#10;&#10;&lt;注释&gt;&#10;...&#10;&lt;/注释&gt;"></textarea>
+
+                <span>
+                    <button class="save-Button small-button" textarea-id="chinese_annotation" data-filename="[Step0]注释.md">下载文本到本地</button>
+                    <input type="file" textarea-id="chinese_annotation"><button class="load-Button small-button">由本地上传文本</button>
+                    <button id="format_annotation"  class="small-button format_article" textarea-id="chinese_annotation">确保文本符合格式</button>
+                </span>
+                <span>
+                    <label for="wording">写作风格:</label>
+                    <input type="text" id="wording" size="20" value="">
+                    <label for="category">文章分类:</label>
+                    <input type="text" id="category" size="20" value="">
+                </span>
+                <span>
+                    <label for="polish_solution">润色方案:</label>
+                </span>
+                <span>
+                    <textarea id="polish_solution" xml-label="润色方案" rows="10" cols="40" placeholder=""></textarea>
+                </span>
+
+            </div>
+
+            <div class="grid">
+                <h3>1.4 机器翻译</h3>
+                <button id="deepl_translate" class="important">使用DeepL翻译</button>
+
+                <label for="chinese_article">中文翻译稿：</label>
+                <textarea id="chinese_article" xml-label="文章|p" rows="10" cols="50"></textarea>
+
+                <span>
+                    <button class="save-Button small-button" textarea-id="chinese_article" data-filename="[Step1]中文翻译.md">下载文本到本地</button>
+                    <input type="file" textarea-id="chinese_article"><button class="load-Button small-button">由本地上传文本</button>
+                    <button class="small-button format_article" textarea-id="chinese_article">确保文本符合格式</button>
+                    <button class="small-button copy_to_comparison" textarea-id="chinese_article" version-name="DeepL翻译稿">添加到版本对比</button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="slide">
+        <h2>Step 2: 初步修改（快速完成校对&润色） <button id="auto_step2" class="important automation">自动化Step 2全流程</button></h2>
+        <div class="flex-container">
+            <div class="grid">
+                <h3>2.1 打开新chat，让LLM做初步修改：</h3>
+                <h5>必要信息：文章分类、写作风格、中文注释、中文翻译</h5>
+                <label for="primary_revision_prompt">Prompt模板:</label>
+                <textarea id="primary_revision_prompt" rows="10" cols="50" style="background-color: #FFFBE6"></textarea>
+                <span><button class="process_prompt_general important" prompt-textarea-id="primary_revision_prompt" article-textarea-id="chinese_article">复制prompt（请手动操作ChatGPT网页）</button>
+                <button id="primary_revision_button" class="process_prompt_general important automation" prompt-textarea-id="primary_revision_prompt" article-textarea-id="chinese_article" automation='true' result-textarea-id="primary_revision_article">自动执行prompt</button></span>
+                
+            </div>
+            <div class="grid">
+                <h3>2.2 在ChatGPT中用Ctrl(CMD)+Shift+C复制输出，粘贴到下方</h3>
+                <h3>（输出如果中断，请点continue按钮）</h3>
+                <label for="primary_revision_article">初步修改稿：</label>
+                <textarea id="primary_revision_article" xml-label="文章|p" operations='+,+,+' rows="10" cols="50"></textarea>
+                <span>
+                    <button class="save-Button small-button" textarea-id="primary_revision_article" data-filename="[Step2]初步修改.md">下载文本到本地</button>
+                    <input type="file" textarea-id="primary_revision_article"><button class="load-Button small-button">由本地上传文本</button>
+                    <button class="small-button format_article" textarea-id="primary_revision_article">确保文本符合格式</button>
+                    <button class="small-button copy_to_comparison" textarea-id="primary_revision_article" version-name="初步修改稿">添加到版本对比</button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="slide">
+        <h2>Step 3: 润色（获得不同风格的润色，然后整合） <button id="auto_step3" class="important automation">自动化Step 3全流程</button></h2>
+        <div class="flex-container">
+            <div class="grid">
+                <h3>3.1 打开新chat，让LLM做润色：</h3>
+                <h5>必要信息：文章分类、写作风格、中文翻译</h5>
+                <label for="polish_prompt">Prompt:</label>
+                <textarea id="polish_prompt" rows="10" cols="50" style="background-color: #FFFBE6"></textarea>
+                <span><button class="process_prompt_general important" prompt-textarea-id="polish_prompt" article-textarea-id="primary_revision_article">复制prompt（请手动操作ChatGPT网页）</button>
+                <button id="polish_button1" class="process_prompt_general important automation" prompt-textarea-id="polish_prompt" article-textarea-id="primary_revision_article" automation='true' result-textarea-id="polished_article_analysis">自动执行prompt</button></span>
+            </div>
+            <div class="grid">
+                <h3>3.2 在ChatGPT中用Ctrl(CMD)+Shift+C复制输出，粘贴到下方</h3>
+                <h3>（输出如果中断，请点continue按钮）</h3>
+                <textarea id="polished_article_analysis" rows="10" cols="50"></textarea>
+            </div>
+            <div class="grid">
+                <h3>3.3 从3.2中提取文章内容</h3>
+                <button id="polish_button2" class="selectVersion important" prompt-textarea-id="polish_prompt" article-textarea-id="polished_article_analysis" result-textarea-id="polished_article">提取</button>
+
+                <label for="polished_article">润色稿：</label>
+                <textarea id="polished_article" xml-label="文章|p" operations='+,+,+' rows="10" cols="50"></textarea>
+                <span>
+                    <button class="save-Button small-button" textarea-id="polished_article" data-filename="[Step3]润色整合.md">下载文本到本地</button>
+                    <input type="file" textarea-id="polished_article"><button class="load-Button small-button">由本地上传文本</button>
+                    <button class="small-button format_article" textarea-id="polished_article">确保文本符合格式</button>
+                    <button class="small-button copy_to_comparison" textarea-id="polished_article" version-name="润色稿">添加到版本对比</button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="slide">
+        <h2>Step 4: 精校对（明确指出每句话的翻译错误并修改） <button id="auto_step4" class="important automation">自动化Step 4全流程</button></h2>
+        <div class="flex-container">
+            <div class="grid">
+                <h3>4.1 打开新chat，让LLM做校对：</h3>
+                <h5>必要信息：文章分类、写作风格、英文原文、中文注释、中文初稿或润色整合（如有）</h5>
+                <label for="advance_proof_prompt">Prompt模板:</label>
+                <textarea id="advance_proof_prompt" rows="10" cols="50" style="background-color: #FFFBE6"></textarea>
+                <span><button class="process_prompt_general important" prompt-textarea-id="advance_proof_prompt" article-textarea-id="primary_revision_article|polished_article|english_article">复制prompt（请手动操作ChatGPT网页）</button>
+                <button id="advance_proof_button1" class="process_prompt_general important automation" prompt-textarea-id="advance_proof_prompt" article-textarea-id="primary_revision_article|polished_article|english_article" automation='true' result-textarea-id="proofed_article_analysis">自动执行prompt</button></span>
+            </div>
+            <div class="grid">
+                <h3>4.2 在ChatGPT中用Ctrl(CMD)+Shift+C复制输出，粘贴到下方</h3>
+                <h3>（输出如果中断，请点continue按钮）</h3>
+                <textarea id="proofed_article_analysis" rows="10" cols="50"></textarea>
+            </div>
+            <div class="grid">
+                <h3>4.3 从4.2中提取文章内容</h3>
+                <button id="advance_proof_button2" class="construct_proofed_version important" article-textarea-id="proofed_article_analysis" result-textarea-id="proofed_article">提取</button>
+
+                <label for="proofed_article">精校对稿：</label>
+                <textarea id="proofed_article" xml-label="文章|p" operations='+,+,-,concat' rows="10" cols="50"></textarea>
+                <span>
+                    <button class="save-Button small-button" textarea-id="proofed_article" data-filename="[Step4]精校对.md">下载文本到本地</button>
+                    <input type="file" textarea-id="proofed_article"><button class="load-Button small-button">由本地上传文本</button>
+                    <button class="small-button format_article" textarea-id="proofed_article">确保文本符合格式</button>
+                    <button class="small-button copy_to_comparison" textarea-id="proofed_article" version-name="精校对稿">添加到版本对比</button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="slide">
+        <h2>Extra Step: 版本对比</h2>
+        <div class="flex-container" id="versions">
+            <div class="grid version">
+                <label for="version_name_1">版本名:</label>
+                <input type="text" id="version_name_1" size="10" value="版本1"><br>
+                <textarea id="article_version_1" xml-label="文章|p" operations='+,+,+' rows="10" cols="50"></textarea>
+                <span>
+                    <input type="file" textarea-id="article_version_1"><button class="load-Button small-button">由本地上传文本</button>
+                    <button class="small-button format_article" textarea-id="article_version_1">确保文本符合格式</button>
+                </span>
+            </div>
+            <div class="grid version">
+                <label for="version_name_2">版本名:</label>
+                <input type="text" id="version_name_2" size="10" value="版本2"><br>
+                <textarea id="article_version_2" xml-label="文章|p" operations='+,+,+' rows="10" cols="50"></textarea>
+                <span>
+                    <input type="file" textarea-id="article_version_2"><button class="load-Button small-button">由本地上传文本</button>
+                    <button class="small-button format_article" textarea-id="article_version_2">确保文本符合格式</button>
+                </span>
+            </div>
+            <div id="button_for_versions" class="grid">
+                <button id="add_version">添加新版本</button>
+                <button id="copy_multiversions" class="important">复制不同版本的对比到剪贴板</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript" src="static/io.js"></script>
+<script type="text/javascript" src="static/text-format.js"></script>
+<script type="text/javascript" src="static/shorten-prompt.js"></script>
+<script type="text/javascript" src="static/slides.js"></script>
+<script type="text/javascript">
+
+    document.getElementById('editor_prompt').value = `<*Task1*>
+
+<*Material*>
+
+The following is an article. The body of the article is located between the above XML tags \`<article>\` and \`</article>\`, and each paragraph is denoted by the XML tag \`<p_[i]>\`, where ‘i’ stands for the paragraph id.
+
+---
+@{texts: [english_article],
+languages: ['english'],
+names: [''],
+sentence_segment: false,}@
+
+</*Material*>
+
+<*Role-play*>
+## You are a professional editor who:
+- Familiar with Markdown and XML formats.
+<*Role-play*>
+
+<*Description*>
+## Goal:
+Examine the article and produce the following annotations in XML format with the main tag \`<annotations>\`:
+
+1. *Wording*: Assign the wording categories of the article according to the following framework: Context(Formal/Informal);Tone(Neutral/Positive/Negative);Specificity(Concrete/Abstract);Technical(Technical/Non-technical);Expression(Direct/Indirect). Separate each tag with the symbol ";" inside the XML tag \`<wording>\`.
+2. *Category*: Assign a hierarchical category to which the article pertains. The basic level should belong to one of Science and Technology, Social Sciences, Literature and Arts, News and Media, and Lifestyle. Denote each successive level of the hierarchical category with the symbol ">" inside the XML tag \`<category>\`.
+3. *Content Tags*: Pinpoint and list up to five relevant content tags that best represent the article's themes. Separate each tag with the symbol ";" inside the XML tag \`<tags>\`.
+4. *Abstract*: Draft a super succinct summary (XML tag: \`<abstract>\`).
+5. *Glossary Compilation*: 
+  - Please identify *as more* terms or idioms in the article *as you can* that might be confusing to someone without specific knowledge. 
+  - Output format: \`term1;term2;...\` to format these each term within the XML tag \`<glossary>\`. If no such terms are found, retain an empty \`<glossary>\` tag in your response.
+6. *Non-translatable expressions*: 
+ - Identify any specific words/expressions that should be retained in their untranslated form during any subsequent translation processes (for instance, the terms or names that do not have clear or unique translations in foreign languages). 
+ - Separate each expressions with the symbol ";" inside the XML tag \`<NTE>\`. If no words/expressions are identified, maintain an empty \`<NTE>\` tag in your response.
+
+You should complete Task and generate your response. 
+</*Description*>
+
+<*Response format*>
+## Your response should be in the XML structure as follows:
+\`\`\`
+<annotations>
+    ...
+</annotations>
+...
+\`\`\`
+</*Response format*>
+
+<*Task1*>
+
+<*Task2*>
+
+<*参考材料*>
+
+**词汇表参考**：
+---
+@{glossary}@
+
+</*参考材料*>
+
+<*角色扮演*>
+你是一个专业翻译员：
+- 母语为中文，语言表达能力极高，有近50年的中文写作经验；
+- 写作风格严谨，非常注重在翻译中准确无误地反应原文，绝对不会遗漏原文的细节；
+- 逻辑清晰，力求在句子内部和句子之间体现出明确的逻辑关系，同时使用精确无歧义的词汇表达概念；
+- 熟悉Markdown和XML格式。
+</*角色扮演*>
+
+<任务描述>
+## 目标
+上面已经给你了**词汇表参考**表格，你要输出一个新的词汇表：
+- 如果**词汇表参考**中提供了一个英文单词在不同领域内多种翻译，在新的词汇表中只保留和文章最匹配的那个领域所在的行，删除其它的行；
+- 如果**词汇表参考**中没有提供这个英文单词的对应翻译，就在新的词汇表中根据给定领域和文章的内容给出合适的翻译；
+- 不要在新的词汇表中擅自改变**词汇表参考**中提供的翻译，即使提供的翻译也是英文；
+- 如果之前你输出的\`<glossary>\`中包含**词汇表参考**中没有提供的英文单词，就把这些单词添加进新的词汇表，从\`<category>\`里给出的文章领域中挑选一个较细的领域，标记在“领域”栏中。
+</任务描述>
+
+<*输出格式*>
+## 你的输出应当符合下面的格式：
+把新的词汇表输出为名为“建议词汇表”、格式为\`|英文|领域|翻译|\`的表格。
+</*输出格式*>
+
+</*Task2*>
+
+<*Task3*>
+
+<任务描述>
+## 目标
+请将你上面输出的\`<annotations>\`翻译到同一个XML标签中。要求：
+1. 在翻译过程中，请保留所有XML格式的标记。
+2. 将以下XML标签进行更名：
+  - <annotations> → <注释>
+  - <wording> → <风格>
+  - <category> → <分类>
+  - <tags> → <内容标签>
+  - <abstract> → <摘要>
+  - <glossary> → <翻译词汇表>
+  - <NTE> → <不可译项>
+3. \`<wording>\`标签的内容按下面的参考翻译：正式语境/非正式语境; 语气中立/语气积极/语气消极; 详细具体/抽象概念; 专业/通俗; 表达方式直接/表达方式委婉。
+4. 特别注意，\`<NTE>\`到\`<不可译项>\`标签的内容不可翻译，请保留英文原型。而其它所有的标签的内容都需要翻译。
+5. 对于\`<翻译词汇表>\`标签的内容，请把上面你生成的“建议词汇表”表格，输出格式为\`术语1的英文:术语1的翻译; 术语2的英文:术语2的翻译;...\`（用\`;\`区分项目，\`:\`分隔英文和翻译）。但是\`<翻译词汇表>\`的内容里请去除\`<不可译项>\`里提到的表达。
+6. 请将\`<摘要>\`标签置于\`<注释>\`标签内的末尾位置，注意\`<摘要>\`中的术语按照\`<翻译词汇表>\`翻译，而\`<不可译项>\`标签内出现的表达在\`<摘要>\`中不要翻译。
+</任务描述>
+
+<*输出格式*>
+## 你的输出应当符合下面的格式：
+\`\`\`
+<注释>
+    <风格>...</风格>
+    ...
+</注释>
+...
+\`\`\`
+</*输出格式*>
+
+</*Task3*>
+
+<*Task4*>
+<任务描述>
+你将来会看到这篇文章的中文翻译稿，但是因为翻译稿的文字质量不高，你将被要求润色这个中文翻译稿。
+请你根据已经得到的该文章的文体（见\`<风格>\`）和领域（见\`<分类>\`），预先制定出对中文翻译稿的润色方案，其步骤如下：
+1. 确定文章的核心目标与受众；
+2. 明确合适的润色风格；
+3. 详细设计能润色出这种风格的策略和方法。
+</任务描述>
+
+<*输出格式*>
+## 你的输出应当符合下面的格式：
+\`\`\`
+<润色方案>
+    [目标与受众]: xxxxx
+    [润色风格]: xxxxx
+    [润色策略]: xxxxx
+</润色方案>
+...
+\`\`\`
+</*输出格式*>
+
+</*Task4*>
+
+<*pipline_of_tasks*>
+1. Output "Task1:";
+2. then finish <*Task1*> in English;
+3. 输出"Task2:\n##建议词汇表\n";
+4. 然后执行<*Task2*>;
+5. 输出"Task3:";
+6. 然后执行<*Task3*>。
+5. 输出"Task4:";
+6. 然后执行<*Task4*>。
+
+这一任务对我非常关键，完整完成工作后你将得到10000美元的酬劳。请深呼吸，然后依次执行<*Task1*>、<*Task2*>、<*Task3*>、<*Task4*>
+不要在输出的开头和结尾擅自增加无关的内容。
+不要在完成<*Task1*>之后就自动停止。
+</*pipline_of_tasks*>
+
+(Please follow the <*pipline_of_tasks*> and continue)
+completion_mark:</注释>
+new_chat:true
+close_chat:true
+consolidate_mark:false
+`;
+
+document.getElementById('primary_revision_prompt').value = `<*参考材料*>
+
+下面你将看到的内容是一篇结构化的文章。该结构有3个主要层次： 
+  a. 用\`<文章>\`XML标签包括整篇文章的内容；
+  b. 用\`<p_[i]>\`XML标签表示文章中每个段落，其中'i'代表段落编号；
+  d. 用\`[原文]:\`和\`[机翻]:\`分别指示段落的英文原句和中文机翻版本。
+
+---
+@{texts: [english_article, chinese_article],
+languages: ['english', 'chinese'],
+names: ['原文', '机翻'],
+sentence_segment: false,}@
+
+------
+------
+------
+
+下面你将看到的内容是对该文章的注释，包含两个主要层次： 
+  a. 用\`<注释>\`囊括所有的内容；
+  b. 分别用\`<分类>\`、\`<内容标签>\`、\`<摘要>\`、\`<翻译词汇表>\`、\`<不可译项>\`标注特定的内容。
+---
+@{注释}@
+
+</*参考材料*>
+
+<*角色扮演*>
+你是一个资深翻译员：
+- 母语为中文英文双语，有近50年的翻译经验，擅长发现翻译中各种错误，哪怕是十分细微的错误；
+- 中文语言表达能力极高，擅长使用非常地道的文字去修改和润色翻译腔很重的文章；
+- 习惯的写作风格是 @{wording}@；
+- 擅长清晰地表达思想，为了把句子表达清楚，喜欢用对于中文来说规范的语法、严密的逻辑和精准无歧义的用词；
+- 擅长@{category}@领域的中文和英文写作；
+- 熟悉Markdown和XML格式。
+</*角色扮演*>
+
+<*任务介绍*>
+## 目标
+上文的中文翻译是机器翻译，所以存在许多错误。
+- *任务目标1*： 有的错误源于中文翻译相比英文原文的任何遗漏、冗余、或语义扭曲等错误，所以你的第一个目标是确保译文的高度准确性和质量。你要对比两者的差异，识别出中文翻译中的错误，并改进翻译稿。你可以从以下几个方面入手：
+    - **准确清晰**：确保译文准确传达原文的信息，没有遗漏原文的信息或增加不必要的信息。密切关注曲解、模棱两可的措辞或前后矛盾之处。
+    - **语法和句法结构**：检查中文译文是否符合语法规范，句子结构是否通顺。
+    - **术语正确**：确认专业术语（如果有的话）或其它用词是否合适，
+    - **逻辑连贯**：确保翻译后的逻辑正确且清晰，前后连贯。
+    - **风格一致**：保持译文@{wording}@的风格，确保语言表达直接且符合@{category}@领域的表达习惯。
+    如果你发现了某个错误但认为这是作者为了某种特殊表达故意设计的，就忽略这个错误。
+
+- *任务目标2*：有的错误源于中文和英文在用法上的差异，所以你的第二个目标是润色中文翻译。润色后的翻译稿应当更加符合中文语言习惯、更加符合原文要表达的意思、也要保留原文的Markdown格式。
+你的润色方案如下：
+@{polish_solution}@
+
+总的来说，你的任务是根据每对原文和翻译的语义一致性，识别出该翻译相比原文的任何遗漏、冗余、语义扭曲、或其它的错误，修正发现的问题（*任务目标1*），并使其符合中文语言习惯以及符合原文的意思（*任务目标2*）；
+
+## 当你执行上述任务时，请注意：
+1. 修正时禁止改变文章原意；
+2. 修正时禁止擅自总结文章或段落，或擅自将较短内容扩展；
+3. 请保留原文中的标题、列表、链接、粗体、斜体、表格等所有Markdown语法元素，不会进行任何破坏格式的操作；
+4. 如果文中出现英文（包括名称、术语、参考文献、参考文献在正文中的引用、等等），请不要翻译，而是完整保留其原文；
+5. 如果文中出现引用、注释或脚注，请完整保留它们的原文内容和标签格式。
+6. 请遵照\`<翻译词汇表>\`和\`<不可译项>\`的翻译参考。
+
+这一任务对我非常关键，完整完成任务后你将得到10000美元的酬劳。请深呼吸，然后充分展现你的写作技能，认真完成任务并输出。
+</*任务介绍*>
+
+<*输出格式*>
+## 你的输出应当符合下面的格式：
+    a. 从<p_1>开始，对于输入的\`<文章>\`中的每个段落，输出带编号的段落开始标记\`<p_[i]>\`。
+    b. 在段落开始标记后，直接输出该段落符合任务要求的修正文本。
+
+## 当你输出上述结构时，请注意：
+1. 从<p_1>开始；
+2. 禁止在输出的开头和结尾擅自增加无关的内容；
+3. 禁止擅自合并或遗漏任何段落（包括注释、引用）;
+4. 请确保输出所有的段落，也就是输出的结尾应当为"@{last_paragraph}@";
+5. 不要输出原文的信息。
+
+## 输出的例子如下：
+\`\`\`
+<p_1>
+    ## Lorem ipsum
+</p_1>
+<p_2>
+    Lorem ipsum **dolor** sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
+</p_2>
+...
+\`\`\`
+</*输出格式*>
+
+<*输出内容*>
+<p_1>
+（请继续。。。）
+completion_mark:@{last_paragraph}@
+new_chat:true
+close_chat:true
+consolidate_mark:false
+`;
+
+document.getElementById('polish_prompt').value = `<*参考材料*>
+
+下面你将看到的内容是一篇结构化的文章。该结构有3个主要层次： 
+  a. 用\`<文章>\`包括整篇文章的内容；
+  b. 用\`<p_[i]>\`囊括各个段落，其中'i'代表段落编号；
+  c. 用\`<句子_[i]>\`和\`</句子_[i]>\`囊括当前段落内的各个句子，其中'i'代表句子编号；
+
+---
+@{texts: [primary_revision_article],
+languages: ['chinese'],
+names: [''],
+sentence_segment: true,}@
+
+</*参考材料*>
+
+<*角色扮演*>
+你是一名作家：
+- 母语为中文，语言表达能力极高，有近50年的现代中文写作经验；
+- 擅长使用非常地道的句子和用词去修改和润色翻译腔很重的文章；
+- 习惯的写作风格是 @{wording}@；
+- 擅长@{category}@领域的中文和英文写作；
+- 熟悉Markdown和XML格式。
+</*角色扮演*>
+
+<*任务介绍*>
+## 目标
+你的主要目标是对提供的这篇Markdown格式的中文文章进行润色。
+你的润色方案如下：
+@{polish_solution}@
+
+请你遵照这个润色方案的要求，在保留文章原意和Markdown格式的前提下把原文润色出2个不同的版本。
+最后，你要在原文和这2个重写版本中挑选出最合适的版本.
+
+## 当你执行上述任务时，请注意：
+1. 润色时禁止改变文章原意；
+2. 润色时禁止擅自将较长内容总结，或擅自将较短内容扩展；
+3. 请保留原文中的标题、列表、链接、粗体、斜体、表格等所有Markdown语法元素，不会进行任何破坏格式的操作；
+4. 如果文中出现英文（包括名称、术语、参考文献、参考文献在正文中的引用、等等），请不要翻译，而是完整保留其原文；
+5. 如果文中出现引用、注释或脚注，请完整保留它们的原文内容和标签格式；
+6. 文中有些内容出现在括号之间，它们也很重要，请不要擅自忽略括号之间的内容。
+
+这一任务对我非常关键，完整完成任务后你将得到10000美元的酬劳。请深呼吸，然后充分展现你的写作技能，认真完成任务并输出。
+</*任务介绍*>
+
+<*输出格式*>
+## 你的输出应当符合下面的格式：
+1. 从<p_1>开始，对于输入的\`<文章>\`中的每个段落，输出带编号的段落开始标记\`<p_[i]>\`。
+2. 对于该段落的每个句子，依次执行下面操作：
+    2.1. 复制句子开始标记\`<s_[j]>\`;
+    2.2. 输出标记\`[版本1]:\`，复制原始版本的句子；
+    2.3. 输出标记\`[版本2]:\`，把原始版本的内容重写为简洁版本；
+    2.4. 输出标记\`[版本3]:\`，把原始版本的内容重写为生动版本；
+    2.5. 输出\`分析：\`，然后分析当前句子的哪个版本信息全面，且能够让读者更轻松地阅读。分析的过程的格式为“版本k具有的语言优势”，如“版本1语言简洁明了，保留了重要信息”；
+    2.6. 输出\`选择：\`，并在其后根据上一步（2.2）的分析结果输出最佳版本的序号（大于等于1）；
+    2.7. 如果段落没有结束，跳到下一个句子。
+3. 复制段落结束标记\`</段落_[i]>\`。
+
+## 当你输出上述结构时，请注意：
+1. 从<p_1>开始；
+2. 禁止在输出的开头和结尾擅自增加无关的内容；
+3. 禁止擅自合并或遗漏任何段落（包括注释、引用）;
+4. 请确保输出所有的段落，也就是输出的结尾应当为"@{last_paragraph}@"。
+
+## 输出的例子如下：
+\`\`\`
+<p_1>
+    <s_1>
+        [版本1]: ## Lorem
+        [版本2]: ## Lorem
+        [版本3]: ## Lorem ipsum
+        [分析]: 版本1...
+        [选择]: 1
+    </s_1>
+    <s_2>
+        [版本2]: Lorem ipsum **dolor** sit amet, consectetur elit
+        [版本1]: Lorem ipsum **dolor**, consectetur elit
+        [版本2]: Lorem ipsum **dolor** sit amet, consectetur adipiscing elit
+        [分析]: 版本3...
+        [选择]: 3
+    </s_2>
+    ...
+</p_1>
+<p_2>
+...
+\`\`\`
+</*输出格式*>
+
+<*输出内容*>
+<p_1>
+（请继续。。。）
+completion_mark:@{last_paragraph}@
+new_chat:true
+close_chat:true
+consolidate_mark:false
+`;
+
+document.getElementById('advance_proof_prompt').value = `<*参考材料*>
+
+下面你将看到的内容是一篇结构化的文章。该结构有4个主要层次： 
+  a. 用\`<文章>\`XML标签包括整篇文章的内容；
+  b. 用\`<p_[i]>\`XML标签表示文章中每个段落，其中'i'代表段落编号；
+  c. 用\`[s_[j]]:\`表示段落中的每个句子；
+  d. 用\`[原文]:\`和\`[翻译]:\`分别指示句子的英文原句和中文机翻版本。
+
+---
+@{texts: [english_article, polished_article],
+languages: ['english', 'chinese'],
+names: ['原文', '翻译'],
+sentence_segment: true,}@
+
+------
+------
+------
+
+下面你将看到的内容是对该文章的注释，包含两个主要层次： 
+  a. 用\`<注释>\`囊括所有的内容；
+  b. 分别用\`<分类>\`、\`<内容标签>\`、\`<摘要>\`、\`<翻译词汇表>\`、\`<不可译项>\`标注特定的内容。
+---
+@{注释}@
+
+</*参考材料*>
+
+<*角色扮演*>
+你是一名校对员：
+- 母语为中文英文双语，有近50年的翻译校对经验；
+- 擅长发现翻译中各种错误，哪怕是十分细微的错误；
+- 擅长模仿翻译稿的整体语言风格修正其中的错误；
+- 习惯的写作风格是 @{wording}@；
+- 擅长@{category}@领域的中文和英文写作；
+- 熟悉Markdown和XML格式。
+</*角色扮演*>
+
+<*任务介绍*>
+## 目标
+你的主要目标是确保译文的高度准确性和质量。在本任务中，你将得到一篇英文原文和一篇有许多错误的中文翻译稿。你要对比两者的差异，识别出中文翻译中的错误，并改进翻译稿。
+
+## 当你执行上述任务时，请注意：
+1. 校对时禁止改变文章原意；
+2. 校对时禁止擅自将较长内容总结，或擅自将较短内容扩展；
+3. 请保留原文中的标题、列表、链接、粗体、斜体、表格等所有Markdown语法元素，不会进行任何破坏格式的操作；
+4. 如果文中出现英文（包括名称、术语、参考文献、参考文献在正文中的引用、等等），请不要翻译，而是完整保留其原文；
+5. 如果文中出现引用、注释或脚注，请完整保留它们的原文内容和标签格式；
+6. 文中有些内容出现在括号之间，它们也很重要，请不要擅自忽略括号之间的内容。
+
+这一任务对我非常关键，完整完成任务后你将得到10000美元的酬劳。请深呼吸，然后充分展现你的写作技能，认真完成任务并输出。
+</*任务介绍*>
+
+<*输出格式*>
+## 你的输出应当符合下面的格式：
+1. 从<p_1>开始，对于输入的\`<文章>\`中的每个段落，输出带编号的段落开始标记\`<p_[i]>\`。
+2. 对于该段落的每个句子\`[s_[j]]\`，依次执行下面操作：
+    a. 进行\`[分析]\`步骤：你需要仔细比较英文原文与中文译文，找出可能存在的错误。你可以从以下几个方面入手：
+    - **准确清晰**：确保译文准确传达原文的信息，没有遗漏原文的信息或增加不必要的信息。密切关注曲解、模棱两可的措辞或前后矛盾之处。
+    - **语法和句法结构**：检查中文译文是否符合语法规范，句子结构是否通顺。
+    - **术语正确**：确认专业术语（如果有的话）或其它用词是否合适，
+    - **逻辑连贯**：确保翻译后的逻辑正确且清晰，前后连贯。
+    - **风格一致**：保持译文@{wording}@的风格，确保语言表达直接且符合@{category}@领域的表达习惯。
+    如果你发现了某个错误但认为这是作者为了某种特殊表达故意设计的，就忽略这个错误。
+    你不必强行找出翻译的不足，若翻译准确无误，你可以输出“译文准确，无需修改。”。
+    b. 进行\`[修正]\`步骤：基于上面的分析结果，判断是否需要修改。若翻译基本准确，保持\`[修正]\`标签内容为原本的中文译文；若发现明显问题，则对应地修改译文，输出修正后的中文翻译，同时确保翻译流畅、易懂。
+
+## 当你输出上述结构时，请注意：
+1. 从<p_1>开始；
+2. 禁止在输出的开头和结尾擅自增加无关的内容；
+3. 禁止擅自合并或遗漏任何段落（包括注释、引用）;
+4. 请确保输出所有的段落，也就是输出的结尾应当为"@{last_paragraph}@"。
+
+## 输出的例子如下：
+\`\`\`
+<p_1>
+    [s_1]: 
+        [分析]: xxxxxx
+        [修正]: xxxxxx
+
+    [s_2]: 
+        [分析]: 译文准确，无需修改。
+        [修正]: xxxxxx
+    ...
+</p_1>
+
+<p_2>
+...
+\`\`\`
+</*输出格式*>
+
+<*输出内容*>
+<p_1>
+（请继续。。。）
+completion_mark:@{last_paragraph}@
+new_chat:true
+close_chat:true
+consolidate_mark:false
+`;  
+
+    // 定义检测textarea内容变化的函数
+    function textAreaChanged(selector) {
+      return new Promise((resolve) => {
+        const target = document.querySelector(selector);
+        if (!target) {
+          console.error('指定的元素不存在');
+          resolve();  // 如果元素不存在，则直接解决Promise
+          return;
+        }
+        target.onchange = () => {
+          resolve();  // 当内容变化并且失去焦点时，解决Promise
+        };
+      });
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    const clickWithAwait = async (element) => {
+        // 触发点击并等待事件处理完成
+        const event = new Event('click');
+        element.dispatchEvent(event);
+        if (event.promise) {
+            await event.promise;
+        }
+    };
+
+    const ele_only_for_automation = document.createElement('textarea');
+    ele_only_for_automation.id = "ele_only_for_automation";
+    ele_only_for_automation.style = 'display: none';
+    document.body.appendChild(ele_only_for_automation);
+
+    async function auto_step1() {
+        document.getElementById('notification').innerText = 'Step 1.1 fetching online glossary...'
+        await clickWithAwait(document.getElementById('fetch_online_glossary'));
+        // await document.getElementById('fetch_online_glossary').click();
+        // await textAreaChanged('#glossary');  // 等待textarea的变化
+        if (document.getElementById('glossary').value == '') {
+            document.getElementById('notification').innerText = 'Step 1.1 failed.'
+            throw new Error();
+        }
+        document.getElementById('glossary').parentElement.scrollIntoView({ behavior: 'smooth',inline: 'start'});
+        document.getElementById('notification').innerText = 'Step 1.1 online glossary fetched'
+
+        document.getElementById('notification').innerText = 'Step 1.2 sending prompt...'
+        document.getElementById('editor_prompt').parentElement.scrollIntoView({ behavior: 'smooth',inline: 'start'}); 
+        await clickWithAwait(document.getElementById('editor_prompt_button'));
+        document.getElementById('notification').innerText = 'Step 1.2 prompt responsed'
+
+        if (document.getElementById('chinese_annotation').value == '') {
+            document.getElementById('notification').innerText = 'Step 1.2 failed.'
+            throw new Error();
+        }
+        // await textAreaChanged('#chinese_annotation');
+        document.getElementById('chinese_annotation').parentElement.scrollIntoView({ behavior: 'smooth',inline: 'start'}); 
+
+        document.getElementById('format_annotation').click();
+        await sleep(1000);
+
+        document.getElementById('auto_step1').parentElement.parentElement.querySelector('.copy_to_comparison').click();
+
+        document.getElementById('notification').innerText = 'Step 1.3 annotation formatted'
+        
+        document.getElementById('notification').innerText = 'Step 1.4 translating...'
+        await clickWithAwait(document.getElementById('deepl_translate'));
+        if (document.getElementById('chinese_article').value == '') {
+            document.getElementById('notification').innerText = 'Step 1.4 failed.'
+            throw new Error();
+        }
+        // await textAreaChanged('#chinese_article');
+        document.getElementById('chinese_article').parentElement.scrollIntoView({ behavior: 'smooth',inline: 'start'});
+        document.getElementById('notification').innerText = 'Step 1.4 translated...'
+    }
+
+    async function auto_step2() {
+        document.getElementById('notification').innerText = 'STEP 2 is running...'
+        await clickWithAwait(document.getElementById('primary_revision_button'));
+        if (document.getElementById('primary_revision_article').value == '') {
+            document.getElementById('notification').innerText = 'Step 2 failed.'
+            throw new Error();
+        }
+        document.getElementById('auto_step2').parentElement.parentElement.querySelector('.copy_to_comparison').click();
+        // await textAreaChanged('#primary_revision_article');  // 等待textarea的变化
+        document.getElementById('primary_revision_article').parentElement.scrollIntoView({ behavior: 'smooth',inline: 'start'}); 
+        document.getElementById('notification').innerText = 'STEP2 is done.'
+    }
+
+    async function auto_step3() {
+        document.getElementById('notification').innerText = 'STEP 3 is running...'
+        await clickWithAwait(await document.getElementById('polish_button1'));
+        if (document.getElementById('polished_article_analysis').value == '') {
+            document.getElementById('notification').innerText = 'Step 3 failed.'
+            throw new Error();
+        }
+        // await textAreaChanged('#polished_article_analysis');  // 等待textarea的变化
+        document.getElementById('polished_article_analysis').parentElement.scrollIntoView({ behavior: 'smooth',inline: 'start'}); 
+
+        document.getElementById('polish_button2').click();
+        await sleep(1000);
+
+        document.getElementById('auto_step3').parentElement.parentElement.querySelector('.copy_to_comparison').click();
+        document.getElementById('polished_article').parentElement.scrollIntoView({ behavior: 'smooth',inline: 'start'}); 
+        document.getElementById('notification').innerText = 'STEP3 is done.'
+    }
+
+    async function auto_step4() {
+        document.getElementById('notification').innerText = 'STEP 4 is running...'
+        await clickWithAwait(document.getElementById('advance_proof_button1'));
+        if (document.getElementById('proofed_article_analysis').value == '') {
+            document.getElementById('notification').innerText = 'Step 4 failed.'
+            throw new Error();
+        }
+        // await textAreaChanged('#proofed_article_analysis');  // 等待textarea的变化
+        document.getElementById('proofed_article_analysis').parentElement.scrollIntoView({ behavior: 'smooth',inline: 'start'}); 
+
+        document.getElementById('advance_proof_button2').click();
+        await sleep(1000);
+
+        document.getElementById('auto_step4').parentElement.parentElement.querySelector('.copy_to_comparison').click();
+        document.getElementById('proofed_article').parentElement.scrollIntoView({ behavior: 'smooth',inline: 'start'}); 
+        sound_alarm();
+        document.getElementById('notification').innerText = 'STEP4 is done.'
+    }
+
+    document.getElementById('auto_step1').addEventListener('click', async function() {
+        auto_step1();
+    });
+
+    document.getElementById('auto_step2').addEventListener('click', async function() {
+        auto_step2();
+    });
+
+    document.getElementById('auto_step3').addEventListener('click', async function() {
+        auto_step3();
+    });
+
+    document.getElementById('auto_step4').addEventListener('click', async function() {
+        auto_step4();
+    });
+
+    document.getElementById('auto_step_all').addEventListener('click', async function() {
+        switch_slide('next');
+        await auto_step1();
+        switch_slide('next');
+        await auto_step2();
+        switch_slide('next');
+        await auto_step3();
+        switch_slide('next');
+        await auto_step4();
+
+    });
+
+    function zip(arrays) {
+        return arrays[0].map(function(_,i){
+            return arrays.map(function(array){return array[i]})
+        });
+    }
+
+    function replace(prompt_template, to_be_replaced) {
+        let new_prompt = prompt_template;
+
+        to_be_replaced.forEach((item, idx) => {
+            [placehold, content, ele] = item;
+
+            if (new_prompt.includes(placehold)) {
+                if (content.trim() == "") {
+                    alert(`失败！"${ele}"的文本框缺少内容！`);
+                    throw new Error(`失败！"${ele}"的文本框缺少内容！`);
+                }
+                new_prompt = new_prompt.replaceAll(placehold, content);
+            }
+        });
+
+        return new_prompt
+    }
+
+    document.getElementById('deepl_translate').addEventListener('click', async function(event) {
+            // 创建并挂载一个临时的 Promise 用于阻塞
+            event.promise = new Promise(async (resolve) => {
+                document.getElementById('format_annotation').click();
+                await sleep(500);
+
+                let annotation = document.getElementById('chinese_annotation').value;
+                let english_article = document.getElementById('english_article').value;
+                english_article = english_article.replace(new RegExp(`\n*</?.*?_\\d+>`, 'g'), '\n');
+                english_article = english_article.replace(new RegExp(`</?article>`, 'ug'), '');
+                // 去除头尾的空行
+                english_article = english_article.trim();
+                // 使用正则表达式将上一行尾的空白字符和下一行的换行符替换为一个换行符
+                english_article = english_article.replace(/[ \t]*\n/g, "\n");
+                // 使用正则表达式将超过两个连续的换行符替换为两个连续换行符
+                english_article = english_article.replace(/\n{2,}/g, "\n\n");
+
+                let data = await post('/translate', 
+                            {
+                              text: english_article,
+                              target_lang: "ZH",
+                              source_lang: "EN",
+                              annotations:  annotation,
+                            });
+
+                console.log(data);
+                document.getElementById('chinese_article').value = data;
+
+                resolve();  // 成功完成时，调用 resolve 以结束 Promise
+            });
+
+        });
+
+    document.querySelectorAll('.process_prompt_general').forEach(button => {
+        button.addEventListener('click', async function(event) {
+            // 创建并挂载一个临时的 Promise 用于阻塞
+            event.promise = new Promise(async (resolve) => {
+                // 使用按钮上的 textarea-id 属性获取对应的 textarea ID
+                var promptTextareaId = this.getAttribute('prompt-textarea-id');
+                var articleTextareaId = this.getAttribute('article-textarea-id');
+
+                let glossary = document.getElementById('glossary').value;
+                let wording = document.getElementById('wording').value;
+                let category = document.getElementById('category').value;
+                let polish_solution = document.getElementById('polish_solution').value;
+
+                let prompt_template = document.getElementById(promptTextareaId).value;
+                if (prompt_template.match(/@\{texts: \[(.*?)\]/g)) {
+                    if (prompt_template.includes('polished_article') && document.getElementById('polished_article').value == '') { // ugly temporal solution 
+                            prompt_template = prompt_template.replace('polished_article','primary_revision_article');
+                        }
+                    var id_group = /@\{texts: \[(.*?)\]/g.exec(prompt_template)[1].split(',');
+                    id_group.push('chinese_annotation');
+                    for (id of id_group) {
+                        id = id.trim();
+
+                        await format(document.getElementById(id));
+                        eval(`var ${id} = document.getElementById('${id}').value`);
+                    }
+                }
+                
+                let article_format = prompt_template.match(/@\{texts: ([\s\S]*?)\}@/g);
+                let last_paragraph = '';
+                let formatted_article = '';
+                if (article_format) {
+                    article_format = article_format[0].slice(2,-2);
+                    formatted_article = await post('/combine_articles', eval('({'+article_format+'})'));
+
+                    matches = formatted_article.match(/<\/p_.*?>/g);
+                    last_paragraph = matches[matches.length - 1];
+                }
+
+                to_be_replaced =[['@{wording}@', wording, '写作风格'],
+                                ['@{category}@', category, '文章分类'],
+                                ['@{glossary}@', glossary, '词汇表'], 
+                                ['@{注释}@', chinese_annotation, '中文注释'], 
+                                ['@{polish_solution}@', polish_solution, '润色方案'], 
+                                ['@{' + article_format + '}@', formatted_article, '格式化的文章'], 
+                                ['@{last_paragraph}@', last_paragraph, '最后段落']]
+
+                let prompt = replace(prompt_template, to_be_replaced);
+                let [new_prompt, completion_mark, new_chat, close, consolidate_mark] = prompt.split(/completion_mark:|new_chat:|close_chat:|consolidate_mark:/).map(s => s.trim());
+
+                // copy or send
+                if (this.getAttribute('automation')) {
+                    var limit = document.getElementById('length_limit').value; //尽管GPT4的context length是128k，但大海捞针效果不好。建议使用32k
+                    if (new_prompt.length < limit) {
+                        var answer = await send2LLM(new_prompt, completion_mark, new_chat, close);
+                        console.log(answer);
+                    }
+                    else {
+                        var answer = '';
+                        var new_prompt_short = '';
+                        var start = 0;
+                        while (1) {
+                            [new_prompt_short, new_start, new_completion_mark] = shorten_prompt(new_prompt, start, limit)
+                            answer += await send2LLM(new_prompt_short, new_completion_mark, new_chat, close);
+                            if (answer == 'null') {
+                                throw (new Error());
+                            }   
+
+                            if (new_start == -1) {
+                                break
+                            }
+                            else {
+                                start = new_start;
+                            }
+                        }
+
+                        if (consolidate_mark == 'true') {
+                            tag = completion_mark.replace('/','');
+                            answer = await send2LLM(`Please consolidate all your responses into a single \`${tag}\` XML tag`, completion_mark, false, close);
+                            consolidate_mark = 'false';
+                        }
+
+                    }
+                    
+                    var resultTextareaId = this.getAttribute('result-textarea-id');
+                    if (resultTextareaId) {
+                        document.getElementById(resultTextareaId).value = answer;
+                        document.getElementById(resultTextareaId).dispatchEvent(new Event('change'));
+                    }
+                }
+                else {
+                    copy(new_prompt);
+                } 
+                document.getElementById('ele_only_for_automation').dispatchEvent(new Event('change')); // 发送一个事件说明执行完毕，方便自动化步骤了解进度
+
+                resolve();  // 成功完成时，调用 resolve 以结束 Promise
+            });
+
+        });
+    });
+
+    document.querySelectorAll('.selectVersion').forEach(button => {
+        button.addEventListener('click', async function() {
+            var instruction = document.getElementById(this.getAttribute('article-textarea-id')).value;
+
+            var xml_string = '';
+            for (matched_p of instruction.matchAll(/<(p_\d+)>([^]*?)<\/\1>/g)) {
+                p_i = matched_p[1];
+                p_content = matched_p[2];
+                xml_string += `\t<${p_i}>\n\t\t`;
+                for (matched_s of p_content.matchAll(/(?<=<(s_\d+)>)([^]*?)(?=<\/\1>)/g)) {
+                    s_i = matched_s[1];
+                    s_content = matched_s[2];
+
+                    versions = {}
+                    for (matched_v of s_content.matchAll(/(\s*)\[版本(\d+)\]:\s*([^]*?)(?=\n\1\[版本(\d+)\]|\n\1\[分析\])/g)) {
+                        indent = matched_v[1];
+                        v_i = matched_v[2];
+                        v_content = matched_v[3];
+                        versions[v_i] = v_content;
+                    }
+
+                    selected_version = s_content.match(/\[选择\]:\s*(\d+)/)[1]; // match 方法在没有全局标志 g 的情况下会返回细节信息，包括捕获组；但如果有 g 标志，它只返回所有匹配的数组。
+
+                    xml_string += versions[selected_version];
+                }
+                xml_string += `\n\t</${p_i}>\n`;
+            }
+            xml_string = `<文章>\n${xml_string}\n</文章>`;
+            document.getElementById(this.getAttribute('result-textarea-id')).value = xml_string;
+            document.getElementById(this.getAttribute('result-textarea-id')).dispatchEvent(new Event('change'));
+
+        });
+    });
+
+    document.querySelectorAll('.construct_proofed_version').forEach(button => {
+        button.addEventListener('click', async function() {
+            var instruction = document.getElementById(this.getAttribute('article-textarea-id')).value;
+
+            // 找到之前的版本，作为修改基础
+            if (document.getElementById('polished_article').value == '') {
+                var last_version = document.getElementById('polished_article').value;
+            }
+            else {
+                var last_version = document.getElementById('primary_revision_article').value;
+            }
+
+            var xml_string = '';
+            for (matched_p of instruction.matchAll(/<(p_\d+)>([^]*?)<\/\1>/g)) {
+                p_i = matched_p[1];
+                p_content = matched_p[2];
+                xml_string += `\t<${p_i}>\n\t\t`;
+                for (matched_s of p_content.matchAll(/(?<=\[(s_\d+)\]:)([^]*?)(?=\n+\s*\[s_\d+\]:|$)/g)) {
+                    s_i = matched_s[1];
+                    s_content = matched_s[2];
+
+                    var revision = s_content.match(/\[修正\]:\s*([^]*?)$/)[1]; // match 方法在没有全局标志 g 的情况下会返回细节信息，包括捕获组；但如果有 g 标志，它只返回所有匹配的数组。
+
+                    xml_string += revision;
+                }
+                xml_string += `\n\t</${p_i}>\n`;
+            }
+            xml_string = `<文章>\n${xml_string}\n</文章>`;
+            document.getElementById(this.getAttribute('result-textarea-id')).value = xml_string;
+            document.getElementById(this.getAttribute('result-textarea-id')).dispatchEvent(new Event('change'));
+
+        })
+    })
+
+
+    document.getElementById('fetch_online_glossary').addEventListener('click', async function(event) {
+            // 创建并挂载一个临时的 Promise 用于阻塞
+            event.promise = new Promise(async (resolve) => {
+                let glossary = await post('/access_glossary', {
+                    article: document.getElementById('english_article').value,
+                });
+
+                document.getElementById('glossary').value = glossary;
+                document.getElementById('glossary').dispatchEvent(new Event('change'));
+
+                resolve();  // 成功完成时，调用 resolve 以结束 Promise
+            });
+
+        });
+
+    document.getElementById('update_online_glossary').addEventListener('click', async function(event) {
+            window.open('https://docs.google.com/spreadsheets/d/1cHl0FzJkc8-_LENPcz1ZDLlk03ZgnAlkbJnPrHyzaYg/', '_blank').focus();
+            var rows = document.getElementById('glossary').value.split('---|\n')[1].split('\n');
+            copy(rows.map(row => row.replace(/\s*?\|\s*?/g, '\t').trim()).join('\n'));
+
+        });
+
+    document.querySelectorAll('.copy_to_comparison').forEach(button => {
+        button.addEventListener('click', async function() {
+
+
+            let version = this.getAttribute('version-name');
+            let text = document.getElementById(this.getAttribute('textarea-id')).value;
+            
+            
+            // Step 1: Find target <div class="grid version">
+            let targetDiv = null;
+            let versionDivs = document.querySelectorAll('.grid.version');
+            
+            for (let div of versionDivs) {
+                let textarea = div.querySelector('textarea');
+                if (textarea && textarea.value.trim() === '') {
+                    targetDiv = div;
+                    break;
+                }
+            }
+            
+            // If no empty textarea was found, click 'add_version' button to add a new version div
+            if (!targetDiv) {
+                document.getElementById('add_version').click();
+                
+                // Wait a bit to ensure the new element is added
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Set the newly added div as target
+                let newVersionDivs = document.querySelectorAll('.grid.version');
+                targetDiv = newVersionDivs[newVersionDivs.length - 1];
+            }
+            
+            // Step 2: Fill the target <div class="grid version"> with values
+            if (targetDiv) {
+                let input = targetDiv.querySelector('input');
+                let textarea = targetDiv.querySelector('textarea');
+                
+                if (input) input.value = version;
+                if (textarea) textarea.value = text;
+            }
+            
+        });
+    });
+
+    document.getElementById('add_version').addEventListener('click', async function() {
+        // define index of the new version
+        let idx = document.getElementById('versions').childElementCount;
+        // create a new div for the new version and append it to the versions div (before the add_version button)
+
+        document.getElementById('button_for_versions').insertAdjacentHTML('beforebegin', `
+            <div class="grid version">
+
+                <label for="version_name_${idx}">版本名:</label>
+                <input type="text" id="version_name_${idx}" size="10" value="版本${idx}"><br>
+                <textarea id="article_version_${idx}" xml-label="文章|p" operations='+,+,+' rows="10" cols="50"></textarea>
+                <span>
+                    <input type="file" textarea-id="article_version_${idx}"><button class="load-Button small-button">由本地上传文本</button>
+                    <button class="small-button format_article" textarea-id="article_version_${idx}">确保文本符合格式</button>
+                </span>
+            </div>
+        `);
+
+        document.querySelector(`button[textarea-id="article_version_${idx}"].format_article`).addEventListener('click', async function() {
+                var textareaId = this.getAttribute('textarea-id');
+                await format(document.getElementById(textareaId));
+            });
+
+
+        document.querySelector(`input[type="file"][textarea-id="article_version_${idx}"]`).addEventListener('change', function() {
+                loadButton(this);
+            });
+
+    });
+
+    document.getElementById('copy_multiversions').addEventListener('click', async function() {
+        var versions = [];
+        var version_names = [];
+        var nodes = document.getElementById('versions').childNodes
+        for (ele of nodes) {
+            if (ele.className == 'grid version') {
+                var article_ele = ele.getElementsByTagName('textarea')[0];
+                var article_xml = await format(article_ele);
+
+                var version_name = ele.getElementsByTagName('input')[0].value;
+                version_names.push(version_name);
+
+                // var article = article_ele.value;
+                // article = article.replace(new RegExp(`\n*</?.*?>`, 'g'), '\n\n').trim();
+                
+                var paragraphs = [...article_xml.matchAll(/(?:<.*?_.*?>)([^]*?)<\/.*?_.*?>/g)].map((values, i) => {
+                                        return(values[1]);
+                                    });
+
+                if (paragraphs.length>0){
+                    versions.push(paragraphs);
+                }
+            }
+        }
+
+        var xmlContent = '';
+        zip(versions).forEach((p, idx) => {
+            xmlContent += `<p_${idx+1}>\n`;
+            p.forEach((p_v_i, v_i) => {
+                xmlContent += `<*${version_names[v_i]}*>\n${p_v_i.trim()}\n</*${version_names[v_i]}*>\n`;
+            });
+            xmlContent += `</p_${idx+1}>\n\n`;
+        });
+
+        copy(xmlContent);
+    });
+
+
+</script>
+
+</body>
+</html>
