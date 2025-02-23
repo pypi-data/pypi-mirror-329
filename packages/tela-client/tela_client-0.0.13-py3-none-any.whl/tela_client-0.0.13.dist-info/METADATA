@@ -1,0 +1,61 @@
+Metadata-Version: 2.2
+Name: tela-client
+Version: 0.0.13
+Summary: A client library for interacting with the Tela API
+Home-page: https://github.com/yourusername/tela-client
+Author: Meistrari
+Author-email: contato@meistrari.com
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Requires-Dist: requests
+Requires-Dist: pandas
+Requires-Dist: watchdog
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Tela Client
+
+A Python client library for interacting with the Tela API.
+
+## Installation
+
+You can install the Tela Client using pip:
+
+```
+pip install git+https://github.com/yourusername/tela-client.git
+```
+
+## Usage
+
+Here's a basic example of how to use the Tela Client:
+
+```python
+from tela_client import TelaClient, file
+
+TELA_API_KEY = "Your API KEY"
+tela_client = TelaClient(TELA_API_KEY)
+
+canvas_id = "your-canvas-id"
+canvas = tela_client.newCanvas(canvas_id, expected_input=['document'])
+
+FILE_NAME = "./your_document.pdf"
+result = canvas.run(document=file(FILE_NAME))
+print(result)
+```
+
+## License
