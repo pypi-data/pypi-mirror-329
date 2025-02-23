@@ -1,0 +1,94 @@
+# https://peps.python.org/pep-0621/
+[project]
+name = "mosec"
+description = "Model Serving made Efficient in the Cloud"
+readme = "README.md"
+authors = [
+    {name = "Keming", email = "kemingy94@gmail.com"},
+    {name = "Zichen", email = "lkevinzc@gmail.com"}
+]
+license = {text = "Apache-2.0"}
+keywords = ["machine learning", "deep learning", "model serving"]
+dynamic = ["version"]
+requires-python = ">=3.9"
+dependencies = []
+classifiers = [
+    "Environment :: GPU",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Rust",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Build Tools",
+]
+
+[project.urls]
+homepage = "https://mosecorg.github.io/"
+documentation = "https://mosecorg.github.io/mosec/"
+repository = "https://github.com/mosecorg/mosec"
+changelog = "https://github.com/mosecorg/mosec/releases"
+[project.scripts]
+[project.optional-dependencies]
+validation = ["msgspec"]
+redis = ["redis"]
+msgpack = ["msgpack"]
+numbin = ["numbin"]
+
+[build-system]
+requires = ["maturin>=1.8,<2.0"]
+build-backend = "maturin"
+
+[tool.maturin]
+bindings = "bin"
+python-packages = ["mosec"]
+strip = true
+exclude = ["tests/**/*", "docs/**/*", "examples/**/*"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_redundant_casts = true
+warn_unreachable = true
+pretty = true
+
+[[tool.mypy.overrides]]
+module = [
+    "torch.*",
+    "transformers",
+    "sentence_transformers",
+    "llmspec",
+    "openai",
+]
+ignore_missing_imports = true
+
+[tool.pyright]
+pythonPlatform = "Linux"
+pythonVersion = "3.9"
+include = ["mosec", "tests", "examples"]
+reportMissingImports = "warning"
+
+[tool.pytest.ini_options]
+markers = [
+    "shm: mark a test is related to shared memory",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "G", "B", "I", "SIM", "TID", "PL", "RUF", "D"]
+ignore = ["E501", "D203", "D213"]
+[tool.ruff.lint.isort]
+known-first-party = ["mosec"]
+[tool.ruff.lint.pylint]
+max-args = 10
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D"]
+"examples/*" = ["D"]
+[tool.ruff.lint.pydocstyle]
+convention = "google"
