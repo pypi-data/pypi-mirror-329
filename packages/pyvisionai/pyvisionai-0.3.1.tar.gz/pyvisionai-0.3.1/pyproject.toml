@@ -1,0 +1,101 @@
+[tool.poetry]
+name = "pyvisionai"
+version = "0.3.1"
+description = "A Python library for extracting and describing content from documents using Vision LLMs"
+authors = ["MDGrey33 <roland@abouyounes.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/MDGrey33/pyvisionai"
+keywords = ["pdf", "docx", "pptx", "html", "vision", "llm", "extraction"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+]
+packages = [
+    { include = "pyvisionai" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.32.3"
+ollama = "^0.4.2"
+pillow = "^11.0.0"
+python-docx = "^1.1.2"
+python-pptx = "^1.0.2"
+openai = "^1.58.1"
+pdf2image = "^1.17.0"
+pdfminer-six = "^20231228"
+pypdf = "^4.1.0"
+playwright = "^1.41.0"
+anthropic = "^0.45.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.4"
+black = "^24.10.0"
+isort = "^5.13.2"
+pydocstyle = "^6.3.0"
+flake8 = "^7.0.0"
+flake8-pyproject = "^1.2.3"
+pytest-cov = "^4.1.0"
+pytest-order = "^1.2.0"
+
+[tool.poetry.scripts]
+file-extract = "pyvisionai.cli.extract:main"
+describe-image = "pyvisionai.cli.describe_image:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 72
+target-version = ['py312']
+include = '\.pyi?$'
+skip-string-normalization = true
+preview = true
+extend-exclude = '''
+/(
+    \.git
+    | \.venv
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 72
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+[tool.pydocstyle]
+convention = "google"
+add_select = ["D417"]
+add_ignore = ["D100", "D104"]
+
+[tool.flake8]
+select = ["E9", "F63", "F7", "F82", "E722"]
+extend-ignore = ["E501", "F401", "W503", "E226", "E128", "F403", "F405", "E402", "E731", "F541"]
+max-complexity = 20
+exclude = [".git", "venv"]
+
+[tool.coverage.run]
+source = ["pyvisionai"]
+omit = ["tests/*", "examples/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError",
+]
+show_missing = true
+fail_under = 80
