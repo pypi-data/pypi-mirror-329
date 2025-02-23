@@ -1,0 +1,60 @@
+# pip install asro_preprocessing==0.1.4
+
+# Asro Preprocessing
+
+Library Python untuk preprocessing teks bahasa Indonesia yang menyediakan fungsi-fungsi untuk membersihkan dan menormalkan data teks. Selain itu, library ini juga dilengkapi dengan fitur untuk menampilkan profil pengguna melalui antarmuka grafis yang mencakup informasi dan foto pengguna.
+
+## Fitur
+
+* **Case Folding** : Mengubah semua teks menjadi huruf kecil untuk uniformitas.
+* **Pembersihan Teks** : Menghapus URL, tanda baca, dan angka.
+* **Tokenisasi** : Memecah teks menjadi daftar kata individu.
+* **Penghapusan Stopwords** : Menghilangkan kata-kata umum yang tidak menambah banyak makna ke dalam analisis teks.
+* **Normalisasi Teks** : Mengkonversi kata tidak baku menjadi kata baku menggunakan kamus bawaan.
+* **Penghapusan Duplikat** : Mencegah pengolahan data redundan dalam analisis.
+* **Deteksi Sumber Media** : Membedakan teks yang berasal dari media atau individu.
+* **Tampilan Profil Pengguna** : Menampilkan profil pengguna dengan foto dalam GUI berbasis tkinter.
+
+## Instalasi
+
+Untuk menginstal versi terbaru library ini, gunakan pip: pip install asro_preprocessing==0.1.5
+
+## Penggunaan
+
+### Preprocessing Teks
+
+Berikut adalah cara menggunakan library untuk memproses dataset teks:
+
+from asro_preprocessing.preprocessing import AsroPreprocessing
+
+# Membuat instance dari AsroPreprocessing
+
+preprocessor = AsroPreprocessing()
+
+# Memproses file Excel dengan data komentar
+
+df = preprocessor.preprocess(
+    input_path="path/to/your/comments.xlsx",
+    text_column="comment",
+    channel_title_column="channel_title",
+    output_path="path/to/output/processed_comments.xlsx"
+)
+
+print(df.head()
+
+### Menampilkan Profil Pengguna
+
+Untuk menampilkan profil pengguna menggunakan GUI:
+
+from asro_preprocessing.preprocessing import AsroPreprocessing
+
+preprocessor = AsroPreprocessing()
+preprocessor.display_user_profile()
+
+## Kontribusi
+
+Kontribusi ke library ini selalu terbuka. Jika Anda ingin menambahkan fitur baru atau memperbaiki bug, silakan fork repositori dan submit pull request Anda.
+
+## Lisensi
+
+Library ini dilisensikan di bawah [MIT License]().
