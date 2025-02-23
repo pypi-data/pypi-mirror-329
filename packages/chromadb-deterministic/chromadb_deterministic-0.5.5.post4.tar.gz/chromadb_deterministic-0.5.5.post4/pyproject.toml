@@ -1,0 +1,83 @@
+[project]
+name = "chromadb_deterministic"
+version = "0.5.5.post4"
+
+authors = [
+  { name = "Jeff Huber", email = "jeff@trychroma.com" },
+  { name = "Anton Troynikov", email = "anton@trychroma.com" },
+]
+description = "Chroma with deterministic behavior."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  'build >= 1.0.3',
+  'pydantic >= 2.10.6',
+  'chroma-hnswlib>=0.7.6',
+  'fastapi >= 0.115.8',
+  'uvicorn[standard] >= 0.34.0',
+  'numpy >= 1.26.4,<2.0.0',
+  'posthog >= 3.14.2',
+  'typing_extensions >= 4.12.2',
+  'onnxruntime >= 1.20.1',
+  'opentelemetry-api>=1.30.0',
+  'opentelemetry-exporter-otlp-proto-grpc>=1.30.0',
+  'opentelemetry-instrumentation-fastapi>=0.51b0',
+  'opentelemetry-sdk>=1.30.0',
+  'tokenizers >= 0.21.0',
+  'pypika >= 0.48.9',
+  'tqdm >= 4.67.1',
+  'overrides >= 7.7.0',
+  'importlib-resources>=6.5.2',
+  'graphlib_backport >= 1.0.3; python_version < "3.9"',
+  'grpcio >= 1.70.0',
+  'bcrypt >= 4.2.1',
+  'typer >= 0.15.1',
+  'kubernetes>=32.0.1',
+  'tenacity>=9.0.0',
+  'PyYAML>=6.0.2',
+  'mmh3>=5.1.0',
+  'orjson>=3.10.15',
+  'httpx>=0.28.1',
+  'rich>=13.9.4',
+]
+
+[tool.black]
+line-length = 88
+required-version = "23.3.0"                         # Black will refuse to run if it's not this version.
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+asyncio_mode = "auto"
+
+[tool.mypy]
+ignore_errors = false
+
+[[tool.mypy.overrides]]
+module = ["chromadb_deterministic.proto.*"]
+ignore_errors = true
+
+[project.scripts]
+chromadb-deterministic = "chromadb_deterministic.cli.cli:app"
+
+[project.urls]
+"Homepage" = "https://github.com/luthfibalaka/chroma"
+"Bug Tracker" = "https://github.com/luthfibalaka/chroma/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+local_scheme = "node-and-date"
+
+[tool.setuptools]
+packages = ["chromadb_deterministic"]
+
+[tool.setuptools.package-data]
+chromadb_deterministic = ["*.yml"]
