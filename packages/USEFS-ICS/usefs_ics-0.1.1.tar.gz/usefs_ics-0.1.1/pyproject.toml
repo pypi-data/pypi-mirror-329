@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "USEFS_ICS" 
+version = "0.1.1" 
+description = "A tool for converting between USEFS and iCalendar files."
+authors = [{ name = "SRInternet", email = "srinternet@qq.com" }] 
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.7" 
+classifiers = [  # 分类器
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License", 
+    "Operating System :: OS Independent",
+]
+
+dependencies = [  # 项目依赖
+    "USEFS_Python>=0.2.0",
+    "icalendar",
+    "pytz",
+]
+
+[project.optional-dependencies]  # 可选依赖
+dev = ["pytest"]
+
+[project.scripts]  # 命令行脚本
+usefs_ics = "USEFS_ICS:main"  # usefs_ics -> USEFS_ICS/__init__.main
+
+[project.urls]
+homepage = "https://github.com/SRInternet/USEFS_ICS"
+repository = "https://github.com/SRInternet/USEFS_ICS"
+
+[tool.setuptools.packages.find]  # 自动查找包
+where = ["."]
