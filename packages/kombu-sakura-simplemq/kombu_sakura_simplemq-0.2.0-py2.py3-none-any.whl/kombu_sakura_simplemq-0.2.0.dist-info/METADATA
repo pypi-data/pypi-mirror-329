@@ -1,0 +1,61 @@
+Metadata-Version: 2.4
+Name: kombu-sakura-simplemq
+Version: 0.2.0
+Summary: Kombu Tramsport for Sakura Cloud SimpleMQ
+Project-URL: Homepage, https://github.com/chibiegg/kombu-sakura-simplemq
+Project-URL: Repository, https://github.com/chibiegg/kombu-sakura-simplemq
+Project-URL: Issue Tracker, https://github.com/chibiegg/kombu-sakura-simplemq/issues
+License: MIT License
+License-File: LICENCE.txt
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Software Development :: Build Tools
+Requires-Dist: kombu
+Requires-Dist: requests
+Description-Content-Type: text/markdown
+
+# Kombu Tramsport for Sakura Cloud SimpleMQ
+
+
+## Install
+
+```
+pip install kombu-sakura-simplemq
+```
+
+### Quick overview
+
+```python
+from kombu import transport, Connection, Queue
+
+transport.TRANSPORT_ALIASES["sakura-simplemq"] = "kombu_sakura_simplemq.transport:Transport"
+
+with Connection("sakura-simplemq://:{}@".format("YOUR_SIMPLEMQ_API_KEY")) as conn:
+    queue_name = "somequeue"
+    queue = Queue(queue_name)
+    queue.maybe_bind(conn)
+    queue.declare()
+
+    # メッセージ送信
+    producer = conn.Producer()
+    producer.publish(
+        body="Hello, custom Transport!",
+        routing_key=queue_name,
+    )
+
+    def handle_message(body, message):
+        print(f"Received message: {body}")
+        message.ack()
+
+    # メッセージ受信
+    with conn.Consumer(queue, callbacks=[handle_message]):
+        while True:
+            conn.drain_events(timeout=2)
+```
