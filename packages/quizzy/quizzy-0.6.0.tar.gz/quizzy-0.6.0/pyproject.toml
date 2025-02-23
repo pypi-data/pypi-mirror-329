@@ -1,0 +1,60 @@
+
+[project]
+name = "quizzy"
+version = "0.6.0"
+description = "A Python TUI quiz app"
+authors = [{ name = "Jonas Ehrlich", email = "jonas.ehrlich@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.10.3",
+    "pyyaml>=6.0.2",
+    "textual-serve>=1.1.1",
+    "textual>=1.0.0",
+]
+license = "MIT"
+
+[project.scripts]
+quizzy = "quizzy.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
+[dependency-groups]
+dev = [
+    "black>=24.10.0",
+    "isort>=5.13.2",
+    "pytest>=8.3.4",
+    "pytest-sugar>=1.0.0",
+    "ruff>=0.8.3",
+    "textual-dev>=1.7.0",
+]
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 120
+
+[tool.mypy]
+strict = true
+
+[tool.ruff]
+line-length = 120
+src = ["quizzy"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle error rules
+    "F",   # pycodestyle warning rules
+    "B",   # flake8-bugbear rules
+    "S",   # flake8-bandit rules
+    "PTH", # flake8-use-pathlib
+    "PLC", # pylint convention rules
+    "PLR", # pylint refactor rules
+    "PLE", # pylint error rules
+    "PLW", # pylint warning rules
+    "C90", # mccabe complexity rules
+]
