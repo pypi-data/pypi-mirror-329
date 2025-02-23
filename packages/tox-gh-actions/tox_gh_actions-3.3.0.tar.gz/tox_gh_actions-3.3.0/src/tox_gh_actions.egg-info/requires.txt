@@ -1,0 +1,15 @@
+tox<5,>=4
+
+[testing]
+devpi-process
+pytest>=7
+pytest-cov>=4
+pytest-mock>=3
+pytest-randomly>=3
+
+[testing:platform_python_implementation == "CPython"]
+black
+mypy
+
+[testing:python_version >= "3.8"]
+flake8<7,>=6
