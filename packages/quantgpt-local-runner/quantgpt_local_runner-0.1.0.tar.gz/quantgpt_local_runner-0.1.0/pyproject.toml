@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quantgpt-local-runner"
+version = "0.1.0"
+description = "Local runner for QuantGPT"
+requires-python = ">=3.7"
+dependencies = [
+  "fastapi~=0.115.4",
+  "uvicorn~=0.31.0",
+  "typer~=0.11.0"
+]
+
+[project.scripts]
+quantgpt-run-local = "quantgpt_local_runner.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
