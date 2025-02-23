@@ -1,0 +1,89 @@
+Metadata-Version: 2.1
+Name: burst-link-protocol
+Version: 0.1.1
+Summary: Binary Utility for Reliable Stream Transfer (BURST) is a library for encoding and decoding binary data streams into and from a byte stream.
+Author-Email: Floris vernieuwe <floris@vernieuwe.eu>
+Requires-Python: <4.0,>=3.10
+Requires-Dist: cobs<2.0.0,>=1.2.1
+Requires-Dist: numpy<3.0.0,>=2.2.3
+Requires-Dist: crc<8.0.0,>=7.1.0
+Requires-Dist: pytest<9.0.0,>=8.3.4
+Requires-Dist: pytest-cov<7.0.0,>=6.0.0
+Requires-Dist: pytest-benchmark<6.0.0,>=5.1.0
+Requires-Dist: scikit-build-core[pyproject]<0.11.0,>=0.10.7; extra == "dev"
+Requires-Dist: nanobind<3.0.0,>=2.5.0; extra == "dev"
+Requires-Dist: pytest<9.0.0,>=8.3.4; extra == "dev"
+Requires-Dist: pytest-cov<7.0.0,>=6.0.0; extra == "dev"
+Requires-Dist: pytest-benchmark<6.0.0,>=5.1.0; extra == "dev"
+Provides-Extra: dev
+Description-Content-Type: text/markdown
+
+# BURST interface 
+Binary Utility for Reliable Stream Transfer (BURST) is a library for encoding and decoding binary data streams, a packet format.
+It combines a 16 bit checksum and cobs encoding to convert packets into a format that can be sent over a stream.
+
+This projects is written so it can be used both in python, c and c++ based project
+
+# Installation instuctions
+
+## As an user
+
+Simple installation
+```sh
+pip install -e .
+```
+
+## As a developer
+
+Fast build
+```sh
+pip install --no-build-isolation -ve .
+```
+
+Auto rebuild on run
+```sh
+pip install --no-build-isolation -Ceditable.rebuild=true -ve .
+```
+
+
+### Python Stub files generation
+
+They are generated automatically buy can also be generated 
+
+```
+python -m nanobind.stubgen -m nanobind_example_ext
+```
+
+# Publishing instructions
+
+```
+
+```
+
+# Test
+
+```sh
+pytest
+```
+
+# BURST protocol
+TODO
+* STAGE 1
+    * Convert cpp to c files [OK]
+    * Formalise naming [OK]
+    * Add c encode functions [OK]
+    * Test c encode functions [OK]
+    * Update README 
+    * Improve poetry.toml   [OK]
+
+
+* STAGE 2
+    * Add CI/CD on github to compile x86
+       * Fix dependencies once compilation succeeds
+    * Publish on pypi
+* STAGE 3
+    * Add a way to get C test coverage
+
+
+
+
