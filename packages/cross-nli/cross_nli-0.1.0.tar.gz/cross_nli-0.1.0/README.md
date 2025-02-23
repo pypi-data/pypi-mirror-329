@@ -1,0 +1,89 @@
+# Cross_NLI: Cross-Atomic NLI Evaluation
+
+Cross_NLI is a Python package designed to evaluate generated text using **Natural Language Inference (NLI)** and **Large Language Models (LLMs)**. It calculates **hallucination** and **coverage** scores by comparing generated with reference (golden) texts as introduced in "Less for More: Enhanced Feedback-aligned Mixed LLMs for Molecule Caption Generation and Fine-Grained NLI Evaluation"
+
+## Features
+- Extracts **atomic factual units** from text using an LLM (Meta-Llama-3-8B-Instruct).
+- Computes **hallucination** and **coverage** scores using an NLI model (nli-deberta-base).
+- Supports **customizable logging** for debugging and performance tracking.
+- Works with **PyTorch** and **Hugging Face Transformers**.
+
+---
+## Installation
+Ensure you have Python 3.8+ installed. Then, install install it via pip:
+
+```sh
+pip install cross_nli
+```
+
+---
+## Usage
+### 1️⃣ Import and Initialize
+```python
+from cross_nli import Cross_NLI
+
+
+path = "data.json"
+
+model = Cross_NLI(path)
+```
+
+### 2️⃣ Run Evaluation
+```python
+hallucination_score, coverage_score = model.evaluation()
+print(f"Hallucination Score: {hallucination_score}")
+print(f"Coverage Score: {coverage_score}")
+```
+
+
+---
+## Expected Data Format
+The input data should be in JSON format, containing "golden" (reference summary) and "generated" (model-generated summary) fields. Each line in the dataset should be a JSON object:
+
+```json
+{"golden": "The patient began experiencing anxiety and mild depression in early 2018, which gradually worsened leading to professional intervention in mid-2019. Treatment with therapy and medication stabilized symptoms by early 2020.", "generated": "The patient started showing signs of anxiety and depression around 2018 and saw significant improvement after therapy and medication were introduced by 2020."}
+
+{"golden": "Starting in late 2017, a gradual onset of mood swings was observed, escalating into major depressive episodes by 2018. A comprehensive treatment plan was implemented in 2019, with steady progress noted through 2020.", "generated": "Mood swings began in 2017 and quickly developed into severe depression, but the treatment initiated in 2019 brought noticeable improvement by 2020."}
+```
+
+---
+## Logging
+This package includes built-in logging to track progress and debug issues.
+- Logs are saved to `cross_nli.log`.
+- You can adjust verbosity by modifying `logging.basicConfig(level=logging.INFO)`.
+
+---
+## Evaluation Metrics
+1️⃣ **Hallucination Score**
+- Measures how much information in the generated text is **contradicted** by the reference text.
+- Lower scores indicate **fewer hallucinations**.
+
+2️⃣ **Coverage Score**
+- Measures how much of the reference text is **entailed** in the generated text.
+- Higher scores indicate **better alignment**.
+
+---
+## Contributing
+Contributions are welcome! Feel free to submit issues or pull requests.
+
+---
+## License
+MIT License. See `LICENSE` for details.
+
+---
+## Author
+**Dimitris Gkoumas*  
+🚀 AI|NLP Researcher | QMUL & Huawei London
+```
+
+## Citation
+If you use this work, please cite:
+
+```bibtex
+@article{gkoumas2024less,
+  title={Less for More: Enhanced Feedback-aligned Mixed LLMs for Molecule Caption Generation and Fine-Grained NLI Evaluation},
+  author={Gkoumas, Dimitris and Liakata, Maria},
+  journal={arXiv preprint arXiv:2405.13984},
+  year={2024}
+}
+```
