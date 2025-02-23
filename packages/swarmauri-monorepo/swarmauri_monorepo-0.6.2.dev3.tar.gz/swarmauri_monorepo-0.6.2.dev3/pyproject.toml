@@ -1,0 +1,67 @@
+[project]
+name = "swarmauri-monorepo"
+version = "0.6.2.dev3"
+description = "Monorepo for multiple interdependent Swarmauri Python packages"
+authors = [
+	{ name = "Jacob Stewart", email = "jacob@swarmauri.com" },
+	]
+license = { file = "LICENSE" }
+readme = { file = "README.md", content-type = "text/markdown" }
+# Disables packaging mode
+package-mode = false
+requires-python = ">=3.10,<3.13"
+
+[tool.uv.workspace]
+members = [
+	"core",
+	"base"
+]
+
+[tool.uv.sources]
+swarmauri_core = { workspace = true }
+swarmauri_base = { workspace = true }
+
+
+[dependency-groups]
+dev = [
+"toml>=0.10.2",
+"pytest>=8.0.0",
+"pytest-xdist>=3.6.1",
+"pytest-asyncio>=0.24.0",
+"pytest-timeout>=2.3.1",
+"pytest-json-report>=1.5.0",
+"python-dotenv>=1.0.0",
+"pytest-mock>=3.14.0",
+"jsonschema>=4.18.5",
+]
+
+[tool.pytest.ini_options]
+norecursedirs = ["experimental", "swarmauri_standard", "standards/*", "community/*"]
+
+markers = [
+    "test: standard test",
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "i9n: Integration Tests",
+    "r9n: Regression Tests",
+    "acceptance: Acceptance tests",
+    "experimental: Experimental tests",
+]
+
+log_cli = true
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s [%(levelname)s] %(message)s"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "core/swarmauri_core",
+    "base/swarmauri_base",
+
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
