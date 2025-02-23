@@ -1,0 +1,191 @@
+Metadata-Version: 2.2
+Name: nyord-vpn
+Version: 0.1.0
+Summary: NordVPN client with API fallback support
+Author-email: Adam Twardoch <adam+github@twardoch.com>
+License: MIT
+Project-URL: Documentation, https://github.com/twardoch/nyord-vpn#readme
+Project-URL: Issues, https://github.com/twardoch/nyord-vpn/issues
+Project-URL: Source, https://github.com/twardoch/nyord-vpn
+Keywords: vpn,nordvpn,security
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: njord>=0.0.1
+Requires-Dist: tenacity>=8.0.0
+Requires-Dist: backoff>=2.0.0
+Requires-Dist: rich>=13.4.2
+Requires-Dist: fire>=0.7.0
+Requires-Dist: pydantic>=2.10.6
+Requires-Dist: pydantic-settings>=2.8.0
+Requires-Dist: requests>=2.31.0
+Requires-Dist: keyring>=24.2.0
+Requires-Dist: pycountry>=24.6.1
+Requires-Dist: psutil>=5.9.5
+Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: aiohttp>=3.11.0
+Requires-Dist: cryptography>=42.0.0
+Requires-Dist: black>=23.7.0
+Requires-Dist: bleach>=6.0.0
+Requires-Dist: build>=0.10.0
+Requires-Dist: certifi>=2023.5.7
+Requires-Dist: charset-normalizer>=3.2.0
+Requires-Dist: click>=8.1.5
+Requires-Dist: docutils>=0.20.1
+Requires-Dist: idna>=3.4
+Requires-Dist: importlib-metadata>=6.8.0
+Requires-Dist: jaraco-classes>=3.3.0
+Requires-Dist: markdown-it-py>=3.0.0
+Requires-Dist: mdurl>=0.1.2
+Requires-Dist: more-itertools>=9.1.0
+Requires-Dist: mypy-extensions>=1.0.0
+Requires-Dist: packaging>=23.1
+Requires-Dist: pathspec>=0.11.1
+Requires-Dist: pkginfo>=1.9.6
+Requires-Dist: platformdirs>=3.9.1
+Requires-Dist: pygments>=2.15.1
+Requires-Dist: pyproject-hooks>=1.0.0
+Requires-Dist: readme-renderer>=40.0
+Requires-Dist: requests-toolbelt>=1.0.0
+Requires-Dist: rfc3986>=2.0.0
+Requires-Dist: six>=1.16.0
+Requires-Dist: tomli>=2.0.1
+Requires-Dist: twine>=4.0.2
+Requires-Dist: typing-extensions>=4.7.1
+Requires-Dist: urllib3>=2.0.3
+Requires-Dist: webencodings>=0.5.1
+Requires-Dist: zipp>=3.16.2
+Requires-Dist: loguru>=0.7.3
+Provides-Extra: dev
+Requires-Dist: pre-commit>=3.6.0; extra == "dev"
+Requires-Dist: ruff>=0.1.0; extra == "dev"
+Requires-Dist: mypy>=1.0.0; extra == "dev"
+Requires-Dist: pyupgrade>=3.19.0; extra == "dev"
+Provides-Extra: test
+Requires-Dist: pytest>=7.0.0; extra == "test"
+Requires-Dist: pytest-cov>=4.0.0; extra == "test"
+Requires-Dist: pytest-asyncio>=0.25.0; extra == "test"
+Requires-Dist: pytest-mock>=3.12.0; extra == "test"
+Requires-Dist: pytest-timeout>=2.3.0; extra == "test"
+Requires-Dist: pytest-xdist>=3.5.0; extra == "test"
+
+# nyord-vpn
+
+A simple and reliable NordVPN client for macOS with support for both legacy OpenVPN and njord APIs.
+
+## Features
+
+- Simple and reliable VPN connection management
+- Support for both legacy OpenVPN and njord APIs
+- Country selection
+- Basic status monitoring
+- Clear error messages
+- Minimal dependencies
+
+## Installation
+
+```bash
+# Install system requirements
+brew install openvpn
+
+# Install package
+pip install nyord-vpn
+
+# Optional: Install njord support
+pip install nyord-vpn[njord]
+```
+
+## Usage
+
+### Environment Variables
+
+Set your NordVPN credentials:
+
+```bash
+export NORD_USER="your-username"
+export NORD_PASSWORD="your-password"
+```
+
+### CLI Commands
+
+```bash
+# Connect to VPN (defaults to US)
+nyord-vpn connect
+
+# Connect to specific country
+nyord-vpn connect --country netherlands
+
+# Use njord API
+nyord-vpn --api njord connect
+
+# Enable debug logging
+nyord-vpn --verbose connect
+
+# Check status
+nyord-vpn status
+
+# List available countries
+nyord-vpn list-countries
+
+# Disconnect
+nyord-vpn disconnect
+```
+
+### Python API
+
+```python
+from nyord_vpn.core.factory import create_client
+
+# Create client (legacy or njord)
+client = create_client("legacy")
+
+# Connect to VPN
+client.connect("netherlands")
+
+# Check status
+status = client.status()
+print(f"Connected to {status['server']} ({status['ip']})")
+
+# Disconnect
+client.disconnect()
+```
+
+## Development
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Install optional njord support
+pip install njord
+
+# Run with debug logging
+NORD_USER="username" NORD_PASSWORD="password" nyord-vpn --verbose connect
+```
+
+## Error Handling
+
+The client uses simple retry logic for API calls and provides clear error messages. Common errors:
+
+- `VPNCredentialsError`: Missing or invalid credentials
+- `VPNConnectionError`: Failed to connect/disconnect
+- `VPNConfigError`: Configuration issues (e.g., missing OpenVPN)
+- `VPNServerError`: Failed to get server information
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## License
+
+MIT 
