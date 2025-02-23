@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "supertabnanny"
+dynamic = ["version"]
+description = "Super Tab Nanny - an inofficial rewrite"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+keywords = [
+  "tab",
+  "nanny",
+]
+authors = [
+  {name = "Rainer Schwarzbach", email = "rainer@blackstream.de"},
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Intended Audience :: Developers",
+]
+
+dependencies = [
+]
+
+[project.scripts]
+supertabnanny = "supertabnanny.__main__:main"
+
+[project.urls]
+Homepage = "https://gitlab.com/blackstream-x/supertabnanny"
+CI = "https://gitlab.com/blackstream-x/supertabnanny/-/pipelines"
+"Bug Tracker" = "https://gitlab.com/blackstream-x/supertabnanny/-/issues"
+Repository = "https://gitlab.com/blackstream-x/supertabnanny.git"
+
+[tool.setuptools]
+license-files = []
+
+[tool.setuptools.dynamic]
+version = {attr = "supertabnanny.__version__"}
+
+[tool.setuptools.package-data]
+"supertabnanny" = ["py.typed"]
