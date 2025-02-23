@@ -1,0 +1,31 @@
+start: (statement)* 
+
+?statement: declaration ";" | function ";"
+
+declaration: NAME "=" value
+
+function: NAME"(" [value+] ")"
+
+variable: NAME
+
+code_block: "{" (statement)* "}"
+
+sum: term "+" term
+difference: term "-" term
+
+?term: NUMBER
+    | variable -> value
+    | sum
+    | difference
+
+value: NUMBER -> number 
+     | function 
+     | variable 
+     | ESCAPED_STRING -> string
+     | term
+
+%import common.WS
+%import common.CNAME -> NAME
+%import common.INT -> NUMBER
+%import common.ESCAPED_STRING
+%ignore WS
