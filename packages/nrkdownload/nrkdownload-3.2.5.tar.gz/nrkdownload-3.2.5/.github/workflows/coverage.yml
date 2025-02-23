@@ -1,0 +1,46 @@
+name: Test coverage
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  pytest:
+    name: pytest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install FFmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v3
+        id: setup-ffmpeg
+        with:
+          ffmpeg-version: git
+
+      # This is needed because FFmpeg is compiled with an old glibc version
+      - name: Install nscd
+        uses: ConorMacBride/install-package@v1
+        with:
+          apt: nscd
+
+      - name: Test FFmpeg
+        run: ffmpeg -version
+
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Install uv and set the python version
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ vars.UV_VERSION }}
+
+      - name: Install the project with dependencies
+        run: uv sync
+
+      - name: Run tests
+        run: uv run pytest --cov-branch --cov-report=xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          slug: marhoy/nrk-download
+          token: ${{ secrets.CODECOV_TOKEN }}
