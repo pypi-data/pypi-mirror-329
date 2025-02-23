@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sais-prism-sdk"
+version = "0.1.0-beta"
+description = "SAIS Prism: A unified interface for ML data access and lifecycle management"
+readme = "README.md"
+license = {text = "The Unlicense"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Shepard", email = "zhaoxun@sais.com.cn"}
+]
+dependencies = [
+    "mlflow>=2.0.0",
+    "PyYAML>=6.0",
+    "scikit-learn>=1.2.0"
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools_scm]
+write_to = "sais_prism/_version.py"
+write_to_template = "__version__ = '{version}'"

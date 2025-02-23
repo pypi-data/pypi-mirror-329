@@ -1,0 +1,43 @@
+foundation:
+  experiment_name: "example_sft"
+
+unified_data_access:
+  enabled: false
+  token: "demo_token"
+  data_access:
+    dataset_names: ["alpaca_sft_dataset.jsonl", "mars"]
+ml:
+  enabled: true
+  auto_log: true
+  system_tracing: true
+  parameters:
+    output_dir: "artifacts/runtime" 
+    device: 'mps'
+    dataset_names: ["/cpfs01/projects-HDD/cfff-4a8d9af84f66_HDD/public/Data/ecmwf-001/ENS"]
+    base_model: "meta-llama/Llama-3.2-1B"
+    num_train_epochs: 3  # Number of training epochs
+    per_device_train_batch_size: 2  # Small batch size to fit in memory
+    gradient_accumulation_steps: 8  # Accumulate gradients to simulate larger batch size
+    learning_rate: 0.00002
+    weight_decay: 0.01
+    warmup_steps: 200  # Reduced warmup steps
+    save_total_limit: 1  # Keep only one checkpoint
+    logging_dir: "./logs"
+    logging_steps: 10  # Log less frequently to save resources
+    save_strategy: "epoch"  # Save at the end of each epoch
+    evaluation_strategy: "no"  # No evaluation during training
+    report_to: ["mlflow"]  # Disable reporting to external tools
+    optim: "adamw_torch"  # Optimized AdamW optimizer
+    gradient_checkpointing: true
+  custom_metrics: [] # Define custom metrics
+  artifacts: [] 
+  model_repo:
+    model_uri: "runs:/{run_id}/artifacts/model"
+    name: "llama_models"
+    await_registration_for: 300
+    tag:
+      framework: "pytorch"
+      task_type: "language-model"
+      model_type: "llama"
+      base_model: "meta-llama/Llama-3.2-1B"
+    version: "1.0.1"

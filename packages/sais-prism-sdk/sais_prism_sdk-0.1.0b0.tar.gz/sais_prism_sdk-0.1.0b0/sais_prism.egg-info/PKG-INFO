@@ -1,0 +1,295 @@
+Metadata-Version: 2.2
+Name: sais-prism
+Version: 0.1.0b0
+Summary: SAIS Prism: A unified interface for ML data access and lifecycle management
+Home-page: http://gitlab-paas.internal.sais.com.cn/data_intelligence_platform/sais-prism
+Author: Shepard
+Author-email: Shepard <zhaoxun@sais.com.cn>
+License: The Unlicense
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: mlflow>=2.0.0
+Requires-Dist: PyYAML>=6.0
+Requires-Dist: scikit-learn>=1.2.0
+Dynamic: author
+Dynamic: home-page
+Dynamic: requires-python
+
+# SAIS Prism
+
+SAIS Prism is a unified interface for machine learning workflows, acting as a virtual access layer for data and a lifecycle management system through MLflow. Like a prism separates light into its spectrum, this framework separates and manages different aspects of ML development while maintaining a cohesive workflow.
+
+## Features
+
+- Virtual Data Access Layer with unified interface
+- Dynamic Configuration Management through YAML files
+- Automated Metric Tracking for training and system metrics
+- One-line MLflow Integration with `@tracing` decorator
+- Flexible Parameter Access with dot notation
+- Strict Configuration Validation
+- Pre-configured Training Parameters and Metrics
+
+## Installation
+
+```bash
+# Install from PyPI
+pip install sais-prism
+
+# Install from source
+git clone http://gitlab-paas.internal.sais.com.cn/data_intelligence_platform/sais-prism.git
+cd sais-prism
+pip install -e .
+```
+
+## Quick Start
+
+1. **Create Configuration File**
+
+Create `tracing.yaml` in your project root:
+
+```yaml
+tracing:
+  generic:
+    experiment_name: "my_experiment"
+    system_tracing: true
+   
+  model_repo:
+    registered: true
+    name: "my_model"
+    tag:
+      framework: "pytorch"
+      task_type: "classification"
+    version: "1.0.0"
+
+  metric:
+    training:
+      - loss
+      - accuracy
+      - learning_rate
+
+  train_parameters:
+    num_train_epochs: 3
+    learning_rate: 2.0e-4
+    model:
+      model_name: "bert-base-uncased"
+      quantization:
+        load_in_4bit: true
+        bnb_4bit_compute_dtype: "float16"
+```
+
+2. **Enable Tracking**
+
+```python
+from sais_prism.decorators import tracing
+
+@tracing
+def train_model():
+    # Your training code
+    model.train()
+    
+    # Metrics are automatically logged to MLflow
+    return model
+```
+
+## Usage Guide
+
+### Configuration Management
+
+#### Configuration File Structure
+
+The `tracing.yaml` configuration file contains the following sections:
+
+- **generic**: Basic configuration
+  - `experiment_name`: MLflow experiment name
+  - `system_tracing`: Enable/disable system metric tracking
+
+- **model_repo**: Model repository settings
+  - `registered`: Model registration flag
+  - `name`: Model name
+  - `tag`: Model tags
+  - `version`: Model version
+
+- **metric**: Metrics to track
+  - `training`: List of training metrics
+
+- **artifacts**: Artifacts to save
+  ```yaml
+  artifacts:
+    - name: "checkpoints"
+      path: "./checkpoints"
+    - name: "plots"
+      path: "./plots"
+  ```
+
+- **train_parameters**: Training configuration
+  - Supports nested parameter structures
+  - Common parameters (learning rate, batch size)
+  - Model-specific parameters (quantization)
+  - LoRA parameters (if applicable)
+
+#### Accessing Configuration
+
+Two access methods are available:
+
+1. **Dot Notation Access (Recommended)**:
+```python
+from sais_prism.config_manager import config_manager
+
+config = config_manager.params
+learning_rate = config.train_parameters.learning_rate
+model_name = config.train_parameters.model.model_name
+```
+
+2. **Dictionary Access**:
+```python
+training_params = config_manager.get_training_params()
+model_info = config_manager.get_model_info()
+metrics_config = config_manager.get_metrics_config()
+```
+
+### Metric Tracking
+
+#### Automatic Tracking
+
+The `@tracing` decorator automatically:
+- Creates MLflow experiment if not exists
+- Starts a new run
+- Logs all configured parameters
+- Enables system metric tracking if configured
+- Ends run and saves results
+
+```python
+@tracing
+def train():
+    for epoch in range(num_epochs):
+        # Training code
+        metrics_tracker.log_metric("loss", loss.item(), step=epoch)
+```
+
+#### Manual Tracking
+
+```python
+from sais_prism.metrics_tracker import metrics_tracker
+
+# Log single metric
+metrics_tracker.log_metric("loss", 0.5, step=1)
+
+# Log multiple metrics
+metrics_tracker.log_metrics({
+    "loss": 0.5,
+    "accuracy": 0.95
+}, step=1)
+```
+
+### System Metrics
+
+When `system_tracing` is enabled, SAIS Prism tracks:
+- CPU utilization
+- Memory usage
+- GPU utilization (if available)
+- GPU memory (if available)
+- Network latency
+
+### Complete Example
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from sais_prism.decorators import tracing
+from sais_prism.config_manager import config_manager
+
+@tracing
+def train_model():
+    # Get configuration
+    config = config_manager.params
+    train_params = config.train_parameters
+    
+    # Load model and tokenizer
+    model = AutoModelForCausalLM.from_pretrained(
+        train_params.model.model_name,
+        device_map={"": 0}
+    )
+    
+    # Training loop
+    for epoch in range(train_params.num_train_epochs):
+        # Training code
+        pass
+    
+    return model
+
+if __name__ == "__main__":
+    model = train_model()
+```
+
+## Development
+
+### Running Tests
+
+```bash
+# Install test dependencies
+pip install -e ".[test]"
+
+# Run tests
+./run_tests.sh
+```
+
+### Project Structure
+
+```
+sais_prism/
+├── sais_prism/
+│   ├── config_manager.py   # Configuration management
+│   ├── config_objects.py   # Dynamic configuration objects
+│   ├── config_validator.py # Configuration validation
+│   ├── decorators.py      # MLflow decorators
+│   └── metrics_tracker.py  # Metric tracking
+├── examples/
+│   ├── example_usage.py   # Usage examples
+│   └── tracing.yaml      # Example configuration
+└── tests/                # Test suite
+```
+
+## FAQ
+
+1. **Q: How to change MLflow tracking server?**
+   A: Add tracking_url in `tracing.yaml`:
+   ```yaml
+   tracing:
+     tracking_url: "http://my-mlflow-server:5000"
+   ```
+
+2. **Q: How to disable system metrics?**
+   A: Set `system_tracing: false` in configuration
+
+3. **Q: What metrics are supported?**
+   A: SAIS Prism supports any numeric metrics, including:
+   - Training losses
+   - Evaluation metrics
+   - Custom metrics
+   - System metrics (CPU, memory, GPU)
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit changes
+4. Push to the branch
+5. Create Pull Request
+
+## License
+
+MIT License
+
+## Author
+
+- Shepard (zhaoxun@sais.com.cn)
+
+## Changelog
+
+### v0.1.0
+- Initial release
+- Virtual data access layer
+- Dynamic configuration management
+- Automated metric tracking
+- MLflow integration
+- System metric tracking
