@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "powerdns-cli"
+authors = [
+    {name = "Raphael Grieger", email = "r.grieger@hotmail.com"},
+]
+readme = "README.md"
+requires-python = ">3.6"
+license = {text = "GPL-3.0-or-later"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+version = "0.0.13"
+dependencies = [
+    "requests",
+    "click"
+]
+description="PowerDNS Authoritative API client"
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "pylint",
+    "flake8",
+    "tox",
+    "bandit"
+]
+
+[project.scripts]
+powerdns-cli = "powerdns_cli.powerdns_cli:main"
+
+[project.urls]
+Homepage = "https://github.com/IamLunchbox/powerdns-cli"
+Issues = "https://github.com/IamLunchbox/powerdns-cli/issues"
+
+[tool.pylint."DISABLE"]
+disable = ["too-many-arguments", "too-many-positional-arguments", "no-value-for-parameter"]
