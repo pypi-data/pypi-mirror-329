@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ticket-miner"
+version = "1.0.0"
+description = "a python library designed to grab a Jira ticket and scrape ALL of the related and referenced content (and scrape referenced Confluence pages or help center pages for their full content) like a human reviewer would do to try and understand what was going on, and return structured JSON to make it easy to pass to an LLM / ChatGPT / GenAI Etc"
+keywords = ["ticket mining", "knowledge base", "jira", "confluence", "documentation"]
+readme = "README.md"
+authors = [
+    {name = "Your Organization", email = "maintainers@example.com"},
+]
+license = {text = "MIT"}
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "atlassian-python-api>=3.41.0",
+    "python-dotenv>=1.0.0",
+    "html2text>=2020.1.16",
+    "urllib3>=2.0.0",
+    "requests>=2.31.0",
+    "psutil>=5.9.0",
+    "aiohttp>=3.9.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=22.0.0",
+    "isort>=5.0.0",
+    "flake8>=4.0.0",
+]
+
