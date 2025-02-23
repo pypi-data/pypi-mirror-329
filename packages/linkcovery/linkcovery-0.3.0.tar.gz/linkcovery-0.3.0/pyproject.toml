@@ -1,0 +1,39 @@
+[project]
+name = "linkcovery"
+version = "0.3.0"
+description = "Bookmark and Link discovery tool for people with love and Python :)"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["bookmark", "link", "discovery", "tool", "python"]
+authors = [{name = "Arian Omrani"}]
+requires-python = ">=3.13"
+dependencies = [
+    "pydantic[email]>=2.10.6",
+    "pydantic-settings>=2.7.1",
+    "rich>=13.9.4",
+    "sqlalchemy>=2.0.38",
+    "typer>=0.15.1",
+]
+
+[dependency-groups]
+dev = [
+    "alembic>=1.14.1",
+    "pytest>=8.3.4",
+    "sqlite-web>=0.6.4",
+]
+
+[tool.ruff]
+line-length = 120
+
+[project.urls]
+Homepage = "https://github.com/arian24b/linkcovery"
+Issues = "https://github.com/arian24b/linkcovery/issues"
+
+[project.scripts]
+linkcovery = "app.cli:cli_app"
+
+[tool.uv]
+package = true
+
+[tool.setuptools]
+license-files = []
