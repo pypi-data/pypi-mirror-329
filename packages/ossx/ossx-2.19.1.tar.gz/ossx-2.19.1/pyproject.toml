@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "ossx"
+version = "2.19.1"
+description = "aliyun oss sdk for python async"
+authors = ["sswest"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+aiofiles = ">=0.7.0"
+oss2 = ">=2.18,<3.0"
+httpx = ">=0.23,<1.0"
+
+[tool.poetry.group.dev.dependencies]
+coveralls = "^3.3.1"
+pytest = "^8.1.1"
+pytest-asyncio = "^0.23.6"
+isort = "^5.13.2"
+black = "^24.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
