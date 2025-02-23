@@ -1,0 +1,52 @@
+# Copyright © 2025 Ralph Seichter
+#
+# This file is part of "stown".
+#
+# stown is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# stown is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# stown. If not, see <https://www.gnu.org/licenses/>.
+
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools", "wheel"]
+
+[project]
+name = "stown"
+version = "0.14.2"
+authors = [{name = "Ralph Seichter"}, {email = "stown@seichter.de"}]
+description = "Manage file system object mapping via symlinks."
+readme = "README.md"
+requires-python = ">=3.9"
+# See https://pypi.org/classifiers/
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.9",
+  "Topic :: Utilities",
+]
+
+[project.scripts]
+stown = "stown.__main__:main"
+
+[project.urls]
+Homepage = "https://www.seichter.de/stown/"
+Issues = "https://github.com/rseichter/stown/issues"
+Source = "https://github.com/rseichter/stown"
+
+[tool.coverage.html]
+title = "stown coverage report"
+
+[tool.coverage.run]
+branch = true
+
+[tool.isort]
+force_single_line = true
+profile = "black"
