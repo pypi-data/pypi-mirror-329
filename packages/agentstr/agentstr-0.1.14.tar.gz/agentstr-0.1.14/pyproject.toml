@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentstr"
+version = "0.1.14"
+description = "Tools for a Nostr agentic ecosystem"
+readme = "README.md"
+requires-python = ">=3.9, <3.13"
+license = { text = "MIT" }
+authors = [
+    {name = "Synvya", email = "synvya@synvya.com"}
+]
+dependencies = [
+    "agno>=1.1.1",
+    "openai>=1.50.0",
+    "nostr_sdk>=0.39.0",
+    "pydantic>=2.0.0",   
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.23.5",
+    "black>=23.0",
+    "isort>=5.0",
+    "mypy>=1.0",
+    "pylint>=3.0",
+]
+examples = [
+    "python-dotenv>=1.0",
+    "cassandra-driver>=3.29.2",
+    "cassio>=0.1.10",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.30.0",
+]
+
+[project.urls]
+Homepage = "https://www.synvya.com"
+Repository = "https://github.com/synvya/agentstr"
+Documentation = "https://github.com/synvya/agentstr#readme"
+BugTracker = "https://github.com/synvya/agentstr/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["agentstr"]
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+src = ["src", "tests", "examples"]
+
+[tool.isort]
+profile = "black"
+src_paths = ["src", "tests", "examples"]
+multi_line_output = 3
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+mypy_path = "src"
+check_untyped_defs = true
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["nostr_sdk.*"]
+ignore_missing_imports = true
+
+[tool.setuptools.package-data]
+agentstr = ["py.typed"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+markers = [
+    "asyncio: mark test as async",
+]
