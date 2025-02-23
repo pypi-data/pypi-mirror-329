@@ -1,0 +1,38 @@
+[project]
+name = "fibos"
+version = "2.0.0"
+description = "Package to calculate Occluded Surfaces"
+authors = [
+    {name = "Herson Hebert Mendes Soares"}
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.22.4",
+    "biopython>=1.84",
+    "testresources>=2.0.1",
+    "pandas>=2.2.3",
+]
+
+[build-system]
+requires = [
+    "meson-python>=0.13.1",
+    "numpy>=1.22.4",
+    "wheel>=0.45.0",
+    "setuptools>=70.0.0",
+]
+build-backend = "mesonpy"
+
+
+[tool.meson-python]
+limited-api = false
+
+[project.urls]
+# Add your project URLs here, for example:
+# Homepage = "https://github.com/username/fibos"
+# Documentation = "https://fibos.readthedocs.io/"
+
+[tool.setuptools]
+packages = ["fibos"]
+
+[tool.setuptools.package-data]
+fibos = ["radii"]
