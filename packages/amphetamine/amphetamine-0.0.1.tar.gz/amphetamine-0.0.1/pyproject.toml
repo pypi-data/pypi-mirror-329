@@ -1,0 +1,27 @@
+[project]
+name = "amphetamine"
+version = "0.0.1"
+description = "Conveniences for faster prototyping and more enjoyable interactive sessions."
+readme = "README.md"
+license = "AGPL-3.0"
+authors = [
+    { name = "K. LeBryce", email = "k.lebryce@pm.me" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "platformdirs>=4.3.6",
+]
+
+[project.scripts]
+amphetamine = "amphetamine:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "mypy>=1.15.0",
+    "sphinx>=8.2.1",
+]
