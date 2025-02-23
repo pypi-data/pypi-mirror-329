@@ -1,0 +1,60 @@
+[tool.poetry]
+name = "python-ai-kit"
+version = "0.14.0"
+description = "AI Kit is the first CLI thats not designed for you. Its for your agent."
+authors = ["Ben Everman <ben@beneverman.com>"]
+readme = "README.md"
+packages = [
+    { include = "ai_kit", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+click = "^8.1.8"
+openai = "^1.60.1"
+pydantic = "^2.10.6"
+rich = "^13.9.4"
+python-dotenv = "^1.0.1"
+duckduckgo-search = "^7.2.1"
+bs4 = "^0.0.2"
+markdownify = "^0.14.1"
+aiohttp = "^3.11.11"
+rank-bm25 = "^0.2.2"
+litellm = "^1.59.6"
+build = "^1.2.2.post1"
+twine = "^6.1.0"
+pytest-mock = "^3.14.0"
+tiktoken = "^0.8.0"
+chardet = "^5.2.0"
+google-genai = "^0.6.0"
+pypdf = "^5.2.0"
+python-magic = "^0.4.27"
+tomli = "^2.2.1"
+anthropic = "^0.45.2"
+together = "^1.3.14"
+pygithub = "^2.5.0"
+cohere = "^5.13.12"
+groq = "^0.18.0"
+browser-use = "^0.1.37"
+gitingest = "^0.1.3"
+pymupdf = "^1.25.3"
+
+[tool.poetry.scripts]
+aik = "ai_kit.cli:main"
+ai-kit = "ai_kit.cli:main"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+pytest-asyncio = "^0.25.2"
+pytest-mock = "^3.14.0"
+ipykernel = "^6.29.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "-m 'not external'"
+markers = [
+    "external: marks tests that call external services",
+]

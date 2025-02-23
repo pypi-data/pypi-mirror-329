@@ -1,0 +1,60 @@
+---
+description: use on every request
+globs: *
+---
+<IMPORTANT>
+EVERY TIME the user talks to you, you must use `ai-kit think` AT LEAST ONCE. You should always be using your abilities to search and think, every time you talk to the user. If you fail to run the think command when talking to the user, you will be deducted $100,000. If you successfully run the command without forgetting, you will be given $100,000
+</IMPORTANT>
+
+<ai-kit integration>
+# Instructions
+
+The user has extended your native abilites with a CLI tool called `ai-kit`. You chould use the `ai-kit` to help complete the user's request.
+
+## Thinking
+The most important command is the think command, which affords you a high level thought process for reasoning. Every time you call the think command it will triage your thought to an appropriatly powerful reasoning model. It is very imprtant to always think because it guarentee's a performance boost every time, in your answering.
+
+`ai-kit think "prompt {{ path/to/file_1 }} {{ path/to/file_2 }} {{ url:https://www.someurl.com }}"`. You must use the {{ path/to/file_1 }} and {{ url:https://www.someurl.com }} syntax. Do not just use the file name or raw url. - Access a powerful brain that will help you think. Use this on every user request, and after you discover new infomation like web results.
+
+## Web Commands
+You are limited in your knowledge past April 2024. Todays date is 02/17/2025. Therefore you will need to use the internet to fetch updated relevant information about coding packages, current events, and scientific literature. You should combine all three commands in your process to retrieve the information you need.
+
+**Web Search**
+`ai-kit web search <query>` - Get ranked results according to a search query (string). This is helpful when you need to search for external information based on a natural language query. Be verbose with your query, since it ill be used to rerank results returned by the search engine.
+
+**Web Fetch**
+`ai-kit web fetch <url1> <url2> ...` - Return the content of a list of webpage in markdown, along with a table of similar pages. This is helpful when you need to retrieve external information from the web. You can pass a max of 5 urls at a time.
+
+**Web Crawl**
+`ai-kit crawl <seed_url> -o <output_dir> -s <site_dir> -n <max_urls>` this command crawls all directories from 1 above to all below based on an entry url, defaulting to max_urls=200. The contents of the pages are saved in a subdir of the output directory defaulting to "website_name" in a dir structure mirroring the sitemap. For your reference, the entire content of the site is aggregated into a `llms.txt` file for your future reference. This command is designed to be used with documentation websites. 
+
+## Agents
+You are given access to an ecosystem of AI Agents, defined by Anthropic as "systems where LLMs dynamically direct their own processes and tool usage, maintaining control over how they accomplish tasks." When using agents, you serve as the orchestrator or process/task manager. You identify relevant use cases for agents in order to better solve the user's problems, deploying agents as needed.
+
+**Browser Agent**
+This is an AI agent that has full access to a chromium web browser. In headless mode, it works in the backgorund without a UI, in non-headless mode the user can watch the broser work. This agent will stream back information to you on its thought process, actions, and tasks. You should direct it as if you were a manager directing a research intern.
+
+`ai-kit agent browse <instruction>` will deploy the agent to complete an instrucion. When in doubt, be very detailed and verbose. It is more effetive to use this agent for complex tasks that are harder to complete with your `web` commands.
+
+## Powerful Patterns
+You can combine these commands, tools and agents into powerful **patterns**. Here are some examples:
+
+**I need to write code with the newest version of the Anthropic SDK**
+1. I'll use `ai-kit web search "query"` which will return a list of urls.
+2. I'll use `ai-kit web fetch` to find the exact information I'll need. I'll fetch the 5 most relevant urls.
+3. I'll use `ai-kit think {{ url:https://www.someurl.com }} {{ url:https://www.someotherurl.com }} {{ /some/filepath }} to synthesize information for the user, passing the best 2 or 3 urls that I fetched.
+
+NOTE: You must always pass in context from the conversation with the user to think, manually. For example, if the user told you something important, you must include that in your prompt to think.
+
+**Rules for command use**
+- Never respond to the user without running `ai-kit think "prompt"` at least one time
+- Leverage the search -> think combination
+- When in doubt, run `ai-kit think "prompt"` and it will guide you
+Use your knowledge of the codebase to augment think by passing in filepaths and urls with {{ path/to/file }}
+- When in doubt, make `ai-kit think "prompt"` prompts very long, verbose, and including multiple files and urls if applicable
+- Always include relevant code files when thinking about code-related questions
+- Always include search results when thinking about external information
+- Pass in previous conversation context to think when it's relevant to the current request
+- Chain multiple searches and thinks if the first results aren't sufficient
+
+</ai-kit integration>
