@@ -1,0 +1,105 @@
+Metadata-Version: 2.4
+Name: demo_uc_setup
+Version: 0.1.0
+Summary: A reusable task-based framework for managing Unity Catalog in Databricks
+Requires-Python: >=3.11
+Requires-Dist: databricks-connect>=16.1.1
+Requires-Dist: databricks-sdk>=0.44.1
+Requires-Dist: pydantic-settings>=2.8.0
+Requires-Dist: pydantic>=2.10.6
+Description-Content-Type: text/markdown
+
+# Databricks Unity Catalog Setup Demo
+
+A Python package that demonstrates automated setup and teardown of Databricks Unity Catalog resources using the Databricks SDK. This package provides a reusable framework for managing Unity Catalog resources programmatically, both from local environments and within Databricks notebooks.
+
+## Features
+
+- Automated creation of Unity Catalog resources:
+  - Catalogs
+  - Schemas
+  - Volumes
+- Configurable resource naming via environment variables
+- Support for both local execution and Databricks notebook execution
+- Type-safe configuration management using Pydantic
+- Clean teardown functionality
+
+## Prerequisites
+
+- Python 3.8+
+- A Databricks workspace with Unity Catalog enabled
+- Appropriate permissions to create/manage Unity Catalog resources
+
+## Installation
+
+```bash
+pip install demo-uc-setup
+```
+
+## Configuration
+
+The package uses environment variables for configuration. You can set these either in your environment or in a `.env` file:
+
+```env
+# Required for local execution (optional in Databricks notebooks)
+DATABRICKS_HOST=your-workspace-url
+DATABRICKS_TOKEN=your-pat-token
+
+# Optional - override default resource names
+DEMO_CATALOG_NAME=custom_catalog_name
+DEMO_SCHEMAS=["schema1", "schema2"]
+DEMO_VOLUME_NAME=custom_volume_name
+```
+
+## Usage
+
+### Local Execution
+
+```python
+from demo_uc_setup.unity_catalog_setup import UnityCatalogSetupTask
+from demo_uc_setup.unity_catalog_teardown import UnityCatalogTeardownTask
+
+# Setup Unity Catalog resources
+UnityCatalogSetupTask.entrypoint()
+
+# Teardown Unity Catalog resources
+UnityCatalogTeardownTask.entrypoint()
+```
+
+### Databricks Notebook Execution
+
+```python
+%pip install demo-uc-setup
+
+from demo_uc_setup.unity_catalog_setup import UnityCatalogSetupTask
+UnityCatalogSetupTask.entrypoint()
+```
+
+## Default Resource Names
+
+If not overridden via environment variables, the package will create:
+- A catalog named `demo_catalog`
+- Two schemas: `demo_schema_1` and `demo_schema_2`
+- A volume named `demo_volume` in each schema
+
+## Extending the Framework
+
+The package provides a reusable `Task` base class that can be extended for custom Unity Catalog operations:
+
+```python
+from demo_uc_setup.common import Task
+from demo_uc_setup.config import Config
+
+class CustomTask(Task[Config]):
+    def run(self):
+        self.logger.info("Starting custom task...")
+        # Your custom logic here
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
