@@ -1,0 +1,14 @@
+[console_scripts]
+pycoffer = pycoffer.main:cli
+pycoffer_static = pycoffer.main_static:cli
+
+[cofferfile.coffer]
+bank = pycoffer.bank:CofferBank
+market = pycoffer.market:CofferMarket
+null = pycoffer.null:CofferNull
+store = pycoffer.store:CofferStore
+
+[cofferfile.plugin]
+crypt = pycoffer.plugins.crypt:Crypt
+password = pycoffer.plugins.password:Password
+rsync = pycoffer.plugins.rsync:Rsync
