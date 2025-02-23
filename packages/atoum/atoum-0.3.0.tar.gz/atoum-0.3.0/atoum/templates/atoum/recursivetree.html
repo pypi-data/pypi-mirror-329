@@ -1,0 +1,78 @@
+{% extends "atoum/base.html" %}
+{% load i18n %}
+
+{% block title-content %}{% spaceless %}
+    <h1>{% translate "Tree" %}</h1>
+{% endspaceless %}{% endblock title-content %}
+
+{% block app_content %}{% spaceless %}
+<div class="recursive-tree-page">
+    <div class="mb-5">
+        <h2 class="fs-5">Légende</h2>
+        <p>
+            <span class="badge text-bg-success fs-4">
+                <i class="bi bi-boxes"></i> Consommable
+            </span>&nbsp;-
+            <span class="badge text-bg-primary rounded-pill fs-5">
+                <i class="bi bi-stack"></i> Gamme
+            </span>&nbsp;-
+            <span class="badge text-bg-warning fs-6">
+                <i class="bi bi-tags"></i> Categorie
+            </span>&nbsp;-
+            <span class="text-bg-light">
+                <i class="bi bi-archive"></i> Produit
+            </span>
+        </p>
+    </div>
+
+    <hr>
+    <div class="mb-5">
+        <h2>Données</h2>
+        <ul class="tree consumable-list">
+            {% for consumable in object_list %}
+                <li>
+                    <span class="badge text-bg-success fs-4">{{ consumable.title }}</span>
+
+                    {% with assortments=consumable.get_assortments %}
+                        {% if assortments %}
+                        <ul class="assortment-list my-2">
+                            {% for assortment in assortments %}
+                            <li class="mb-2">
+                                <span class="badge rounded-pill text-bg-primary fs-5">{{ assortment.title }}</span>
+
+                                {% with categories=assortment.get_categories %}
+                                    {% if categories %}
+                                    <ul class="category-list my-1">
+                                        {% for category in categories %}
+                                        <li class="mb-1">
+                                            <span class="badge text-bg-warning fs-6">{{ category.title }}</span>
+
+                                            {% with products=category.get_products %}
+                                                {% if products %}
+                                                <ul class="product-list my-1">
+                                                    {% for product in products %}
+                                                    <li class="mb-1">
+                                                        {{ product.title }}
+                                                    </li>
+                                                    {% endfor %}
+                                                </ul>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                {% endwith %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    {% endwith %}
+                </li>
+            {% empty %}
+                <li>{% translate "No consumable yet." %}</li>
+            {% endfor %}
+        </ul>
+    <div>
+</div>
+{% endspaceless %}{% endblock app_content %}

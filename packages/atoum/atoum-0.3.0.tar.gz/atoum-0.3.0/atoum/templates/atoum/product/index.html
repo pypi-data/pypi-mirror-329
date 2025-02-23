@@ -1,0 +1,48 @@
+{% extends "atoum/base.html" %}
+{% load i18n %}
+{% block header-title %}{% translate "Products" %} - {{ block.super }}{% endblock header-title %}
+
+{% block title-content %}{% spaceless %}
+    <h1>
+        <i class="bi bi-archive"></i>
+        {% translate "Products" %}
+    </h1>
+{% endspaceless %}{% endblock title-content %}
+
+{% block page-submenu %}
+    <div class="page-submenu">
+        {% if request.user.is_staff %}
+            <div class="manage-object dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-gear"></i> {% translate "Manage" %}
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="{% url "admin:atoum_product_add" %}"
+                            class="dropdown-item">
+                            <small class="me-3"><i class="bi bi-plus-circle text-success"></i> {% translate "Add a new Product" %}</small>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+{% endblock page-submenu %}
+
+{% block app_content %}{% spaceless %}
+    <div class="product-index mt-3">
+        <div class="products stacks">
+            {% for product in object_list %}
+                <a href="{{ product.get_absolute_url }}" class="item">
+                    <span class="title">{{ product.title }}</span>
+                    <br><small class="parent">{{ product.category.title }}</small>
+                </a>
+            {% empty %}
+                <p class="empty">{% translate "No products yet." %}</p>
+            {% endfor %}
+        </div>
+
+        {% include "atoum/pagination.html" %}
+    </div>
+{% endspaceless %}{% endblock app_content %}

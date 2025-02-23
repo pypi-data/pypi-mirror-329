@@ -1,0 +1,55 @@
+{% extends "atoum/base.html" %}
+{% load i18n %}
+{% block header-title %}{% translate "Dashboard" %} - {{ block.super }}{% endblock header-title %}
+
+{% block title-content %}{% spaceless %}
+    <h1>{% translate "Dashboard" %}</h1>
+{% endspaceless %}{% endblock title-content %}
+
+{% block app_content %}{% spaceless %}
+    <div class="dashboard">
+        <h2 class="mb-4">{% translate "Catalog" %}</h2>
+
+        <div class="features grid">
+            <a class="item" href="{% url "atoum:consumable-index" %}">
+                <div class="cover text-bg-consumable">
+                    <i class="icon bi bi-boxes"></i>
+                </div>
+                <div class="body">
+                    <span class="number">{{ consumable_count }}</span>
+                    <span class="text">{% translate "Consumables" %}</span>
+                </div>
+            </a>
+
+            <a class="item" href="{% url "atoum:assortment-index" %}">
+                <div class="cover text-bg-assortment">
+                    <i class="icon bi bi-stack"></i>
+                </div>
+                <div class="body">
+                    <span class="number">{{ assortment_count }}</span>
+                    <span class="text">{% translate "Assortments" %}</span>
+                </div>
+            </a>
+
+            <a class="item" href="{% url "atoum:category-index" %}">
+                <div class="cover text-bg-category">
+                    <i class="icon bi bi-tags"></i>
+                </div>
+                <div class="body">
+                    <span class="number">{{ category_count }}</span>
+                    <span class="text">{% translate "Categories" %}</span>
+                </div>
+            </a>
+
+            <a class="item" href="{% url "atoum:product-index" %}">
+                <div class="cover text-bg-product">
+                    <i class="icon bi bi-archive"></i>
+                </div>
+                <div class="body">
+                    <span class="number">{{ product_count }}</span>
+                    <span class="text">{% translate "Products" %}</span>
+                </div>
+            </a>
+        </div>
+    </div>
+{% endspaceless %}{% endblock app_content %}

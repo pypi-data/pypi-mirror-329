@@ -1,0 +1,62 @@
+{% extends "atoum/base.html" %}
+{% load atoum crispy_forms_tags i18n %}
+
+{% block title-content %}{% spaceless %}
+    <h1>
+        <i class="bi bi-search"></i>
+        {% translate "Search" %}
+    </h1>
+{% endspaceless %}{% endblock title-content %}
+
+{% block app_content %}
+    <div class="search-results mt-3">
+        {% crispy form %}
+
+        <hr>
+
+        {% if query %}
+            <h3 class="h4 mb-4">
+                {% translate "Results" %}
+            </h3>
+
+            {% with results=page_obj.object_list %}
+                {% if results %}
+                    <div class="results stacks">
+                        {% for result in results %}
+                            {% if result.model_name == "assortment" %}
+                                <a href="{{ result.object.get_absolute_url }}" class="item">
+                                    <small class="model"><i class="bi bi-stack"></i> {% translate "Assortment" %}</small><br>
+                                    <span class="title">{{ result.object.title }}</span>
+                                    <br><small class="parent">{% translate "In consumable" %} <em>{{ result.object.consumable.title }}</em></small>
+                                </a>
+                            {% elif result.model_name == "category" %}
+                                <a href="{{ result.object.get_absolute_url }}" class="item">
+                                    <small class="model"><i class="bi bi-tags"></i> {% translate "Category" %}</small><br>
+                                    <span class="title">{{ result.object.title }}</span>
+                                    <br><small class="parent">{% translate "In assortment" %} <em>{{ result.object.assortment.title }}</em></small>
+                                </a>
+                            {% elif result.model_name == "consumable" %}
+                                <a href="{{ result.object.get_absolute_url }}" class="item">
+                                    <small class="model"><i class="bi bi-boxes"></i> {% translate "Consumable" %}</small><br>
+                                    <span class="title">{{ result.object.title }}</span>
+                                </a>
+                            {% elif result.model_name == "product" %}
+                                <a href="{{ result.object.get_absolute_url }}" class="item">
+                                    <small class="model"><i class="bi bi-archive"></i> {% translate "Product" %}</small><br>
+                                    <span class="title">{{ result.object.title }}</span>
+                                    <br><small class="parent">{% translate "In category" %} <em>{{ result.object.category.title }}</em></small>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="item empty">{% translate "No results found." %}</p>
+                {% endif %}
+            {% endwith %}
+
+            {% include "atoum/pagination.html" with page=page_obj query=query %}
+        {% else %}
+            <p class="empty text-secondary">{% translate "No search pattern was submitted." %}</p>
+        {% endif %}
+   </div>
+{% endblock app_content %}

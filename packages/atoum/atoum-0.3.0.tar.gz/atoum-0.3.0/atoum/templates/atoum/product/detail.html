@@ -1,0 +1,81 @@
+{% extends "atoum/base.html" %}
+{% load i18n smart_image %}
+{% block header-title %}{{ product_object.title }} - {{ block.super }}{% endblock header-title %}
+
+{% block title-content %}{% spaceless %}
+    <p class="mb-0">
+        <small class="text-body-secondary"><i class="bi bi-archive"></i> {% translate "Product" %}</small>
+    </p>
+
+    <h1>
+        {{ product_object.title }}
+    </h1>
+{% endspaceless %}{% endblock title-content %}
+
+{% block page-submenu %}
+<div class="page-submenu">
+    {% if request.user.is_staff %}
+        <div class="manage-object dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-gear"></i> {% translate "Manage" %}
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="{% url "admin:atoum_product_change" object_id=product_object.id %}"
+                        class="dropdown-item">
+                        <small class="me-3"><i class="bi bi-pencil text-primary"></i> {% translate "Change" %}</small>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url "admin:atoum_product_delete" object_id=product_object.id %}"
+                        class="dropdown-item">
+                        <small class="me-3"><i class="bi bi-trash3 text-danger"></i> {% translate "Delete" %}</small>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+</div>
+{% endblock page-submenu %}
+
+{% block app_content %}{% spaceless %}
+    <div class="product-detail">
+        <div class="grid">
+            <div class="g-col-8">
+                <div class="cover bg-light-subtle p-3">
+                    {% if product_object.cover %}
+                        {% media_thumb product_object.cover "400x400" format="JPEG" as cover_thumb %}
+                        <img src="{{ cover_thumb.url }}" class="img-fluid img-thumbnail m-auto w-auto mw-100 d-block" alt="">
+                    {% else %}
+                        <svg class="img-fluid img-thumbnail m-auto w-auto mw-100 d-block" width="400" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Card image cap" preserveAspectRatio="xMidYMid slice" focusable="false">
+                            <title>Cover image empty</title>
+                            <rect width="100%" height="100%" style="fill:RGBA(var(--bs-secondary-rgb),var(--bs-bg-opacity,1));"></rect>
+                        </svg>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="g-col-4 p-2"></div>
+
+            <div class="g-col-8">
+                <div class="brand mb-3">
+                    <h2 class="h4 mb-2">{% translate "Brand" %}</h2>
+                    {% if product_object.brand %}
+                        <p>{{ product_object.brand }}</p>
+                    {% else %}
+                        <p class="empty text-body-secondary"><em>{% translate "No brand." %}</em></p>
+                    {% endif %}
+                </div>
+                <div class="description mb-3">
+                    <h2 class="h4 mb-2">{% translate "Description" %}</h2>
+                    {% if product_object.description %}
+                        {{ product_object.description|linebreaks }}
+                    {% else %}
+                        <p class="empty text-body-secondary"><em>{% translate "No description." %}</em></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endspaceless %}{% endblock app_content %}

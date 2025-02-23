@@ -1,0 +1,51 @@
+{% extends "atoum/base.html" %}
+{% load i18n %}
+{% block header-title %}{% translate "Assortments" %} - {{ block.super }}{% endblock header-title %}
+
+{% block title-content %}{% spaceless %}
+    <h1>
+        <i class="bi bi-stack"></i>
+        {% translate "Assortments" %}
+    </h1>
+{% endspaceless %}{% endblock title-content %}
+
+{% block page-submenu %}
+    <div class="page-submenu">
+        {% if request.user.is_staff %}
+            <div class="manage-object dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-gear"></i> {% translate "Manage" %}
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="{% url "admin:atoum_assortment_add" %}"
+                            class="dropdown-item">
+                            <small class="me-3"><i class="bi bi-plus-circle text-success"></i> {% translate "Add a new Assortment" %}</small>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+{% endblock page-submenu %}
+
+{% block app_content %}{% spaceless %}
+    <div class="assortment-index mt-3">
+        <div class="assortments cartouches">
+            {% for assortment in object_list %}
+                <a class="item item--assortment" href="{{ assortment.get_absolute_url }}">
+                    <div class="cover"></div>
+                    <div class="body">
+                        <small class="parent">{{ assortment.consumable.title }}</small>
+                        <span class="title">{{ assortment.title }}</span>
+                    </div>
+                </a>
+            {% empty %}
+                <div class="empty">
+                    <p><em>{% translate "No assortment yet." %}</em></p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endspaceless %}{% endblock app_content %}
