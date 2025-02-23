@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bard-cli"
+dynamic = ["version"]
+description = "bard is a text to speech tool based on existing open-source models (local install) and APIs to install on your desktop"
+authors = [
+    { name="Mahé Perrette", email="mahe.perrette@gmail.com" }
+]
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "sounddevice",
+    "soundfile",
+    "tqdm",
+    "pyperclip",
+    "pystray",
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+
+keywords = [
+    "text-to-speech",
+    "AI",
+    "language",
+    "openai",
+]
+
+[project.optional-dependencies]
+app = ["PyGObject"]
+openai = ["openai"]
+html = ["beautifulsoup4", "requests", "lxml_html_clean", "readability-lxml"]
+all = ["openai"]
+
+[project.urls]
+Homepage = "https://github.com/perrette/bard"
+
+[project.scripts]
+bard = "bard.app:main"
+bard-install = "bard.install_desktop:main"
+
+[tool.setuptools]
+packages = [ "bard", "bard_data" ]
+
+[tool.setuptools_scm]
+write_to = "bard/_version.py"
