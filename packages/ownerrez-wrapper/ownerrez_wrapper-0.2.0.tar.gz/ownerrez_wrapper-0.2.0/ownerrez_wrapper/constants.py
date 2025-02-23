@@ -1,0 +1,1 @@
+BASEURL = "https://api.ownerreservations.com/v2" 
