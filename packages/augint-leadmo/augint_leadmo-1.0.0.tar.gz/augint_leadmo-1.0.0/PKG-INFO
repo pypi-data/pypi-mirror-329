@@ -1,0 +1,142 @@
+Metadata-Version: 2.3
+Name: augint-leadmo
+Version: 1.0.0
+Summary: Lead Momentum tools for Augmenting Integrations
+License: AGPL-3.0-only
+Author: Samuel Vange
+Author-email: 7166607+svange@users.noreply.github.com
+Requires-Python: >=3.10,<4.0
+Classifier: License :: OSI Approved :: GNU Affero General Public License v3
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Provides-Extra: docs
+Requires-Dist: aws-lambda-powertools (>=2.42.0,<3.0.0)
+Requires-Dist: boto3 (>=1.28.51,<2.0.0)
+Requires-Dist: loguru (>=0.7.2,<0.8.0)
+Requires-Dist: pydantic[email] (>=2.8.2,<3.0.0)
+Requires-Dist: pygithub (>=2.3.0,<3.0.0)
+Requires-Dist: python-dotenv (>=1.0.1,<2.0.0)
+Requires-Dist: pytz (>=2024.1,<2025.0)
+Requires-Dist: rich (>=13.7.1,<14.0.0)
+Requires-Dist: sphinx (>=7.4.7,<9.0.0) ; extra == "docs"
+Requires-Dist: sphinx-click (>=6.0.0,<7.0.0) ; extra == "docs"
+Description-Content-Type: text/markdown
+
+# Augmenting Integrations Lead Momentum Tools
+![ci status](https://github.com/svange/augint-leadmo/actions/workflows/pipeline.yaml/badge.svg?branch=main)
+
+![PyPI - Version](https://img.shields.io/pypi/v/openbrain)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=flat-square&logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![Made with GH Actions](https://img.shields.io/badge/CI-GitHub_Actions-blue?logo=github-actions&logoColor=white)](https://github.com/features/actions "Go to GitHub Actions homepage")
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+
+
+# LeadmoApiV1 Class
+
+The `LeadmoApiV1` class is a Python client designed to facilitate interactions with the Lead Momentum API. This client provides an easy-to-use interface for managing contacts and appointments within the Lead Momentum platform. It abstracts away the complexities of making HTTP requests and handling authentication, allowing developers to focus on their application's core functionality.
+
+## Capabilities
+
+The `LeadmoApiV1` class offers the following capabilities:
+
+### Contact Management
+
+- **Create Contact**: Add a new contact to your Lead Momentum account.
+- **Lookup Contact**: Retrieve contact details using contact identifiers.
+- **Update Contact**: Modify existing contact information, such as address and phone number.
+- **Delete Contact**: Remove a contact from your account.
+- **Get Contact by ID**: Fetch detailed information about a contact using their unique identifier.
+
+### Appointment Management
+
+- **Get Available Appointment Slots**: Retrieve available time slots for scheduling appointments.
+- **Create Appointment**: Schedule a new appointment using available slots.
+- **Get Appointment by ID**: Retrieve detailed information about a specific appointment.
+- **Update Appointment**: Change the details of an existing appointment.
+- **Update Appointment Status**: Modify the status of an appointment (e.g., confirmed, canceled).
+- **Delete Appointment**: Cancel and remove an appointment from the schedule.
+
+## Usage
+
+### Initialization
+
+To use the `LeadmoApiV1` client, instantiate it with your API key:
+
+```python
+from augint_tools.leadmo_api.v1.client import LeadmoApiV1
+
+# Initialize the client
+api_key = "your_api_key_here"
+leadmo = LeadmoApiV1(api_key=api_key)
+```
+
+Alternatively, you can set the API key as an environment variable and initialize the client without passing the key explicitly:
+
+```python
+from augint_tools.leadmo_api.v1.client import LeadmoApiV1
+os.environ["LEADMO_BEARER_TOKEN"] = "your_api_key_here"
+# Initialize the client
+leadmo = LeadmoApiV1()
+```
+### Examples
+
+#### Creating a Contact
+
+```python
+# Define contact details
+contact_data = {
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john.doe@example.com",
+    "phone": "+1234567890"
+}
+
+# Create the contact
+response = leadmo.create_contact(**contact_data)
+print(response)
+```
+
+#### Scheduling an Appointment
+
+```python
+# Get available appointment slots
+slots_response = leadmo.get_available_appointment_slots(calendar_id="your_calendar_id", timezone="US/Pacific")
+next_slot = list(slots_response.values())[0]["slots"][0]
+
+# Create an appointment
+appointment_response = leadmo.create_appointment(
+    phone=contact_data.get("phone"),
+    calendar_id="your_calendar_id",
+    selected_slot=next_slot,
+    selected_timezone="US/Pacific"
+)
+print(appointment_response)
+```
+
+#### Updating Contact Information
+
+```python
+# Update the contact's address
+update_response = leadmo.update_contact(contact_id=contact_id, address1="1234 Main St.")
+print(update_response)
+```
+
+#### Deleting an Appointment
+
+```python
+# Delete the appointment
+leadmo.delete_appointment(appointment_id=appointment_id)
+```
+
+## Conclusion
+
+The `LeadmoApiV1` class streamlines the process of integrating with the Lead Momentum API, providing a simple and efficient way to manage contacts and appointments programmatically. By utilizing this client, developers can focus on building robust applications while leveraging the powerful features offered by the Lead Momentum platform.
+
+examples as needed for your project's documentation!
+
