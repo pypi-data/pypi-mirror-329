@@ -1,0 +1,139 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sieves"
+readme = "README.md"
+description = "Rapid prototyping and robust baselines for information extraction with zero- and few-shot models."
+license = { text = "MIT" }
+dynamic = ["version", "authors"]
+requires-python = ">=3.10"
+dependencies = [
+    "loguru>=0.7.3",
+    "pydantic>=2,<3",
+    "datasets>=3,<4",
+    "jinja2>=3,<4",
+    "chonkie>=0.3",
+    "docling>=2",
+    "outlines>=0.0.34",
+    "dspy-ai>=2,<3",
+    "chonkie>=0.3",
+    "transformers>=4,<5",
+    "loguru>=0.7.3",
+    "sentencepiece<1",
+    "gliner<1",
+    "ollama<1",
+    "langchain>=0.3,<0.4",
+    "scikit-learn>=1,<2",
+    "unstructured[all-docs]>=0.16,<1",
+    "unstructured-inference>=0.8,<1",
+    "instructor>=1,<2",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
+]
+
+[project.optional-dependencies]
+utils = [
+    "tesseract>=0.1,<1"
+]
+test = [
+    "pytest>=7.4.3",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.21.1",
+    "mypy>=1",
+    "mypy-extensions>=1",
+    "pytest-cov>=6",
+    "langchain-anthropic>0.3,<0.4",
+    "tesseract>=0.1,<1",
+    # For generating documentation.
+    "mkdocstrings[python]>=0.27,<1",
+    "mkdocs-material>=9.6,<10"
+]
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+include = '\.pyi?$'
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)
+select = ["E", "F", "I", "UP"]
+ignore = []
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = ["F401"]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    ".venv"
+]
+
+[tool.ruff.mccabe]
+max-complexity = 10
+
+[tool.ruff.isort]
+known-first-party = ["sieves"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+allow_untyped_globals = false
+allow_redefinition = false
+implicit_reexport = false
+strict_equality = true
+ignore_missing_imports = true
+
+# Per-module ignores for third-party libraries
+[[tool.mypy.overrides]]
+module = ["outlines.*", "docling.*", "chonkie.*", "tqdm.*", "dspy.*"]
+ignore_missing_imports = true
+follow_imports = "skip"
+
+[tool.pytest.ini_options]
+markers = [
+  "slow: marks tests as slow (deselect with '-m not slow')"
+]
