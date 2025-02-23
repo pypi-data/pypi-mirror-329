@@ -1,0 +1,84 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "plottica"
+dynamic = ["version"]
+description = "A shortcut package for academic plotting."
+homepage = "https://github.com/LovelyBuggies/plottica"
+repository = "https://github.com/LovelyBuggies/plottica"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["Academic", "Research", "Plotting"]
+authors = [
+  { name = "Shuo Liu", email = "ninomyemail@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "matplotlib>=3.4.0",
+  "numpy>=1.21.0",
+  "pandas>=1.3.0",
+  "seaborn>=0.11.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "wandb>=0.19.7",
+  "black>=24.2.0",
+  "pre-commit>=2.15.0",
+  "build>=0.7.0",
+  "twine>=3.4.0",
+  "pytest>=8.3.4",
+  "jupyter-notebook>=7.3.2",
+  "jupyterlab>=1.1.1",
+  "jupyter-book>=1.0.3",
+  "scipy>=1.15.2",
+]
+
+[project.urls]
+Documentation = "https://github.com/LovelyBuggies/plottica#readme"
+Issues = "https://github.com/LovelyBuggies/plottica/issues"
+Source = "https://github.com/LovelyBuggies/plottica"
+
+[tool.hatch.version]
+path = "src/plottica/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/plottica tests}"
+
+[tool.coverage.run]
+source_pkgs = ["plottica", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/plottica/__about__.py",
+]
+
+[tool.coverage.paths]
+plottica = ["src/plottica", "*/plottica/src/plottica"]
+tests = ["tests", "*/plottica/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.black]
+line-length = 98  # Default Black line length
+target-version = ['py312']  # Set Python 3.12 as the target version
