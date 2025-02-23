@@ -1,0 +1,52 @@
+Metadata-Version: 2.1
+Name: tagmapper
+Version: 0.3.1
+Summary: Python wrapper for sql tag mapping database
+Author: Åsmund Våge Fannemel
+Author-email: asmf@equinor.com
+Requires-Python: >=3.9.2,<4.0.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Dist: azure-identity (>=1.17.1,<2.0.0)
+Requires-Dist: certifi (>=2023.11.17)
+Requires-Dist: msal-bearer (>=1.1.4,<2.0.0)
+Requires-Dist: pandas (>=2.2.2,<3.0.0)
+Requires-Dist: pyodbc (>=5.1.0,<6.0.0)
+Requires-Dist: requests (>=2.31.0,<3.0.0)
+Requires-Dist: sqlalchemy (>=2.0.28,<3.0.0)
+Description-Content-Type: text/markdown
+
+# tagmapper-sdk [![SNYK dependency check](https://github.com/equinor/tagmapper-sdk/actions/workflows/snyk.yml/badge.svg)](https://github.com/equinor/tagmapper-sdk/actions/workflows/snyk.yml)
+Prototype python package to get IMS-tag mappings for data models for separators and wells.
+
+Authentication is done using Azure credentials and bearer tokens.
+
+
+## Use
+See [demo](examples/demo_separator.py). Or try the following simple code.  
+```
+from tagmapper import Well
+
+
+w = Well("NO 30/6-E-2")  
+```
+
+
+## Installing
+Install from pypi using pip.  
+``
+pip install tagmapper
+``
+
+
+## Developing
+Clone repo and run ``poetry install`` to install dependencies.
+
+
+## Testing
+Run tests and check coverage using pytest-cov
+``poetry run pytest --cov=tagmapper test/ --cov-report html``
+
