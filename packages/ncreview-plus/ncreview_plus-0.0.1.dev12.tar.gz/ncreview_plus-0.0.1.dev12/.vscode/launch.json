@@ -1,0 +1,74 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Module",
+            "type": "python",
+            "python": "/usr/local/bin/python3",
+            "subProcess": true,
+            "request": "launch",
+            "module": "ncr",
+            "console": "integratedTerminal",
+            "args": [
+                "${workspaceRoot}/data/archive/sgp/sgpkazrcfrmdC1.a1",
+                "${workspaceRoot}/data/reproc/sgp/sgpkazrcfrmdC1.a1",
+                // "${workspaceRoot}/data/archive/sgp/sgpmetE13.b1"
+            ]
+        },
+        {
+            "name": "2 arm files (working)",
+            "type": "python",
+            "subProcess": true,
+            "request": "launch",
+            "module": "ncr",
+            "console": "integratedTerminal",
+            "args": [
+                "~/code.arm.gov/vap/beflux1long/test/reprocessing_cdf_output/sgp/sgpbeflux1longC1.c1",
+                "~/code.arm.gov/vap/beflux1long_py/test/reprocessing_cdf_output/sgp/sgpbeflux1longpyC1.c1",
+                "-b", "20241001", "-e", "20241003"
+                // "${workspaceRoot}/data/archive/sgp/sgpmetE13.b1"
+            ]
+        },
+        {
+            "name": "2 wdh files (not working)",
+            "type": "python",
+            "subProcess": true,
+            "request": "launch",
+            "module": "ncr",
+            "console": "integratedTerminal",
+            "args": [
+                "${workspaceRoot}/test/nant_lidar_a0",
+                "${workspaceRoot}/test/nant_lidar_b0",
+                "-b", "20241001", "-e", "20241003"
+                // "${workspaceRoot}/data/archive/sgp/sgpmetE13.b1"
+            ]
+        },
+        {
+            "name": "not arm or wdh",
+            "type": "python",
+            "subProcess": true,
+            "request": "launch",
+            "module": "ncr",
+            "console": "integratedTerminal",
+            "args": [
+                "/data/home/sivaraman/sgp/sgppblhttropoeC1.c1/pblht_thermo_test/data",
+                // "${workspaceRoot}/data/archive/sgp/sgpmetE13.b1"
+            ]
+        },
+        {
+            "name": "nant samples",
+            "type": "python",
+            "subProcess": true,
+            "request": "launch",
+            "module": "ncr",
+            "console": "integratedTerminal",
+            "args": [
+                "${workspaceFolder}/test/nant_samples"
+                // "${workspaceRoot}/data/archive/sgp/sgpmetE13.b1"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,36 @@
+[build-system]
+requires = [
+    "setuptools>=72.2",
+    "packaging>=24.1",
+    "wheel>=0.43.0",
+    "setuptools-scm[toml]>=6.2"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ncreview_plus"
+dynamic = ["version"]
+description = "A tool to compare and/or summarize netCDF files"
+license = {text = "MIT"}
+authors = [
+    {name = "Gabriel Gibler", email = "gabriel.gibler@pnnl.gov"},
+    {name = "Sherman Beus", email = "sherman.beus@pnnl.gov"},
+    {name = "Thomas Powell", email = "thomas.powell@pnnl.gov"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "netCDF4",
+    "numpy == 1.26",
+    "urllib3 == 1.26.16",
+    "act-atmos == 1.4",
+    "matplotlib == 3.4",
+]
+
+[project.scripts]
+ncreview = "ncr.__main__:run"
+ncrplot = "ncr.__main__:plot"
+ncrserver = "ncr.server:main"
+
+[tool.setuptools.packages.find]
+exclude = ["web-legacy", "test"]

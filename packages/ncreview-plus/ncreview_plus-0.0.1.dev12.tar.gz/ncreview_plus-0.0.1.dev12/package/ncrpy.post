@@ -1,0 +1,72 @@
+#!/bin/bash
+#
+# Post install script for the dsutil-ncreview_plus package.
+#
+
+comp="dsutil"
+process_name="ncreview_plus"
+prefix="/apps/ds"
+conda_exe='conda'
+
+# Whether to remove/clean conda existing environment first
+# Set to 'true' to clean existing conda environment and 'false' to not
+clean_conda_env="true"
+
+# Conda package to install in environment (contains full path to package).
+# This field is filled in by APR
+# Example: /apps/process/package/conda/linux64/mplcmaskml-0.1.0-py39_0.tar.bz2
+conda_package=__CONDA_PACKAGE__
+
+# Functions to echo and run commands
+# Debug only
+run() {
+    echo "> $1"
+    $1 || exit 1
+}
+
+# Activate Conda environment
+conda_source="/apps/base/conda/etc/profile.d/conda.sh"
+if [ ! -e "$conda_source" ]; then
+    conda_source="/apps/base/mamba/etc/profile.d/conda.sh"
+fi
+
+run "source $conda_source"
+env_yaml_file="$prefix/conda-env/$comp/$process_name/environment.yml"
+
+# Get environment name
+env_name=$(head -n 1 $env_yaml_file  | cut -f2 -d ' ')
+
+# Check if environment already exists
+env_exists=$($conda_exe env list | grep $env_name)
+
+if [ "$env_exists" ] && [ "$clean_conda_env" == "true" ]; then
+    echo "Cleaning conda environment $env_name"
+    run "$conda_exe env remove -y -n $env_name"
+    env_exists=""
+fi
+
+if [ -z "$env_exists" ]; then
+    # If conda env not created, create the environment
+    echo "Conda env '$env_name' doesn't exist. Creating environment..."
+    run "$conda_exe env create -f $env_yaml_file --solver=libmamba"
+else
+    # If conda env already created, run the update function
+    echo "Conda env '$env_name' exists. Updating environment..."
+    run "$conda_exe env update -f $env_yaml_file --solver=libmamba"
+fi
+
+echo "Conda package path: $conda_package"
+
+# Run conda_index on channel directory before installing package.
+# Note: APR environment has conda_index
+run "$conda_exe activate apr"
+
+basedir=$(dirname $conda_package)
+run "cd $basedir"
+run "cd .."
+run "python -m conda_index ."
+run "$conda_exe deactivate"
+
+# Install package in environment
+run "$conda_exe activate $env_name"
+run "$conda_exe install $conda_package"
