@@ -1,0 +1,43 @@
+[project]
+name = "pixerise"
+version = "0.12.1"
+description = "A high-performance 3D software renderer implemented in Python, optimized with NumPy and Numba JIT compilation."
+authors = [
+    { name = "Enrico Stara", email = "enrico.stara@gmail.com" },
+]
+dependencies = [
+    "numpy>=2.0.0",
+    "numba>=0.60.0",
+    "scipy>=1.14.1",
+]
+requires-python = ">=3.10,<3.13"
+readme = "README.md"
+
+[project.license]
+text = "MIT"
+
+[build-system]
+requires = [
+    "pdm-backend",
+]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.build]
+includes = [
+    "src/",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.4.0",
+    "ruff>=0.9.6",
+    "pydoc-markdown>=4.8.2",
+    "rust-just>=1.39.0",
+    "pre-commit>=4.1.0",
+]
+examples = [
+    "pygame>=2.6.1",
+]
