@@ -1,0 +1,46 @@
+Index: ssc_codegen/str_utils.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import re\n\nRE_GO_IMPORTS_BLOCK = re.compile(r\"import\\s*\\(\\s*([\\s\\S]*?)\\s*\\)\")\n\n__all__ = [\n    \"to_snake_case\",\n    \"to_upper_camel_case\",\n    \"to_lower_camel_case\",\n    \"wrap_backtick\",\n    \"wrap_double_quotes\",\n    \"escape_str\",\n    \"remove_empty_lines\",\n    \"go_unimport_naive\",\n    'py_optimize_return_naive'\n]\n\n\ndef to_snake_case(s: str) -> str:\n    # camelCase\n    s = re.sub(r\"([a-z])([A-Z])\", r\"\\1_\\2\", s)\n    # PascalCase\n    s = re.sub(r\"([A-Z]+)([A-Z][a-z])\", r\"\\1_\\2\", s)\n    return s.lower()\n\n\ndef to_upper_camel_case(s: str) -> str:\n    return (\n        \"\".join(word[0].upper() + word[1:] for word in s.split(\"_\")) if s else s\n    )\n\n\ndef to_lower_camel_case(s: str) -> str:\n    if not s:\n        return s\n\n    up_case = to_upper_camel_case(s)\n    return up_case[0].lower() + up_case[1:]\n\n\ndef wrap_double_quotes(s: str, escape_ch: str = \"\\\\\") -> str:\n    \"\"\"used if string marks only in this chars\"\"\"\n    return '\"' + s.replace('\"', f'{escape_ch}\"') + '\"'\n\n\ndef wrap_backtick(s: str, escape_ch: str = \"\\\\\") -> str:\n    return \"`\" + s.replace(\"`\", f\"{escape_ch}`\") + \"`\"\n\n\ndef escape_str(\n    s: str, pattern: str = r\"[\\-.^$*+?{}\\[\\]\\\\|()]\", escape_ch: str = \"\\\\\"\n) -> str:\n    \"\"\"Sanitize matching characters.\n    Used, for trim, l_trim, r_trim realizations by regex\"\"\"\n\n    def _repl(ch: re.Match[str]) -> str:\n        return escape_ch + ch[0]\n\n    return re.sub(pattern, _repl, s)\n\n\ndef remove_empty_lines(code: list[str], sep: str = \"\\n\") -> str:\n    \"\"\"remove empty lines from sequence of strings\"\"\"\n    return sep.join([i for i in code if i])\n\n\ndef go_unimport_naive(go_code: str) -> str:\n    \"\"\"remove unused imports in golang code\"\"\"\n    imports_block = RE_GO_IMPORTS_BLOCK.search(go_code)\n    if not imports_block:\n        return go_code\n    imports_code = imports_block.group(1)\n    import_libs = re.findall(r'\"([^\"]+)\"', imports_code)\n    for absolute_lib in import_libs:\n        lib = (\n            absolute_lib.split(\"/\")[-1]\n            if absolute_lib.find(\"/\") != -1\n            else absolute_lib\n        )\n        if not re.search(lib + \"\\\\.\", go_code):\n            sub_pattern = f'\\\\s*\"{absolute_lib}\"'\n            go_code = re.sub(sub_pattern, \"\", go_code)\n    return go_code\n\n\nRE_PY_METHOD_BLOCK = re.compile(r\"\"\"\ndef\\s_(?:parse|split)_\\w+\\(.*\\:    # method header: STRUCT_FIELD or SPLIT_DOC\n\\s*(?:\\n|.)*?                      # block of code instructions\nreturn\\s*(?P<ret_var>value[\\d+]?)  # return last variable\n\"\"\", flags=re.X)\n\n\ndef py_optimize_return_naive(py_code: str) -> str:\n    \"\"\"optimize _parse_[a-zA-Z_0-9] and _split_doc return statements\n\n    insert last expr instruction to return stmt instead create new variable\n\n    example:\n\n    IN:\n\n    class Foo:\n        # ...\n        def _split_doc(self, v):\n            v1 = v.expr1\n            v2 = v1.expr2\n            return v2\n        def _parse_a(self, v):\n            v1 = v.expr1\n            return v1\n        # ...\n\n    OUT:\n\n    class Foo:\n        # ...\n        def _split_doc(self, v):\n            v1 = v.expr1\n            return v1.expr2\n        def _parse_a(self, v):\n            return v.expr1\n        # ...\n\n    \"\"\"\n    tmp_code = py_code\n    for method_block in RE_PY_METHOD_BLOCK.finditer(tmp_code):\n        ret_var = method_block['ret_var']\n        # value6\\s*=\\s*(?P<expr>.*)$\n        re_expr = f\"{ret_var}\\\\s*=\\\\s*(?P<expr>.*)\"\n        expr = re.search(re_expr, method_block[0])['expr']\n\n        new_method_block = re.sub(f'\\\\s*{re_expr}', \"\", method_block[0])\n        new_method_block = re.sub(rf\"return {ret_var}\", f'return {expr}', new_method_block)\n        tmp_code = tmp_code.replace(method_block[0], new_method_block, 1)\n    return tmp_code\n\n\nif __name__ == '__main__':\n    code = \"\"\"\nclass Books:\n    def __init__(self, document: Union[str, _SelectorType]) -> None:\n        self._doc = (\n            Selector(document) if isinstance(document, str) else document\n        )\n\n    def _split_doc(self, value: SelectorList[_SelectorType]) -> SelectorList:\n        value1 = value.css(\".col-lg-3\") \n        return value1\n\n    def _parse_name(self, value: Selector) -> str:\n        value1 = value.css(\".thumbnail\")\n        value2 = value1.attrib[\"alt\"]\n        return value2\n\n    def _parse_image_url(self, value: Selector) -> str:\n        value1 = value.css(\".thumbnail\")\n        value2 = value1.attrib[\"src\"]\n        value3 = \"https://{}\".format(value2) if value2 else value2\n        return value3\n\n    def _parse_url(self, value: Selector) -> str:\n        value1 = value.css(\".image_container > a\")\n        value2 = value1.attrib[\"href\"]\n        return value2\n\"\"\"\n    print(py_optimize_return_naive(code))
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ssc_codegen/str_utils.py b/ssc_codegen/str_utils.py
+--- a/ssc_codegen/str_utils.py	(revision e503494828b9a03fe9f43fd1c3d229764d3da940)
++++ b/ssc_codegen/str_utils.py	(date 1739795635895)
+@@ -132,34 +132,3 @@
+         new_method_block = re.sub(rf"return {ret_var}", f'return {expr}', new_method_block)
+         tmp_code = tmp_code.replace(method_block[0], new_method_block, 1)
+     return tmp_code
+-
+-
+-if __name__ == '__main__':
+-    code = """
+-class Books:
+-    def __init__(self, document: Union[str, _SelectorType]) -> None:
+-        self._doc = (
+-            Selector(document) if isinstance(document, str) else document
+-        )
+-
+-    def _split_doc(self, value: SelectorList[_SelectorType]) -> SelectorList:
+-        value1 = value.css(".col-lg-3") 
+-        return value1
+-
+-    def _parse_name(self, value: Selector) -> str:
+-        value1 = value.css(".thumbnail")
+-        value2 = value1.attrib["alt"]
+-        return value2
+-
+-    def _parse_image_url(self, value: Selector) -> str:
+-        value1 = value.css(".thumbnail")
+-        value2 = value1.attrib["src"]
+-        value3 = "https://{}".format(value2) if value2 else value2
+-        return value3
+-
+-    def _parse_url(self, value: Selector) -> str:
+-        value1 = value.css(".image_container > a")
+-        value2 = value1.attrib["href"]
+-        return value2
+-"""
+-    print(py_optimize_return_naive(code))
+\ No newline at end of file
