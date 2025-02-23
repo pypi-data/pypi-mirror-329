@@ -1,0 +1,40 @@
+aiofiles>=24.1.0
+gallery_dl<2.0.0,>=1.28.1
+jinja2<4.0.0,>=3.1.5
+python-multipart>=0.0.20
+requests<3.0.0,>=2.32.3
+starlette<1.0.0,>=0.45.1
+watchfiles<2.0.0,>=1.0.0
+websockets>=13.1
+yt-dlp>=2024.11.04
+
+[:(platform_machine != "x86_64" and platform_machine != "AMD64") or implementation_name != "cpython"]
+uvicorn<1.0.0,>=0.32.0
+
+[:(platform_machine == "x86_64" or platform_machine == "AMD64") and implementation_name == "cpython"]
+uvicorn[standard]<1.0.0,>=0.32.0
+
+[build]
+build>=1.2.2
+pip>=24.3
+pyinstaller>=6.10.0
+setuptools>=75.6.0
+wheel>=0.45.0
+
+[dev]
+pre-commit>=4.0.0
+ruff>=0.9.0
+
+[full]
+mutagen>=1.47.0
+pycryptodomex>=3.21.0
+pyyaml>=6.0.2
+
+[full:implementation_name != "cpython"]
+brotlicffi>=1.1.0
+
+[full:implementation_name == "cpython"]
+brotli>=1.1.0
+
+[full:python_version <= "3.10"]
+toml>=0.10.2
