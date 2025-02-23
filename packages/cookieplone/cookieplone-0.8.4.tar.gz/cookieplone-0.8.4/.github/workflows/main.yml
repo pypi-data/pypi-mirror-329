@@ -1,0 +1,49 @@
+name: Test Codebase
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@v4
+
+      - name: Install hatch
+        run: pipx install hatch
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+          cache: "pip"
+
+      - name: "Install Environment"
+        run: hatch env create
+
+      - name: "Run checks"
+        run: hatch run check
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@v4
+
+      - name: Install hatch
+        run: pipx install hatch
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: "Install Environment"
+        run: hatch env create
+
+      - name: "Test Codebase"
+        run: hatch run test
