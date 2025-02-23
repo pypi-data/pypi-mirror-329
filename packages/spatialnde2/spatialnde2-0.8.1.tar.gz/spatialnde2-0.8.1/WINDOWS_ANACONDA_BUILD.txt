@@ -1,0 +1,93 @@
+On Windows, it is possible to quickly set up the entire build environment using
+Anaconda.  This provides a convenient environment for running Python code,
+including Dataguzzler, and ensures all required libraries and dependencies are
+installed and in the correct location.  
+
+Prerequisites:
+Microsoft Visual Studio 2015 Update 3 or later.
+    Be sure to install "Python development" and
+    "Desktop development with C++"
+Anaconda3
+This repository or Git Bash to clone the repo from GitHub
+OpenCL Drivers (Optional -- For OpenCL Support)
+
+Steps:
+
+1) Download the source code from GitHub or another location.  You can also
+   clone the repo using Git Bash or another git client using the following:
+
+      git clone https://github.com/isuthermography/spatialnde2
+
+2) Having a command-line GIT client installed and in the system path is
+strongly recommended as it will allow the build process to identify the
+version based on git tagging, such as from https://git-scm.com/downloads
+
+3) Open an Anaconda Command Prompt using the shortcut in the start menu
+
+4) Packages from conda-forge will be required.  Use of a new environment is
+   strongly encouraged.  The following command will establish a new environment
+   named SNDE with all of the required libraries and packages:
+
+     conda create -n SNDE -c conda-forge python=3.11 numpy scipy matplotlib cython ipython pip opencv clhpp pyopencl pint hdf5 h5py lxml setuptools setuptools_scm netcdf4 cmake openscenegraph pyopengl glfw freeglut glew mesa eigen swig pyreadline pyserial pyside2 hdf5 pyvisa git wheel build tomli-w 
+     
+   Note:  not all of these packages may be needed.  There may be other 
+          packages required for certain situations.
+
+5) Activate the conda environment 
+
+     conda activate SNDE
+
+   and cd into the spatialnde2 source folder.
+
+OPTION A: Fully automated build
+-------------------------------
+6) Use pip to perform the build entirely automatically
+     pip install --no-deps --no-build-isolation .
+
+SpatialNDE2 is now fully built and installed and you can skip
+steps 7-9.
+
+If option A fails, you can troubleshoot by performing a
+manual build:
+
+6) Make a build folder and cd inside
+
+     mkdir build
+     cd build
+
+7) Run cmake and watch for errors
+
+     cmake ..
+
+8) Build with cmake and watch for errors
+
+     cmake --build . -- /p:Configuration=RelWithDebInfo
+
+   Alternatively you can load the generated .sln file into Visual Studio and
+   build it from there. If you do so you may need to manually select RelWithDebInfo
+   as the configuration to build (upper toolbar, left center) instead of Debug or Release.
+   
+9) Build and install python wrapper from the build folder
+
+     pip install --no-deps --no-build-isolation .
+
+10) Optional: Build and install example c++ wrapper
+
+     cd ..
+     cd spatialnde2_example_external_cpp_function
+     pip install --no-deps --no-build-isolation .
+
+11) Finished! You can check that everything is working with a quick test:
+
+     cd ..
+     cd test
+     python recmath_test2.py
+	 
+12) Known issues: 
+   C++ programs that use the QT library do not load correctly because for some reason QT
+   can't find its plugins from the Anaconda installation. 
+     Workaround #1: Initialize QT from Python (e.g. use dataguzzler-python)
+	 Workaround #2: Set the QT_PLUGIN_PATH environment variable to point at the QT plugins
+	                from your anaconda environment, e.g. 
+					command prompt: set 'QT_PLUGIN_PATH=c:\users\username\.conda\envs\SNDE\Library\plugins'
+					PowerShell: $env:QT_PLUGIN_PATH='c:\users\username\.conda\envs\SNDE\Library\plugins'

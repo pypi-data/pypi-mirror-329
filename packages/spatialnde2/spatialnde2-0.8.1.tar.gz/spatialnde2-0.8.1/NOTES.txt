@@ -1,0 +1,66 @@
+Architecture
+------------
+
+A combination NURBS/meshed surface store.
+
+Defines a single array of vertices, single array
+of texture coordinates, single array of NURBS 3D control points,
+single array of NURBS 3D  knots, single array of NURBS 2D control points,
+single array of NURBS 2D knots, etc.
+
+Spaces in these arrays can be allocated and locked.
+Locking can be by the entire array, or subregions, and can be
+read only or read write.  There must be an order for locking the
+different arrays, and subregions of the arrays can be locked independently,
+ordered by array position and size. Initially only locking of the entire
+array will actually be implemented, but this could be improved later.
+
+Hierarchical assemblies and parts will be defined by reference into
+these master arrays. 
+
+Future: Implement ordered global revision tracker with different
+locking semantics.
+
+Any attempt to begin a lockprocess for write defines a new global revision.
+Any read- or write locks secured by this process are actually copies and
+don't take effect until the locking process is complete and they are
+ready to be used. (read locks for the prior version do have to be secured) 
+
+Only one thread at a time can perform such a lockprocess for write, therefore
+locking order is irrelevant. When ready to write to an array, need to wait
+for existing locks on the prior version to be released. This cannot cause a
+deadlock, though. 
+
+
+TODO: define a function that takes an rwlock_token_set and
+iterates over the map, explicitly unlocking all components.
+In general convention should be to explicitly unlock all locks
+when finished. This way if there is an attempt to unlock the same
+lock twice, it will fail because unlocking an unlocked std::unique_lock
+throws an exception (std::system_error).
+
+Process of defining and resetting all_locks as part of the locking
+process is somewhat confusing. 
+
+***!!! Remove last two entries from snde_error_opencl.hpp because incompatible
+with NVIDIA
+
+*** lock_types.hpp should #include<memory>
+
+arraymanager.hpp
+and snde_error.hpp
+need     #if defined(_MSC_VER) && _MSC_VER < 1900
+    #define snprintf _snprintf
+    #else
+    #include <stdio.h> //sprintf
+    #endif
+    for MSVC
+
+likewise remove noexcept() for
+MSVC2013 https://msdn.microsoft.com/en-us/library/dn956976.aspx
+
+rangetracker.hpp
+needs memory.h
+
+OpenCLcachemanger line 386 need to check for size of ev, and provide NULL
+otherwise
