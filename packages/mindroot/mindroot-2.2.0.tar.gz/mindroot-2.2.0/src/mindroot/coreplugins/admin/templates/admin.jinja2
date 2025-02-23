@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head_meta %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Interface</title>
+  {% endblock %}
+  {% block head %}
+  <link rel="stylesheet" href="/admin/static/css/reset.css">
+  <link rel="stylesheet" href="/admin/static/css/default.css">
+  <link rel="stylesheet" href="/admin/static/css/admin-custom.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked-highlight/lib/index.umd.js"></script>
+  <script type="module" src="/admin/static/js/persona-editor.js"></script>
+  <script type="module" src="/admin/static/js/plugin-toggle.js"></script>
+  <script type="module" src="/admin/static/js/agent-editor.js"></script>
+  <script type="module" src="/admin/static/js/model-preferences.js"></script>
+  <script type="module" src="/admin/static/js/plugin-manager.js"></script>
+  <script type="module" src="/admin/static/js/server-control.js"></script>
+
+  {% block head_favicon %}
+  <link rel="apple-touch-icon" sizes="180x180" href="/admin/static/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/admin/static/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/admin/static/favicon/favicon-16x16.png">
+
+  {% endblock %}
+
+  {% endblock %}
+  {% block head_end %}
+  {% endblock %}
+</head>
+<body>
+  {% block content_top %}
+  <header class="admin-header">
+    <a href="/" class="logo">
+      <img src="/admin/static/logo.png" class="logo"/>
+    </a>
+  </header>
+  <script>window.theme = 'default';</script>
+  {% endblock %}
+
+  {% block content %}
+  <div class="admin-container">
+    <details>
+      <summary>
+        <span class="material-icons">apps</span>
+        <span>Plugins</span>
+      </summary>
+      <div class="details-content">
+        <plugin-manager></plugin-manager>
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        <span class="material-icons">extension</span>
+        <span>Plugin States</span>
+      </summary>
+      <div class="details-content">
+        <plugin-toggle></plugin-toggle>
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        <span class="material-icons">smart_toy</span>
+        <span>Agents</span>
+      </summary>
+      <div class="details-content">
+        <agent-editor theme="dark" scope="local"></agent-editor>
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        <span class="material-icons">person</span>
+        <span>Personas</span>
+      </summary>
+      <div class="details-content">
+        <persona-editor theme="dark" scope="local"></persona-editor>
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        <span class="material-icons">settings</span>
+        <span>Model Preferences</span>
+      </summary>
+      <div class="details-content">
+        <model-preferences theme="dark" scope="local"></model-preferences>
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        <span class="material-icons">power_settings_new</span>
+        <span>Server Control</span>
+      </summary>
+      <div class="details-content">
+        <server-control theme="dark"></server-control>
+      </div>
+    </details>
+  {% endblock %}
+  </div>
+
+  {% block footer %}
+  {% endblock %}
+</body>
+</html>
