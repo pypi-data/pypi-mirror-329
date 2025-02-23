@@ -1,0 +1,44 @@
+Metadata-Version: 2.2
+Name: forth_kernel
+Version: 0.4.0
+Summary: A Jupyter kernel for the Forth programming language. Allows running Forth in interactive Jupyter Notebook.
+Author-email: Sohang Chopra <sohangchopra@gmail.com>
+Project-URL: Source, https://github.com/sohang3112/iforth
+Classifier: Framework :: IPython
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: System :: Shells
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: importlib-metadata>=8.5.0
+Requires-Dist: ipykernel>=6.29.5
+Requires-Dist: jupyter-client>=8.6.3
+Requires-Dist: pexpect>=4.9.0
+
+# IForth
+
+Forth kernel for Jupyter notebook / lab. This is a fork of [github.com/jdfreder/iforth](https://github.com/jdfreder/iforth).
+
+[Open in Colab](https://colab.research.google.com/github/sohang3112/iforth/blob/master/forth_jupyter_tour.ipynb)
+
+![Example Notebook Screenshot](notebook_screenshot.png)
+
+**Note:** Check the [changelog](CHANGELOG.md) to see the latest changes in development as well as in releases.
+
+## Installation
+
+- Install pre-reequisites: `python3`, `gforth` (forth interpreter).
+- Run `pip install forth_kernel`.
+- Now register it with jupyter: `python -m forth_kernel.self_install --user`.
+
+**Note:** On Windows, `gforth` doesn't work. Instead, [run using docker](#installing-with-docker).
+
+### Development Installation
+
+Git clone this repo, then do editable install using [uv](https://github.com/astral-sh/uv): `uv run python -m forth_kernel.self_install --user`.
+
+## Usage
+
+- Run `jupyter notebook` (or `jupyter lab`, whichever you prefer).
+- In a new or existing notebook, use the kernel selector (located at the top right of the notebook) to select `IForth`.
