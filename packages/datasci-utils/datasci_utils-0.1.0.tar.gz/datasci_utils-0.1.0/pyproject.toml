@@ -1,0 +1,26 @@
+[project]
+name = "datasci-utils"
+version = "0.1.0"
+description = "A comprehensive Python package designed for efficient manipulation and analysis of time series data at scale. Whether you’re working with financial data, retail metrics, or any time-based datasets, tsacme provides the tools you need to clean, analyze, and preprocess your data effectively."
+authors = [
+    {name = "John Snow",email = "johnsnow@company.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy (>=2.2.3,<3.0.0)",
+    "pandas (>=2.2.3,<3.0.0)",
+    "scikit-learn (>=1.6.1,<2.0.0)",
+    "plotnine (>=0.14.5,<0.15.0)",
+    "black (>=25.1.0,<26.0.0)",
+    "matplotlib (>=3.10.0,<4.0.0)",
+    "pylint (>=3.3.4,<4.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "datasci_utils", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
