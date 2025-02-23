@@ -1,0 +1,65 @@
+Metadata-Version: 2.2
+Name: LLM-Bridge
+Version: 0.3.0
+Summary: A Bridge for LLMs
+Author: windsnow1025
+Author-email: windsnow125@gmail.com
+License: MIT
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: fastapi
+Requires-Dist: httpx
+Requires-Dist: openai
+Requires-Dist: google-genai
+Requires-Dist: anthropic
+Requires-Dist: tiktoken
+Requires-Dist: pillow
+Requires-Dist: PyMuPDF
+Requires-Dist: python-docx
+Requires-Dist: openpyxl
+Requires-Dist: python-pptx
+Requires-Dist: pytest
+Requires-Dist: pytest-asyncio
+Requires-Dist: python-dotenv
+Requires-Dist: protobuf
+Dynamic: author
+Dynamic: author-email
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# LLM Bridge
+
+A Bridge for LLMs. Support OpenAI, OpenAI-Azure, OpenAI-GitHub, Gemini, Claude, Grok.
+ 
+## Process
+
+1. **Message Preprocessor**: Preprocess Messages
+    1. **Message Preprocessor**: Extract Text Files to Message
+2. **Chat Client Factory**: Create Chat Client
+    1. **Model Message Converter**: Convert Message to Model
+        1. **Media Processor**: Get Model Image Content from URL
+3. **Chat Client**: Generate Response
+
+## Test
+
+```bash
+pytest ./tests/
+```
+
+## Usage
+
+See `./usage/`
+
+## Installation
+
+### PyPI
+
+```bash
+pip install --upgrade llm_bridge
+```
+
