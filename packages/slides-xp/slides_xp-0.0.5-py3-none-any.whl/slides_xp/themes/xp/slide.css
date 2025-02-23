@@ -1,0 +1,173 @@
+.slide-content {
+    background:
+        /* Corners */
+        url('/theme/window-top-left.png') top left no-repeat,
+        url('/theme/window-top-right.png') top right no-repeat,
+        url('/theme/window-bottom-left.png') bottom left no-repeat,
+        url('/theme/window-bottom-right.png') bottom right no-repeat,
+        /* Edges */
+        url('/theme/window-top.png') top repeat-x,
+        url('/theme/window-bottom.png') bottom repeat-x,
+        url('/theme/window-left.png') left repeat-y,
+        url('/theme/window-right.png') right repeat-y,
+        /* Center */
+        url('/theme/window-center.png') center repeat;
+
+    clip-path: inset(7px 9px 7px 7px round 3px);
+
+    padding: 30px;
+
+    margin: 100px;
+
+    width: fit-content;
+    max-width: 90vw;
+}
+
+/* Bootloader slide */
+.bootloader {
+    margin: 0px;
+    height: 100vh;
+    background-color: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.bootloader h2 {
+    margin: 0;
+}
+
+.bootloader h1 {
+    margin: 0;
+}
+
+.bootloader-title {
+    padding-top: 10vh;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: -50px;
+    width: 100%;
+}
+
+.bootloader-subtitle {
+    display: flex;
+    align-items: top;
+    justify-content: center;
+    width: 100%;
+}
+
+.windows-logo {
+    width: 20%;
+}
+
+.xp {
+    color: rgb(225, 94, 35);
+    padding-bottom: 30px;
+}
+
+/*
+Loading animation, derived from:
+https://codepen.io/duptitung/pen/XMVNyZ
+*/
+.boot-animation {
+    width: 150px;
+    height: 10px;
+    border: 2px solid #b2b2b2;
+    border-radius: 7px;
+    margin: 0 auto;
+    padding: 2px 1px;
+    overflow: hidden;
+    font-size: 0;
+}
+
+.boot-animation>div {
+    width: 9px;
+    height: 100%;
+    background: linear-gradient(to bottom, #2838c7 0%, #5979ef 17%, #869ef3 32%, #869ef3 45%, #5979ef 59%, #2838c7 100%);
+    display: inline-block;
+    margin-right: 2px;
+    animation: loader 2s infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes loader {
+    0% {
+        transform: translate(-35px);
+    }
+
+    100% {
+        transform: translate(150px);
+    }
+}
+
+.gap {
+    flex-grow: 1;
+}
+
+/* BSOD slide */
+
+.bsod {
+    margin: 0px;
+    height: 100vh;
+    background-color: #0102AC;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.bsod-title {
+    background-color: white;
+    color: #0102AC;
+    padding: 5px 20px;
+    font-weight: bold;
+}
+
+.bsod pre {
+    white-space: pre-wrap;
+    width: 50%;
+    min-width: 800px;
+}
+
+.bsod span {
+    display: flex;
+    gap: 1rem;
+    width: fit-content;
+}
+
+.bsod span pre {
+    width: fit-content;
+    min-width: fit-content;
+}
+
+/* Caret animation: https://css-tricks.com/almanac/properties/c/caret/ */
+.bsod .caret {
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+
+    from,
+    to {
+        color: transparent;
+    }
+
+    50% {
+        color: #fff;
+    }
+}
+
+
+/* Syntax highlighting */
+
+:root {
+    --hl-comment: rgb(125, 131, 136);
+    --hl-doc: rgb(125, 131, 136);
+    --hl-keyword: rgb(223, 58, 72);
+    --hl-var: rgb(35, 35, 35);
+    --hl-func: rgb(129, 98, 199);
+    --hl-type: rgb(129, 98, 199);
+    --hl-string: rgb(19, 42, 108);
+}
