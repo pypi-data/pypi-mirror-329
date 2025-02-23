@@ -1,0 +1,65 @@
+Metadata-Version: 2.2
+Name: barre
+Version: 1.0.1
+Summary: Minimal progress bar
+Home-page: https://github.com/FeelTheFonk/barre
+Author: Fonk
+Author-email: feelthefonk@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: summary
+
+# barre
+
+<div align="center">
+
+[![PyPI version](https://badge.fury.io/py/barre.svg)](https://badge.fury.io/py/barre)
+[![CI](https://github.com/FeelTheFonk/barre/workflows/CI/badge.svg)](https://github.com/FeelTheFonk/barre/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A lightweight progress bar. One line, zero config, zero dependencies.
+</div>
+
+## Install
+```bash
+pip install barre
+```
+
+## Usage
+```python
+from barre import b
+
+# Simple iteration
+for x in b(range(100)):
+    process(x)
+
+# With any iterable
+items = ["item1", "item2", "item3"]
+for x in b(items):
+    process(x)
+```
+
+Output:
+```
+[||||||||||||||||||||||||||||||||||||||||] 100/100
+```
+
+## Features
+- Single file (<1KB)
+- Zero dependencies
+- No configuration needed
+- Clean ASCII progress display
+
+## License
+MIT
+
+---
+Built with minimalism in France ðŸ‡«ðŸ‡·
