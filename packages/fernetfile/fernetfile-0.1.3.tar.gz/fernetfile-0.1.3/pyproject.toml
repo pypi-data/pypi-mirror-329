@@ -1,0 +1,82 @@
+[project]
+name = "fernetfile"
+version = "0.1.3"
+requires-python = ">= 3.9"
+readme = "README.md"
+description = "A python xxxFile like ( ie GzipFile, BZ2File, ...) for manipulating Fernet encrypted files."
+authors = [
+  {name = "bibi21000", email = "bibi21000@gmail.com"},
+]
+maintainers = [
+  {name = "bibi21000", email = "bibi21000@gmail.com"}
+]
+packages = ["fernetfile"]
+dependencies = [
+  "cryptography>=43.0.0",
+  "cofferfile",
+]
+classifiers = [
+  # How mature is this project? Common values are
+  #   3 - Alpha
+  #   4 - Beta
+  #   5 - Production/Stable
+  "Development Status :: 4 - Beta",
+
+  # Indicate who your project is intended for
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+
+  # Pick your license as you wish (see also "license" above)
+  "License :: OSI Approved :: MIT License",
+
+  # Specify the Python versions you support here.
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+
+  "Operating System :: OS Independent",
+]
+
+[project.entry-points."cofferfile.cryptor"]
+fernet = "fernetfile:FernetCryptor"
+
+[project.optional-dependencies]
+test = ["pytest", "coverage[toml]", "pytest-cov", "pytest-xdist",
+ "pytest-random-order", "pytest-mock", "ruff", "bandit"]
+build = ["build", 'twine']
+zstd = ["pyzstd"]
+doc = ["pdoc"]
+
+[project.urls]
+HomePage = "https://github.com/bibi21000/FernetFile"
+Issues = "https://github.com/bibi21000/FernetFile/issues"
+Changelog = "https://github.com/bibi21000/FernetFile/blob/master/CHANGELOG.md"
+Documentation = "https://bibi21000.github.io/FernetFile/"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = [
+  "/fernetfile",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.pytest.ini_options]
+# addopts = "--cov=fernetfile --cov-report xml --junitxml=junit.xml"
+addopts = "--cov=fernetfile --durations=0 --capture=sys --cov-report html --junitxml=junit.xml"
+
+[tool.coverage.run]
+source = ['fernetfile']
+omit = ['tests']
+
+[tool.coverage.paths]
+source = ['fernetfile']
+
+[tool.bandit]
+exclude_dirs = ["tests", "venv"]
