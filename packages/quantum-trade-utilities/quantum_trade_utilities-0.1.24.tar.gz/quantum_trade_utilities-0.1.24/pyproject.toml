@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "quantum-trade-utilities"
+version = "0.1.24"
+authors = [
+    { name="Jonathan Poeder", email="jaoeder@gmail.com" },
+]
+description = "Shared utilities for Quantum Trade"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "python-dotenv",
+    "requests",
+    "pymongo",
+    "debugpy",
+    "beautifulsoup4",
+    "selenium",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "pylint",
+    "pytest",
+]
+test = [
+    "pytest",
+    "pytest-cov",
+    "coverage",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/japoeder/quantum-trade-utilities"
+"Bug Tracker" = "https://github.com/japoeder/quantum-trade-utilities/issues"
