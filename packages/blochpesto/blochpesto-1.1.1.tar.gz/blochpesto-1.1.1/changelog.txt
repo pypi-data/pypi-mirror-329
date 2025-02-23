@@ -1,0 +1,284 @@
+[Known issues]
+- MDCs are messed up when using explorer on concatenated spectra
+- EDC/MDC slicing from spin images don't work as expected
+- can't kwarp spin images
+
+
+[Features on the roadmap for future updates]
+- Generic and XPS-specific peak fitting tools
+- FFT mesh removal tool
+- Option to invert axes when displaying spatial maps (to match sample camera)
+- Arbitrary slicing in 3D datasets
+- kz warping of hv scan datasets
+
+
+(v1.1.1) 2025.02.23
+----------
+
+* Packaged on pip for easy installation! See docs page for further information.
+
+* [Bugfix] the ibw loader was not correctly handling edge cases where the major/minor axes in a 2D scan are corrupt, but there is still enough information to infer how to reconstruct the scan. 
+
+* [Bugfix] the 'mask' argument in loadSpectrum had stopped working after the xy file loader re-write 
+
+
+
+2024.11.18
+----------
+
+* Complete rewrite of the Prodigy xy file loader and the spin module
+
+*[Feature] spin.despike() can be invoked as an interactive tool, and works for both 1D and 2D datasets.
+
+*[Feature] 2D curvature tab added to imageExplorer, implementing the method discussed by Zhang et al (Rev Sci Inst 82, 043712 (2011))
+
+*[Feature] loadSpectrum now handles .pickle outputs from the spin-resolved B endstation at Bloch (for spatial XY maps)
+
+*[Feature] align() for A-endstation data already suggests what corrections you should make to the manipulator. It now does the same for the B-endstation manipulator.
+
+*[Bugfix] Interactive functions perform a check for whether the ipympl backend is being used, and for some installations it was failing because of a different return value from matplotlib.get_backend(). 
+
+*[Bugfix] The photon energy field in SBZ() had overly restrictive limits set on the valid input range, which made it behave unpleasantly when trying to type in values.
+
+*[Bugfix] The default for xy files exported from Prodigy is to save the intensity in counts/s. This is not what we want when calculating statistical error bars, which scale as 1/N. Intensity is now corrected to total counts when doing the file load.
+
+*[Bugfix] Some python installations were issuing a long annoying stream of warnings about invalid escape characters when \ was encountered in a string. Those instances ((e.g. strings containing latex subsections) should have been specified as raw string literals (e.g. r"$\overline{M}$")
+
+*[Bugfix] drawHighSymmetryLabels was failing if the axis being drawn on was reversed
+
+*[Bugfix] kwarping of deflector scans was broken due to a missing beQuiet argument in a function header
+
+*[Bugfix] 'copy code to clipboard' in imageExplorer was giving the wrong code
+
+*[Misc] The invocation in the template notebook header, that was responsible for resizing the cell width, had stopped working for jupyter versions >=7. Replaced with some lines that will work for either case.
+
+
+2024.08.18
+----------
+
+*[Feature] data export from a pesto 'spectrum' object to a NeXus compliant hdf5 file (*.nxs) is preliminarily supported (pesto.export.nxs()). Development is ongoing.
+
+*[Feature] loading from pesto exported .nxs files is now supported (pesto.loadSpectrum()). Non-exhaustively checked with test data from beamline i05. Development is ongoing.
+
+*[Feature] New function getProfileArbitrary, for extracting arbitrary line profiles from source images (i.e. not just horizontal or vertical)
+
+*[Feature] New function normalize, for doing simplistic normalization of a spectrum (rescale intensity to the range 0..1)
+
+*[Feature] New function SBZ(), a calculator for determining k-space locations of high-symmetry points
+
+*[Feature] loadSpectrum() and quickPlot() will now complain if you have provided an invalid or mis-spelled argument
+
+*[Refactoring] Bloch-specific calculators now moved into a separate file
+
+*[Refactoring] Exporting 1D data to a simple tab delimited .txt is moved to pesto.export.txt()
+
+*[Docs] Page added with notes about k-warping 
+
+*[Docs] Additional examples added to 'Code snippets' page
+
+- Specific to the function align():
+	* [UX] Can now use the mouse to move the center of the alignment feature, as a more convenient alternative to the polar and tilt sliders
+
+	* [UX] Now explicitly says in the plot title that the blue line corresponds to the analyzer slit
+
+	* [UX] Replaced colormin and colormax sliders with a single colorscale slider
+
+- Specific to the function explorer():
+
+	* [UX] The native matplotlib toolbar that shows up when hovering over the plot has been simplified, and now only shows the reset and zoom buttons. 
+
+	* [UX] Replaced colormin and colormax sliders with a single colorscale slider
+
+	* [UX] Disabled custom mouse interactions whenever the native zoom tool is active
+
+	Specific to 'imageExplorer' for 2D datasets:
+		*[Feature] A 'reload' button has been added. This is for cases where you are plotting a measurement that is still in-progress (i.e. the same file is being updated after every sweep). To make this possible, loadSpectrum now adds a 'CurrentFilePath' field to the 'Metadata' dict.
+
+	Specific to 'cubeExplorer' for 3D datasets:
+
+		*[Feature] A second-derivative tab has been added. This visualizes your spectrum after performing a frame-by-frame smoothed second derivative along the energy axis.
+
+		*[UX] Can now use the mouse on each image as an alternative to adjusting the axis sliders
+
+		*[Feature] (3D datasets): Can now copy template code to clipboard for each panel
+
+	Specific to 'spatialMapExplorer' for 4D x-y map datasets:
+
+		*[UX] Now shows the coordinates of the currently selected position in the map, above the detector image
+
+		*[UX] Can change colormap for the frame (instead of only for the map)
+
+		*[Bugfix] Will now guess at the major/minor scan axes if they were not specified explicitly within the spectrum object (this is part of an ongoing attempt to make it able to handle more than just SES output)
+
+		*[Bugfix] Wouldn't display properly when the measurement was performed in binding energy instead of kinetic
+
+		*[Bugfix] 'Copy code template to clipboard' was not preserving colormap/colorscale, and for XPS contrast was still using depreciated quickPlotXPS() function
+
+
+* [Bugfix] changed from the 'igor' to the 'igor2' package for loading ibw files. This resolves a problem with numpy that previously required editing the package source file. For existing installations with 'igor' installed and the edit made, pesto will fall back to using it instead.
+
+*[Bugfix] Wasn't kwarping prodigy deflector matrices due to overly tight checks on axis names when deciding what kwarp function to use.
+
+*[Bugfix] specs .xy file loader broke the loading progress bar if the file contained fewer than 200 lines
+
+*[Bugfix] A call to np.int() in kwarp__wholeMatrix_kwarp() was giving an error since it became depreciated in newer versions of numpy.
+
+*[Bugfix] cubeExplorer (3 orthogonal cuts of a datacube) was not automatically switching to the matplotlib widget backend
+
+*[Bugfix] Found rare edge cases where SES-acquired spatial maps were mostly OK but corrupted enough to break the file loader. This is now fixed by making the loader more robust - when identifying what physical axis the major/minor scan axes correspond to, it looks for the closest matching axis, not a direct match
+
+*[Bugfix] kwarping of single energy-angle images had two issues that have now been corrected:
+
+	* For large negative tilts, and particularly for scans deep below Ef, parts of the lower right quadrant of the k-warped image should be zero as the information is not present in the original energy-angle image. In these regions the interpolation function was receiving negative values and was wrapping around instead of just setting zero - so these regions were being filled with false signal.
+
+	* The width of the warped image in k was being calculated based on the mid-point energy of the source image, where it should have been using the highest kinetic energy in the source image. This led to some cropping of the k-warped image in the upper quadrants, especially for source images that covered a large energy range.
+
+	 * As penance for my sins, in addition to fixing these issues I also made it go 60% faster.
+
+*[Bugfix] energy axis correction during kwarping of hv sweeps was not behaving correctly, in ways that are mostly impacted UX and cosmetics.The sign of the correction was opposite, and the output spectrum was not clipped tightly enough. See code snippets page for examples of this correction working as intended.
+
+
+
+2023.10.11
+----------
+- Prodigy_xy was (and still is) painfully slow for large file sizes (>1GB). Made minor improvements in speed and added a progress bar.
+
+2023.09.22
+----------
+- Bug fix: fitFermiEdge was not correctly checking whether the input was 2D or 1D
+
+
+2023.09.20
+----------
+
+- Default analyzer workfunction (for the A endstation at Bloch) changed to 4.34eV, consistent with historical values. The previous setting of 4.733eV was very likely an error due to an un-noticed energy offset setting in SES at the time it was measured.
+
+- New function: pesto.spin.despike can filter out erroneous datapoints from a spin-ARPES measurement, see documentation page for details.
+
+- New function: pesto.temperatureCalculator estimates the time evolution of the sample temperature in response to a step change in setpoint. Very specific to the Carving manipulator at Bloch. Intended for providing an estimate how long to wait during temperature dependent measurements.
+
+- Function modified: clipSpectrum now works on 1D data. Use the xRange argument to specify the axis range
+
+- Function modified: pesto.spin.quickSummary now accepts arguments hv and sherman
+
+- Function modified: fitFermiEdge previously only accepted 2D images. It now also works with 1D profiles.
+
+- Function modified: limits on angle sliders in pesto.align() have been extended
+
+- Function modified: Changes to analyzer work function were not sticking. Now instead of referencing the global variable pesto.ANALYZER_WORKFUNCTION, one should instead call the function pesto.getAnalyzerWorkFunction(). Related,  pesto.updateWorkfunction() is replaced by pesto.setAnalyzerWorkFunction()
+
+- Bug fix: kwarp for manipulator polar scans had the wrong sign convention for tilt and polar offsets. It is now consistent with deflector maps and with what is written on the documentation page
+
+- Bug fix: Prodigy_xy file loader didn't handle spin scans with only a single scan, i.e. if the polarity of the target didn't change. It now handles this case
+
+- Bug fix: DFT loader broke when exponential numbers were missing an 'e' (e.g. 7.322+01). Now fixed
+
+- Bug fix: Resolution calculator was not looking in the right location for fit coefficient data files. 
+
+
+2023.08.18
+----------
+
+- spin module: Corrected some errors in the sign of the component intensities, and in the calculation of statistical errors for asymmetry.
+
+2023.08.14
+----------
+pesto:
+
+- Energy resolution calculators now include the B endstation, and also use a much better approximation for the beamline resolution that closely matches ray-tracing results over the full photon energy range for exit slits hgaps of 10-200um. Includes the 2400 and 92 L/mm gratings.
+
+- DFT module for loading quantum espresso output. Currently limited to slab bands and surface-projected bulk bandstructure (see docs)
+
+- spin-ARPES functions broken out into separate 'spin' module. See docs for the functions that this makes available.
+
+- Major improvements to all interactive explorers (e.g. align, explorer), afforded in large part by changing the matplotlib backend from 'inline' to 'widgets' using the ipympl library. Real time updates and mouse controls are in.  This breaks compatibility with the 'inline' mode, and requires the installation of the ipympl library. 
+
+- All the different interactive explorer functions for 2D manipulator scans are now available from a single pesto.explorer() call. Individual functions such as Manipulator_2D_explorer_XPS_relative() no longer exist!
+
+- explorer() for 2D images now includes EDC/MDC panels and derivative plots in a second tab (eliminating secondDerivativeExplorer())
+
+- pesto.explorer() for images and 2D manipulator scans now includes a 'copy template code to clipboard' button. Pressing this will paste code into the system clipboard that will reproduce the current view in the explorer window as a static image.
+
+- quickPlotXPS no longer exists. Pass the argument XPS=True to quickPlot instead.
+
+- export to .txt available for 1D data
+
+- new tree() function for printing the contents of a spectrum object
+
+- kwarping of manipulator scans has been sped up by a factor of 2-3 for typical scan sizes
+
+- support for loading target scattering scans (spin station)
+
+- Most recent Prodigy update renamed SALX/SALY to ShiftX/ShiftY, which broke file loaders. Now fixed and backwards compatible.
+
+- clipSpectrum now works on 1D data as well as 2D
+
+
+2023.02.15
+----------
+pesto:
+
+- fitFermiEdge now accepts 'linearBG' argument. Defaults to false. If set to true, will multiply the Fermi function by a linear background function. This will simulate a slope in the DOS below Ef (but leave the region above Ef flat) 
+
+- refactoring of fileloading, now each file is broken out into its own .py file inside the fileLoaders subdirectory. To add support for a new file, add the new filename in fileLoads/__init__.py and update the loadSpectrum function within base.py
+
+- Fixed a bug where an odd number of calls to quickPlotXPS would incorrectly flip the x-axis.
+
+- Fixed a bug that would cause the first panel in pesto.explorer to fail to render
+
+- Added support for more file formats: 
+	- (prodigy) spin station .xy files (Spin EDCs, spin MDCs, CCD ARPES 2D & 3D spectra, Ferrum total intensity ARPES images)
+	- From old beamline i4, .sr and .sp2 support
+
+- exportToFile, initially only supporting 1D.
+
+- Prototype 'pop-out' window for pesto.ManipulatorExplorer. Much faster! 
+
+Example data:
+- Added more data files from Prodigy for the B station
+
+docs:
+- clarified instructions for importing pesto from a central installation, added comment about the nbopen package 
+
+
+2022.12.1
+----------
+pesto:
+	- quickPlot now accepts 'logscale' argument, if set to true, then for 1D data the plot axes will be set to log scale. For 2D images, the log of the image data will be plotted.
+
+docs:
+	- new log argument to quickPlot documented
+
+2022.10.14
+----------
+pesto:
+	- Updated default ANALYZER_WORKFUNCTION to 4.733 based on recent measurements for the A-station
+	- New function 'updateWorkfunction' to enable the workfunction to be set at the start of a notebook.
+	- 'load_itx' updated, seemed to be some errors regarding () or [] bracket conventions. Now works for current version of Prodigy on Bloch spin station.
+	- Updated spotSize function, tweaking formula to match recently measured values on A station. Note that the spot size is currently NOT the same on the B station.
+
+Example data:
+	- Added example data files from Prodigy for the B station
+
+docs:
+	- updateWorkfunction documented
+
+2022.05.21
+----------
+pesto:
+	- Updated beamline resolution calculation to use a direct polynomial fit to ray-tracing data. Now goes above 400eV. Still only applies to cff 2.25, 800l/mm
+
+
+2022.05.08
+----------
+pesto:
+
+	- Added some example data files
+	- (bug) printMetaData was failing ungracefully under certain circumstances
+	- (bug) kwarp was failing on deflector maps due to a typo
+	- (bug) secondDerivativeExplorer was failing
+docs:
+	- secondDerivativeExplorer added
+	- naming inconsistencies fixed with getSliceArbitrary documentation?
+	- replaced missing image on front page
+	- corrections and optimizations in some of the snippets
