@@ -1,0 +1,197 @@
+Metadata-Version: 2.2
+Name: deepwhisperer
+Version: 0.1.1
+Summary: A Python package for sending Telegram notifications asynchronously.
+Author-email: Tom Mathews <tom.mathews@nyu.edu>
+License: MIT License
+        
+        Copyright (c) 2025 Tom Mathews
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: cachetools>=5.5.0
+Requires-Dist: httpx>=0.28.0
+Requires-Dist: pytest>=8.3.4
+Requires-Dist: twine>=6.1.0
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: black; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
+
+# DeepWhisperer
+
+## Overview
+
+**DeepWhisperer** is a Python package for sending **Telegram notifications asynchronously** with advanced message handling. It provides a queue-based, non-blocking mechanism to send messages, images, documents, and other media via Telegram.
+
+### **Key Features**
+
+- 🚀 **Asynchronous message handling** via background processing
+- 🔁 **Retry logic** with exponential backoff for failed messages
+- 🔄 **Duplicate message filtering** using a TTL-based cache
+- 📦 **Queue overflow handling** to prevent excessive accumulation
+- 📢 **Message batching** to reduce API calls
+- 🖼 **Support for multiple media types** (photos, videos, audio, documents)
+- ✅ **Function Execution Notification Decorator** (`deepwhisper_sentinel`)
+
+---
+
+## Prerequisite - Create a Telegram Bot
+
+1. Open Telegram App on your device
+2. Search @BotFather and click/tap on it and send the message `/start`.
+
+    ![Search for @BotFather](assets/1.webp)
+
+3. Then you will receive a message from BotFather
+
+4. Send `/newbot` and then follow the instructions given by BotFather.
+
+5. Send `/token` to get HTTP API access token.
+
+    ![Create new bot](assets/2.webp)
+
+## Installation
+
+### **Using pip (Recommended)**
+
+```sh
+pip install deepwhisperer
+```
+
+### **From Source**
+
+```sh
+gh repo clone Mathews-Tom/deepwhisperer
+cd deepwhisperer
+pip install -e .
+```
+
+---
+
+## Usage
+
+### **1️⃣ Initializing DeepWhisperer**
+
+```python
+from deepwhisperer import DeepWhisperer
+
+notifier = DeepWhisperer(access_token="your_telegram_bot_token")
+notifier.send_message("Hello, Telegram!")
+```
+
+### **2️⃣ Using the Decorator for Function Execution Notifications**
+
+```python
+from deepwhisperer import DeepWhisperer, deepwhisper_sentinel
+
+notifier = DeepWhisperer(access_token="your_telegram_bot_token")
+
+@deepwhisper_sentinel(notifier, default_description="Data Processing Task")
+def process_data():
+    import time
+    time.sleep(3)  # Simulating a task
+    print("Task Completed")
+
+process_data()
+```
+
+### **3️⃣ Sending Different Types of Messages**
+
+```python
+# Sending a photo
+notifier.send_photo("path/to/photo.jpg", caption="Look at this!")
+
+# Sending a document
+notifier.send_file("path/to/document.pdf", caption="Important file")
+
+# Sending a location
+notifier.send_location(latitude=37.7749, longitude=-122.4194)
+
+# Sending a video
+notifier.send_video("path/to/video.mp4", caption="Watch this!")
+```
+
+---
+
+## Configuration & Parameters
+
+### **DeepWhisperer Class Arguments**
+
+| Parameter          | Type     | Default | Description |
+|-------------------|---------|---------|-------------|
+| `access_token`    | `str`   | Required | Telegram Bot API token |
+| `chat_id`         | `str`   | `None`   | Target chat ID (auto-detected if not provided) |
+| `max_retries`     | `int`   | `5`      | Max retry attempts for failed messages |
+| `retry_delay`     | `int`   | `3`      | Base delay for exponential backoff |
+| `queue_size`      | `int`   | `100`    | Max message queue size before discarding |
+| `deduplication_ttl` | `int` | `300`    | Time-to-live for duplicate message tracking |
+| `batch_interval`  | `int`   | `15`     | Time window for batching text messages |
+
+### **Decorator Parameters (`deepwhisper_sentinel`)**
+
+| Parameter             | Type           | Default  | Description |
+|----------------------|---------------|----------|-------------|
+| `notifier`           | `DeepWhisperer` | Required | Instance of `DeepWhisperer` |
+| `default_description` | `str`          | "Task"   | Default function description |
+
+---
+
+## Dependencies
+
+DeepWhisperer requires the following dependencies, which are automatically installed:
+
+```toml
+[dependencies]
+httpx = "*"  # Handles Telegram API reques
+cachetools = "*"  # Provides TTLCache for duplicate prevention
+```
+
+---
+
+## Code Structure
+
+```plaintext
+deepwhisperer/
+│── __init__.py
+│── deepwhisperer.py  # Core class
+│── decorators.py     # Function execution notifier
+│── constants.py      # Store class-wide constants
+│── tests/            # Test cases
+│   ├── __init__.py
+│   ├── test_deepwhisperer.py
+│   ├── test_decorators.py    
+│── pyproject.toml    # Project metadata
+│── README.md         # Documentation
+│── LICENSE           # License file
+│── .gitignore        # Ignore unnecessary files
+```
+
+---
+
+## License
+
+This project is licensed under the **MIT License**. See `LICENSE` for details.
+
+## Author
+
+[Tom Mathews](https://github.com/Mathews-Tom)
