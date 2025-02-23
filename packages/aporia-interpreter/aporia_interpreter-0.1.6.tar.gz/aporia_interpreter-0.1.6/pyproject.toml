@@ -1,0 +1,25 @@
+[project]
+name = "aporia-interpreter"
+version = "0.1.6"
+description = "An interpreter for the Aporia language"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Ephraim Siegfried", email = "ephraim.siegfried@hotmail.com" }]
+requires-python = ">=3.10"
+dependencies = [
+    "lark>=1.2.2",
+]
+
+[project.scripts]
+aporia = "aporia.main:cli"
+
+[build-system]
+requires = ["setuptools", "wheel", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+"aporia" = ["*.lark"]
+
+[tool.setuptools]
+# https://github.com/astral-sh/uv/issues/9513
+license-files = []
