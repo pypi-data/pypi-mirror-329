@@ -1,0 +1,177 @@
+[tool]
+[tool.poetry]
+name = "stringpod"
+version = "0.2.1"
+homepage = "https://github.com/jyyyeung/stringpod"
+description = "Matching texts across languages."
+authors = ["Jasmine Yeung <yeungjyy@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+classifiers = [
+    'Development Status :: 2 - Pre-Alpha',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Natural Language :: English',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.12',
+]
+packages = [{ include = "stringpod" }, { include = "tests", format = "sdist" }]
+
+[tool.poetry.dependencies]
+python = ">=3.12.3,<4.0"
+click = "8.0.1"
+opencc = "^1.1.9"
+hanzidentifier = "^1.3.0"
+
+pytest = { version = "^8.3.4", optional = true }
+pytest-cov = { version = "^6.0.0", optional = true }
+black = { version = "^25.1.0", optional = true }
+isort = { version = "^6.0.0", optional = true }
+mypy = { version = "^1.15.0", optional = true }
+flake8 = { version = "^7.1.2", optional = true }
+flake8-docstrings = { version = "^1.6.0", optional = true }
+
+mkdocs = { version = "^1.6.1", optional = true }
+mkdocs-include-markdown-plugin = { version = "^1.0.0", optional = true }
+mkdocs-material = { version = "^9.6.5", optional = true }
+mkdocstrings = { version = "^0.28.1", optional = true }
+mkdocstrings-python = { version = "^1.16.1", optional = true }
+mkdocs-autorefs = { version = "^1.3.1", optional = true }
+
+python-semantic-release = { version = "^9.20.0", optional = true }
+tox = { version = "^4.24.1", optional = true }
+pre-commit = { version = "^4.1.0", optional = true }
+virtualenv = { version = "^20.29.2", optional = true }
+pip = { version = "^25.0.1", optional = true }
+twine = { version = "^6.1.0", optional = true }
+toml = { version = "^0.10.2", optional = true }
+bump2version = { version = "^1.0.1", optional = true }
+word2number = "^1.1"
+number-parser = "^0.3.2"
+langdetect = "^1.0.9"
+pypinyin = "^0.53.0"
+jieba = "^0.42.1"
+
+[tool.poetry.scripts]
+stringpod = 'stringpod.cli:main'
+
+
+[tool.poetry.extras]
+test = [
+    "pytest",
+    "pytest-cov",
+    "black",
+    "isort",
+    "mypy",
+    "flake8",
+    "flake8-docstrings",
+]
+dev = [
+    "python-semantic-release",
+    "tox",
+    "pre-commit",
+    "virtualenv",
+    "pip",
+    "twine",
+    "toml",
+    "bump2version",
+]
+docs = [
+    "mkdocs",
+    "mkdocs-include-markdown-plugin",
+    "mkdocs-material",
+    "mkdocstrings",
+    "mkdocstrings-python",
+    "mkdocs-autorefs",
+]
+
+[tool.black]
+line-length = 120
+skip-string-normalization = true
+target-version = ['py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+line_length = 120
+skip_gitignore = true
+# you can skip files as below
+#skip_glob = docs/conf.py
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.semantic_release]
+version_variable = ["stringpod/__init__.py:__version__"]
+version_toml = ["pyproject.toml:tool.poetry.version"]
+version_pattern = [
+    "README.md:rev: v{version}",
+    "docs/CONTRIBUTING.md:stringpod, version {version}",
+]
+major_on_zero = true # TODO: change to false when ready for release
+branch = "main"
+upload_to_PyPI = true
+upload_to_release = true
+build_command = "pip install poetry && poetry build"
+logging_use_named_masks = true
+commit_parser = "conventional"
+commit_parser_options = { parse_squash_commits = true, ignore_merge_commits = true }
+
+[tool.semantic_release.changelog]
+default_templates.changelog = "CHANGELOG.md"
+mask_initial_release = true
+output_format = "md"
+mode = "update"
+exclude_commit_patterns = [
+    '''chore(?:\([^)]*?\))?: .+''',
+    '''ci(?:\([^)]*?\))?: .+''',
+    '''cicd(?:\([^)]*?\))?: .+''',
+    '''refactor(?:\([^)]*?\))?: .+''',
+    '''style(?:\([^)]*?\))?: .+''',
+    '''test(?:\([^)]*?\))?: .+''',
+    '''build\((?!deps\): .+)''',
+    '''Merged? .*''',
+    '''Initial Commit.*''',
+    # Old semantic-release version commits
+    '''^\d+\.\d+\.\d+''',
+]
+
+[tool.semantic_release.branches.main]
+match = "(main|master)"
+prerelease = false
+prerelease_token = "rc"
+
+
+[tool.semantic_release.branches.alpha]
+match = "^(feat|fix|perf)/.+"
+prerelease = true
+prerelease_token = "alpha"
+
+
+[tool.semantic_release.branches.dev]
+match = ".+"
+prerelease = true
+prerelease_token = "dev"
+
+[tool.semantic_release.remote]
+type = "github"
+token = { env = "GITHUB_TOKEN" }
