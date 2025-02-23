@@ -1,0 +1,40 @@
+[project]
+name = "paic-patterns"
+version = "0.1.48"
+description = "Principled AI Coding Patterns for large-scale, max-compute, low-error engineering in the GenAI Age."
+readme = "PUBLIC.md"
+authors = [
+    { name = "indydevdan", email = "dan@agenticengineer.com" }
+]
+requires-python = ">=3.9,<3.13"
+dependencies = [
+    "aider-chat>=0.73.0",
+    "pydantic>=2.10.5",
+    "pytest>=8.3.4",
+    "python-dotenv>=1.0.1",
+    "pyyaml>=6.0.2",
+    "rich>=13.9.4",
+    "typer>=0.15.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+# With a flat layout, simply list the package name.
+packages = ["paic_patterns"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "PUBLIC.md",
+    "images/*"
+]
+
+[dependency-groups]
+dev = [
+    "pytest-xdist>=3.6.1",
+]
+
+[project.scripts]
+paic = "paic_patterns.main:main"
