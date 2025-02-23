@@ -1,0 +1,58 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling", "hatch-vcs"]
+
+[project]
+name = "scparadise"
+version = "0.5.0_beta"
+description = "Single-Cell Analysis Annotation and Modality Prediction."
+requires-python = ">=3.7"
+license = {text = "MIT License"}
+authors = [
+    {name = "Vadim Chechekhin"},
+    {name = "Elizaveta Chechekhina"},
+]
+maintainers = [
+    {name = "Vadim Chechekhin", email = "vadimchex97@gmail.com"},
+    {name = "Elizaveta Chechekhina", email = "voynovaes.pharm@gmail.com"},
+]
+readme = "README.md"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 4 - Beta",
+    "Environment :: GPU",
+    "Framework :: Jupyter",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",  
+    "Programming Language :: Python :: 3.8", 
+    "Programming Language :: Python :: 3.9",   
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "anndata>=0.8, < 0.10.9",
+    "numpy>=1.17, <1.25.1",
+    "scanpy>=1.1",
+    "tqdm>=4.36",
+    "muon>=0.1.0",
+    "optuna>=3.0.0",
+    "pytorch_tabnet>=4.0",
+    "scipy>=1.4",
+    "scikit-learn>=0.21",
+    "torch>=1.3",
+    "imbalanced-learn>=0.9.0",
+    "numba>=0.56",
+    "packaging>=21.3",
+    "shap>=0.46.0",
+]
+
+[project.urls]
+Source = "https://github.com/Chechekhins/scParadise"
+
+[tool.hatch.build.targets.wheel]
+packages = ["tests", "src/scparadise"]
