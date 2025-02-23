@@ -1,0 +1,35 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools",
+]
+
+[project]
+name = "self-destruct"
+version = "0.0.1"
+description = "A simple way for EC2 instances to stop/terminate themselves."
+readme = "README.rst"
+keywords = [
+  "AWS",
+  "EC2",
+  "terminate",
+]
+authors = [
+  { name = "Tom Morrell", email = "Thomas.Albert.Morrell@gmail.com" },
+]
+requires-python = ">=3.9"
+classifiers = [
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+]
+dependencies = [
+  "boto3",
+  "ec2-metadata",
+]
+
+[project.urls]
+Homepage = "https://github.com/TomMorrell/self-destruct"
+Issues = "https://github.com/TomMorrell/self-destruct/issues"
