@@ -1,0 +1,25 @@
+[project]
+name = "mishkal-hebrew"
+version = "0.2.4"
+description = "Convert Hebrew text into IPA for TTS systems and learning"
+readme = "README.md"
+authors = [
+    { name = "thewh1teagle", email = "61390950+thewh1teagle@users.noreply.github.com" }
+]
+requires-python = ">=3.6"
+dependencies = [
+    "num2words>=0.5.14",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "gradio>=5.15.0",
+    "tqdm>=4.67.1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["mishkal"]
