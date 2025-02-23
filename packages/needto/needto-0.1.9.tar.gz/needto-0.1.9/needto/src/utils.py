@@ -1,0 +1,104 @@
+import typing
+import functools
+import click
+import sys
+from simple_term_menu import TerminalMenu
+import rich.console
+import rich.prompt
+
+EDITOR_TEMPLATE = """{command}
+
+# Save this file to confirm the command or quit to skip it.
+# After save, you will {confirm_prompt} this command.
+"""
+
+
+@functools.cache
+def stdin_is_atty():
+    return sys.stdin.isatty()
+
+
+@functools.cache
+def get_tty_file():
+    return open("/dev/tty")
+
+
+def prompt_menu(
+    items: list[str],
+    *,
+    ask_for_edit=False,
+    no_op_value="-- non of this options, want to explain more --",
+    confirm_prompt="",
+    preview_command: None | str | typing.Callable[[str], str] = None,
+):
+    items_to_prompt: list[str] = [no_op_value] + items
+    menu_entry_index = TerminalMenu(
+        [command.replace("|", r"\|") for command in items_to_prompt],
+        preview_command=preview_command,
+    ).show()
+
+    if isinstance(menu_entry_index, int):
+        selected_item: str = items_to_prompt[menu_entry_index]
+    else:
+        return
+
+    if selected_item == no_op_value:
+        return
+
+    if ask_for_edit and stdin_is_atty():
+        if edited_text := click.edit(
+            text=EDITOR_TEMPLATE.format(
+                command=selected_item, confirm_prompt=confirm_prompt.lower()
+            )
+        ):
+            lines = [
+                line
+                for line in edited_text.split("\n")
+                if line.strip() and not line.strip().startswith("#")
+            ]
+            if len(lines) == 1:
+                selected_item = lines[0].strip()
+        else:
+            return
+
+    if not stdin_is_atty():
+        sys.stdin = get_tty_file()
+
+        if confirm_prompt and not rich.prompt.Confirm.ask(
+            f"{confirm_prompt} '{selected_item}'", default=False
+        ):
+            return
+
+    return typing.cast(str, selected_item)
+
+
+def prompt_menu_and_print(
+    items: list[str],
+    *,
+    ask_for_edit=False,
+    no_op_value="-- non of this options, want to explain more --",
+    confirm_prompt="",
+    preview_command: None | str | typing.Callable[[str], str] = None,
+):
+    selected_item = prompt_menu(
+        items,
+        ask_for_edit=ask_for_edit,
+        no_op_value=no_op_value,
+        confirm_prompt=confirm_prompt,
+        preview_command=preview_command,
+    )
+
+    items_to_print = items
+    if selected_item and selected_item not in items:
+        items_to_print.append(selected_item)
+
+    console = rich.console.Console()
+    print()
+    for command in items_to_print:
+        if command == selected_item:
+            console.print(f"$ {command}", style="black on white")
+        else:
+            console.print(f"$ {command}")
+    print()
+
+    return selected_item
