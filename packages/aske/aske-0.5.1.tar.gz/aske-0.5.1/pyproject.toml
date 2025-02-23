@@ -1,0 +1,55 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "aske"
+version = "0.5.1"
+description = "Platform Architect Development Framework"
+readme = "README.md"
+authors = [{ name = "ASKE Team" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["platform", "architecture", "development", "framework"]
+dependencies = [
+    "click>=8.0.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0.0",
+]
+requires-python = ">=3.9"
+
+[project.optional-dependencies]
+dev = ["black", "pytest"]
+
+[project.urls]
+Homepage = "https://github.com/caraveo/aske"
+
+[project.scripts]
+aske = "aske.cli:main"
+aske-activate = "aske.cli:activate"
+
+[tool.poetry]
+name = "aske"
+version = "0.5.1"
+description = "Platform Architect Development Framework"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "aske", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+click = "^8.1.7"
+
+[tool.poetry.scripts]
+aske = "aske.cli:main"
+
+[tool.setuptools]
+packages = ["aske", "aske.core", "aske.core.models"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.package-data]
+aske = ["scripts/*"]
