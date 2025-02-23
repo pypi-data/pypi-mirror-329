@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "loopsniff"
+version = "0.1.0"
+description = "A static analysis tool for detecting inefficient SQLAlchemy loops"
+license = "MIT"
+authors = ["Jiri Otoupal <jiri-otoupal@ips-database.eu>"]
+readme = "README.md"
+
+# Ensure Poetry recognizes the package correctly
+packages = [{include = "app"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+click = ">=8.1.8,<9.0.0"
+rich = ">=13.9.4,<14.0.0"
+
+[tool.poetry.scripts]
+loopsniff = "app.main:main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
