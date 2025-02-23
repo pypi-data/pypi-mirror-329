@@ -1,0 +1,115 @@
+# cfgrammar : Context-free grammars, parsing and semantic #
+
+## Table of Contents
+
+- [Main Features](#main-features)
+- [Example](#example)
+- [API overall graph](#API-overall-graph)
+- [Parsing example](#Parsing-example)
+- [Abstract Syntax Tree](#Abstract-Syntax-Tree)
+## Main features
+
+* Grammar properties
+  * accessible and productive rules / variables
+  * ε-productive rules / variables
+  * reduced grammar
+  * "First" and "Follow" sets
+* LL1 parsing
+  * computes and displays LL(1) table
+  * constructs parser
+* LR parsing
+  * computes and displays LR(0) automaton
+  * constructs LR(0), SLR(1), LALR(1) tables and parsers
+* Semantic
+  * parsing with semantic actions
+* Abstract Syntax Tree
+  * predefined semantic classes to produce AST
+    * Graphviz / dot output 
+    * Latex + Tikz output
+  
+## Example
+Code :
+```python
+from cfgrammar import Grammar
+
+g = Grammar.from_string('S -> ( S ) S | a')
+
+print(g)
+print('productives variables : ', g.productive.vars)
+print('Follow sets : ', g.follow)
+print(g.tableLL1().to_markdown())
+```
+Output:
+```
+Grammar(
+     terminals : ( ) a
+     variables : S
+     axiom : S
+     rules : ['S → ( S ) S', 'S → a']
+    )
+productives variables :  {'S'}
+Follow sets :  {'S': {')', '#'}}
+|    | S           |
+|:---|:------------|
+| (  | S → ( S ) S |
+| )  |             |
+| a  | S → a       |
+| #  |             |
+```
+## API overall graph
+
+![schema](https://gitlab.univ-lille.fr/bruno.bogaert/cfgrammar/-/raw/e7ce707148b95087c8ab35ed446bbd13cbe6d8de/images/doc.svg)
+
+
+## Parsing example
+
+### Graphviz AST
+
+Predefined semantic producing graphviz (dot) text.
+```python
+from cfgrammar.builder import ParserBuilder
+
+parser = ParserBuilder.from_dict({
+    'E -> E + T ': lambda p,*_ : p.E + p.T,
+    'E -> T' : lambda p,*_: p.T,
+    'T -> T * F ': lambda p,*_ : p.T * p.F,
+    'T -> F' : lambda p,*_: p.F,
+    'F -> ( E )' : lambda p,*_ : p.E,
+    'F -> 0|1|2|3|4|5|6|7|8|9' : lambda p,*_ : int(p[0])
+})
+print('Value: ',parser.parse('2*(4+5*(1+1))'))
+print(parser.grammar)
+print(parser.method)
+```
+output :
+```
+Value:  28
+GrammarBase(
+     terminals : ( ) * + 0 1 2 3 4 5 6 7 8 9
+     variables : F E T
+     axiom : E
+     rules : ['E → E + T', 'E → T', 'T → T * F', 'T → F', 'F → ( E )', 'F → 0', 'F → 1', 'F → 2', 'F → 3', 'F → 4', 'F → 5', 'F → 6', 'F → 7', 'F → 8', 'F → 9']
+    )
+LRMethod.LALR1
+```
+## Abstract Syntax Tree
+```python
+from cfgrammar.semantic import GraphvizAST
+display_ast  = GraphvizAST()
+dot_source = parser.parse('2*(4+5*(1+1))',display_ast)
+
+from graphviz import Source
+Source(dot_source).view()
+```
+![example_ast](https://gitlab.univ-lille.fr/bruno.bogaert/cfgrammar/-/raw/89bfba77280ae6e0fd40d61cc0e08146cdd0c344/images/example_ast.svg)
+
+
+### Latex AST
+
+LatexForestAST produces latex source (needs forest latex package)
+
+```python
+from cfgrammar.semantic import LatexForestAST
+display_latex_ast  = LatexForestAST()
+latex_source = parser.parse('2*(4+5*(1+1))',display_latex_ast)
+```
