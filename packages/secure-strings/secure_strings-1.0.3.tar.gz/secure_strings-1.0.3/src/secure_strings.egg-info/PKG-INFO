@@ -1,0 +1,78 @@
+Metadata-Version: 2.1
+Name: secure-strings
+Version: 1.0.3
+Summary: Protects passwords from accidentally getting into logs
+Author-email: Pavel Shmakov <shmakovpn@yandex.ru>
+License: MIT License
+        
+        Copyright (c) 2018 Real Python
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/shmakovpn/secure-string
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: global-manager>=1.0.3
+Provides-Extra: dev
+Requires-Dist: tomli; python_version < "3.11" and extra == "dev"
+Requires-Dist: pip-tools; extra == "dev"
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: coverage; extra == "dev"
+Requires-Dist: build; extra == "dev"
+
+# secure-string
+
+![Tests](https://github.com/shmakovpn/secure-string/actions/workflows/python-package.yml/badge.svg)
+[![codecov](https://codecov.io/github/shmakovpn/secure-string/graph/badge.svg?token=744XXMAKOZ)](https://codecov.io/github/shmakovpn/secure-string)
+![Mypy](https://github.com/shmakovpn/secure-string/actions/workflows/mypy.yml/badge.svg)
+[![pypi](https://img.shields.io/pypi/v/secure-strings.svg)](https://pypi.python.org/pypi/secure-strings)
+[![downloads](https://static.pepy.tech/badge/secure-strings/month)](https://pepy.tech/project/secure-strings)
+[![versions](https://img.shields.io/pypi/pyversions/secure-strings.svg)](https://github.com/shmakovpn/secure-string)
+
+Protects passwords from accidentally getting into logs
+
+## Installation
+
+```bash
+pip install secure-strings  # not secure-string, but secure-strings
+```
+
+## Examples
+
+```py
+from secure_string import SecureString, SecureStringContextManager, SecureStringStrictContextManager
+
+
+password = SecureString('my password')
+print(password)  # this will print '***' to stdout
+print(password.value)  # this will print 'my password', use the `value` property to get real value
+
+# we can disable string protection
+with SecureStringContextManager(False):
+    print(password)  # 'my password'
+
+
+# we can also enable strict mode when we need to find a place where the password can be displayed
+with SecureStringStrictContextManager(True):
+    print(password)  # SecureStringStrictError, Method "__str__" does not allowed in strict mode context
+```
