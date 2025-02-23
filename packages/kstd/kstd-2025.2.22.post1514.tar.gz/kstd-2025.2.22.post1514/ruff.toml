@@ -1,0 +1,42 @@
+line-length = 100
+preview = true
+target-version = "py312"
+
+[lint]
+extend-safe-fixes = [
+    "PYI025", # The fix quite elaborate to do manually, so the autofixer is handy
+    "TC", # It is easy to see and test the effects of this autofix
+]
+ignore = [
+    "CPY", # Not needed in this project
+    "D203", # Incompatible with D211
+    "D212", # Incompatible with D213
+    "E501", # Ruff formatter takes care of keeping lines not too long
+    "EM101", # We want to follow this style
+    "FURB118", # operator.* methods are often not as well typed as lambda (and arguably less readable)
+    "ISC001", # Incompatible with Ruff formatter
+    "PIE810", # The recommended pattern can be hard to understand (implicit 'or' semantics)
+    "PLC0206", # Calling `keys()` or `values()` can be clearer
+    "PLC0415", # Permit delayed import
+    "PLC1901", # Prefer explicit comparisons
+    "PLR09", # These count-based rules are often too crude
+    "PLR2004", # Magic values are often acceptable, especially as Pyright reasons about them as literal
+    "PLR5501", # Nested if statements are sometimes intentional for readability
+    "PLW0108", # Explicit lambdas make some code more readable
+    "PT011", # Sometimes the raised errors is broad
+    "TID252", # Relative imports are sometimes cleaner
+    "TRY003", # We want to follow this style
+]
+select = ["ALL"]
+
+[lint.pydocstyle]
+convention = "google"
+
+[lint.per-file-ignores]
+"tests/**" = [
+    "D1", # Less stringent documentation requirements in tests
+    "S101", # Asserts are expected in tests
+]
+
+[lint.flake8-type-checking]
+strict = true
