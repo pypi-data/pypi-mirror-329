@@ -1,0 +1,88 @@
+/*
+Functions and routines associated with Enasis Network Common Library.
+
+This file is part of Enasis Network software eco-system. Distribution
+is permitted, for more information consult the project license file.
+*/
+
+
+
+/*******************************************/
+/* Standard structure for message elements */
+/*******************************************/
+
+div.encommon_message {
+  border-radius: 0 .5rem .5rem 0;
+  border-style: solid;
+  border-width: .1rem .1rem .1rem .3rem;
+  display: inline-block;
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: .4rem .6rem .4rem 1.9rem;
+  position: relative; }
+
+
+
+/*******************************************/
+/* Extended structure for message elements */
+/*******************************************/
+
+div.encommon_message:after {
+  content: '';
+  height: 1.5rem;
+  left: .2rem;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  position: absolute;
+  top: .1rem;
+  width: 1.5rem;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain; }
+
+
+
+/*******************************************/
+/* Extended structure for message elements */
+/*******************************************/
+
+
+.encommon_message[data-level='failure'] {
+  background-color: rgba(var(--color-red-lite), .25);
+  border-color: rgba(var(--color-red-lite), .9); }
+
+.encommon_message[data-level='failure']:after {
+  background-color: rgba(var(--color-red-lite), 1);
+  mask-image: var(--svgicon-failure);
+  -webkit-mask-image: var(--svgicon-failure); }
+
+
+.encommon_message[data-level='information'] {
+  background-color: rgba(var(--color-blue-lite), .25);
+  border-color: rgba(var(--color-blue-lite), .9); }
+
+.encommon_message[data-level='information']:after {
+  background-color: rgba(var(--color-blue-lite), 1);
+  mask-image: var(--svgicon-failure);
+  -webkit-mask-image: var(--svgicon-failure); }
+
+
+.encommon_message[data-level='success'] {
+  background-color: rgba(var(--color-green-lite), .25);
+  border-color: rgba(var(--color-green-lite), .9); }
+
+.encommon_message[data-level='success']:after {
+  background-color: rgba(var(--color-green-lite), 1);
+  mask-image: var(--svgicon-failure);
+  -webkit-mask-image: var(--svgicon-failure); }
+
+
+.encommon_message[data-level='warning'] {
+  background-color: rgba(var(--color-yellow-lite), .25);
+  border-color: rgba(var(--color-yellow-lite), .9); }
+
+.encommon_message[data-level='warning']:after {
+  background-color: rgba(var(--color-yellow-lite), 1);
+  mask-image: var(--svgicon-failure);
+  -webkit-mask-image: var(--svgicon-failure); }
