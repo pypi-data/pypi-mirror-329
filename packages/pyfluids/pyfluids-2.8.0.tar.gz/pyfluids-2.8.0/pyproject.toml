@@ -1,0 +1,70 @@
+[tool.poetry]
+name = "pyfluids"
+version = "2.8.0"
+description = "Simple, full-featured, lightweight CoolProp wrapper for Python"
+authors = [
+    "Vladimir Portyanikhin <v.portyanikhin@ya.ru>",
+]
+license = "MIT"
+readme = "PyPI.md"
+homepage = "https://github.com/portyanikhin/PyFluids"
+repository = "https://github.com/portyanikhin/PyFluids"
+documentation = "https://github.com/portyanikhin/PyFluids"
+keywords = [
+    "CoolProp",
+    "fluids",
+    "mixtures",
+    "humid",
+    "air",
+    "thermophysical",
+    "properties",
+    "thermodynamics",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Manufacturing",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Unix",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+packages = [
+    { include = "pyfluids" },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9, <3.14"
+CoolProp = "6.7.0"
+tomli = "2.2.1"
+
+[tool.poetry.group.test.dependencies]
+pytest = "8.3.4"
+pytest-asyncio = "0.25.3"
+pytest-cov = "6.0.0"
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
