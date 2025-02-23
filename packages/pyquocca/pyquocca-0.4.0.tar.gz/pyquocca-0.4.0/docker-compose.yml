@@ -1,0 +1,36 @@
+services:
+    main:
+        build: .
+        volumes:
+            - ./src:/app/src
+        ports:
+            - "8000:8000"
+        environment:
+            - POSTGRES_HOST=postgres
+            - POSTGRES_USER=user
+            - POSTGRES_PASSWORD=verysecure
+            - POSTGRES_DB=challengedb
+            - MYSQL_HOST=mysql
+            - MYSQL_USER=user
+            - MYSQL_PASSWORD=verysecure
+            - MYSQL_DATABASE=challengedb
+
+    # mysql:
+    #     image: mysql:8.0
+    #     command: --default-authentication-plugin=mysql_native_password
+    #     environment:
+    #         - MYSQL_USER=user
+    #         - MYSQL_PASSWORD=verysecure
+    #         - MYSQL_DATABASE=challengedb
+    #         - MYSQL_ROOT_PASSWORD=verysecure
+    #     volumes:
+    #         - ./src/test_app/sqlimports-mysql:/docker-entrypoint-initdb.d
+
+    postgres:
+        image: postgres:17-alpine
+        environment:
+            - POSTGRES_USER=user
+            - POSTGRES_PASSWORD=verysecure
+            - POSTGRES_DB=challengedb
+        volumes:
+            - ./src/test_app/sqlimports-postgres:/docker-entrypoint-initdb.d
