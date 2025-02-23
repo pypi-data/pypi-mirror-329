@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=65.0.0", "wheel>=0.36.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bocr"
+dynamic = ["version"]
+description = "A Python package for OCR using Vision LLMs"
+readme = { file = "README.md", content-type = "text/markdown" }
+urls = { Repository = "https://github.com/adrianphoulady/bocr" }
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Adrian Phoulady", email = "adrian.phoulady@gmail.com" }]
+keywords = [
+    "ocr", "vision", "llm", "vllm", "bocr", "text extraction",
+    "qwen-vl", "llama-vision", "phi-vision", "ollama"
+]
+
+dependencies = [
+    # Machine Learning
+    "accelerate>=0.34.0",
+    "torch>=2.4.0,<2.6.0",  # 2.6.0 has compatibility issues on macOS with latest transformers
+    "torchvision>=0.19.0,<0.21.0",  # torchvision < 0.21.0 required for torch < 2.6.0
+    "transformers>=4.49",  # For Qwen2.5-VL
+    "qwen_vl_utils>=0.0.10",
+    "ollama>=0.1",
+    # Image Processing
+    "opencv-python-headless>=4.10.0.84",
+    "pdf2image>=1.16.0",
+    "pillow>=10.0.0",
+    # Utility
+    "markdown>=3.4.0",
+    "pypandoc>=1.11",
+]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "bocr.__version__" }
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["bocr*"]
+
+[tool.setuptools.package-data]
+"bocr.backbones" = ["mapping.yaml"]
+
+[project.scripts]
+bocr = "bocr.cli:main"
