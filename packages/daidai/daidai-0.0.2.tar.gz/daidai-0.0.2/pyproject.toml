@@ -1,0 +1,94 @@
+[build-system]
+requires = ["hatchling>=1.18.0", "hatch-vcs>=0.3.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "daidai"
+dynamic = ["version"]
+description = " Modern dependency & assets management library for MLOps"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    {name = "Antoine Jeannot", email = "antoine.jeannot1002+github@gmail.com"},
+]
+dependencies = [
+    "fsspec>=2025.2.0",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/antoinejeannot/daidai"
+"Bug Tracker" = "https://github.com/antoinejeannot/daidai/issues"
+
+
+[project.optional-dependencies]
+extra = [
+    "pympler>=1.1",
+]
+dev = [
+    "pre-commit>=4.0.1",
+    "ruff==0.9.4",
+    "pytest>=8.3.4",
+]
+publish = [
+    "build>=1.2.2.post1",
+    "twine>=6.1.0",
+]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.wheel]
+packages = ["daidai"]
+
+[tool.hatch.build.targets.wheel.sources]
+"daidai" = "daidai"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "daidai",
+    "tests",
+    "README.md",
+    "LICENSE",
+]
+
+[tool.hatch.build.force-include]
+"daidai/py.typed" = "daidai/py.typed"
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "B",   # flake8-bugbear
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "RUF", # ruff-specific rules
+    "PT",  # pytest style
+    "SIM", # simplify
+    "TCH", # type-checking
+    "ARG", # unused arguments
+    "C4",  # comprehensions
+]
+
+ignore = [
+    "E501",    # Line too long (handled by formatter)
+    "B008",    # Do not perform function call in argument defaults
+    "C901",    # Too complex
+    "N999",    # Invalid module name
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["daidai"]
