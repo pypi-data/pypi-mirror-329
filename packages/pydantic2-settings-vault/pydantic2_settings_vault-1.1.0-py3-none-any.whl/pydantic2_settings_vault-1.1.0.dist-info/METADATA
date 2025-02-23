@@ -1,0 +1,145 @@
+Metadata-Version: 2.4
+Name: pydantic2-settings-vault
+Version: 1.1.0
+Summary: A Pydantic v2 settings extension for secure configuration management using HashiCorp Vault OpenSource (OSS) and Enterprise
+Project-URL: homepage, https://github.com/sylvainmouquet/pydantic2-settings-vault
+Project-URL: documentation, https://github.com/sylvainmouquet/pydantic2-settings-vault
+Project-URL: repository, https://github.com/sylvainmouquet/pydantic2-settings-vault
+Project-URL: changelog, https://github.com/sylvainmouquet/pydantic2-settings-vault/releases
+Author-email: Sylvain Mouquet <sylvain.mouquet@gmail.com>
+License: MIT
+License-File: LICENSE
+Keywords: configuration,enterprise,hashicorp,opensource,pydantic,python,secrets management,security,settings,vault
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.10
+Requires-Dist: aiohttp>=3.10.10
+Requires-Dist: certifi>=2025.1.31
+Requires-Dist: concurrency-limiter>=1.1.0
+Requires-Dist: pydantic-settings>=2.6.0
+Requires-Dist: pydantic>=2.9.2
+Requires-Dist: reattempt>=1.1.3
+Description-Content-Type: text/markdown
+
+# Pydantic2-Settings-Vault
+
+Pydantic2-Settings-Vault is a simple extension of Pydantic Settings to collect secrets from HashiCorp Vault OpenSource (OSS) and Enterprise
+
+
+### Demonstration:
+
+```python
+from functools import lru_cache
+from threading import Lock
+from typing import Tuple, Type
+from pydantic import Field, SecretStr
+from pydantic_settings import (
+    BaseSettings,
+    PydanticBaseSettingsSource,
+)
+from pydantic2_settings_vault import VaultConfigSettingsSource
+
+class AppSettings(BaseSettings):
+
+    MY_SECRET: SecretStr = Field(
+        ...,
+        json_schema_extra={
+            "vault_secret_path": "secret/data/test",
+            "vault_secret_key": "FOO",  # pragma: allowlist secret
+        },
+    )
+    
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls: Type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> Tuple[PydanticBaseSettingsSource, ...]:
+        return (
+            init_settings,
+            env_settings,
+            dotenv_settings,
+            VaultConfigSettingsSource(settings_cls=settings_cls),
+        )
+
+# The connection to Vault is done via HTTPS with AppRole authentication
+import os
+os.environ['VAULT_URL'] = "<configure it>"
+os.environ['VAULT_ROLE_ID'] = "<configure it>"
+os.environ['VAULT_SECRET_ID'] = "<configure it>"
+
+# Only with Enterprise edition
+os.environ['VAULT_NAMESPACE'] = "<configure it>"
+
+### Usage
+app_settings_lock = Lock()
+
+@lru_cache
+def get_app_settings() -> AppSettings:
+    with app_settings_lock:
+        return AppSettings()  # type: ignore
+```
+
+### Internal interactions:
+```mermaid
+sequenceDiagram
+    participant A as Your Application
+    participant B as BaseSettings
+    participant V as Vault
+    note over A,B: 1. Retrieve settings
+    A->>B: get_app_settings()
+    note over B: 2. Collect secrets paths
+    B->>B: foreach fields, get the secret path and keep unique value
+    note over B,V: 3. HTTPS Asynchronously fetch secrets by path from Vault
+    B->>V: get_secrets(secrets/data/<A>)
+    B->>V: get_secrets(secrets/data/<B>)
+    note over V,B: 4. Vault returns secrets
+    V->>B: return secrets for secrets/data/<A>
+    V->>B: return secrets for secrets/data/<B>
+    note over B: 5. Fill fields with secrets values
+    B->>B: SECRET_ONE => secrets/data/<A>[SECRET_ONE] <br> SECRET_TWO => secrets/data/<A>[SECRET_TWO] <br> SECRET_THREE => secrets/data/<B>[SECRET_THREE]
+    note over B,A: 6. Return settings
+    B->>A: settings with variables and secrets
+```
+
+## Table of Contents
+
+- [Pydantic2-Settings-Vault](#Pydantic2-Settings-Vault)
+  - [Table of Contents](#table-of-contents)
+  - [Description](#description)
+  - [Installation](#installation)
+  - [License](#license)
+  - [Contact](#contact)
+
+## Description
+
+Pydantic2-Settings-Vault is a extension for Pydantic Settings that enables secure configuration management by integrating with HashiCorp Vault. This library supports both the open-source (OSS) and Enterprise versions of Vault, providing a seamless way to retrieve and manage secrets within your Pydantic-based applications. By leveraging Vault's robust security features, Pydantic2-Settings-Vault allows developers to easily incorporate secure secret management practices into their Python projects, enhancing overall application security and simplifying the handling of sensitive configuration data.
+
+## Installation
+
+```bash
+# Install the dependency
+pip install pydantic2-settings-vault
+uv add pydantic2-settings-vault
+poetry add pydantic2-settings-vault
+```
+
+## License
+
+Pydantic2-Settings-Vault is released under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## Contact
+
+For questions, suggestions, or issues related to Pydantic2-Settings-Vault, please open an issue on the GitHub repository.
+
