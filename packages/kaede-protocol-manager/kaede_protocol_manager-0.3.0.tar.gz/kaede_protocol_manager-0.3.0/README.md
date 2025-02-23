@@ -1,0 +1,220 @@
+# Kaede Protocol Manager v0.2.0
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Development Status :: 3 - Alpha](https://img.shields.io/badge/Development%20Status-Alpha-red)](https://pypi.org/classifiers/)
+[![Programming Language :: Python :: 3](https://img.shields.io/badge/Programming%20Language-Python%203-blue)](https://www.python.org/)
+
+**A CLI tool to manage custom API protocols for the Kaede API Creation package.**
+
+The Kaede Protocol Manager (`kaede-protocol-manager`) is a command-line interface (CLI) utility designed to streamline the installation and management of custom API protocols. It works in conjunction with the Kaede API Creation package (`kaede-api-creation`) by providing a standardized way to package, install, and verify custom protocol definitions.
+
+## Features
+
+*   **Compressed Protocol Installation:** Installs custom API protocols from a single, compressed `.kprotocol` file (`.zip` archive).
+*   **Protocol Initialization:**  Offers a command to initialize and perform basic validation of an installed protocol, ensuring it is correctly set up.
+*   **`.kprotocol` File Creation:**  **NEW:**  You can now create `.kprotocol` files directly from a protocol directory using the `make protocol` command, simplifying the protocol packaging process.
+*   **Bundled Protocol Definitions:**  Protocols are packaged as `.kprotocol` files, which are `.zip` archives containing all necessary definition files (`data.json`, `request_parser.py`, `response_formatter.py`).
+*   **Structured Data Storage (`data.json`):**  Protocol metadata, headers, and status codes are stored in a structured `data.json` file within the `.kprotocol` archive.
+*   **Python Logic Encapsulation:** Protocol-specific request parsing and response formatting logic are contained within `request_parser.py` and `response_formatter.py` files within the `.kprotocol` archive.
+*   **Simple CLI Interface:**  Provides an intuitive command-line interface for managing protocols.
+
+## Installation
+
+To install `kaede-protocol-manager`, navigate to the directory containing the `setup.py` file and execute the following command using `pip`:
+
+```bash
+pip install .
+```
+
+This command will install the `kaede-protocol-manager` package and make the `kaede-protocol-manager` command available in your system's command-line environment.
+
+## Usage
+
+The `kaede-protocol-manager` CLI provides the following commands for managing custom API protocols:
+
+### `install protocol`
+
+Installs a new API protocol from a `.kprotocol` file.
+
+**Usage:**
+
+```bash
+kaede-protocol-manager install protocol --file <protocol_file_path> --name <protocol_name>
+```
+
+**Options:**
+
+*   `protocol`: Specifies that you are installing a protocol (currently the only supported resource type).
+*   `--file <protocol_file_path>`: **(Required)**  The path to the `.kprotocol` file (which is a `.zip` archive) containing the protocol definition.
+*   `--name <protocol_name>`: **(Required)** The name you wish to assign to this protocol. This name will be used to reference the protocol when creating APIs with `kaede-api-creation`.
+
+**Example:**
+
+```bash
+kaede-protocol-manager install protocol --file my_custom_protocol.kprotocol --name my-protocol
+```
+
+This command will install the protocol defined in `my_custom_protocol.kprotocol` and name it `my-protocol`. The protocol definition will be extracted to the `~/.kaede_protocols/my-protocol` directory.
+
+### `initialize protocol`
+
+Initializes and validates an installed protocol. This command performs basic checks to ensure that the protocol directory exists and that essential files (`data.json`, `request_parser.py`, `response_formatter.py`) are present after installation.
+
+**Usage:**
+
+```bash
+kaede-protocol-manager initialize protocol --name <protocol_name>
+```
+
+**Options:**
+
+*   `protocol`: Specifies that you are initializing a protocol (currently the only supported resource type).
+*   `--name <protocol_name>`: **(Required)** The name of the protocol to initialize.
+
+**Example:**
+
+```bash
+kaede-protocol-manager initialize protocol --name my-protocol
+```
+
+This command will initialize the protocol named `my-protocol`, verifying the presence of the protocol directory and required definition files.
+
+### `make protocol` **(NEW)**
+
+Creates a `.kprotocol` file from a directory containing protocol definition files. This command simplifies the process of packaging a custom protocol for installation.
+
+**Usage:**
+
+```bash
+kaede-protocol-manager make protocol <protocol_directory_path> [--output <output_file_name>]
+```
+
+**Options:**
+
+*   `protocol`: Specifies that you are making a protocol `.kprotocol` file (currently the only supported resource type).
+*   `<protocol_directory_path>`: **(Required)** The path to the directory containing your protocol definition files. This directory should contain a subdirectory named `protocol` with `data.json`, `request_parser.py`, and `response_formatter.py` inside.
+*   `--output <output_file_name>`: **(Optional)**  Specify a custom name for the output `.kprotocol` file. If not provided, the file name will be automatically generated based on the protocol name defined in `data.json`. Ensure the output file name ends with `.kprotocol` or it will be added automatically.
+
+**Example:**
+
+```bash
+kaede-protocol-manager make protocol my_protocol_source
+```
+
+This command will create a `.kprotocol` file (e.g., `source-test-proto.kprotocol` if your protocol name in `data.json` is `source-test-proto`) in the `my_protocol_source` directory, packaging the protocol definition from the `my_protocol_source/protocol` subdirectory.
+
+```bash
+kaede-protocol-manager make protocol my_protocol_source --output custom_protocol.kprotocol
+```
+
+This command will create a `.kprotocol` file named `custom_protocol.kprotocol` in the `my_protocol_source` directory.
+
+## Creating a `.kprotocol` File (Manual Method - *Now Optional with `make protocol` command*)
+
+While the `make protocol` command simplifies `.kprotocol` creation, you can still create `.kprotocol` files manually if needed. A `.kprotocol` file is a `.zip` archive that bundles all the necessary components of a custom API protocol.
+
+**Structure of a `.kprotocol` Archive:**
+
+A `.kprotocol` archive **must** contain the following files within a subdirectory named `protocol` at the root level:
+
+```
+<protocol_name>.kprotocol (ZIP Archive)
+│
+└── protocol/
+│   └── data.json
+│   │   └── Contains protocol metadata, headers, and status codes in JSON format.
+│   │
+│   └── request_parser.py
+│   │   └── Python file defining the `parse_kaede_request` function.
+│   │
+│   └── response_formatter.py
+│       └── Python file defining the `format_kaede_response` function.
+```
+
+**File Descriptions within the `.kprotocol` Archive:**
+
+*   **`protocol/data.json`:** This file is a JSON document that defines the structured data for your protocol. It should contain the following top-level keys (all are required):
+
+    ```json
+    {
+      "PROTOCOL": {
+        "name": "<protocol_name>",        // (Required) - Name of the protocol (must match installation name in most cases)
+        "version": "<protocol_version>",    // (Required) - Version of the protocol (e.g., "1.0", "v2")
+        "description": "<protocol_description>" // (Optional) - Human-readable description
+      },
+      "HEADERS": {                      // (Optional) - Default headers for responses
+        "<header_name_1>": "<header_value_1>",
+        "<header_name_2>": "<header_value_2>",
+        // ... more headers ...
+      },
+      "STATUS_CODES": {                 // (Optional) - Custom status codes
+        "<status_code_number_1>": "<status_code_name_1>", // Status code number (string) and name
+        "<status_code_number_2>": "<status_code_name_2>",
+        // ... more status codes ...
+      }
+    }
+    ```
+
+    *   **`PROTOCOL` Block:**
+        *   `name`:  The name of the protocol (string). It is recommended to keep this consistent with the `--name` used during installation.
+        *   `version`: The protocol version (string or number).
+        *   `description` (Optional): A human-readable description of the protocol.
+
+    *   **`HEADERS` Block (Optional):**  Defines default headers (key-value pairs) that will be included in responses when using this protocol.
+
+    *   **`STATUS_CODES` Block (Optional):** Defines custom status codes (key-value pairs where keys are status code numbers as strings, and values are status code names).
+
+*   **`protocol/request_parser.py`:** This Python file **must** define a function named `parse_kaede_request`. This function is responsible for parsing raw request data (received by the server) and converting it into a `Request` object that can be understood by your API handlers.
+
+    ```python
+    # Example content of request_parser.py
+    class MyProtocolRequest: # Custom Request class (optional, but recommended)
+        def __init__(self, method, path, headers, body):
+            self.method = method
+            self.path = path
+            self.headers = headers
+            self.body = body
+
+    def parse_kaede_request(raw_request_data):
+        """Parses raw request data and returns a Request object."""
+        # ... (Your protocol's parsing logic here) ...
+        request = MyProtocolRequest(method="GET", path="/", headers={}, body="") # Example
+        return request
+    ```
+
+*   **`protocol/response_formatter.py`:** This Python file **must** define a function named `format_kaede_response`. This function takes a `Response` object (returned by your API handlers) and formats it into bytes that can be sent back as a response over the network.
+
+    ```python
+    # Example content of response_formatter.py
+    def format_kaede_response(response):
+        """Formats a Response object into bytes for sending."""
+        # ... (Your protocol's formatting logic here) ...
+        response_bytes = b"Example Response Data" # Example
+        return response_bytes
+    ```
+
+**Steps to Manually Create a `.kprotocol` File:**
+
+1.  **Create a directory structure** like this: `my_protocol_source/protocol/`.
+2.  **Inside `my_protocol_source/protocol/`, create:**
+    *   `data.json` (with your protocol's metadata, headers, status codes).
+    *   `request_parser.py` (with your `parse_kaede_request` function).
+    *   `response_formatter.py` (with your `format_kaede_response` function).
+3.  **Compress the *`protocol` directory* into a `.zip` archive.** **Make sure the `protocol` directory itself is at the root of the zip, and inside it are the three files.**
+4.  **Rename the created `.zip` archive** to have a `.kprotocol` extension (e.g., `my_protocol.kprotocol`).
+
+You can then use this `.kprotocol` file to install your custom protocol using the `kaede-protocol-manager install protocol` command.
+
+## For Developers
+
+Contributions to `kaede-protocol-manager` are welcome! Please refer to the project's repository on GitHub for contribution guidelines, issue tracking, and to submit pull requests.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Author
+
+**Kaede Dev Kento Hinode** - [cleaverdeath@gmail.com](mailto:cleaverdeath@gmail.com)
+
+[GitHub Repository](https://github.com/darsheeegamer/kaede-protocol-manager)
