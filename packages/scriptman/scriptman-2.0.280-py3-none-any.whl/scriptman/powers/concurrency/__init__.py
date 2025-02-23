@@ -1,0 +1,388 @@
+from asyncio import (
+    CancelledError,
+    Future,
+    Task,
+    create_task,
+    gather,
+    iscoroutinefunction,
+    run,
+    wrap_future,
+)
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
+from datetime import datetime
+from itertools import zip_longest
+from typing import Any, Coroutine, Generic, Optional, Union, cast
+from uuid import uuid4
+
+from tqdm import tqdm
+
+from scriptman.powers.concurrency._models import BatchResult, TaskResult, TaskStatus
+from scriptman.powers.generics import Func, SyncFunc, T
+
+
+class TaskExecutor(Generic[T]):
+    """🧩 Task Executor
+
+    Efficiently manages parallel task execution using both threading and multiprocessing
+    based on task type:
+
+    🔄 CPU-bound tasks (ProcessPoolExecutor):
+    - Data transformation and processing
+    - Complex calculations and algorithms
+    - Image/video processing
+    - Machine learning inference
+    - Data compression/decompression
+
+    🌐 I/O-bound tasks (ThreadPoolExecutor):
+    - API calls and network requests
+    - Database operations
+    - File system operations
+    - Message queue interactions
+    - External service communications
+
+    Features:
+    - Automatic task type routing
+    - Background execution with task management
+    - Parallel execution with batching
+    - Resource cleanup and error handling
+    - Task status monitoring and statistics
+    """
+
+    def __init__(
+        self,
+        thread_pool_size: Optional[int] = None,
+        process_pool_size: Optional[int] = None,
+    ):
+        """
+        🚀 Initialize the TaskExecutor with configurable pool sizes.
+
+        Args:
+            thread_pool_size: Maximum number of threads for I/O-bound tasks
+            process_pool_size: Maximum number of processes for CPU-bound tasks
+        """
+        self._background_tasks: dict[str, Task[TaskResult[T]]] = {}
+        self._thread_pool = ThreadPoolExecutor(max_workers=thread_pool_size)
+        self._process_pool = ProcessPoolExecutor(max_workers=process_pool_size)
+
+    def run_in_background(
+        self,
+        func: Func[T],
+        raise_on_error: bool = True,
+        *args: Any,
+        **kwargs: Any,
+    ) -> str:
+        """
+        🚀 Run a single task in the background.
+
+        NOTE: The task result can be accessed using the `get_background_result` method.
+
+        Args:
+            func: Function to execute
+            raise_on_error: Whether to raise an exception if the task fails
+            *args: Positional arguments for the function
+            **kwargs: Keyword arguments for the function
+
+        Returns:
+            str : Task ID of the background task
+        """
+        task_id = f"background_task_{func.__name__}_{uuid4().hex[:8]}"
+        coroutine = self.__create_task_result(
+            args=args,
+            kwargs=kwargs,
+            task_id=task_id,
+            raise_errors=raise_on_error,
+            coroutine=(
+                func(*args, **kwargs)
+                if iscoroutinefunction(func)
+                else wrap_future(
+                    self._thread_pool.submit(
+                        cast(SyncFunc[T], func),
+                        *args,
+                        **kwargs,
+                    )
+                )
+            ),
+        )
+
+        self._background_tasks[task_id] = create_task(coroutine)
+        return task_id
+
+    async def get_background_result(self, task_id: str) -> TaskResult[T]:
+        """
+        📊 Get the result of a background task by its ID.
+
+        Args:
+            task_id (str): The task ID of the background task.
+
+        Returns:
+            TaskResult: The result of the background task.
+
+        Raises:
+            KeyError: If the task ID is not found.
+        """
+        if task := self._background_tasks.get(task_id):
+            try:
+                return await task
+            except CancelledError as e:
+                return TaskResult(task_id=task_id, status=TaskStatus.CANCELLED, error=e)
+            finally:
+                self._background_tasks.pop(task_id, None)
+
+        raise KeyError(f"💥Task with ID {task_id} not found.")
+
+    def cancel_background_task(self, task_id: str) -> bool:
+        """
+        🛑 Cancel a background task by its task ID.
+
+        Args:
+            task_id (str): The task ID of the background task.
+
+        Returns:
+            bool: True if the task was canceled, False otherwise.
+
+        Raises:
+            KeyError: If the task ID is not found.
+        """
+        if task := self._background_tasks.get(task_id):
+            return task.cancel()
+        raise KeyError(f"💥 Task {task_id} not found.")
+
+    async def parallel_cpu_bound_task(
+        self,
+        func: SyncFunc[T],
+        args: list[tuple[Any, ...]] = [],
+        kwargs: list[dict[str, Any]] = [],
+        batch_size: int = 100,
+        batch_id: Optional[str] = None,
+        raise_on_error: bool = True,
+    ) -> BatchResult[T]:
+        """
+        🔄 Process CPU-intensive tasks in parallel using multiprocessing.
+
+        Optimized for computation-heavy tasks that benefit from multiple CPU cores.
+
+        Args:
+            func: The CPU-bound function to execute
+            args: List of argument tuples for each task
+            kwargs: List of keyword argument dicts for each task
+            batch_size: Number of tasks to process in each batch
+            batch_id: Optional identifier for the batch
+            raise_on_error: Whether to raise an exception if any task fails
+
+        Returns:
+            BatchResult[T]: Results of all processed tasks
+        """
+        batch_id = batch_id or f"parallel_cpu_{func.__name__}_{uuid4().hex[:8]}"
+        start_time = datetime.now()
+
+        # Process tasks in batches to avoid memory issues
+        tasks = []
+        for i in tqdm(range(0, len(args), batch_size), desc="Processing Tasks"):
+            batch_args = args[i : i + batch_size]
+            batch_kwargs = kwargs[i : i + batch_size]
+            batch_tasks: list[tuple[tuple[Any, ...], dict[str, Any], Future[Any]]] = [
+                (
+                    a,
+                    kwa,
+                    wrap_future(self._process_pool.submit(func, *a, **kwa)),
+                )
+                for a, kwa in self._zip_args_and_kwargs(batch_args, batch_kwargs)
+            ]
+            tasks.extend(
+                await gather(
+                    *[
+                        self.__create_task_result(
+                            args=task_args,
+                            kwargs=task_kwargs,
+                            parent_id=batch_id,
+                            coroutine=task_future,
+                            raise_errors=raise_on_error,
+                            task_id=f"{func.__name__}_{uuid4().hex[:8]}",
+                        )
+                        for task_args, task_kwargs, task_future in batch_tasks
+                    ]
+                )
+            )
+        return BatchResult[T](
+            tasks=tasks,
+            batch_id=batch_id,
+            start_time=start_time,
+            end_time=datetime.now(),
+        )
+
+    async def parallel_io_bound_task(
+        self,
+        func: Func[T],
+        args: list[tuple[Any, ...]] = [],
+        kwargs: list[dict[str, Any]] = [],
+        batch_size: int = 100,
+        batch_id: Optional[str] = None,
+        raise_on_error: bool = True,
+    ) -> BatchResult[T]:
+        """
+        🌐 Process I/O-bound tasks in parallel using threading.
+
+        Optimized for tasks that spend time waiting for external resources.
+
+        Args:
+            func: The I/O-bound function to execute
+            args: List of argument tuples for each task
+            kwargs: List of keyword argument dicts for each task
+            batch_size: Number of tasks to process in each batch
+            batch_id: Optional identifier for the batch
+            raise_on_error: Whether to raise an exception if any task fails
+
+        Returns:
+            BatchResult[T]: Results of all processed tasks
+        """
+        batch_id = batch_id or f"parallel_io_{func.__name__}_{uuid4().hex[:8]}"
+        start_time = datetime.now()
+
+        # Process tasks in batches to avoid memory issues
+        tasks = []
+        for i in tqdm(range(0, len(args), batch_size), desc="Processing Tasks"):
+            batch_args = args[i : i + batch_size]
+            batch_kwargs = kwargs[i : i + batch_size]
+            batch_tasks: list[
+                tuple[
+                    tuple[Any, ...],
+                    dict[str, Any],
+                    Future[Any] | Coroutine[Any, Any, Any],
+                ]
+            ] = [
+                (
+                    a,
+                    kwa,
+                    (
+                        func(*a, **kwa)
+                        if iscoroutinefunction(func)
+                        else wrap_future(self._thread_pool.submit(func, *a, **kwa))
+                    ),
+                )
+                for a, kwa in self._zip_args_and_kwargs(batch_args, batch_kwargs)
+            ]
+            tasks.extend(
+                await gather(
+                    *[
+                        self.__create_task_result(
+                            args=task_args,
+                            kwargs=task_kwargs,
+                            parent_id=batch_id,
+                            coroutine=task_future,
+                            raise_errors=raise_on_error,
+                            task_id=f"{func.__name__}_{uuid4().hex[:8]}",
+                        )
+                        for task_args, task_kwargs, task_future in batch_tasks
+                    ]
+                )
+            )
+        return BatchResult[T](
+            batch_id=batch_id,
+            tasks=tasks,
+            start_time=start_time,
+            end_time=datetime.now(),
+        )
+
+    async def __create_task_result(
+        self,
+        task_id: str,
+        args: tuple[Any, ...],
+        kwargs: dict[str, Any],
+        coroutine: Union[Future[T], Coroutine[Any, Any, T]],
+        parent_id: Optional[str] = None,
+        raise_errors: bool = True,
+    ) -> TaskResult[T]:
+        """Create a task result with proper error handling and timing."""
+        result = TaskResult[T](
+            args=args,
+            kwargs=kwargs,
+            task_id=task_id,
+            parent_id=parent_id,
+        )
+
+        try:
+            result.status = TaskStatus.RUNNING
+            result.start_time = datetime.now()
+            result.result = await coroutine
+            result.status = TaskStatus.COMPLETED
+        except CancelledError as e:
+            result.status = TaskStatus.CANCELLED
+            result.error = e
+            if raise_errors:
+                raise
+        except Exception as e:
+            result.status = TaskStatus.FAILED
+            result.error = e
+            if raise_errors:
+                raise
+        finally:
+            result.end_time = datetime.now()
+
+        return result
+
+    async def cleanup(self, wait: bool = True) -> None:
+        """🧹 Clean up executor resources and cancel running tasks."""
+        if not wait:  # Cancel all running background tasks
+            for task in self._background_tasks.values():
+                task.cancel()
+
+        if self._background_tasks:  # Wait for all tasks to complete or be cancelled
+            await gather(*self._background_tasks.values(), return_exceptions=True)
+
+        # Shutdown thread and process pools
+        self._thread_pool.shutdown(wait=True)
+        self._process_pool.shutdown(wait=True)
+
+    @staticmethod
+    def wait(coroutine: Coroutine[Any, Any, T]) -> T:
+        """⌚ Runs an async coroutine synchronously and waits for the result."""
+        if coroutine is None:
+            return None  # type:ignore
+
+        if isinstance(coroutine, Future) or isinstance(coroutine, Task):
+            return cast(T, coroutine.result())
+
+        return run(coroutine)
+
+    def _zip_args_and_kwargs(
+        self,
+        args_list: list[tuple[Any, ...]],
+        kwargs_list: list[dict[str, Any]],
+    ) -> list[tuple[tuple[Any, ...], dict[str, Any]]]:
+        """
+        🤐 Combine lists of positional and keyword arguments into a single list of tuples.
+
+        Given two lists of arguments, where the first list contains tuples of
+        positional arguments and the second list contains dictionaries of keyword
+        arguments, this method returns a single list of tuples, where each tuple
+        contains a tuple of positional arguments and a dictionary of keyword
+        arguments.
+
+        The lists are zipped together using the zip_longest function, so if the
+        lists are of different lengths, the shorter list is padded with empty
+        tuples or dictionaries as necessary.
+
+        The returned list is a list of tuples, where each tuple contains a tuple
+        of positional arguments and a dictionary of keyword arguments. The tuples
+        and dictionaries are guaranteed to be of type tuple and dict, respectively,
+        even if the input lists contain empty or None values.
+
+        :param args_list: List of tuples of positional arguments.
+        :param kwargs_list: List of dictionaries of keyword arguments.
+        :return: List of tuples, where each tuple contains a tuple of positional
+            arguments and a dictionary of keyword arguments.
+        """
+        return [  # type: ignore # Issue with zip_longest return type annotation
+            (
+                args if isinstance(args, tuple) else (),
+                kwargs if isinstance(kwargs, dict) else {},
+            )
+            for args, kwargs in zip_longest(
+                args_list,
+                kwargs_list,
+                fillvalue=() if not args_list else {},
+            )
+        ]
+
+
+__all__: list[str] = ["TaskExecutor", "TaskStatus", "TaskResult", "BatchResult"]
