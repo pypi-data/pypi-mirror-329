@@ -1,0 +1,23 @@
+[project]
+name = 'dataguzzler-python'
+dynamic = ['version','authors','description','urls']
+requires-python = ">= 3.8"
+readme = "README.md"
+classifiers = [
+	    "Development Status :: 3 - Alpha",
+	    "License :: OSI Approved :: BSD License"
+	    ]
+
+[project.scripts]
+dataguzzler-python = "dataguzzler_python.bin.dataguzzler_python:main"
+dgpy = "dataguzzler_python.bin.dgpy:main"
+
+[build-system]
+requires = ["setuptools>=64","numpy", "setuptools_scm[toml]>=5"]
+build-backend = "setuptools.build_meta:__legacy__"
+
+[tool.setuptools_scm]
+# Note: With recent setuptools we can use "version_file" instead of "write_to"
+write_to = "dataguzzler_python/_version.py"
+
+#v0.3.1
