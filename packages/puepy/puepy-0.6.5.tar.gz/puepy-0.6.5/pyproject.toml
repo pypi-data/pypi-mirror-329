@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "puepy"
+version = "0.6.5"
+description = "Frontend Framework for PyScript"
+authors = ["Ken Kinder <ken+github@kkinder.com>"]
+readme = "README.md"
+homepage = "https://puepy.dev/"
+repository = "https://github.com/kkinder/puepy"
+documentation = "https://docs.puepy.dev/"
+license = "Apache-2.0"
+keywords = ["pyscript", "webassembly", "frontend", "framework", "reactive"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Environment :: WebAssembly",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest-playwright = "^0.5.0"
+pytest = "^8.2.2"
+
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.6.1"
+mkdocs-material = "^9.6.4"
+beautifulsoup4 = "^4.13.3"
+mkdocs-material-extensions = "^1.3.1"
+mkdocstrings = {extras = ["python"], version = "^0.28.1"}
+mkdocs-macros-plugin = "^1.3.7"
+mike = "^2.1.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tools.poetry.urls]
+issues = "https://github.com/kkinder/puepy/issues"
