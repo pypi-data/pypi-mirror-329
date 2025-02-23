@@ -1,0 +1,32 @@
+Metadata-Version: 2.4
+Name: smartscreen-driver
+Version: 0.2.0
+Summary: Driver for serial-over-USB displays; library extracted from turing-smart-screen-python
+Author: Mathieu Houdebine
+Author-email: Hugo Chargois <hugo.chargois@free.fr>
+License-File: LICENSE
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3.9
+Requires-Dist: numpy>=2.0.2
+Requires-Dist: pillow>=11.1.0
+Requires-Dist: pyserial>=3.5
+Description-Content-Type: text/markdown
+
+# smartscreen-driver
+
+This package contains drivers for low-cost serial-over-USB displays such as
+the Turing Smart Screen.
+
+This library is simply an extract of the driver code from the
+[turing-smart-screen-python](https://github.com/mathoudebine/turing-smart-screen-python)
+project, removing all the sensors and UI code and dependencies, fixing coding
+conventions violations (PEP8 et al) and adding proper Python packaging.
+
+The usage is straightforward:
+
+- you open the connection with the correct `LcdCommRevX` depending on your display
+- you `paint()` (PIL) images to the display
+
+See `hello_world.py` for an example.
