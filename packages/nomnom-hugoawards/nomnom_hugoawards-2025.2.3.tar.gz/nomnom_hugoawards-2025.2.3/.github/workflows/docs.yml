@@ -1,0 +1,71 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**/*"
+      - ".github/workflows/docs.yml"
+      - "uv.lock"
+      - "CODE_OF_CONDUCT.md"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/**/*"
+      - ".github/workflows/docs.yml"
+      - "uv.lock"
+      - "CODE_OF_CONDUCT.md"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    permissions:
+      # needed so it can write to gh-pages
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Configure git
+        run: |
+          set -e
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Generate the docs
+        run: uv run mkdocs build
+        working-directory: ./docs
+
+      - name: Upload the artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/site/
+
+  deploy:
+    permissions:
+      contents: read
+      id-token: write
+      pages: write
+
+    runs-on: ubuntu-latest
+    needs: docs
+    if: github.event_name != 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
