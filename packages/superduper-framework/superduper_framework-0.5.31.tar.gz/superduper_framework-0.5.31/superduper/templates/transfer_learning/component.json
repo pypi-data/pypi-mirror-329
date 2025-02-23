@@ -1,0 +1,437 @@
+{
+  "_path": "superduper.components.template.Template",
+  "identifier": "transfer_learning",
+  "upstream": null,
+  "plugins": null,
+  "cache": true,
+  "build_variables": null,
+  "build_template": null,
+  "template": {
+    "_base": "?transfer-learning",
+    "_builds": {
+      "model:embedding": {
+        "_path": "superduper_sentence_transformers.model.SentenceTransformer",
+        "preferred_devices": [
+          "cuda",
+          "mps",
+          "cpu"
+        ],
+        "device": "cpu",
+        "upstream": null,
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "signature": "singleton",
+        "datatype": null,
+        "output_schema": null,
+        "model_update_kwargs": {},
+        "predict_kwargs": {},
+        "compute_kwargs": {},
+        "validation": null,
+        "metric_values": {},
+        "num_workers": 0,
+        "serve": false,
+        "trainer": null,
+        "deploy": false,
+        "model": "all-MiniLM-L6-v2",
+        "preprocess": null,
+        "postprocess": "&:blob:e2c0ace81839b6babf91d5d063e2f022ca7ea721"
+      },
+      "resnet18": {
+        "_path": "superduper.base.leaf.ImportCall",
+        "import_path": "torchvision.models.resnet.resnet18",
+        "args": [],
+        "kwargs": {
+          "pretrained": true
+        }
+      },
+      "model:my-vision-model": {
+        "_path": "superduper_torch.model.TorchModel",
+        "preferred_devices": [
+          "cuda",
+          "mps",
+          "cpu"
+        ],
+        "device": null,
+        "upstream": null,
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "signature": "singleton",
+        "datatype": null,
+        "output_schema": null,
+        "model_update_kwargs": {},
+        "predict_kwargs": {},
+        "compute_kwargs": {},
+        "validation": null,
+        "metric_values": {},
+        "num_workers": 0,
+        "serve": false,
+        "trainer": null,
+        "deploy": false,
+        "object": "?resnet18",
+        "preprocess": "&:blob:52ceea3d8d3cd3eab25e4cb9e2074ff4984545c3",
+        "preprocess_signature": "singleton",
+        "postprocess": "&:blob:c9b8ecb942240cf67959aa59b0e197910bd64d55",
+        "postprocess_signature": "singleton",
+        "forward_method": "__call__",
+        "forward_signature": "singleton",
+        "train_forward_method": "__call__",
+        "train_forward_signature": "singleton",
+        "train_preprocess": null,
+        "train_preprocess_signature": "singleton",
+        "collate_fn": null,
+        "optimizer_state": null,
+        "loader_kwargs": {}
+      },
+      "model:feature_extractor": {
+        "_path": "superduper.components.model.ModelRouter",
+        "upstream": null,
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "signature": "*args,**kwargs",
+        "datatype": null,
+        "output_schema": null,
+        "model_update_kwargs": {},
+        "predict_kwargs": {},
+        "compute_kwargs": {},
+        "validation": null,
+        "metric_values": {},
+        "num_workers": 0,
+        "serve": false,
+        "trainer": null,
+        "deploy": false,
+        "models": {
+          "<var:modality>": "?model:embedding",
+          "image": "?model:my-vision-model"
+        },
+        "model": "<var:modality>"
+      },
+      "var-table-name-select": {
+        "_path": "superduper_<var:databackend>.query.parse_query",
+        "documents": [],
+        "query": "<var:table_name>.select()"
+      },
+      "listener:features": {
+        "_path": "superduper.components.listener.Listener",
+        "upstream": [],
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "key": "x",
+        "model": "?model:feature_extractor",
+        "predict_kwargs": {},
+        "select": "?var-table-name-select",
+        "flatten": false
+      },
+      "metric:acc": {
+        "_path": "superduper.components.metric.Metric",
+        "upstream": null,
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "object": "&:blob:7a948b230b9e3abab9c1302864417439001554ba"
+      },
+      "var-table-name-outputs-features-?(listener:features.uuid)-filter-fold-eq-valid": {
+        "_path": "superduper_<var:databackend>.query.parse_query",
+        "documents": [
+          {
+            "_fold": {
+              "<$>eq": "valid"
+            }
+          }
+        ],
+        "query": "<var:table_name>.outputs(\"features__?(listener:features.uuid)\").filter(documents[0])"
+      },
+      "dataset:my-valid": {
+        "_path": "superduper.components.dataset.Dataset",
+        "upstream": null,
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "select": "?var-table-name-outputs-features-?(listener:features.uuid)-filter-fold-eq-valid",
+        "sample_size": null,
+        "random_seed": null,
+        "creation_date": null,
+        "raw_data": null,
+        "pin": false
+      },
+      "validation:transfer_learning_performance": {
+        "_path": "superduper.components.model.Validation",
+        "upstream": null,
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "metrics": [
+          "?metric:acc"
+        ],
+        "key": [
+          "<var:output_prefix>features__?(listener:features.uuid)",
+          "y"
+        ],
+        "datasets": [
+          "?dataset:my-valid"
+        ]
+      },
+      "var-table-name-outputs-features-?(listener:features.uuid)": {
+        "_path": "superduper_<var:databackend>.query.parse_query",
+        "documents": [],
+        "query": "<var:table_name>.outputs(\"features__?(listener:features.uuid)\")"
+      },
+      "trainer:my-scikit-trainer": {
+        "_path": "superduper_sklearn.model.SklearnTrainer",
+        "upstream": null,
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "key": [
+          "<var:output_prefix>features__?(listener:features.uuid)",
+          "y"
+        ],
+        "select": "?var-table-name-outputs-features-?(listener:features.uuid)",
+        "transform": null,
+        "metric_values": {},
+        "signature": "*args",
+        "data_prefetch": false,
+        "prefetch_size": 1000,
+        "prefetch_factor": 100,
+        "in_memory": true,
+        "compute_kwargs": {},
+        "validation": null,
+        "fit_params": {},
+        "predict_params": {},
+        "y_preprocess": null
+      },
+      "model:my-model-scikit": {
+        "_path": "superduper_sklearn.model.Estimator",
+        "upstream": null,
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "signature": "singleton",
+        "datatype": null,
+        "output_schema": null,
+        "model_update_kwargs": {},
+        "predict_kwargs": {},
+        "compute_kwargs": {},
+        "validation": "?validation:transfer_learning_performance",
+        "metric_values": {},
+        "num_workers": 0,
+        "serve": false,
+        "trainer": "?trainer:my-scikit-trainer",
+        "deploy": false,
+        "object": "&:blob:055c64a7005dbdf4f8abd258a998a5639973bacf",
+        "preprocess": null,
+        "postprocess": null
+      },
+      "trainer:my-torch-trainer": {
+        "_path": "superduper_torch.training.TorchTrainer",
+        "upstream": null,
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "key": [
+          "<var:output_prefix>features__?(listener:features.uuid)",
+          "y"
+        ],
+        "select": "?var-table-name-outputs-features-?(listener:features.uuid)",
+        "transform": "&:blob:ad9a1fd31dcc52daa4a597e845a1fa67e7114328",
+        "metric_values": {},
+        "signature": "*args",
+        "data_prefetch": false,
+        "prefetch_size": 1000,
+        "prefetch_factor": 100,
+        "in_memory": true,
+        "compute_kwargs": {},
+        "validation": null,
+        "objective": "&:blob:a10fbf2cdd7532dd7bf5bba03b7c28e01b4326cc",
+        "loader_kwargs": {
+          "batch_size": 10
+        },
+        "max_iterations": 1000,
+        "no_improve_then_stop": 5,
+        "download": false,
+        "validation_interval": 100,
+        "listen": "objective",
+        "optimizer_cls": "Adam",
+        "optimizer_kwargs": {},
+        "optimizer_state": null,
+        "collate_fn": null
+      },
+      "model:my-model-torch": {
+        "_path": "superduper_torch.model.TorchModel",
+        "preferred_devices": [
+          "cuda",
+          "mps",
+          "cpu"
+        ],
+        "device": null,
+        "upstream": null,
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "signature": "singleton",
+        "datatype": null,
+        "output_schema": null,
+        "model_update_kwargs": {},
+        "predict_kwargs": {},
+        "compute_kwargs": {},
+        "validation": "?validation:transfer_learning_performance",
+        "metric_values": {},
+        "num_workers": 0,
+        "serve": false,
+        "trainer": "?trainer:my-torch-trainer",
+        "deploy": false,
+        "object": "&:blob:0d46606de78f20a18562745e6f58741147230260",
+        "preprocess": "&:blob:adf600e3db8339a9d2832b705de42bae7122d8bf",
+        "preprocess_signature": "singleton",
+        "postprocess": "&:blob:5265abc43d8f7d659a40cca666eab899f6f6e9be",
+        "postprocess_signature": "singleton",
+        "forward_method": "__call__",
+        "forward_signature": "singleton",
+        "train_forward_method": "__call__",
+        "train_forward_signature": "singleton",
+        "train_preprocess": null,
+        "train_preprocess_signature": "singleton",
+        "collate_fn": null,
+        "optimizer_state": null,
+        "loader_kwargs": {}
+      },
+      "model:estimator": {
+        "_path": "superduper.components.model.ModelRouter",
+        "upstream": [
+          "?listener:features",
+          "?listener:features"
+        ],
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "signature": "*args,**kwargs",
+        "datatype": null,
+        "output_schema": null,
+        "model_update_kwargs": {},
+        "predict_kwargs": {},
+        "compute_kwargs": {},
+        "validation": null,
+        "metric_values": {},
+        "num_workers": 0,
+        "serve": false,
+        "trainer": null,
+        "deploy": false,
+        "models": {
+          "scikit-framework": "?model:my-model-scikit",
+          "torch-framework": "?model:my-model-torch"
+        },
+        "model": "scikit-framework"
+      },
+      "transfer-learning": {
+        "_path": "superduper.components.application.Application",
+        "upstream": null,
+        "plugins": null,
+        "cache": true,
+        "build_variables": null,
+        "build_template": null,
+        "components": [
+          "?listener:features",
+          "?model:estimator"
+        ],
+        "namespace": null,
+        "link": null,
+        "_literals": [
+          "template"
+        ]
+      }
+    }
+  },
+  "template_variables": [
+    "table_name",
+    "framework",
+    "modality"
+  ],
+  "types": {
+    "table_name": {
+      "type": "str",
+      "default": "sample_transfer_learning"
+    },
+    "modality": {
+      "type": "str",
+      "default": "text"
+    },
+    "framework": {
+      "type": "str",
+      "default": "scikit-framework"
+    }
+  },
+  "schema": null,
+  "blobs": null,
+  "files": null,
+  "requirements": null,
+  "default_tables": [
+    "?table:sample_transfer_learning"
+  ],
+  "staged_file": null,
+  "queries": null,
+  "_literals": [
+    "template"
+  ],
+  "_builds": {
+    "str": {
+      "_path": "superduper.components.schema.FieldType",
+      "uuid": "4d69047b1d0d4df7"
+    },
+    "int": {
+      "_path": "superduper.components.schema.FieldType",
+      "uuid": "37f821e5ba5340d4"
+    },
+    "schema:sample_transfer_learning/schema": {
+      "_path": "superduper.components.schema.Schema",
+      "uuid": "4ce67227d4124492",
+      "upstream": null,
+      "plugins": null,
+      "cache": true,
+      "build_variables": null,
+      "build_template": null,
+      "fields": {
+        "x": "?str",
+        "y": "?int",
+        "_fold": "?str"
+      }
+    },
+    "dataset:text_classification": {
+      "_path": "superduper.components.dataset.RemoteData",
+      "uuid": "22e7bad51a6747a9",
+      "upstream": null,
+      "plugins": null,
+      "cache": true,
+      "build_variables": null,
+      "build_template": null,
+      "getter": "&:blob:920b30f0c588fae8757fc0945a3d81e2b3d41f15"
+    },
+    "table:sample_transfer_learning": {
+      "_path": "superduper.components.table.Table",
+      "uuid": "5d8a69d24fe14edf",
+      "upstream": null,
+      "plugins": null,
+      "cache": true,
+      "build_variables": null,
+      "build_template": null,
+      "schema": "?schema:sample_transfer_learning/schema",
+      "primary_id": "id",
+      "data": "?dataset:text_classification"
+    }
+  },
+  "_files": {}
+}
