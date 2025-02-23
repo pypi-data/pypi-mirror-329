@@ -1,0 +1,30 @@
+[project]
+name="project-koha-dspace-ner"
+version="0.1.0"
+description="A project to extract named entities from UMSA's academic repository documents"
+requires-python=">=3.12"
+license="MIT"
+authors = [
+    {name = "Rodrigo Iturralde"}
+]
+keywords = ["nlp", "ner", "koha", "dspace", "umsa"]
+dependencies =  [
+    "PyMuPDF~=1.24.14",
+    "opencv-python-headless~=4.10.0.84",
+    "numpy~=2.2.1",
+    "pytesseract==0.3.13"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+include = ["src/main/python/registration_asistant_ner/training_data/pdf_reader.py"]
+sources = ["src/main/python/"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/main/python/registration_asistant_ner/training_data/pdf_reader.py"]
+sources = ["src/main/python/"]
+
+
