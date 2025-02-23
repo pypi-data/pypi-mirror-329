@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "cursed-toggle"
+version = "0.1.0"
+description = "Implementation of a Boolean toggle function according to the KICS principle"
+authors = ["Kevin Golob <151143873+kvnglb@users.noreply.github.com>"]
+readme = "README.md"
+license = "GPL-3.0-only"
+homepage = "https://github.com/kvnglb/cursed-toggle"
+repository = "https://github.com/kvnglb/cursed-toggle"
+packages = [{include = "cursed_toggle", from = "src"}]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Typing :: Typed"
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+mypy = "^1.15.0"
+flake8 = "^7.1.1"
+ruff = "^0.9.6"
+
+[tool.poetry.group.dev.dependencies]
+spyder-kernels = "~2.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
