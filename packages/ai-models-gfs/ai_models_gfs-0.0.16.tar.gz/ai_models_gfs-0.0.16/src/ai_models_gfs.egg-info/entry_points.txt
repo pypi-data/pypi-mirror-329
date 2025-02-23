@@ -1,0 +1,16 @@
+[ai_models_gfs.input]
+cds = ai_models_gfs.inputs.cds:CdsInput
+ecmwf-open-data = ai_models_gfs.inputs.opendata:OpenDataInput
+file = ai_models_gfs.inputs.file:FileInput
+gdas = ai_models_gfs.inputs.gfs:GdasInput
+gefs = ai_models_gfs.inputs.gfs:GefsInput
+gfs = ai_models_gfs.inputs.gfs:GfsInput
+mars = ai_models_gfs.inputs.mars:MarsInput
+opendata = ai_models_gfs.inputs.opendata:OpenDataInput
+
+[ai_models_gfs.output]
+file = ai_models_gfs.outputs:FileOutput
+none = ai_models_gfs.outputs:NoneOutput
+
+[console_scripts]
+ai-models-gfs = ai_models_gfs.__main__:main
