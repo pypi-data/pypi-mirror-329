@@ -1,0 +1,104 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "dbox"
+version = "0.3.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = "~=3.9"
+dependencies = [
+    "click~=8.1",
+    "colorama~=0.4",
+    "pydantic~=2.1",
+]
+
+
+[tool.ruff]
+line-length = 120
+# src = []
+include = ["pyproject.toml", "*.ipynb", "dbox/**/*.py", "pkgs/**/*.py"]
+extend-exclude = ["transformers/**"]
+
+[tool.ruff.lint]
+# https://docs.astral.sh/ruff/rules/
+select = ["B", "C", "E", "F", "I", "N", "W", "PLE", "AIR", "PLW"]
+ignore = [
+  "F401", # unused imports
+  "F405",
+  # "I001",
+  "E501",
+  "PLE1142",
+  "F403",
+  "N806",    # variable name should be snake_case
+  "N817",
+  "N812",
+]
+
+[tool.pytest.ini_options]
+addopts = "--capture=tee-sys"
+log_cli = true
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s %(levelname)-7s %(message)s"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+filterwarnings = ["ignore:.*"]
+testpaths = ["dbox"]
+asyncio_default_fixture_loop_scope = "session"
+
+[dependency-groups]
+dev = [
+  "attrs>=24.3.0",
+  "bs4>=0.0.2",
+  "google-cloud-bigquery-storage>=2.27.0",
+  "authlib>=1.4.0",
+  "ipywidgets>=8.1.5",
+  "orjson>=3.10.15",
+  "sentence-transformers>=3.3.1",
+  "google-cloud-bigquery>=3.27.0",
+  "humanfriendly>=10.0",
+  "ipython",
+  "pendulum>=3.0.0",
+  "polars>=1.18.0",
+  "psutil>=6.1.1",
+  "pyarrow>=18.1.0",
+  "pydantic>=2.10.4",
+  "pytest>=8.3.4",
+  "ruff>=0.8.4",
+  "tenacity>=9.0.0",
+  "psycopg>=3.2.3",
+  "psycopg-pool>=3.2.4",
+  "pyperclip>=1.9.0",
+  "colorama>=0.4.6",
+  "pytest-asyncio>=0.25.1",
+  # "telethon>=1.38.1",
+  # "python-telegram-bot>=21.9",
+  "google-ads>=25.1.0",
+  "httpx>=0.27.2",
+  "numpy",
+  # "torch>=2.5.1",
+  # "matplotlib",
+  # "llama-models",
+  # "ipykernel>=6.29.5",
+  # "transformers>=4.47.1",
+  # "ollama>=0.4.5",
+  # "llama-stack",
+  # "ipywidgets>=8.1.5",
+  # "pypdf>=5.1.0",
+  # "playwright>=1.49.1",
+  "starlette>=0.45.2",
+  "uvicorn>=0.34.0",
+  "types-boto3[essential]>=1.36.11",
+  "boto3[essential]>=1.36.11",
+  "duckdb>=1.2.0",
+  "ipykernel>=6.29.5",
+  "flit>=3.10.1",
+  "twine>=6.1.0",
+  "telethon>=1.38.1",
+  "python-telegram-bot>=21.10",
+  "cryptg>=0.5.0.post0",
+  "valkey>=6.1.0",
+]
+
+# [tool.pyright]
+# pythonPath = "/Users/goku/micromamba/envs/lm/bin/python"
