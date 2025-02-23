@@ -1,0 +1,56 @@
+# spssimage
+
+A lightweight Python library for creating and manipulating images, including generating star maps with dynamic effects like twinkling stars and gradients.
+
+## Features
+
+- Create static images with shapes, gradients, and colors.
+- Generate animations (e.g., twinkling stars) and export them as GIFs.
+- Apply radial gradients to simulate gas clouds.
+- Lightweight and independent of external libraries like OpenCV or Pillow.
+
+## Installation
+
+Install the library using pip:
+
+```bash
+pip install spssimage
+```
+
+USAGE:
+from spssimage.core import Canvas
+
+# Create a canvas
+
+canvas = Canvas(100, 100, background=(0, 0, 0))
+
+# Define pixel positions for twinkling
+
+pixel_positions = [(20, 20), (50, 50), (80, 80)]
+
+# Define the base color of the twinkling pixels
+
+base_color = (255, 255, 255)
+
+# Save the twinkling pixels as a GIF
+
+canvas.save_gif(pixel_positions, base_color, "twinkling_pixels.gif", frames=30, duration=100, loop=0)
+
+---
+
+### 2. Prepare for Deployment
+
+#### Build the Package
+
+Run the following commands to build the package:
+
+```bash
+# Ensure your virtual environment is active
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install build tools
+pip install --upgrade build twine
+
+# Build the package
+python -m build
+```
