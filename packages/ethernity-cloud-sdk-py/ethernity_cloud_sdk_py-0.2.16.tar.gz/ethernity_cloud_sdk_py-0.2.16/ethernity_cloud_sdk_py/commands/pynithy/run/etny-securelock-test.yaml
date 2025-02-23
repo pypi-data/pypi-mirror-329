@@ -1,0 +1,44 @@
+name: llama_test_server_SECURELOCK_V3_testnet_59
+version: "0.3"
+
+
+security:
+  attestation:
+    tolerate: [debug-mode, hyperthreading, outdated-tcb, software-hardening-needed, debug-mode]
+    ignore_advisories: "*"
+
+services:
+   - name: application
+     image_name: application_image
+     mrenclaves: [ "50df122889aff5bd5ebfffa0e8da4ad6848ff4b22a97e32cef4efdd7c9eb6456" ]
+     command: /usr/local/bin/python /etny-securelock/securelock.py
+     pwd: /
+
+images:
+   - name: application_image
+     injection_files:
+       - path: /app/llama_test_server_SECURELOCK_V3_testnet_59/ca.pem
+         content: $$SCONE::CA_CERT:crt$$
+       - path: /app/llama_test_server_SECURELOCK_V3_testnet_59/cert.pem
+         content: $$SCONE::SERVER_CERT:crt$$
+       - path: /private/llama_test_server_SECURELOCK_V3_testnet_59/key.pem
+         content: $$SCONE::SERVER_CERT:privatekey$$
+
+secrets:
+   - name: CA_KEY
+     kind: private-key
+     key_type: P-384
+     migrate: true
+   - name: CA_CERT
+     kind: x509-ca
+     private_key: CA_KEY
+     valid_for: 3560d
+   - name: SERVER_KEY
+     kind: private-key
+     key_type: P-384
+     migrate: false
+   - name: SERVER_CERT
+     issuer: CA_CERT
+     kind: x509
+     endpoint: server
+     private_key: SERVER_KEY
