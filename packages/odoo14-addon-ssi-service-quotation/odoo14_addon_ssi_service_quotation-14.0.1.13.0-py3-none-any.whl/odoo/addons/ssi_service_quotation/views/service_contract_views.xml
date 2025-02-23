@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2021 OpenSynergy Indonesia
+     Copyright 2021 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+<record id="service_contract_view_tree" model="ir.ui.view">
+    <field name="name">service.contract tree</field>
+    <field name="model">service.contract</field>
+    <field name="mode">extension</field>
+    <field name="inherit_id" ref="ssi_service.service_contract_view_tree" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="quotation_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+
+<record id="service_contract_view_form" model="ir.ui.view">
+    <field name="name">service.contract form</field>
+    <field name="model">service.contract</field>
+    <field name="mode">extension</field>
+    <field name="inherit_id" ref="ssi_service.service_contract_view_form" />
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='type_id']" position="before">
+                <field name="quotation_id" />
+            </xpath>
+        </data>
+    </field>
+</record>
+</odoo>
