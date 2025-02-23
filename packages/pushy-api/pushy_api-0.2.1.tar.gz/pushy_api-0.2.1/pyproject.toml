@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pushy-api"
+version = "0.2.1"
+description = "An async Python client for Pushy HTTP API"
+authors = [{name = "Vadim Averin", email = "vadim@avevad.com"}, {name = "Anton Egorov", email = "ai_egorov@mail.ru"}]
+license = {text = "MIT"}
+dependencies = ["aiohttp"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.scripts]
+pushy = "pushy:main_sync"
