@@ -1,0 +1,79 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": [
+		"config:recommended",
+		":dependencyDashboard",
+		":semanticCommits",
+		":enableVulnerabilityAlerts"
+	],
+	"schedule": [
+		"before 5am"
+	],
+	"timezone": "America/Edmonton",
+	"lockFileMaintenance": {
+		"enabled": true,
+		"automerge": true,
+		"schedule": [
+			"before 6am"
+		]
+	},
+	"dependencyDashboard": true,
+	"labels": [
+		"dependencies"
+	],
+	"prHourlyLimit": 4,
+	"prConcurrentLimit": 10,
+	"semanticCommitType": "chore",
+	"rangeStrategy": "bump",
+	"rebaseWhen": "auto",
+	"minimumReleaseAge": "3 days",
+	"packageRules": [
+		{
+			"matchDepTypes": [
+				"dev-dependencies"
+			],
+			"matchUpdateTypes": [
+				"minor",
+				"patch"
+			],
+			"groupName": "dev dependencies (non-major)",
+			"automerge": true
+		},
+		{
+			"matchDepTypes": [
+				"dependencies"
+			],
+			"matchUpdateTypes": [
+				"minor",
+				"patch"
+			],
+			"groupName": "production dependencies (non-major)",
+			"automerge": true
+		},
+		{
+			"matchUpdateTypes": [
+				"major"
+			],
+			"labels": [
+				"dependencies",
+				"breaking"
+			],
+			"automerge": false
+		},
+		{
+			"groupName": "type definitions",
+			"automerge": true,
+			"matchPackageNames": [
+				"/^@types//"
+			]
+		}
+	],
+	"vulnerabilityAlerts": {
+		"labels": [
+			"security"
+		],
+		"assignees": [
+			"@MountainGod2"
+		]
+	}
+}
