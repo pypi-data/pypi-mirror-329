@@ -1,0 +1,131 @@
+Metadata-Version: 2.2
+Name: jsongeekai
+Version: 0.2.0
+Summary: A high-performance JSON parser with AI-driven optimizations
+Author-email: Zhang Hongping <zhanghongping@live.com>
+License: MIT License
+        
+        Copyright (c) 2025 Zhang Hongping
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/zhanghongping/jsongeekai
+Project-URL: Documentation, https://jsongeekai.readthedocs.io/
+Project-URL: Repository, https://github.com/zhanghongping/jsongeekai.git
+Project-URL: Changelog, https://github.com/zhanghongping/jsongeekai/blob/main/CHANGELOG.md
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy>=2.1.3
+Requires-Dist: numba>=0.61.0
+Requires-Dist: py-cpuinfo>=9.0.0
+Requires-Dist: json5>=0.9.14
+Requires-Dist: pyyaml>=6.0.1
+Requires-Dist: msgpack>=1.0.7
+Requires-Dist: psutil>=7.0.0
+Requires-Dist: ijson>=3.3.0
+Provides-Extra: test
+Requires-Dist: pytest>=7.4.0; extra == "test"
+Requires-Dist: pytest-benchmark>=4.0.0; extra == "test"
+
+# JsonGeekAI
+
+[![PyPI version](https://img.shields.io/pypi/v/jsongeekai.svg)](https://pypi.org/project/jsongeekai/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/jsongeekai.svg)](https://pypi.org/project/jsongeekai/)
+[![Downloads](https://img.shields.io/pypi/dm/jsongeekai.svg)](https://pypi.org/project/jsongeekai/)
+[![Tests](https://img.shields.io/github/workflow/status/zhanghongping/jsongeekai/Tests)](https://github.com/zhanghongping/jsongeekai/actions)
+[![Coverage Status](https://coveralls.io/repos/github/zhanghongping/jsongeekai/badge.svg?branch=main)](https://coveralls.io/github/zhanghongping/jsongeekai?branch=main)
+[![License](https://img.shields.io/pypi/l/jsongeekai.svg)](https://github.com/zhanghongping/jsongeekai/blob/main/LICENSE)
+
+A high-performance JSON parser with AI-driven optimizations and multi-format support.
+
+## Features
+
+- **SIMD Optimizations**: Utilizes SIMD instructions for faster parsing when available
+- **Multi-format Support**: Handles JSON, JSON5, YAML, MessagePack, and JSONL formats
+- **Memory Efficient**: Smart memory management with configurable limits
+- **Format Auto-detection**: Automatically detects and handles different formats
+- **Rich Error Handling**: Detailed error messages with context and documentation
+- **Compression Support**: Built-in compression for JSONL format
+- **Extensible**: Easy to add new formats and optimizations
+- **Well Tested**: Comprehensive test suite with performance benchmarks
+
+## Installation
+
+```bash
+pip install jsongeekai
+```
+
+## Quick Start
+
+```python
+from jsongeekai import JsonGeekAI
+
+# Create parser
+parser = JsonGeekAI()
+
+# Parse JSON
+data = parser.parse('{"name": "JsonGeekAI", "version": "0.2.0"}')
+
+# Use different formats
+from jsongeekai.formats import FormatHandler
+
+handler = FormatHandler()
+
+# Auto-detect and parse
+data = handler.parse(content)
+
+# Specific format
+data = handler.parse_json5(content)
+data = handler.parse_yaml(content)
+data = handler.parse_msgpack(content)
+
+# With memory limits
+parser = JsonGeekAI(memory_limit=1024*1024)  # 1MB limit
+```
+
+## Version Compatibility
+
+JsonGeekAI requires Python 3.8 or later and is tested on:
+- Python 3.8
+- Python 3.9
+- Python 3.10
+- Python 3.11
+- Python 3.12
+
+## Performance
+
+JsonGeekAI is designed for performance:
+
+- SIMD acceleration when available
+- Efficient memory usage
+- Format-specific optimizations
+- Streaming support for large files
+
+## Documentation
+
+Full documentation is available at [jsongeekai.readthedocs.io](https://jsongeekai.readthedocs.io/)
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+## License
+
+JsonGeekAI is released under the MIT License. See the [LICENSE](LICENSE) file for details.
