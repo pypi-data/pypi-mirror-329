@@ -1,0 +1,90 @@
+cargo-features = ["profile-rustflags"]
+
+[package]
+name = "shinqlx"
+version = "0.5.13"
+authors = ["Markus 'ShiN0' Gaertner"]
+edition = "2024"
+rust-version = "1.85"
+readme = "README.md"
+description = "ShiN0's QuakeLive extension in Rust"
+repository = "https://github.com/mgaertne/shinqlx"
+license-file = "LICENSE"
+include = ["run_server_shinqlx.sh", "log4rs.yml"]
+publish = false
+
+[lib]
+name = "shinqlx"
+path = "src/lib.rs"
+test = true
+bench = false
+doc = true
+proc-macro = false
+harness = true
+crate-type = ["cdylib"]
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+strip = "symbols"
+opt-level = "z"
+lto = "fat"
+codegen-units = 1
+
+[profile.release.build-override]
+rustflags = ["-Zlocation-detail=none"]
+
+[dependencies]
+ctor = { version = ">=0.3.5", default-features = false }
+rand = { version = ">=0.9", default-features = false, features = ["thread_rng"] }
+pyo3 = { version = ">=0.23.4, <0.24", features = ["pyo3-macros", "extension-module", "nightly"] }
+retour = { version = ">=0.4.0-alpha.3", default-features = false, features = ["nightly"] }
+derive_builder = { version = ">=0.20", default-features = false, features = ["clippy", "alloc"] }
+once_cell = { version = ">=1.20", default-features = false }
+arc-swap = { version = ">=1.7", default-features = false }
+log = { version = ">=0.4", default-features = false }
+log4rs = { version = ">=1.3" }
+signal-hook = { version = ">=0.3", default-features = false }
+signal-hook-registry = { version = ">=1.4", default-features = false }
+arrayvec = { version = ">=0.7", default-features = false }
+cfg-if = { version = ">=1.0", default-features = false }
+parking_lot = { version = ">=0.12", default-features = false, features = ["nightly"] }
+
+region = { version = ">=3.0", default-features = false, optional = true }
+
+[target."cfg(target_os=\"linux\")".dependencies]
+procfs = { version = ">=0.17", default-features = false }
+procfs-core = { version = ">=0.17", default-features = false }
+
+[target."cfg(not(target_os=\"windows\"))".dependencies]
+tikv-jemallocator = { version = ">=0.6", default-features = false, features = ["background_threads_runtime_support"], optional = true }
+
+[target."cfg(target_os=\"windows\")".dependencies]
+mimalloc = { version = ">=0.1.43", default-features = false, optional = true }
+
+[build-dependencies]
+pyo3-build-config = { version = ">=0.23.4, <0.24", default-features = false, features = ["resolve-config"] }
+git2 = { version = ">=0.20", default-features = false }
+
+libgit2-sys = { version = ">=0.18", default-features = false }
+
+[dev-dependencies]
+pretty_assertions = { version = ">=1.4", default-features = false, features = ["alloc"] }
+rstest = { version = ">=0.24", default-features = false }
+mockall = { version = ">=0.13", default-features = false, features = ["nightly"] }
+serial_test = { version = ">=3.2", default-features = false }
+
+[features]
+default = ["alloc"]
+patches = ["dep:region"]
+alloc = ["dep:tikv-jemallocator", "dep:mimalloc"]
+
+[lints.rust]
+missing_docs = "warn"
+non_local_definitions = "allow"
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(coverage,coverage_nightly,tarpaulin_include)'] }
+
+[lints.rustdoc]
+broken_intra_doc_links = "deny"
