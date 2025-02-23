@@ -1,0 +1,133 @@
+Metadata-Version: 2.4
+Name: naclfile
+Version: 0.0.3
+Summary: A python xxxFile like (ie GzipFile, BZ2File, ...) for manipulating Nacl encrypted files.
+Project-URL: HomePage, https://github.com/bibi21000/NaclFile
+Project-URL: Issues, https://github.com/bibi21000/NaclFile/issues
+Project-URL: Changelog, https://github.com/bibi21000/NaclFile/blob/master/CHANGELOG.md
+Project-URL: Documentation, https://bibi21000.github.io/NaclFile/
+Author-email: bibi21000 <bibi21000@gmail.com>
+Maintainer-email: bibi21000 <bibi21000@gmail.com>
+License-File: LICENSE
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.9
+Requires-Dist: cofferfile
+Requires-Dist: pynacl
+Provides-Extra: build
+Requires-Dist: build; extra == 'build'
+Requires-Dist: twine; extra == 'build'
+Provides-Extra: doc
+Requires-Dist: pdoc; extra == 'doc'
+Provides-Extra: test
+Requires-Dist: bandit; extra == 'test'
+Requires-Dist: coverage[toml]; extra == 'test'
+Requires-Dist: pytest; extra == 'test'
+Requires-Dist: pytest-cov; extra == 'test'
+Requires-Dist: pytest-mock; extra == 'test'
+Requires-Dist: pytest-random-order; extra == 'test'
+Requires-Dist: pytest-xdist; extra == 'test'
+Requires-Dist: ruff; extra == 'test'
+Provides-Extra: zstd
+Requires-Dist: pyzstd; extra == 'zstd'
+Description-Content-Type: text/markdown
+
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/bibi21000/NaclFile/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/bibi21000/NaclFile/tree/main)
+[![codecov](https://codecov.io/gh/bibi21000/NaclFile/graph/badge.svg?token=4124GIOJAK)](https://codecov.io/gh/bibi21000/NaclFile)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/naclfile)
+
+# NaclFile
+
+A python xxxFile like (ie TarFile, GzipFile, BZ2File, pyzstd.ZstdFile, ...)
+for encrypting files with PyNacl SecretBox.
+
+This project is part of the CofferFile : https://github.com/bibi21000/CofferFile.
+
+If you're looking for a more powerfull storage for your sensible datas,
+look at PyCoffer : https://github.com/bibi21000/PyCoffer.
+
+## Install
+
+```
+    pip install naclfile
+```
+
+## Create your encryption key
+
+```
+    from nacl import utils
+
+    key = utils.random(SecretBox.KEY_SIZE)
+```
+and store it in a safe place (disk, database, ...).
+
+This key is essential to encrypt and decrypt data.
+Losing this key means losing the data.
+
+## "open" your encrypted files like normal files
+
+Text files :
+
+```
+    from naclfile import open as nacl_open
+
+    with nacl_open('test.nacl', mode='wt', secret_key=key, encoding="utf-8") as ff:
+        ff.write(data)
+
+    with nacl_open('test.nacl', "rt", secret_key=key, encoding="utf-8") as ff:
+        data = ff.read()
+
+    with nacl_open('test.nacl', mode='wt', secret_key=key, encoding="utf-8") as ff:
+        ff.writelines(data)
+
+    with nacl_open('test.nacl', "rt", secret_key=key, encoding="utf-8") as ff:
+        data = ff.readlines()
+```
+
+Binary files :
+
+```
+
+    with nacl_open('test.nacl', mode='wb', secret_key=key) as ff:
+        ff.write(data)
+
+    with nacl_open('test.nacl', "rb", secret_key=key) as ff:
+        data = ff.read()
+```
+
+## Crypt and compress ... for better performances.
+
+Look at https://github.com/bibi21000/CofferFile/blob/main/BENCHMARK.md.
+
+```
+    from naclfile.zstd import open as nacl_open
+
+    with nacl_open('test.nacz', mode='wb', secret_key=key) as ff:
+        ff.write(data)
+
+    with nacl_open('test.nacz', "rb", secret_key=key) as ff:
+        data = ff.read()
+```
+
+## Crypt and compress your tar files
+
+```
+    from naclfile.tar import open as tar_open
+
+    with tar_open('test.tarcz', mode='w', secret_key=key) as ff:
+        ff.add(file1,'file1.data')
+        ff.add(file2,'file2.data')
+
+    with tar_open('test.tarcz', "r", secret_key=key) as ff:
+        ff.extractall()
+```
+
+Look at documentation : https://bibi21000.github.io/NaclFile/
