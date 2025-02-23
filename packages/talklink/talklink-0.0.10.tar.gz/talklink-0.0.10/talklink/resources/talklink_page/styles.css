@@ -1,0 +1,904 @@
+/* ======================================================
+   Global Reset & Variables
+   ====================================================== */
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* CSS Variables for Color Scheme and Font */
+:root {
+    /* Font */
+    --font-family-primary: 'Roboto', sans-serif;
+    
+    /* Light Mode Colors */
+    --color-background: #f4f4f4;            /* Main background */
+    --color-content-bg: #f9f9f9;            /* Cards/talk items background */
+    --color-text: #333;                   /* Main text color */
+    --color-border: #ddd;                 /* Borders */
+    --color-shadow: rgba(0, 0, 0, 0.1);     /* Shadow for subtle depth */
+    --color-primary: #0F7173;             /* Primary color (buttons, etc.) */
+    --color-primary-dark: #1F8189;        /* Hover/active primary */
+    --color-accent-claims: #E7ECEF;         /* Accent for claims state */
+    --color-hover: #f0f0f0;               /* Hover background */
+    --color-muted: #888;                  /* Muted text/timestamps */
+    --color-modal-bg: #fefefe;             /* Modal light background */
+    --color-highlight: #FBB13C;           /* Highlight color */
+
+    /* Dark Mode Colors */
+    --dark-bg: #121212;                  /* Dark overall background */
+    --dark-content-bg: #1e1e1e;           /* Dark content areas (video, modal, etc.) */
+    --dark-header-bg: #333;              /* Header background in dark mode */
+    --dark-speech-bg: #333;              /* Sidebar / speaker list background in dark mode */
+    --dark-options-popup-bg: #1e1e1e;     /* Options popup background in dark mode */
+    --dark-options-popup-border: #444;    /* Options popup border in dark mode */
+    --dark-talk-item-bg: #555;            /* Dark talk items background */
+    --dark-talk-item-border: #666;        /* Border for dark talk items */
+    --dark-text: #ffffff;                /* Light text on dark backgrounds */
+    --dark-button-bg: #333;              /* Dark mode button background */
+    --dark-container-bg: #444;           /* Main container dark background */
+}
+
+
+/* ======================================================
+   Base Styles
+   ====================================================== */
+
+body {
+    overflow: hidden;
+    background-color: var(--color-background);
+    font-family: var(--font-family-primary);
+    line-height: 1.6;
+    color: var(--color-text);
+}
+
+iframe {
+    border: none;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+/* ======================================================
+   Header Section
+   ====================================================== */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    width: 100%;
+    background-color: var(--color-background);
+}
+
+.header input {
+    width: 40%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px var(--color-shadow);
+}
+
+.header input:focus {
+    border-color: var(--color-primary);
+    outline: none;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    color: var(--color-primary);
+}
+
+.logo:hover {
+    color: var(--color-primary-dark);
+}
+
+
+/* ======================================================
+   Button & Dropdown Styles
+   ====================================================== */
+
+/* Assign Speakers Button */
+.assign-speakers-button {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    border: none;
+    padding: 12px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.assign-speakers-button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+
+/* Filter Dropdown */
+/*
+.filter-dropdown {
+    display: inline-block;
+    position: relative;
+}
+*/
+
+#filterOptions {
+    position: absolute;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px var(--color-shadow);
+    z-index: 1001; /* Ensure it appears above other content */
+    margin-top: 5px;
+    padding: 6px 6px;
+    background-color: var(--color-background);
+    display: none;
+}
+
+#filterOptions button {
+    display: block;
+    width: 100%;
+    padding: .5rem;
+    border: none;
+    border-radius: 5px;
+    text-align: left;
+    background: none;
+    cursor: pointer;
+    color: black;
+}
+
+#filterOptions button:hover {
+    background-color: var(--color-hover);
+}
+
+/* Selected state for filter options */
+#filterOptions button.selected {
+    background-color: var(--color-primary-dark);
+    color: var(--color-background);
+}
+
+/* Filter Buttons */
+.filter-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+    position: fixed;
+    top: 50px;
+    background-color: var(--color-background);
+    width: 100%;
+    z-index: 1000;
+}
+
+.filter-buttons button {
+    background-color: var(--color-primary);
+    color: black;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filter-buttons button:hover {
+    background-color: var(--color-primary-dark);
+    color: var(--color-background);
+}
+
+.filter-buttons button.active {
+    background-color: var(--color-primary-dark);
+}
+
+/* Dark Mode searchBar override */
+.dark-mode #searchBar {
+    background-color: var(--dark-header-bg);
+    color: var(--color-background);
+}
+
+
+/* ======================================================
+   Main Container & Sections
+   ====================================================== */
+
+/* Main Container */
+#main-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    top: 0;
+    background-color: var(--color-background);
+}
+
+.dark-mode #main-container {
+    background-color: var(--dark-container-bg);
+}
+
+/* List Button */
+.list-button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    width: 100%;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.tab {
+    flex: 1;
+    padding: 15px 0;
+    cursor: pointer;
+    border: 1px solid var(--color-border);
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    background-color: var(--color-background);
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+    margin: 0 .5rem;
+}
+
+.tab:hover {
+    background-color: var(--color-hover);
+}
+
+.tab.active {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.tab.inactive {
+    background-color: #9EB3C2;
+    color: black;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#list-button {
+    transition: background-color 0.3s, color 0.3s;
+    padding: 15px 30px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 10px auto;
+    display: block;
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+#list-button:hover {
+    background-color: var(--color-primary-dark);
+    color: var(--color-background);
+}
+
+#list-button.claims-active {
+    background-color: var(--color-accent-claims);
+    color: var(--color-background);
+}
+
+.dark-mode #list-button.claims-active {
+    background-color: var(--color-accent-claims);
+    color: var(--color-text);
+}
+
+#list-button.transcript-active {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+.dark-mode #list-button.transcript-active {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+/* Video Section */
+#video-section {
+    width: 45%;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    background-color: var(--color-background);
+}
+
+#video-section iframe {
+    width: 100%;
+    height: 90vh;
+}
+
+/* Speaker List Section */
+.speaker-list-section {
+    width: 55%;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background-color: var(--color-background);
+    z-index: 10;
+}
+
+.dark-mode .speaker-list-section {
+    background-color: var(--dark-header-bg);
+}
+
+/* Speaker List */
+.speaker-list {
+    width: 100%;
+    display: flex;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.speaker-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.speaker-list li {
+    padding: 10px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.speaker-list li:hover {
+    background-color: var(--color-hover);
+    cursor: pointer;
+}
+
+.tool-button {
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-bottom: 8px;
+    border: 1.5px solid var(--color-highlight);
+    font-family: var(--font-family-primary);
+}
+
+.tool-button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+#extra-tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 60%;
+}
+
+/* ======================================================
+   Talk List & Options Popup
+   ====================================================== */
+
+/* Options Button */
+.options-button {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: none;
+    padding: 0;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+/* Talk Actions */
+.talk-actions {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* Options Popup */
+.options-popup {
+    position: absolute;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px var(--color-shadow);
+    z-index: 1002;
+    display: none;
+    top: 100%;
+    left: 0;
+}
+
+.options-popup button {
+    display: block;
+    width: 100%;
+    padding: 25px;
+    border: none;
+    text-align: left;
+    background: none;
+    cursor: pointer;
+    color: black;
+}
+
+.options-popup button:hover {
+    background-color: var(--color-hover);
+}
+
+/* Talk List */
+.talk-list {
+    list-style: none;
+    padding: 0;
+    padding-bottom: 2rem;
+}
+
+.talk-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 8px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--color-border);
+    background: var(--color-content-bg);
+    transition: all 0.3s;
+    text-align: left;
+    width: 98%;
+}
+
+.talk-item:hover {
+    background: var(--color-border);
+}
+
+.talk-content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: visible;
+    max-width: calc(100% - 20px);
+}
+
+.talk-text {
+    margin-right: 10px;
+    flex: 1;
+    overflow-wrap: break-word;
+}
+
+.talk-item .badge {
+    display: inline-block;
+    width: 100px;
+    height: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+    padding: 5px;
+    border-radius: 12px;
+    margin-right: 10px;
+    background-color: inherit;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.talk-item .time {
+    color: var(--color-muted);
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.talk-item a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.talk-item a:hover {
+    color: var(--color-primary-dark);
+}
+
+/* Close button hover (if applied to a close-button) */
+.close-button:hover {
+    background-color: red;
+}
+
+
+/* ======================================================
+   Dark Mode Overrides
+   ====================================================== */
+
+.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+.dark-mode .header {
+    background-color: var(--dark-header-bg);
+}
+
+.dark-mode #list-button {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+.dark-mode #video-section {
+    background-color: var(--dark-content-bg);
+}
+
+.dark-mode .speaker-list li {
+    border-bottom: 1px solid #444;
+}
+
+.dark-mode .options-button {
+    color: #66b3ff;
+}
+
+.dark-mode .options-popup {
+    background-color: var(--dark-options-popup-bg);
+    border: 1px solid var(--dark-options-popup-border);
+}
+
+.dark-mode .options-popup button {
+    color: var(--dark-text);
+}
+
+.dark-mode .talk-item {
+    background: var(--dark-talk-item-bg);
+    border: 1px solid var(--dark-talk-item-border);
+}
+
+.dark-mode .talk-item:hover {
+    background: #666;
+}
+
+
+/* ======================================================
+   Dark Mode Button
+   ====================================================== */
+
+#dark-mode-button {
+    background-color: var(--color-accent-claims);
+    color: var(--color-background);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 25px;
+}
+
+#dark-mode-button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+
+/* ======================================================
+   Modal & Speaker Form Styles
+   ====================================================== */
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: var(--color-background);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+}
+
+.dark-mode .modal-content {
+    background-color: var(--dark-content-bg);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Speaker Form */
+.speaker-input-container {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.speaker-label {
+    font-size: 16px;
+    margin-right: 12px;
+    color: black;
+    width: 150px;
+    font-weight: bold;
+}
+
+.dark-mode .speaker-label {
+    color: var(--color-highlight);
+}
+
+.speaker-input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px var(--color-shadow);
+    transition: border-color 0.3s;
+    width: calc(100% - 162px);
+}
+
+.speaker-input:focus {
+    border-color: var(--color-primary);
+    outline: none;
+}
+
+.modal-header {
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-body button {
+    margin-top: 20px;
+    padding: 10px 20px;
+}
+
+#speaker-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#speaker-form button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    cursor: pointer;
+}
+
+.dark-mode .highlight {
+    background-color: var(--color-highlight); /* Change highlight color for dark mode */
+}
+
+.highlight {
+    background-color: var(--color-highlight); /* Change to your desired highlight color */
+}
+
+@keyframes fadeOut {
+  from { 
+    opacity: 1; 
+  }
+  to { 
+    opacity: 0; 
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.3s forwards;
+}
+
+.header-button {
+    background-color: var(--color-accent-claims);
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 25px;
+    width: 50px;
+}
+
+.header-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.header-button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+/* ======================================================
+   Responsive Styles
+   ====================================================== */
+
+/* Media Queries for Mobile Devices */
+@media (max-width: 768px) {
+    body {
+        overflow: visible;
+    }
+
+    #main-container {
+        flex-direction: column;
+    }
+
+    .speaker-list-section {
+        order: 2;
+        width: 100%;
+        height: auto;
+        max-height: 500px;
+    }
+
+    #video-section {
+        order: 1;
+        width: 100%;
+        max-height: 800px;
+    }
+
+    .header {
+        flex-direction: column; /* Stack items vertically */
+        align-items: flex-start; /* Align items to the start */
+    }
+
+    .header .header-buttons {
+        display: flex; /* Keep buttons in a row */
+        width: 100%; /* Full width for buttons */
+        justify-content: space-between; /* Space between buttons */
+        margin-top: 10px; /* Space above buttons */
+    }
+
+    .header-buttons {
+        order: 2
+    }
+
+    .header input {
+        width: 100%; /* Full width for the search bar */
+        margin-top: 10px; /* Space above the search bar */
+        order: 4;
+    }
+
+    .header-button {
+        width: 48%; /* Adjust button width for spacing */
+    }
+
+    .assign-speakers-button {
+        width: 100%; /* Full width for buttons */
+        padding: 1rem; /* Adjust padding */
+        margin-bottom: 10px; /* Space below buttons */
+    }
+
+    #dark-mode-button {
+        width: 100%; /* Full width for buttons */
+        padding: .5rem; /* Adjust padding */
+        margin-bottom: 10px; /* Space below buttons */
+    }
+
+    #help-button {
+        width: 100%; /* Full width for buttons */
+        padding: .5rem; /* Adjust padding */
+        margin-bottom: 10px; /* Space below buttons */
+    }
+
+    /*
+    .filter-dropdown {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+    }
+    */
+
+    #list-button {
+        width: 100%; /* Full width for list button */
+    }
+
+    .speaker-list-section {
+        width: 100%; /* Full width for speaker list */
+        height: auto; /* Auto height for speaker list */
+    }
+
+    .speaker-list {
+        flex-direction: column; /* Stack speaker items vertically */
+    }
+
+    .speaker-list li {
+        width: 100%; /* Full width for list items */
+    }
+
+    .modal-content {
+        width: 90%;
+    }   
+
+    .talk-content {
+        flex-direction: column;
+    }
+
+    .talk-text {
+        font-size: 12px;
+    }
+
+    .talk-actions {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 50%;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .talk-item .time {
+        font-size: 10px;
+    }
+
+    .talk-item .badge {
+        font-size: 12px;
+        text-align: center;
+        margin: 1rem 0;
+        width: 60%;
+    }
+
+    .talk-item {
+        flex-direction: column;
+        align-items: flex-center;
+        justify-content: flex-center;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tool-button {
+        font-size: 10px;
+    }
+}
+
+/* ======================================================
+   Help Button
+   ====================================================== */
+
+#help-button {
+    background-color: var(--color-accent-claims);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 25px;
+    color: black;
+}
+
+#help-button:hover {
+    background-color: var(--color-primary-dark);
+}

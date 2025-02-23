@@ -1,0 +1,239 @@
+:root {
+    --font-family-primary: 'Arial', sans-serif;
+    
+    /* Light Mode Colors */
+    --color-background: #f4f4f4;            /* Main background */
+    --color-content-bg: #f9f9f9;            /* Cards/talk items background */
+    --color-text: #333;                   /* Main text color */
+    --color-border: #ddd;                 /* Borders */
+    --color-shadow: rgba(0, 0, 0, 0.1);     /* Shadow for subtle depth */
+    --color-primary: #0F7173;             /* Primary color (buttons, etc.) */
+    --color-primary-dark: #1F8189;        /* Hover/active primary */
+    --color-accent-claims: #E7ECEF;         /* Accent for claims state */
+    --color-hover: #f0f0f0;               /* Hover background */
+    --color-muted: #888;                  /* Muted text/timestamps */
+    --color-modal-bg: #fefefe;             /* Modal light background */
+    --color-highlight: #FBB13C;           /* Highlight color */
+
+    /* Dark Mode Colors */
+    --dark-bg: #121212;                  /* Dark overall background */
+    --dark-content-bg: #1e1e1e;           /* Dark content areas (video, modal, etc.) */
+    --dark-header-bg: #333;              /* Header background in dark mode */
+    --dark-speech-bg: #333;              /* Sidebar / speaker list background in dark mode */
+    --dark-options-popup-bg: #1e1e1e;     /* Options popup background in dark mode */
+    --dark-options-popup-border: #444;    /* Options popup border in dark mode */
+    --dark-talk-item-bg: #555;            /* Dark talk items background */
+    --dark-talk-item-border: #666;        /* Border for dark talk items */
+    --dark-text: #ffffff;                /* Light text on dark backgrounds */
+    --dark-button-bg: #333;              /* Dark mode button background */
+    --dark-container-bg: #444;           /* Main container dark background */
+}
+
+/* Add a background color and some padding to the body */
+body {
+    background-color: var(--color-background); /* Light gray background */
+    font-family: var(--font-family-primary); /* Change font */
+    margin: 0; /* Remove default margin */
+    padding: 20px; /* Add padding */
+}
+
+/* Style the container */
+.container {
+    max-width: 1400px; /* Limit the width */
+    margin: auto; /* Center the container */
+    padding: 20px; /* Add padding */
+}
+
+/* Style the headings */
+h1 {
+    color: var(--color-text); /* Darker text color */
+    text-align: center; /* Center the heading */
+    justify-content: center;
+}
+
+#top-header {
+    color: var(--color-primary); /* Darker text color */
+    text-align: center; /* Center the heading */
+    justify-content: center;
+    font-size: 50px;
+    padding: 5px 10px;
+}
+
+/* Style the list */
+ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+}
+
+/* Style the list items */
+li {
+    margin: 10px 0; /* Add margin between items */
+}
+
+/* Style the links */
+
+.talk-link {
+    color: var(--color-primary); /* Bootstrap primary color */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+    text-decoration: none; /* Remove underline */
+    color: var(--color-primary); /* Bootstrap primary color */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 5px;
+}
+
+.talk-link:hover {
+    color: var(--color-highlight); /* Darker blue on hover */
+}
+
+.channel-item {
+    background-color: var(--color-content-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--color-shadow); /* Subtle shadow */
+}
+
+.channel-item h2 {
+    margin-bottom: 0;
+}
+
+.channel-item ul {
+    padding-left: 20px;
+}
+
+/* Media query for large screens */
+@media (min-width: 768px) {
+}
+
+.channel-item h2 {
+}
+
+.index-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.index-list li {
+    flex: 1 1 calc(33.33% - 20px); /* 3 columns for large screens */
+}
+
+.dark-mode .channel-item {
+    color: white;
+    background-color: var(--color-muted);
+}
+
+.dark-mode .channel-link{
+    color: var(--color-primary);
+}
+
+.dark-mode .talk-link {
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.dark-mode .talk-link:hover {
+    color: var(--color-highlight);
+}
+
+.header {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    width: 70px;
+    height: 50px;
+    color: var(--color-primary);
+}
+
+.logo:hover {
+    color: var(--color-primary-dark);
+    cursor: pointer;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+
+.channel-link {
+    color: black;
+    transition: color 0.3s;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 5px;
+}
+
+#dark-mode-button {
+    background-color: var(--color-accent-claims);
+    color: var(--color-background);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 30px;
+}
+
+#dark-mode-button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+/*
+.dark-mode #top-header {
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 5px;
+}
+*/
+
+.dark-mode .container {
+    background-color: var(--dark-container-bg);
+}
+
+.video-duration {
+    color: var(--color-highlight);
+    text-align: center;
+    font-size: 12px;
+}
+
+.video-upload-date {
+    color: var(--color-highlight);
+    text-align: center;
+    font-size: 12px;
+}
+
+.dark-mode .video-duration {
+    color: var(--color-highlight);
+}
+
+.dark-mode .video-upload-date {
+    color: var(--color-highlight);
+}
+
+.video-details {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: start;
+    gap: 5px;
+    font-size: 15px;
+    overflow-y: scroll;
+}
+
+.column-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--color-primary);
+}
