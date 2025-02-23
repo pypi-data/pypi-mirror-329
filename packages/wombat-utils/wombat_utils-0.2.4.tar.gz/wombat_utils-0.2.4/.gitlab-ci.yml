@@ -1,0 +1,9 @@
+image: python:3.12
+
+pypi:
+  only:
+    - tags
+  script:
+    - pip install build twine
+    - python -m build
+    - twine upload --repository internal dist/* --config-file $PYPIRC
