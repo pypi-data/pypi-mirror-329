@@ -1,0 +1,53 @@
+Metadata-Version: 2.4
+Name: hyperpocket-llamaindex
+Version: 0.4.4
+Author-email: Hyperpocket Team <hyperpocket@vessl.ai>
+Requires-Python: >=3.10
+Requires-Dist: hyperpocket>=0.0.3
+Requires-Dist: llama-index>=0.10.10
+Description-Content-Type: text/markdown
+
+## Anthropic extensions
+
+### Get Pocket Tools
+
+```python
+import hyperpocket as pk
+from pocket_llamaindex import PocketLlamaindex
+
+# 
+pocket = PocketLlamaindex(tools=[
+    *pk.curated_tools.SLACK,  # SLACK = [slack_get_message, slack_post_message, ..]
+    *pk.curated_tools.LINEAR,
+    "https://github.com/my-org/some-awesome-tool"]
+)
+
+# get tools from pocket
+tools = pocket.get_tools()
+```
+
+
+### Examples
+
+```python
+from llama_index.core.agent import FunctionCallingAgent
+from llama_index.llms.openai import OpenAI
+
+import hyperpocket as pk
+from pocket_llamaindex import PocketLlamaindex
+
+pocket = PocketLlamaindex(tools=[
+    *pk.curated_tools.SLACK,  # SLACK = [slack_get_message, slack_post_message, ..]
+    *pk.curated_tools.LINEAR,
+    "https://github.com/my-org/some-awesome-tool"]
+)
+
+# get tools from pocket
+tools = pocket.get_tools()
+
+llm = OpenAI()
+# pass tools get by pocket to an argument
+agent = FunctionCallingAgent.from_tools(
+    tools=tools, llm=llm, verbose=True
+)
+```
