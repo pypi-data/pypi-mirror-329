@@ -1,0 +1,2 @@
+from QuantDataCollector.abstract_data_collector import AbstractDataCollector
+help(AbstractDataCollector)
