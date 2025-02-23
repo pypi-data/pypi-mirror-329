@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "get-locator"
+version = "9.2.3"
+description = 'Pytest plugin. Run command, e.g.: run-inspector --url "https://demoqa.com/automation-practice-form"'
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "Yevhen Halitsyn", email = "galitsyn.evgeniy955@gmail.com" }]
+license = { text = "MIT" }
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "selenium",
+    "pyperclip",
+    "pynput",
+]
+
+[project.scripts]
+run-inspector = "auto_loc.run_inspector:main"
+create-setup = "auto_loc.create_setup:main"
+
+[tool.setuptools]
+packages = ["auto_loc"]
+
+[project.entry-points."pytest11"]
+auto_loc = "auto_loc.plugin"
+
+
+#pip install -e .
+# publication
+#pip install build twine
+#python -m build
+#twine upload dist/*
+
+
+#run via command line using default test arguments:
+#run-inspector --url "https://demoqa.com/automation-practice-form"
+#run project with web_inspector.py file (File will be created at the root of the project after first run):
+#create-setup --run
