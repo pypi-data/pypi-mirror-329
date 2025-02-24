@@ -1,0 +1,31 @@
+{% import 'macros.jinja2' as macros %}
+{% import 'Trano.jinja2' as Trano %}
+package {{ network.name }}
+{{ Trano.Trano_library(databus, dynamic_components) }}
+{% if data.is_package %}
+{{ data.data|safe }}
+model building
+{% else %}
+model building
+{{ data.data|safe }}
+{% endif %}
+
+
+{{ library.constants|safe }}
+
+{% for element_model in element_models %}
+    {{ element_model|safe }}
+{% endfor %}
+
+
+equation
+{%- for edge in network.edge_attributes -%}
+    {#line break#}
+    {{ macros.connect(edge) }}
+{%- endfor %}
+annotation (Diagram(coordinateSystem(extent={{diagram_size}})), Icon(
+        coordinateSystem(extent={{diagram_size}})));
+end building;
+
+
+end {{ network.name }};
