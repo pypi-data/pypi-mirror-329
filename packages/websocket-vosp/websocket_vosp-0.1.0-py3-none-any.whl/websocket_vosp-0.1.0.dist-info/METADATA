@@ -1,0 +1,33 @@
+Metadata-Version: 2.1
+Name: websocket_vosp
+Version: 0.1.0
+Summary: A WebSocket client package for handling WebSocket connections
+Home-page: https://github.com/MsnVt/websocketsvosp
+Author: Mason Vospette
+Author-email: masonvospette@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+
+# WebSocket Vosp
+
+This package provides a quick-access to what is essentially a boiler-plate socket client; manages socket connections, sends requests, and handles responses. 
+## Installation
+
+```bash
+pip install websocket_vosp
+
+Usage:
+
+from websocket_vosp import SocketClient
+
+client = SocketClient('example.com', 443)
+client.connect()
+client.send_request("Hello Server")
+response = client.receive_response()
+print(response)
+
+
+```
