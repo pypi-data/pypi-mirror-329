@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name="create-base-projects"
+version = "0.0.2"
+description = ""
+authors = [{name="Арсений", email="workmailskr@mail.ru"}]
+dependencies = ["prompt_toolkit"]
+
+[project.scripts]
+project-init = "project_init.__main__:main" 
+
+[tool.setuptools]
+include-package-data = true
+
+[distutils]
+index-servers = "testpypi"
