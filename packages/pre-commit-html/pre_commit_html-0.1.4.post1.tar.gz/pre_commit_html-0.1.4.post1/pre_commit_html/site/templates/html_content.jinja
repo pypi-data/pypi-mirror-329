@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="{{ theme }}">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Commit Result</title>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"
+      integrity="sha512-TPh2Oxlg1zp+kz3nFA0C5vVC6leG/6mm1z9+mA81MI5eaUVqasPLO8Cuk4gMF4gUfP5etR73rgU/8PNMsSesoQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"
+      integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+      integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+      integrity="sha512-Jk4AqjWsdSzSWCSuQTfYRIF84Rq/eV0G2+tu07byYwHcbTGfdmLrHjUSwvzp5HvbiqK4ibmNwdcG49Y5RGYPTg=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+      integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"
+      integrity="sha512-wW8K3TEH5ZViD4aMPzwPdhXKs/Kb5MAm7qLRd3QliYlHy0u9utSKZsZzqlZAgJ9xxXp81acwnrZVZ8oTfoLG1g=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  </head>
+
+  <body class="bg-{{ theme }}">
+
+    <div class="container">
+      <div class="card mt-4">
+        <div class="card-header" style="background-color: rgb(36, 51, 1);">
+          <h1>Pre-Commit Result</h1>
+          <!-- <p>Pre-Commit Result:
+            <span id="result">
+
+            </span>
+          </p> -->
+        </div>
+        <div class="card-body">
+          <div class="list-group">
+            {% for item in content %}
+            <a href="{{ item[2] }}" class="list-group-item list-group-item-action d-flex gap-3 py-3"
+              aria-current="true">
+              <div class="d-block w-100 gap-2 justify-content-between">
+                <div>
+                  <h6 class="mb-0">{{ item[1] }}</h6>
+                  <p class="mb-0 opacity-75">{{ item[0] }}</p>
+                  {% set code = item[4] %}
+                  <pre
+                    class="theme-atom-one-dark shadow-3xl text-sm relative overflow-hidden max-w-full tab-size h-full ">
+                    <code class="language-python">
+                      {% for linecode in code %}
+{{ linecode }}
+                      {% endfor %}
+                    </code>
+
+                  </pre>
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script>hljs.highlightAll();</script>
+
+  </body>
+
+</html>
