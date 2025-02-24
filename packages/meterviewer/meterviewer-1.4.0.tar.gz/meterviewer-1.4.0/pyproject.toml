@@ -1,0 +1,53 @@
+[project]
+name = "meterviewer"
+dynamic = []
+description = "Process meter-formatted dataset."
+authors = [
+    { name = "svtter", email = "svtter@qq.com" },
+]
+dependencies = [
+    "matplotlib>=3.8.4",
+    "numpy>=1.26.4",
+    "pandas>=2.2.2",
+    "pillow>=10.3.0",
+    "toml>=0.10.2",
+    "opencv-python>=4.9.0.80",
+    "sqlalchemy>=2.0.30",
+    "alembic>=1.13.1",
+    "tqdm>=4.66.4",
+    "loguru>=0.7.2",
+    "pydantic>=2.10.6",
+]
+requires-python = ">=3.9,<4.0"
+readme = "README.md"
+version = "1.4.0"
+
+[project.license]
+text = "MIT"
+
+[dependency-groups]
+dev = [
+    "pip>=25.0.1",
+]
+
+[tool.ruff]
+line-length = 88
+indent-width = 2
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.version]
+source = "file"
+path = "./src/meterviewer/__init__.py"
+
+[tool.pdm.scripts]
+notebook = "pdm run jupyter-notebook ."
+app = "pdm run streamlit run src/meterviewer/fastview/home.py --browser.gatherUsageStats false"
+docs = "pdm run sphinx-autobuild -c ./docs/ -b html docs/source docs/build --port 0"
+
+[build-system]
+requires = [
+    "pdm-backend",
+]
+build-backend = "pdm.backend"
