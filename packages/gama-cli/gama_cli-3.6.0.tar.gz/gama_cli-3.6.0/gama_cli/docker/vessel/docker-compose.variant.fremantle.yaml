@@ -1,0 +1,10 @@
+services:
+  gama_vessel:
+    image: ghcr.io/greenroom-robotics/gama_vessel_fremantle:${GAMA_VERSION:-latest}
+    build:
+      args:
+        - PACKAGE_NAME=fremantle_bringup
+
+  gama_docs:
+    environment:
+      GAMA_VARIANT: fremantle
