@@ -1,0 +1,271 @@
+# Reference: https://packaging.python.org/en/latest/guides/writing-pyproject-toml
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "narwhals"
+version = "1.28.0"
+dependencies = []
+requires-python = ">=3.8"
+authors = [
+  { name = "Marco Gorelli", email = "33491632+MarcoGorelli@users.noreply.github.com" },
+]
+description = "Extremely lightweight compatibility layer between dataframe libraries"
+readme = "README.md"
+keywords = ["dataframes", "interoperability", "pandas", "polars", "pyarrow", "dask", "modin", "cudf"]
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python",
+  "Operating System :: OS Independent",
+  "Typing :: Typed",
+]
+
+[project.optional-dependencies]
+# These should be aligned with MIN_VERSIONS in narwhals/utils.py
+# Exception: modin, because `modin.__version__` isn't aligned with
+# `modin.pandas.__version__`. The latter is the one that we make
+# API decisions based on, so that's the one we track internally.
+# We have yet to determine the minimum Modin version we support
+# https://github.com/narwhals-dev/narwhals/issues/817 
+pandas = ["pandas>=0.25.3"]
+modin = ["modin"]
+cudf = ["cudf>=24.10.0"]
+pyarrow = ["pyarrow>=11.0.0"]
+pyspark = ["pyspark>=3.5.0"]
+polars = ["polars>=0.20.3"]
+dask = ["dask[dataframe]>=2024.8"]
+duckdb = ["duckdb>=1.0"]
+ibis = ["ibis-framework>=6.0.0", "rich", "packaging", "pyarrow_hotfix"]
+tests = [
+  "covdefaults",
+  "pytest",
+  "pytest-cov",
+  "pytest-randomly",
+  "pytest-env",
+  "hypothesis",
+  "typing_extensions",
+]
+typing = [
+  "pandas-stubs",
+  "typing_extensions",
+  "mypy~=1.15.0",
+  "pyright"
+]
+dev = [
+  "pre-commit",
+  "narwhals[tests]",
+  "narwhals[typing]",
+]
+core = [
+  "duckdb",
+  "pandas",
+  "polars",
+  "pyarrow",
+  "pyarrow-stubs",
+]
+extra = [  # heavier dependencies we don't necessarily need in every testing job
+  "scikit-learn",
+]
+docs = [
+  "black",  # required by mkdocstrings_handlers
+  "jinja2",
+  "duckdb",
+  "markdown-exec[ansi]",
+  "mkdocs",
+  "mkdocs-autorefs",
+  "mkdocs-material",
+  "mkdocstrings[python]",
+  "mkdocstrings-python>=1.16",
+  "pandas",
+  "polars>=1.0.0",
+  "pyarrow",
+]
+
+[project.urls]
+Homepage = "https://github.com/narwhals-dev/narwhals"
+Documentation = "https://narwhals-dev.github.io/narwhals/"
+Repository = "https://github.com/narwhals-dev/narwhals"
+"Bug Tracker" = "https://github.com/narwhals-dev/narwhals/issues"
+
+[tool.hatch.build]
+exclude = [
+  "/.*",
+  "/docs",
+  "/tests",
+  "/tpch",
+  "/utils",
+  ".gitignore",
+  "CONTRIBUTING.md",
+  "mkdocs.yml",
+  "noxfile.py",
+]
+
+
+[tool.ruff]
+line-length = 90
+fix = true
+target-version = "py38"
+
+lint.select = [
+  "ALL",
+]
+lint.ignore = [
+  "A001",
+  "A004",
+  "A005",
+  "ARG002",
+  "ANN401",
+  "C901",
+  "COM812",
+  "D100",
+  "D101",
+  "D102",
+  "D103",
+  "D104",
+  "D105",
+  "D107",
+  "DTZ001",
+  "E501",
+  "FIX",
+  "ISC001",
+  "PD003",
+  "PD010",
+  "PD901",  # This is a auxiliary library so dataframe variables have no concrete business meaning
+  "PLR0911",
+  "PLR0912",
+  "PLR0913",
+  "PLR2004",
+  "RET505",
+  "SLF001",
+  "TD003",
+  "TD004",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+"tpch/tests/*" = ["S101"]
+"utils/*" = ["S311", "PTH123"]
+"tpch/execute/*" = ["T201"]
+"tpch/notebooks/*" = [
+  "ANN001",
+  "ANN201",
+  "EM101",
+  "EXE002",
+  "PTH123",
+  "T203",
+  "TRY003",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+force-single-line = true
+required-imports = ["from __future__ import annotations"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.pytest.ini_options]
+norecursedirs =  ['*.egg', '.*', '_darcs', 'build', 'CVS', 'dist', 'node_modules', 'venv', '{arch}', 'narwhals/_*']
+testpaths = ["tests"]
+filterwarnings = [
+  "error",
+  'ignore:.*defaulting to pandas implementation',
+  'ignore:.*implementation has mismatches with pandas',
+  'ignore:.*You are using pyarrow version',
+  # This warning was temporarily raised by pandas but then reverted.
+  'ignore:.*Passing a BlockManager to DataFrame:DeprecationWarning',
+  # This warning was temporarily raised by Polars but then reverted.
+  'ignore:.*The default coalesce behavior of left join will change:DeprecationWarning',
+  'ignore: unclosed <socket.socket',
+  'ignore:.*The distutils package is deprecated and slated for removal in Python 3.12:DeprecationWarning:pyspark',
+  'ignore:.*distutils Version classes are deprecated. Use packaging.version instead.*:DeprecationWarning:pyspark',
+  'ignore:.*is_datetime64tz_dtype is deprecated and will be removed in a future version.*:DeprecationWarning:pyspark',
+  # Warning raised by PyArrow nightly just by importing pandas
+  'ignore:.*Python binding for RankQuantileOptions not exposed:RuntimeWarning:pyarrow',
+  'ignore:.*pandas only supports SQLAlchemy:UserWarning'
+]
+xfail_strict = true
+markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
+env = [
+  "MODIN_ENGINE=python",
+  "PYARROW_IGNORE_TIMEZONE=1",
+  "TZ=UTC",
+]
+
+[tool.coverage.run]
+plugins = ["covdefaults"]
+
+[tool.coverage.report]
+fail_under = 80  # This is just for local development, in CI we set it to 100
+omit = [
+  'narwhals/typing.py',
+  'narwhals/stable/v1/typing.py',
+  'narwhals/this.py',
+  'narwhals/_arrow/typing.py',
+  # we can't run this in every environment that we measure coverage on due to upper-bound constraits
+  'narwhals/_ibis/*',
+  # the latest pyspark (3.5) doesn't officially support Python 3.12 and 3.13
+  'narwhals/_spark_like/*',
+  # we don't run these in every environment
+  'tests/ibis_test.py',
+]
+exclude_also = [
+  "if sys.version_info() <",
+  "if .*implementation is Implementation.CUDF",
+  "if .*implementation.is_cudf",
+  'request.applymarker\(pytest.mark.xfail',
+  'backend_version <',
+  'if "cudf" in str\(constructor',
+  'if "pyspark" in str\(constructor'
+]
+
+[tool.mypy]
+files = ["narwhals", "tests"]
+pretty = true
+strict = true
+
+[[tool.mypy.overrides]]
+module = [
+  "cudf.*",
+  "dask.*",
+  "dask_expr.*",
+  "duckdb.*",
+  "ibis.*",
+  "modin.*",
+  "numpy.*",
+  "pyspark.*",
+  "sklearn.*",
+  "sqlframe.*",
+]
+# TODO: remove follow_imports
+follow_imports = "skip"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+  "*._expression_parsing",
+  "*.utils",
+  "*._pandas_like.*",
+  "*._ibis.*",
+  "*._arrow.*",
+]
+warn_return_any = false
+
+[tool.pyright]
+pythonPlatform = "All"
+# NOTE (stubs do unsafe `TypeAlias` and `TypeVar` imports)
+# pythonVersion = "3.8"
+reportMissingImports = "none"
+reportMissingModuleSource = "none"
+reportPrivateImportUsage = "none"
+reportUnusedExpression = "none"    # can enforce with `ruff`
+typeCheckingMode = "basic"
+include = ["narwhals", "tests"]
+ignore = [
+  "../.venv/",
+  "../../../**/Lib",      # stdlib
+  "../../../**/typeshed*" # typeshed-fallback
+]
