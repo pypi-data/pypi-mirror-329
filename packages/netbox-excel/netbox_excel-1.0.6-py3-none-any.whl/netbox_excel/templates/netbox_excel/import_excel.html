@@ -1,0 +1,44 @@
+<head>
+    <style>
+        .btn-import {
+            color: white;
+            background-color: #1aa4bacc;
+        }
+
+        #exampleModal {
+            .modal-content {
+                width: 800px;
+                height: 400px;
+            }
+
+        }
+    </style>
+</head>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-import" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <i class="mdi mdi-upload"></i>
+    Import from excel
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="dcim/devices/import/excel" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Import Device</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="name" class="form-label">File excel</label>
+                    <input type="file" class="form-control" id="name" aria-describedby="nameHelp">
+                    <div class="valid-feedback">Hãy upload file cần import</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancle</button>
+                    <button type="button" class="btn btn-primary">Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
