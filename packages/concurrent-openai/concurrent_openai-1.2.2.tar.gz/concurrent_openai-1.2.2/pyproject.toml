@@ -1,0 +1,68 @@
+[tool.poetry]
+name = "concurrent-openai"
+version = "1.2.2"
+repository = "https://github.com/marianstefi20/concurrent-openai"
+description = "Python library for asynchronous interactions with the OpenAI API, enabling concurrent request handling. It simplifies building scalable, AI-powered applications by offering efficient, rate-limited access to OpenAI services. Perfect for developers seeking to integrate OpenAI's capabilities with minimal overhead."
+authors = ["Stefanescu Marian <marianstefi20@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = "^3.11"
+structlog = "^24.1.0"
+tiktoken = "^0.7.0"
+python-dotenv = "^1.0.1"
+openai = "^1.61.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.3.0"
+isort = "^5.13.2"
+mypy = "^1.9.0"
+pytest = "^8.1.1"
+pytest-asyncio = "^0.23.6"
+autoflake = "^2.3.1"
+pytest-cov = "^6.0.0"
+python-semantic-release = "^9.15.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+
+[tool.black]
+line-length = 100
+
+
+[tool.isort]
+profile = "black"
+
+
+[tool.coverage.run]
+source = ["concurrent_openai"]
+omit = ["tests/*"]
+
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError",
+]
+fail_under = 80
+show_missing = true
+
+
+[tool.semantic_release]
+version_source = "tag"
+version_variable = ["concurrent_openai/__init__.py:__version__"]
+version_toml = ["pyproject.toml:tool.poetry.version"]
