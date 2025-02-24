@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <script src="https://unpkg.com/@hotwired/turbo@7.1.0/dist/turbo.es2017-umd.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Auth Status Bar -->
+        <div class="flex justify-end mb-4">
+            {% if user %}
+                <div class="flex items-center gap-4">
+                    <span class="text-gray-600">Welcome, {{ user.email }}</span>
+                    <form action="/auth/logout" method="POST">
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            {% else %}
+                <a href="/login" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Login
+                </a>
+            {% endif %}
+        </div>
+
+        <h1 class="text-3xl font-bold mb-8">Todo List</h1>
+        
+        <!-- Todo Form -->
+        <form action="/turbo/todo" method="POST" data-turbo-stream class="mb-8">
+            <div class="flex gap-4">
+                <input 
+                    type="text" 
+                    name="title"
+                    placeholder="What needs to be done?"
+                    class="flex-grow p-2 border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
+                >
+                <button 
+                    type="submit"
+                    class="bg-blue-500 text-white px-6 py-2 rounded shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                    Add Todo
+                </button>
+            </div>
+        </form>
+
+        <!-- Todo List -->
+        <div id="todos" class="space-y-4">
+            {% for todo in todos %}
+            <turbo-frame id="todo-{{ todo.id }}">
+                <div class="flex items-center justify-between bg-white p-4 rounded shadow">
+                    <div class="flex items-center gap-4">
+                        <form 
+                            action="/turbo/todo/{{ todo.id }}" 
+                            method="PUT"
+                            data-turbo-stream
+                        >
+                            <input 
+                                type="checkbox" 
+                                name="completed"
+                                value="true"
+                                {% if todo.completed %}checked{% endif %}
+                                onchange="this.form.requestSubmit()"
+                                class="w-5 h-5 rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+                            >
+                        </form>
+                        <span class="{% if todo.completed %}line-through text-gray-500{% endif %}">
+                            {{ todo.title }}
+                        </span>
+                    </div>
+                    <form 
+                        action="/turbo/todo/{{ todo.id }}" 
+                        method="DELETE"
+                        data-turbo-stream
+                    >
+                        <button 
+                            type="submit"
+                            class="text-red-500 hover:text-red-700 focus:outline-none"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </turbo-frame>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Turbo Stream Connection -->
+    <script>
+        const connectToTurboStream = () => {
+            const eventSource = new EventSource("/todo/subscribe-turbo");
+            
+            eventSource.addEventListener("message", (event) => {
+                try {
+                    const streamContent = event.data.trim();
+                    if (!streamContent) return;
+                    
+                    // Process the turbo-stream directly
+                    Turbo.renderStreamMessage(streamContent);
+                } catch (error) {
+                    console.error('Error processing turbo stream:', error, event.data);
+                }
+            });
+
+            eventSource.addEventListener("error", (error) => {
+                console.error("EventSource failed:", error);
+                eventSource.close();
+                // Reconnect after a delay
+                setTimeout(connectToTurboStream, 1000);
+            });
+
+            // Add connection status indicator
+            const statusIndicator = document.createElement("div");
+            statusIndicator.className = "fixed bottom-4 right-4 px-4 py-2 rounded-full text-sm font-medium";
+            document.body.appendChild(statusIndicator);
+
+            eventSource.addEventListener("open", () => {
+                statusIndicator.textContent = "Connected";
+                statusIndicator.className = "fixed bottom-4 right-4 px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800";
+            });
+
+            eventSource.addEventListener("error", () => {
+                statusIndicator.textContent = "Reconnecting...";
+                statusIndicator.className = "fixed bottom-4 right-4 px-4 py-2 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800";
+            });
+        };
+
+        // Start the connection when the page loads
+        document.addEventListener("DOMContentLoaded", connectToTurboStream);
+
+        // Reconnect when the page becomes visible again
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") {
+                connectToTurboStream();
+            }
+        });
+    </script>
+</body>
+</html> 
