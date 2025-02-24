@@ -1,0 +1,121 @@
+[tool.poetry]
+name = "jsonype"
+version = "0"  # ignored
+description = "A package for converting classes with type hints to/from JSON"
+homepage = "https://github.com/volkerstampa/jsonype"
+authors = ["Volker Stampa <Volker.Stampa@gmx.net>"]
+maintainers = ["Volker Stampa <Volker.Stampa@gmx.net>"]
+readme = "README.md"
+license = "Apache-2.0"
+keywords = ["json"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: Apache Software License",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development :: Libraries",
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.setuptools_scm]
+version_file = "jsonype/_version.py"
+local_scheme = "poetry_setuptools_scm_plugin:no_local_scheme"
+
+[tool.pylama]
+# dont run mypy through pylama because of:
+# https://github.com/klen/pylama/issues/163
+linters = "eradicate,mccabe,pycodestyle,pydocstyle,pyflakes,pylint,radon,vulture,isort"
+skip = "docs/*"
+
+[tool.pylama.linter.pydocstyle]
+ignore = "D100,D101,D102,D103,D104,D105,D107,D203,D213,D410,D411,D406,D413,D407"
+
+[tool.pylama.linter.mypy]
+cache_dir = "build/.mypy_cache"
+strict = "True"
+files = "jsonype,tests"
+
+[tool.pylama.linter.pylint]
+# FromJsonConverter.convert has 6 args, one of which is self
+# still unsure how to reduce this best so relax the lint check
+max_args = 6
+max_positional_arguments = 6
+
+[tool.pydocstyle]
+ignore = "D100,D101,D102,D103,D104,D105,D107,D203,D213,D410,D411,D406,D413,D407"
+
+[tool.mypy]
+cache_dir = "build/.mypy_cache"
+strict = "True"
+files = "jsonype,tests"
+
+[tool.isort]
+line_length = 100
+src_paths = ["jsonype", "tests"]
+
+[tool.pylint."messages control"]
+disable = ["invalid-name", "missing-module-docstring", "missing-function-docstring", "missing-class-docstring"]
+ignore = ["docs"]
+recursive = true
+
+[tool.pylint.design]
+max-args = 6
+max-positional-arguments = 6
+
+[tool.radon]
+ignore = ["docs"]
+cc_min = "C"
+
+[tool.vulture]
+min_confidence = 61
+paths = ["jsonype", "tests"]
+
+[tool.ruff]
+line-length = 100
+cache-dir = "build/ruff_cache"
+exclude = ["docs"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D100", "D101", "D102", "D103", "D104", "D105", "D107", "D203", "D213",
+    "D406", "D407", "D410", "D411", "D413",
+    "ARG002",
+    "ANN401",
+    "S101", "S311", 
+    "FA102",
+    "COM812",
+    "FBT001", "FBT002",
+    "PLC0414",
+    "RUF100",
+    "FA100",
+    "I001",
+    "PT013",
+    "PYI042"]
+
+[tool.pytest.ini_options]
+cache_dir = "build/pytest_cache"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.1"
+mypy = "^1.10.0"
+sphinx = ">=7.3.7,<9.0.0"
+pycodestyle = "^2.12.0"
+pyflakes = "^3.2.0"
+mccabe ="^0.7.0"
+radon="^6.0.1"
+# pydocstyle>=6.2 breaks lama: https://github.com/klen/pylama/issues/232
+pydocstyle = "~6.1.1"
+pylint = "^3.2.3"
+toml = "^0.10.2"
+pylama = "^8.4.1"
+vulture = "^2.11"
+eradicate = "^2.3.0"
+sphinx-rtd-theme = ">=2,<4"
+setuptools = ">=70.1,<76.0"
+ruff = ">=0.4.10,<0.10.0"
