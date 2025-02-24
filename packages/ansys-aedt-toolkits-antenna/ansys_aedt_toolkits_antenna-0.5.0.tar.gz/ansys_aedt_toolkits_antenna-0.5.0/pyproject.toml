@@ -1,0 +1,77 @@
+[build-system]
+requires = ["flit_core >=3.2,<3.11"]
+build-backend = "flit_core.buildapi"
+
+[project]
+# Check https://flit.readthedocs.io/en/latest/pyproject_toml.html for all available sections
+name = "ansys-aedt-toolkits-antenna"
+dynamic = ["version"]
+description = "Toolkit to design antennas with Ansys AEDT."
+readme = "README.rst"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [
+    {name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"},
+]
+maintainers = [
+    {name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"},
+]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    'ansys-aedt-toolkits-common[all]'
+]
+
+[project.optional-dependencies]
+all = [
+    'ansys-aedt-toolkits-common[all]'
+]
+tests = [
+    'ansys-aedt-toolkits-common[tests]'
+]
+doc = [
+    'ansys-aedt-toolkits-common[doc]'
+]
+
+[tool.flit.module]
+name = "ansys.aedt.toolkits.antenna"
+
+[project.urls]
+Source = "https://github.com/ansys/pyaedt-toolkits-antenna"
+Issues = "https://github.com/ansys/pyaedt-toolkits-antenna/issues"
+Discussions = "https://github.com/ansys/pyaedt-toolkits-antenna/discussions"
+Documentation = "https://aedt.antenna.toolkit.docs.pyansys.com"
+Releases = "https://github.com/ansys/pyaedt-toolkits-antenna/releases"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+force_sort_within_sections = true
+line_length = 120
+src_paths = ["doc", "src", "tests"]
+
+[tool.coverage.run]
+source = ["ansys.aedt.toolkits.antenna"]
+omit = [
+    # Omit UI testing
+    "src/ansys/aedt/toolkits/antenna/ui/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.pytest.ini_options]
+minversion = "7.1"
+xfail_strict = false
+markers = [
+    "patch_api: mark test as related to the patch antenna API.",
+    "toolkit_api: mark test as related to the toolkit API.",
+    "rest_api: mark test as related to the REST API.",
+]
