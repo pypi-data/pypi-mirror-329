@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lhy-formatter-linter"
+version = "0.0.9"
+dependencies = [
+  "cmake-format>=0.6.13", "clang-format>=13.0.1", "clang-tidy>=13.0.1.1", "yapf>=0.43.0", "flake8>=7.1.1", "isort>=6.0.0"
+]
+authors = [{name = "Yuan SUN", email = "sunyuan860510@gmail.com"}]
+maintainers = [{name = "Yuan SUN", email = "sunyuan860510@gmail.com"}]
+description = "This package provides formatters and linters for CMake, C++, and Python, making it ideal for developers who work with both C++ and Python."
+requires-python = ">=3.9"
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {text = "MIT License"}
+keywords = ["cmake-format", "lint", "clang-format", "clang-tidy", "flake8", "code format", "code lint", "lhy"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development",
+    "Intended Audience :: Developers"
+]
+
+[project.scripts]
+lhy = "script:main"
+
+[project.urls]
+Homepage = "https://github.com/sygslhy/lhy-formatter-linter"
+Repository  = "https://github.com/sygslhy/lhy-formatter-linter"
+Issues = "https://github.com/sygslhy/lhy-formatter-linter/issues"
+Releases = "https://github.com/sygslhy/lhy-formatter-linter/releases"
