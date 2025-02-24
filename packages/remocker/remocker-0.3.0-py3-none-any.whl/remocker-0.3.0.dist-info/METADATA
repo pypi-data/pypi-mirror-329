@@ -1,0 +1,81 @@
+Metadata-Version: 2.1
+Name: remocker
+Version: 0.3.0
+Summary: mocking http request more easy
+Home-page: https://github.com/jrog612/remocker
+License: MIT
+Author: Jrog
+Author-email: jrog612@gmail.com
+Requires-Python: >=3.8,<4.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Dist: responses (>=0.25.6,<0.26.0)
+Project-URL: Repository, https://github.com/jrog612/remocker
+Description-Content-Type: text/markdown
+
+# remocker
+
+mocking http request more easy
+
+## installing
+
+```shell
+pip install remocker
+```
+
+## How to use
+
+First, you define Remocker app.
+
+```python
+from remocker import Remocker, RemockerRequest, RemockerResponse
+
+mocker_app = Remocker('https://api.test.com')
+
+@mocker_app.mock(method='GET', path='products')
+def get_products_mocker(request: RemockerRequest):
+    return RemockerResponse({
+        'success': True,
+        'given_params': request.query_params,
+    })
+
+@mocker_app.mock(method='POST', path='products')
+def create_product_mocker(request: RemockerRequest):
+    return RemockerResponse({
+        'success': True,
+        'given_data': request.data,
+    })
+
+@mocker_app.mock(method='GET', path=r'products/(?P<product_id>\d+)', regex=True)
+def get_product_mocker(request: RemockerRequest):
+    return RemockerResponse({
+        'success': True,
+        'given_product_id': request.url_params['product_id'],
+    })
+```
+
+Next, you can use `mocking` context manager.
+
+```python
+import requests
+
+with mocker_app.mocking():
+    requests.get('https://api.test.com/products', params={'foo': 'var'})
+    # Remocker only allow json request. Not form data
+    requests.post('https://api.test.com/products', json={'foo': 'var'})
+    requests.get('https://api.test.com/products/1')
+
+
+# Also can
+import remocker
+
+with remocker.mocking(mocker_app):
+    ...
+```
+
