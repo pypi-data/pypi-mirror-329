@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "changelog-api-client"
+version = "1.0.0"
+description = "API client for Changelog API"
+requires-python = ">=3.11"
+dynamic = ["dependencies"]
+readme = "README.md"
+license = { text = "Apache-2.0" }
+urls = { "Repository" = "https://github.com/e1004/changelog-api-client" }
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements/prod.in"] }
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[project.scripts]
+changelog = "e1004.changelog_api_client.cli:main"
