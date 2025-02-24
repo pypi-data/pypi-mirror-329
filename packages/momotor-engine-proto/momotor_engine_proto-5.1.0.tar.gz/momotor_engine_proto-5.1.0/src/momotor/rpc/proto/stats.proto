@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "momotor/rpc/proto/exception.proto";
+
+package momotor.rpc.proto;
+
+message StatisticsResponse {
+    string stats = 1;  // statistics in JSON format
+    Exception exception = 1000; // optional
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package momotor.rpc.proto;
+
+enum ExceptionType {
+    INVALID_EXCEPTION = 0;
+    FORMAT = 1;
+    AUTH = 2;
+    JOB = 3;
+    ASSET = 4;
+    ASSET_NOT_FOUND = 5;
+}
+
+message Exception {
+    ExceptionType type = 1;
+    string text = 2;
+}

@@ -1,0 +1,64 @@
+Metadata-Version: 2.2
+Name: momotor-engine-proto
+Version: 5.1.0
+Summary: Momotor Engine Protocol Library
+Author-email: Erik Scheffers <e.t.j.scheffers@tue.nl>
+License: GNU Lesser General Public License v3 (LGPLv3)
+Project-URL: Homepage, https://momotor.org
+Project-URL: Documentation, https://momotor.org/doc/engine/momotor-engine-proto/
+Project-URL: Repository, https://gitlab.tue.nl/momotor/engine-py3/momotor-engine-proto/
+Project-URL: Tracker, https://gitlab.tue.nl/momotor/engine-py3/momotor-engine-proto/issues
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3 :: Only
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: momotor-engine-shared~=2.0
+Requires-Dist: asyncio_extras
+Requires-Dist: protobuf~=4.25.3
+Requires-Dist: h2~=4.0
+Requires-Dist: grpclib~=0.4.7
+Requires-Dist: py-multihash
+Requires-Dist: base58~=2.1
+Requires-Dist: backoff
+Requires-Dist: multidict
+Provides-Extra: test
+Requires-Dist: pytest~=8.1; extra == "test"
+Requires-Dist: pytest-cov; extra == "test"
+Provides-Extra: docs
+Requires-Dist: momotor-engine-proto[test]; extra == "docs"
+Requires-Dist: Sphinx; extra == "docs"
+Requires-Dist: sphinx-autodoc-typehints!=1.14.0; extra == "docs"
+Requires-Dist: furo; extra == "docs"
+Provides-Extra: dev
+Requires-Dist: momotor-engine-proto[docs]; extra == "dev"
+Requires-Dist: docutils-stubs; extra == "dev"
+Requires-Dist: grpcio-tools~=1.62.1; extra == "dev"
+Provides-Extra: build
+Requires-Dist: momotor-engine-proto[dev]; extra == "build"
+Requires-Dist: setuptools; extra == "build"
+Requires-Dist: setuptools-scm; extra == "build"
+Requires-Dist: build[virtualenv]; extra == "build"
+Requires-Dist: python-semantic-release~=9.0; extra == "build"
+
+This package is a part of [Momotor](https://momotor.org/), a tool for automated processing of digital content. 
+
+Momotor accepts digital content as a product bundle and generates a result bundle from this product under 
+control of a recipe bundle. 
+
+Momotor is like a continuous integration system, but broader in scope. The 
+type of content that Momotor can process is not restricted; each recipe may impose its own constraints. 
+One application of Momotor in an educational setting is the automatic generation of feedback on work submitted 
+for programming assignments.
+
+---
+
+The `momotor-engine-proto` package provides the Momotor RPC protocol for communication between the Momotor 
+broker and clients, and also for the communication between the Momotor broker and workers.
+
+The protocol uses the Google RPC (gRPC) protocol.

@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+import "momotor/rpc/proto/exception.proto";
+
+package momotor.rpc.proto;
+
+enum Category {
+    NO_CATEGORY = 0;
+    RECIPE = 1;
+    CONFIG = 2;
+    PRODUCT = 3;
+    RESULT = 4;
+};
+
+message AssetQuery {
+    Category category = 1;  // required
+    string testId = 2;  // optional
+    string stepId = 3;  // optional
+    repeated uint32 taskNumber = 4;  // optional
+}
+
+enum AssetFormat {
+    NO_ASSET_FORMAT = 0;
+    XML = 1;
+    ZIP = 2;
+};
+
+message AssetData {
+    AssetQuery query = 1; // required
+    string name = 2;  // optional
+    AssetFormat format = 3;  // required
+    uint64 size = 4;  // required
+    bytes hash = 5;  // required. A base58 encoded multihash (see https://github.com/multiformats/multihash)
+                     // momotor.rpc.consts contains constants for the required encoding and the preferred hashing
+                     // algorithm.
+                     // 'identity' hash function is supported, ie. short content encoded in the hash field itself
+};
+
+message UploadAssetRequest {
+    string jobId = 1;  // required for first element in the stream
+
+    // First element in the stream must be 'assetData', subsequent elements must be 'chunk'
+    oneof request {
+        AssetData assetData = 2;
+        bytes chunk = 3;
+    }
+};
+
+message UploadAssetResponse {
+    bool assetSelected = 1;  // required, unless there is an exception
+    Exception exception = 1000;  // optional
+};
+
+message DownloadAssetRequest {
+    string jobId = 1;  // required for first element in the stream for workers, optional for clients
+
+    // First element in the stream must be 'query', second element on the stream is 'accepted'
+    oneof request {
+        AssetQuery query = 2;
+        bool accepted = 3;  // If not accepted, the download is stopped immediately
+    }
+}
+
+message DownloadAssetResponse {
+    // First response will be 'data', subsequent responses 'chunk'
+    oneof response {
+        AssetData data = 1;
+        bytes chunk = 2;
+    }
+    Exception exception = 1000;
+}

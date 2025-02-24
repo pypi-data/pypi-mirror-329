@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+import "momotor/rpc/proto/exception.proto";
+import "momotor/rpc/proto/priority.proto";
+import "momotor/rpc/proto/resource.proto";
+import "momotor/rpc/proto/tool.proto";
+
+package momotor.rpc.proto;
+
+message TaskId {
+    string jobId = 1;  // required
+    string stepId = 2;  // required
+    string testId = 3;  // optional
+    repeated uint32 taskNumber = 4;  // optional
+}
+
+message GetTaskRequest {
+    string version = 1;
+    // repeated string capability = 2;  // replaced by resource
+    repeated Resource resource = 3;  // optional: provided resources
+    repeated ToolSet tool = 4;  // provided tools
+    uint32 rank = 5;  // optional: workers with lower value should get tasks assigned first; if not set, the worker is ranked last
+}
+
+message GetTaskResponse {
+    TaskId taskId = 1; // required
+    repeated Resource resource = 2; // optional: requested resources
+    Priority priority = 3;  // optional: priority of the task
+    Exception exception = 1000; // optional
+}

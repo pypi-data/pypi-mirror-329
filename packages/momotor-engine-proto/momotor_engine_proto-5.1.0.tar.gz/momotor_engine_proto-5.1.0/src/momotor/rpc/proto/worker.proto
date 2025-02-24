@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+import "momotor/rpc/proto/asset.proto";
+import "momotor/rpc/proto/exception.proto";
+import "momotor/rpc/proto/shared.proto";
+import "momotor/rpc/proto/task.proto";
+
+package momotor.rpc.proto;
+
+message UpdateTaskStatusRequest {
+    TaskId taskId = 1;  // required
+    double progress = 2;  // optional
+}
+
+message UpdateTaskStatusResponse {
+    Exception exception = 1000; // optional
+}
+
+// Service for Momotor workers to connect to the broker
+service Worker {
+    // Register a worker and get a job. Will block until a job is available
+    // Worker can cancel registration and re-register to change capabilities
+    rpc getTask (GetTaskRequest) returns (GetTaskResponse);
+
+    // Download asset for a job
+    rpc downloadAsset (stream DownloadAssetRequest) returns (stream DownloadAssetResponse);
+
+    // Upload an asset for the job.
+    // If it returns an UploadAssetResponse with 'assetSelected=true', the asset was already known and has been
+    // selected and the steams are closed.
+    // When 'assetSelected=false' subsequent UploadAssetRequests with the 'chunk' field set should be sent until
+    // all data has been sent. When all data has been received, a final response is sent with 'assetSelected=true'
+    rpc uploadAsset (stream UploadAssetRequest) returns (stream UploadAssetResponse);
+
+    // Update the status of the task. An exception response should immediately kill the current job
+    // The worker should send an update regularly (every few seconds)
+    rpc updateTaskStatus (UpdateTaskStatusRequest) returns (UpdateTaskStatusResponse);
+
+    // Shared values
+    // rpc sharedValue (SharedValueRequest) returns (SharedValueResponse);
+
+    // Shared locks
+    // SharedLockRequest messages are sent in a stream, stream continues with `lock` True, ends with `lock` False
+    // `key` may not change in between requests on the same stream
+    // If `lock` is false on first request, the response `locked` value indicates whether the lock is currently held by
+    // another worker
+    // If `lock` is true on first request, lock is acquired before response will be sent. response `locked` will be true
+    // If `lock` is true on subsequent requests, nothing changes
+    // `lock` should be false on final request and the lock is released and response `locked` indicates current lock
+    // status which could be true, if another worker immediately took over the lock
+    // If the stream cancels, lock is release as well
+    rpc sharedLock (stream SharedLockRequest) returns (stream SharedLockResponse);
+}

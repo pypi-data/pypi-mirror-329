@@ -1,0 +1,105 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "momotor-engine-proto"
+authors = [
+    { name = "Erik Scheffers", email = "e.t.j.scheffers@tue.nl" }
+]
+description = "Momotor Engine Protocol Library"
+requires-python = ">=3.9"
+dynamic = ["version", "readme"]
+license = { text="GNU Lesser General Public License v3 (LGPLv3)" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3 :: Only"
+]
+dependencies = [
+    'momotor-engine-shared~=2.0',
+    'asyncio_extras',
+    'protobuf~=4.25.3',
+    'h2~=4.0',
+    'grpclib~=0.4.7',
+    'py-multihash',
+    'base58~=2.1',
+    'backoff',
+    'multidict'
+]
+
+[project.optional-dependencies]
+test = [
+    'pytest~=8.1',
+    'pytest-cov'
+]
+docs = [
+    'momotor-engine-proto[test]',
+    'Sphinx',
+    'sphinx-autodoc-typehints!=1.14.0',
+    'furo',
+]
+dev = [
+    'momotor-engine-proto[docs]',
+    'docutils-stubs',
+    'grpcio-tools~=1.62.1'
+]
+build = [
+    'momotor-engine-proto[dev]',
+    'setuptools',
+    'setuptools-scm',
+    'build[virtualenv]',
+    'python-semantic-release~=9.0',
+]
+
+[project.urls]
+Homepage = "https://momotor.org"
+Documentation = "https://momotor.org/doc/engine/momotor-engine-proto/"
+Repository = "https://gitlab.tue.nl/momotor/engine-py3/momotor-engine-proto/"
+Tracker = 'https://gitlab.tue.nl/momotor/engine-py3/momotor-engine-proto/issues'
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["momotor.*"]
+
+[tool.setuptools.dynamic]
+readme = { file = ["README.md"], content-type = "text/markdown" }
+
+[tool.setuptools_scm]
+
+[tool.pytest.ini_options]
+norecursedirs = [".git", "editables"]
+pythonpath = "src"
+addopts = "--cov=src --doctest-modules -p no:asyncio -p no:django -p no:pytest_doctestplus"
+xfail_strict = true
+
+[tool.semantic_release]
+version_toml = ["version.toml:semantic_release.version"]
+commit_message = 'chore: bump version number'
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = ["^Merge branch ", "^ci\\s*[:(]", "^build\\s*[:(]"]
+
+[tool.semantic_release.release]
+upload_to_vcs_release = false
+
+[tool.semantic_release.remote]
+type = "gitlab"
+token = { env = "GL_TOKEN" }
+
+[tool.semantic_release.branches.master]
+match = "master"
+prerelease = false
+
+[tool.semantic_release.branches.other]
+match = ".*"
+prerelease = true
+prerelease-token = "rc"

@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "momotor/rpc/proto/exception.proto";
+
+package momotor.rpc.proto;
+
+message ServerInfoResponse {
+    string version = 1;  // Server version number, required
+    string protoVersion = 2;  // Protocol (package momotor.rpc) version number, required
+    uint64 chunkSize = 3;  // Recommended chunk size, required
+    uint64 maxIdHashLen = 4;  // Maximum length of content encoded as hash, optional. Identity hashes are only supported if provided
+    repeated uint64 hashFunc = 5; // Supported multihash hash functions, required. Listed from most to least preferred. Excluding code 0 for identity hash
+    uint32 progressUpdateInterval = 6;  // Interval (in seconds) that workers need to send status updates to the broker
+}
+
+message AuthenticateRequest {
+    oneof request {
+        string apiKey = 1;
+        bytes challengeResponse = 2;
+    }
+}
+
+message Challenge {
+    bytes value = 1;
+    string salt = 2;
+}
+
+message AuthenticateResponse {
+    oneof response {
+        Challenge challenge = 1;
+        string authToken = 2;
+        Exception exception = 1000;
+    }
+}
+
+service Auth {
+    // Get server info (does not require authentication)
+    rpc serverInfo (google.protobuf.Empty) returns (ServerInfoResponse);
+
+    // Authenticate the client to get an authKey for use with the requests on the other endpoints
+    rpc authenticate (stream AuthenticateRequest) returns (stream AuthenticateResponse);
+}

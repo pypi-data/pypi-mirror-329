@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+import "momotor/rpc/proto/exception.proto";
+
+package momotor.rpc.proto;
+
+//enum SharedValueAction {
+//    NO_ACTION = 0;
+//    SET_VALUE_ACTION = 1;
+//    GET_VALUE_ACTION = 2;
+//    DELETE_VALUE_ACTION = 3;
+//}
+//
+//message SharedValueRequest {
+//    SharedValueAction action = 1;  // required
+//    string key = 2; // required
+//    string value = 3; // optional. If not supplied for set, it will update the last-set timestamp of the current value
+//}
+//
+//message SharedValueResponse {
+//    string value = 1;
+//    int64 age = 2;  // The age of the value, how long ago was it last set
+//    Exception exception = 1000; // optional
+//}
+
+message SharedLockRequest {
+    bool lock = 1;
+    string key = 2;  // required on first request on the stream, optional on subsequent requests, must not change
+    bool exclusive = 3; // optional, 'true' if not provided (for backwards compatibility)
+}
+
+message SharedLockResponse {
+    bool locked = 1;
+    Exception exception = 1000; // optional
+}
