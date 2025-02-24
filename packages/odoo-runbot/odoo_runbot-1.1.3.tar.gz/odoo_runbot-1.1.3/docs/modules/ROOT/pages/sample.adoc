@@ -1,0 +1,62 @@
+= Exemples
+
+La configuration du `runbot` se trouve dans le fichier `pyproject.toml` à la racine de votre projet.
+
+NOTE: Configuration via le fichier `pyproject.toml` disponible https://peps.python.org/pep-0621/[ici]
+
+[[sample_minimal]]
+== Configuration minimale
+
+[,toml]
+----
+include::partial$sample_config/pyproject_minimal.toml[]
+----
+
+<.> Section principale du runbot
+<.> Définition du module à installer
+
+Dans cet exemple, aucun filtre `test-tags` est appliqué. Le runbot jouera donc tous les tests de `base` jusqu'au module `module_to_test`
+
+== Configuration en 2 étapes
+
+La premiere étape install uniquement les modules voulus.
+La seconde installe les modules et execute les tests.
+
+[,toml]
+----
+include::partial$sample_config/pyproject_simple_with_warmup.toml[]
+----
+
+<.> Section principale du runbot
+<.> Les modules à installer (Dans les 2 `step`)
+<.> Les https://www.odoo.com/documentation/18.0/fr/developer/reference/backend/testing.html#test-selection[test tags (Odoo 18)] disponibles depuis Odoo version 12
+<.> Les 2 `step` au format rapide.
+
+Dans cet exemple, les `step` sont décrites au format le plus simpliste possible, juste un nom et une action (si nécessaire).
+
+Au format verbeux, c'est la même chose que
+
+[,toml]
+----
+include::partial$sample_config/pyproject_simple_with_warmup.exp.toml[]
+----
+
+<1> Les modules à installer et à tester décrits au premier niveau
+<2> Déclaration d'une nouvelle `step` pour le `runbot`
+<3> L'`action` `install` permet de dire qu'il **ne faut pas jouer les tests**
+<4> L'`action` `tests` précise ici que nous voulons **jouer les tests**
+<5> Les tags appliqués lors de la phase de test
+
+== Configuration classique
+
+[,toml]
+----
+include::partial$sample_config/pyproject_classic.toml[]
+----
+
+== Configuration complexe
+
+[,toml]
+----
+include::partial$sample_config/pyproject_complex.toml[]
+----

@@ -1,0 +1,53 @@
+= Step - `tool.runbot.step`
+
+Une `step` représente une étape du `runbot`. Elles seront jouée les unes après les autres.
+Plusieurs attributs de configuration sont possibles.
+
+NOTE: Elles sont exécutées dans l'ordre de déclaration dans le fichier `pyproject.toml`
+
+.pyproject.toml
+[,toml]
+----
+[tool.runbot]
+modules = ["sale"]
+
+[[tool.runbot.step]]
+name = "Step number 2"
+
+[[tool.runbot.step]]
+name = "Step number 1"
+
+----
+
+
+.output
+[,shell]
+----
+$ mangono-runbot diag
+...blabla
+                                         Steps
+┏━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Step          ┃ Module ┃ Run tests ┃ Activate Coverage ┃ Tags to test ┃ Logger filter ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ Step number 2 │ sale   │ TESTS     │ ✔                 │              │               │ <1>
+│ Step number 1 │ sale   │ TESTS     │ ✔                 │              │               │ <2>
+└───────────────┴────────┴───────────┴───────────────────┴──────────────┴───────────────┘
+----
+<1> C'est bien la `step` "Step number 2" qui sera exécutée en première
+<2> Puis la `step` "Step number 1"
+
+
+== Champs possibles des étapes
+
+Dans chaque `step` vous pouvez préciser les attributs suivants.
+
+|===
+| name | Type Toml | Par défaut
+
+| name | https://toml.io/en/v1.0.0#string[string] | `"Step XX"` avec `XX` le numéro de la step
+| modules | https://toml.io/en/v1.0.0#array[liste] de https://toml.io/en/v1.0.0#string[string] | *Obligatoire*
+| action | `"tests"` ou `"install"` | `"tests"`
+| test_tags | https://toml.io/en/v1.0.0#array[liste] de https://toml.io/en/v1.0.0#string[string] | `[]`
+| coverage | https://toml.io/en/v1.0.0#boolean[boolean] | `true`
+| log_filters | https://toml.io/en/v1.0.0#array-of-tables[liste de Log Filter] | `[]`
+|===

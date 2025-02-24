@@ -1,0 +1,11 @@
+[tool.runbot]
+modules = ["module_to_test", "module_to_test_2"] # <.>
+
+[[tool.runbot.step]] # <2>
+name="Big Warmup Step"
+action="install" # <3>
+
+[[tool.runbot.step]] # <2>
+name="Complete Test Step"
+action="tests" # <4>
+test-tags = ["/module_to_test:MyTestCase", "/module_to_test"] # <5>

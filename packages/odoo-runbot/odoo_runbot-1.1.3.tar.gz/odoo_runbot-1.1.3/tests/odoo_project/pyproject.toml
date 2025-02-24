@@ -1,0 +1,65 @@
+[tool.pytest]
+ignore-glob = "./**"
+
+[coverage.run]
+dynamic_context = "test_function"
+
+[tool.ruff]
+line-length = 120
+output-format = "full"
+
+[tool.ruff.lint]
+exclude = ["*/__init__.py"]
+# Skip do not use variables named 'I', 'O', or 'l' rules (E741) # For E203 and W503, see https://github.com/psf/black/blob/06ccb88bf2bd35a4dc5d591bb296b5b299d07323/docs/guides/using_black_with_other_tools.md#flake8
+ignore = ["E741", "F821"]
+
+[tool.runbot]
+modules = ["runbot_tester"]
+
+[[tool.runbot.step]]
+name = "Warmup"
+action="install"
+log-filters = [".*Runbot Test Warmup Warning.*"]
+
+[[tool.runbot.step]]
+name = "Step1"
+test-tags = [":TestStep1"]
+
+[[tool.runbot.step]]
+name = "Step2"
+test-tags = [":TestStep2"]
+
+[[tool.runbot.step]]
+# expecting logger odoo.addons.tester_runbot (global logger of the module)
+name = "Step3"
+test-tags = [":TestStep3"]
+
+[[tool.runbot.step.log-filters]]
+# Match strict message but in a logger (and child only)
+# By default the match should be catch only one time
+regex = "My Warning Filter1" # Strict regex match
+logger = 'odoo.addons.runbot_tester'
+
+[[tool.runbot.step]]
+# expecting logger odoo.addons.tester_runbot (global logger of the module)
+name = "Step4"
+test-tags = [":TestStep4"]
+
+[[tool.runbot.step.log-filters]]
+# Regex to match message, the match should be case insensitive
+# You can set a minimum and a maximum of match
+regex = "My WaRnInG MesSaGe.*"
+min-match = 2
+max-match = 5
+
+[[tool.runbot.step]]
+# expecting logger odoo.addons.tester_runbot (global logger of the module)
+name = "Step5"
+modules = ["false_module", "odoo_img_tester"]
+test-tags = ["/odoo_img_tester:TestImportArrow"]
+
+[[tool.runbot.step]]
+# catch simple filter form
+name = "Step6"
+test-tags = [":TestStep6"]
+log-filters = ['.*Step6.*']

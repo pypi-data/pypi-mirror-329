@@ -1,0 +1,56 @@
+= Configuration
+
+La configuration du `runbot` ce trouve dans le fichier `pyproject.toml` à la racine de votre projet.
+
+NOTE: Configuration via le fichier `pyproject.toml` disponible https://peps.python.org/pep-0621/[ici]
+
+== Description du format
+
+La configuration ce trouve dans un fichier au format https://toml.io/en/v1.0.0#objectives[toml]. +
+Le point d'entrée est `tool.runbot`.
+
+Certaine partie de la config sont des https://toml.io/en/v1.0.0#array-of-tables[listes d'attribut], il faudra l'écrire avec `\[[tool.runbot.sub-part]]`.
+
+IMPORTANT: L'ordre de déclaration des sections a une important pour le langage `toml` ainsi que pour le `runbot`
+
+
+
+[[runbot_format]]
+== Runbot - `tool.runbot`
+
+C'est le point d'entré de la configuration du runbot.
+
+
+== Champs possibles
+
+Dans chaque `warning-filter` vous pouvez préciser les attributs suivants.
+
+|===
+| name | Type Toml | Par défaut
+
+| step | https://toml.io/en/v1.0.0#array-of-tables[liste d'objet] ou https://toml.io/en/v1.0.0#array[list de string] | Voir <<default_step>> et xref::config_step.adoc[doc des étapes]
+| warning_filters | https://toml.io/en/v1.0.0#array-of-tables[liste d'objet] ou https://toml.io/en/v1.0.0#array[list de string] | Voir <<default_step>> et xref::config_global_warning_filter.adoc[doc des filtres `warning`]
+| include_current_project | https://toml.io/en/v1.0.0#boolean[boolean] | `true`
+| log_filters | voir xref:config_step_log_filter.adoc[] | `[]`
+|===
+
+NOTE: Les `log_filters` serons ajouté à chaque étape en plus de celle spécifiée par elle.
+
+
+[[default_step]]
+== Étape par défaut
+
+Le runbot si aucune déclaration d'étape n'existe en ajoutera une. Voir xref:sample.adoc#sample_minimal[]
+
+Dans ce cas alors une étapes ressemblant à ceci sera jouée.
+
+[,toml]
+----
+[[tool.runbot.step]]
+# Warmup step
+name = "Default Step"
+modules = [...] # <1>
+action = "tests"
+log-filters = [...] # <1>
+----
+<1> Reprends les valeurs de la section `tool.runbot`

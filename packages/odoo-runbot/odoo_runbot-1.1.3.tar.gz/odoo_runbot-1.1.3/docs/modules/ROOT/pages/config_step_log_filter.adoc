@@ -1,0 +1,52 @@
+= Log Filter - `tool.runbot.step.log-filter`
+
+Les "Log Filter" dans chaque `step` permettent de filtrer des logs produits par Odoo (ou une librairie) comme autorisés.
+
+Il est possible de décider le nombre de fois et par qui ce log doit être émis.
+
+IMPORTANT: un maximum de `10` match (par step) a été choisis. Au dela, il faut surement regarder pourquoi ce log apparait aussi souvent
+
+En version simple, directement dans la `step` dans l'attribut `log-filter` sous la forme d'une https://toml.io/en/v1.0.0#array[liste] de https://toml.io/en/v1.0.0#string[Literal strings] (avec `'` au lieu de `"`)
+
+.Format simple
+[,toml]
+----
+[[tool.runbot.step]]
+name = "My step with filter"
+log-filter = ['.*my regex.*'] # <1>
+----
+<1> Bien mettre entre simple côte `'`
+
+
+CAUTION: Dans le format simple, le log doit apparaitre **exactement 1 fois**
+
+Il est aussi possible d'être plus précis, de choisir le nombre de fois que le message doit apparaitre et pour quelle `logger`. +
+Dans ce cas, c'est une https://toml.io/en/v1.0.0#array-of-tables[liste de table], donc avec `\[[tool.runbot.step.log-filter]]`
+
+.Format complet
+[,toml]
+----
+[[tool.runbot.step]]
+name = "My Step"
+
+[[tool.runbot.step.log-filter]]
+#name = "My Step - Filter 1" <1>
+regex = '.*my regex.*'
+#min-match = 1 <1>
+#max-match = 1 <1>
+----
+<1> Valeurs par défaut pour l'exemple
+
+== Champs possibles
+
+|===
+| name | Type Toml | Par défaut
+
+| name | https://toml.io/en/v1.0.0#string[string] | `"Step XX - Filter YYY"` avec `XX` le numéro de la step, `YY` le numéro du filtre
+| regex | https://toml.io/en/v1.0.0#string[Literal strings] | *Obligatoire*
+| logger | https://toml.io/en/v1.0.0#string[string] | `""`
+| min_match | int | `1`
+| max_match | int | `1` max `100`
+|===
+
+NOTE: Uniquement l'attribut `regex` est obligatoire.
