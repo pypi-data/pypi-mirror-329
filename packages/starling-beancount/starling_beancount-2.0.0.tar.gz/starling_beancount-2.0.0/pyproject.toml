@@ -1,0 +1,65 @@
+[build-system]
+requires = [
+    "setuptools>=65",
+    "wheel>=0.37.1",
+    "setuptools-scm[toml]>=7.0.5",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "starling-beancount"
+description = "Import Starling Bank transactions in Beancount"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+
+authors = [
+    {name = "Chris Arderne", email="chris@rdrn.me"},
+]
+
+keywords = ["accounting", "cli", "beancount", "banking"]
+
+classifiers = [
+  "Environment :: Console",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: Unix",
+  "Programming Language :: Python",
+]
+
+dependencies = [
+    "beancount>=3.1.0",
+    "httpx>=0.28.1",
+    "python-dateutil>=2.9.0.post0",
+    "PyYAML>=6.0.2",
+    "typer>=0.15.0",
+]
+
+dynamic = ["version"]
+
+[tool.setuptools]
+packages = ["starling_beancount"]
+
+[tool.setuptools_scm]
+
+[project.scripts]
+starling = "starling_beancount.extractor:cli"
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.391",
+    "ruff>=0.8.5",
+    "twine",
+]
+
+[project.urls]
+homepage = "https://github.com/carderne/starling-beancount"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+strict = ["**/*.py"]
+pythonVersion = "3.10"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
