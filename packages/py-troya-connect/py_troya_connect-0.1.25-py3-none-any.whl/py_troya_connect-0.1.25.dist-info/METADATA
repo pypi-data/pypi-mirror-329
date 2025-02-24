@@ -1,0 +1,91 @@
+Metadata-Version: 2.2
+Name: py-troya-connect
+Version: 0.1.25
+Summary: A Python interface for Attachmate Extra Terminal sessions
+Home-page: https://github.com/tolgakurtuluss/py-troya-connect
+Author: Tolga Kurtulus
+Author-email: tolgakurtulus95@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Microsoft :: Windows
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pywin32>=223
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# py-troya-connect
+
+A Python interface for Attachmate Extra Terminal sessions.
+
+## Installation
+
+```bash
+pip install py-troya-connect
+```
+
+## Basic Usage
+
+```python
+from py_troya_connect import ExtraTerminal
+
+# Simple screen reading
+with ExtraTerminal("1") as terminal:
+    screen_content = terminal.read_screen()
+    for line in screen_content:
+        print(line)
+```
+
+## Interactive Session Selection
+
+```python
+from py_troya_connect import ExtraTerminal
+
+# Let user select session interactively
+session_choice = ExtraTerminal.select_session()
+
+# Connect to selected session
+with ExtraTerminal(session_choice) as terminal:
+    screen_content = terminal.read_screen()
+    for line in screen_content:
+        if line.strip():  # Only print non-empty lines
+            print(line)
+```
+
+## Advanced Usage
+
+```python
+from py_troya_connect import ExtraTerminal
+
+with ExtraTerminal("1") as terminal:
+    # List available sessions
+    sessions = terminal.list_available_sessions()
+    print("Available sessions:", sessions)
+    
+    # Check system status
+    status = terminal.check_system_status()
+    print("System status:", status)
+    
+    # Get cursor position
+    cursor_pos = terminal.get_cursor_position()
+    print("Cursor position:", cursor_pos)
+```
+
+## Requirements
+
+- Windows OS
+- Attachmate Extra! Terminal
+- Python 3.6+
+- pywin32
+
+## License
+
+MIT License
