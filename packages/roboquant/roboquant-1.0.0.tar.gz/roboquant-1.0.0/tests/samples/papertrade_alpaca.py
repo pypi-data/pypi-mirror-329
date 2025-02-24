@@ -1,0 +1,33 @@
+# %%
+from datetime import timedelta
+import logging
+import roboquant as rq
+from roboquant.alpaca import AlpacaBroker, AlpacaLiveFeed
+
+# %%
+logging.basicConfig()
+logging.getLogger("roboquant").setLevel(level=logging.INFO)
+
+# %%
+broker = AlpacaBroker()
+account = broker.sync()
+print(account)
+
+# %%
+# Connect to Alpaca and subscribe to some popular stocks
+alpaca_feed = AlpacaLiveFeed(market="iex")
+symbols = ["TSLA", "MSFT", "NVDA", "AMD", "AAPL", "AMZN", "META", "GOOG", "XOM", "JPM", "NLFX", "BA", "INTC", "V"]
+alpaca_feed.subscribe_trades(*symbols)
+
+# Convert the trades into 15-second candles
+feed = rq.feeds.AggregatorFeed(alpaca_feed, timedelta(seconds=15), price_type="trade")
+
+# %%
+strategy = rq.strategies.EMACrossover(13, 26)
+timeframe = rq.Timeframe.next(minutes=15)
+journal = rq.journals.BasicJournal()
+account = rq.run(feed, strategy, broker=broker, journal=journal, timeframe=timeframe)
+
+# %%
+print(account)
+print(journal)
