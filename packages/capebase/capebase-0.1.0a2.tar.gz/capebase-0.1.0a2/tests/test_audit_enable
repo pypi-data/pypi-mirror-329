@@ -1,0 +1,104 @@
+import pytest
+import pytest_asyncio
+
+from sqlmodel import SQLModel, Field
+from typing import Optional
+from datetime import datetime
+import os
+
+from fastapi import FastAPI
+from capebase.main import CapeBase
+from capebase.models import FROM_AUTH_ID, AuthContext
+from capebase.audit import AuditLog
+from sqlalchemy import select
+
+# Test Models
+class ValidModel(SQLModel, table=True):
+    __table_args__ = {'extend_existing': True}
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str
+    user_id: FROM_AUTH_ID
+
+class InvalidModel:  # Not a SQLModel
+    id: int
+    name: str
+
+@pytest_asyncio.fixture
+def app():
+    return FastAPI()
+
+async def get_user_context():
+    return AuthContext()
+
+
+@pytest_asyncio.fixture
+async def cape(app):
+    cape = CapeBase(app=app, db_path="sqlite+aiosqlite:///test_audit_enable.db", auth_provider=get_user_context)
+
+    cape.enable_audit_trail(ValidModel)
+
+    async with cape.app.router.lifespan_context(app):
+        yield cape
+
+    # Cleanup
+    cape._audit_enabled_models.clear()
+    if os.path.exists("test_audit_enable.db"):
+        os.remove("test_audit_enable.db")
+
+@pytest.mark.asyncio
+async def test_enable_audit_valid_model(cape):
+    """Test enabling audit trail for a valid SQLModel"""
+    cape.enable_audit_trail(ValidModel)
+    assert ValidModel in cape._audit_enabled_models
+
+@pytest.mark.asyncio
+async def test_enable_audit_invalid_model(cape):
+    """Test enabling audit trail for an invalid model"""
+    with pytest.raises(TypeError, match="Model InvalidModel is not a SQLModel"):
+        cape.enable_audit_trail(InvalidModel)
+
+@pytest.mark.asyncio
+async def test_enable_audit_duplicate_model(cape):
+    """Test enabling audit trail for the same model twice"""
+    cape.enable_audit_trail(ValidModel)
+    cape.enable_audit_trail(ValidModel)  # Should not raise error
+    assert len(cape._audit_enabled_models) == 1
+    assert ValidModel in cape._audit_enabled_models
+
+@pytest.mark.asyncio
+async def test_audit_tables_created(cape):
+    """Test that AuditLog table is created when audit is enabled"""
+    cape.enable_audit_trail(ValidModel)
+    
+    async with cape.db_session.connect() as conn:
+        # Check if AuditLog table exists
+        result = await conn.run_sync(
+            lambda sync_conn: sync_conn.dialect.has_table(sync_conn, "auditlog")
+        )
+        assert result is True 
+
+@pytest.mark.asyncio
+async def test_audit_log_creation(cape):
+    """Test that audit log entries are created when inserting records"""
+    # Run lifespan again to ensure audit trail is set up
+    
+    # Create a test record
+    test_model = ValidModel(name="Test Item", user_id="test_user")
+    
+    # Insert using privileged session
+    async with cape.get_privileged_session() as session:
+        session.add(test_model)
+        await session.commit()
+        
+        # Verify the audit log was created
+        query = select(AuditLog)
+        result = await session.execute(query)
+        audit_log = result.scalar_one_or_none()
+        
+        assert audit_log is not None
+        assert audit_log.table_name == "validmodel"
+        assert audit_log.action == "INSERT"
+        assert audit_log.new_values["name"] == "Test Item"
+        assert audit_log.new_values["user_id"] == "test_user"
+        assert isinstance(audit_log.timestamp, datetime)
+
