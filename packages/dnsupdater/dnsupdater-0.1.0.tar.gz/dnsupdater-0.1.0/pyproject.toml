@@ -1,0 +1,31 @@
+[build-system]
+# https://github.com/pypa/pip/issues/12100#issuecomment-1606060725
+requires = [
+    "hatchling",
+    "boto3",
+    "requests",
+    "cloudflare"
+]
+build-backend = "hatchling.build"
+
+[project]
+name = "dnsupdater"
+version = "0.1.0"
+authors = [
+  { name="Diego Fernandez Duran", email="diego@goedi.net" },
+]
+description = "Update an Amazon Route53 or Cloudflare record with your current public IP address."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/diegofd/dnsupdater"
+Issues = "https://github.com/diegofd/dnsupdater/issues"
+
+[project.scripts]
+dnsupdater = "dnsupdater.dnsupdater:main"
