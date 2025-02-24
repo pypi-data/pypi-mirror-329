@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lentille Classifier</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .button {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 5px 5px 5px 0;
+    }
+
+    .button:disabled {
+      background-color: grey;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .input-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Lentille Classifier Interface</h1>
+  <div>This interface allows you to classify the commercial use of lenses based on elemental compositions.</div>
+
+  <div class="button-container">
+    <button id="start-workflow" class="button">Start Workflow</button>
+    <button id="start-workflow-no-gui" class="button">Start Workflow (No GUI)</button>
+    <button id="stop-workflow" class="button" style="display: none;">Stop Workflow</button>
+  </div>
+
+  <div class="input-container">
+    <label>Na: <input type="number" id="spin_box_Na" value="7"></label>
+    <label>Mg: <input type="number" id="spin_box_Mg" value="3"></label>
+    <label>Al: <input type="number" id="spin_box_Al" value="5"></label>
+    <label>Si: <input type="number" id="spin_box_Si" value="8"></label>
+    <label>K: <input type="number" id="spin_box_K" value="2"></label>
+    <label>Ca: <input type="number" id="spin_box_Ca" value="9"></label>
+    <label>Ba: <input type="number" id="spin_box_Ba" value="4"></label>
+    <label>Fe: <input type="number" id="spin_box_Fe" value="6"></label>
+  </div>
+
+  <button id="process-data" class="button">Process Data</button>
+
+  <div id="download-section" style="margin-top: 20px; display: none;">
+    <button id="download-csv" class="button">Download CSV</button>
+    <button id="download-json" class="button">Download JSON</button>
+    <button id="download-html" class="button">Download + Show as HTML</button>
+  </div>
+
+  <script src="utilities.js"></script>
+  <script>
+    const WORKFLOW_NAME = 'lentille_inference_local_html.ows';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('start-workflow').addEventListener('click', () => startWorkflow(WORKFLOW_NAME, true));
+      document.getElementById('start-workflow-no-gui').addEventListener('click', () => startWorkflow(WORKFLOW_NAME, false));
+      document.getElementById('stop-workflow').addEventListener('click', () => stopWorkflow(WORKFLOW_NAME));
+
+      document.getElementById('process-data').addEventListener('click', async function () {
+        const csvFile = createFileObject();
+        const uniqueId = await uploadFilesAndInputs(
+          ["input_lentille"], //fileIds
+          "lentille.ows", // workflow id
+          ["file"], // opening method
+          1, // expected number of outputs
+          [csvFile] // files
+        );
+
+        if (uniqueId) {
+          setupDownloadButtons(uniqueId);
+        }
+
+      });
+    });
+
+    function createFileObject() {
+      const data = {
+        Na: document.getElementById('spin_box_Na').value,
+        Mg: document.getElementById('spin_box_Mg').value,
+        Al: document.getElementById('spin_box_Al').value,
+        Si: document.getElementById('spin_box_Si').value,
+        K: document.getElementById('spin_box_K').value,
+        Ca: document.getElementById('spin_box_Ca').value,
+        Ba: document.getElementById('spin_box_Ba').value,
+        Fe: document.getElementById('spin_box_Fe').value,
+      };
+
+      const headers = Object.keys(data).join(",");
+      const values = Object.values(data).join(",");
+      const csvContent = `${headers}\n${values}\n`;
+
+      // Create a Blob with the CSV content
+      const csvBlob = new Blob([csvContent], { type: 'text/csv' });
+
+      // Convert the Blob to a File
+      const csvFile = new File([csvBlob], 'data.csv', { type: 'text/csv' });
+
+      return csvFile;
+    }
+
+    function setupDownloadButtons(uniqueId) {
+      document.getElementById("download-section").style.display = "block";
+
+      document.getElementById('download-csv').onclick = async () => {
+        const blob = await retrieveContent('file', uniqueId);
+        createDownloadLink(blob, 'output.csv');
+      };
+
+      document.getElementById('download-json').onclick = async () => {
+        const jsonData = await retrieveContent('json', uniqueId);
+        const jsonBlob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' });
+        createDownloadLink(jsonBlob, 'output.json');
+      };
+
+      document.getElementById('download-html').onclick = async () => {
+        const htmlData = await retrieveContent('html', uniqueId);
+        const container = document.createElement('div');
+        container.innerHTML = htmlData;
+        document.body.appendChild(container);
+      };
+    }
+  </script>
+</body>
+
+</html>

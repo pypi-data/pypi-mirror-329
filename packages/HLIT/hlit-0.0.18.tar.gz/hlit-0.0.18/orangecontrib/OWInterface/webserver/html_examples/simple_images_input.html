@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Image Uploader</title>
+</head>
+
+<body>
+    <h1>Simple Image Uploader</h1>
+    <button id="start-workflow" class="button">Start Workflow</button>
+
+    <input type="file" id="image-files" accept="image/*" multiple required />
+    <br><br>
+    <button id="upload-images" class="button">Upload Images</button>
+    <button id="download-json" class="button" style="display: none;">Download JSON Output</button>
+    <br><br>
+
+    <div id="output"></div>
+
+    <!-- Include utilities.js -->
+    <script src="utilities.js"></script>
+    <script>
+        const WORKFLOW_NAME = "image-test.ows";
+        const WORKFLOW_ID = WORKFLOW_NAME; // Workflow Id specified in Orange
+
+        document.getElementById('upload-images').addEventListener('click', async function () {
+            const files = document.getElementById('image-files').files;
+            const numFiles = files.length;
+
+            if (numFiles === 0) {
+                alert("Please select images to upload.");
+                return;
+            }
+
+            const fileIds = Array(numFiles).fill("input1");
+            const openingMethods = Array(numFiles).fill("image_file");
+
+            const uniqueId = await uploadFilesAndInputs(
+                fileIds,                // fileIds
+                WORKFLOW_ID,            // workflowId
+                openingMethods,         // openingMethods
+                1,                      // expectedNbOutputs
+                Array.from(files),      // files
+                [],                     // textInputsId
+                [],                     // textInputsValue
+                0                       // timeoutLimit
+            );
+
+            if (uniqueId) {
+                document.getElementById('download-json').style.display = 'inline-block';
+                setupDownloadButton(uniqueId);
+            }
+
+        });
+
+        document.getElementById('start-workflow').addEventListener('click', () => {
+            startWorkflow(WORKFLOW_NAME, true);
+        });
+
+        function setupDownloadButton(uniqueId) {
+            document.getElementById('download-json').onclick = async () => {
+
+                const jsonData = await retrieveContent('json', uniqueId, 10);
+                const jsonBlob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' });
+                createDownloadLink(jsonBlob, `output_${uniqueId}.json`);
+            }
+        };
+    </script>
+</body>
+
+</html>

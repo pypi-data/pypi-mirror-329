@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Single File Uploader</title>
+</head>
+
+<body>
+    <h1>Simple Single File Uploader</h1>
+
+    <!-- This line can be commented if you don't need a button -->
+    <button id="start-workflow" class="button">Start Workflow</button>
+
+    <input type="file" id="file-input" accept="*" required />
+    <br><br>
+    <button id="upload-file" class="button">Upload File</button>
+    <button id="print-output" class="button" style="display: none;">Show Output</button>
+    <br><br>
+
+    <div id="output"></div>
+
+    <!-- Include utilities.js -->
+    <script src="utilities.js"></script>
+    <script>
+        const WORKFLOW_NAME = "simple_file_input.ows";
+        const WORKFLOW_ID = WORKFLOW_NAME;
+        let uniqueId = null;
+
+        document.getElementById('upload-file').addEventListener('click', async function () {
+            const fileInput = document.getElementById('file-input');
+            const files = fileInput.files;
+
+            if (files.length !== 1) { // Ensuring exactly one file is selected
+                alert("Please select exactly one file to upload.");
+                return;
+            }
+
+            const fileIds = ["input"]; // Single file ID
+            const openingMethods = ["file"]; // Single file opening method
+
+            uniqueId = await uploadFilesAndInputs(
+                fileIds,                // fileIds
+                WORKFLOW_ID,          // workflowId
+                openingMethods,         // openingMethods
+                1,                      // expectedNbOutputs
+                [files[0]],                 // single selected file
+                [],                     // textInputsId
+                [],                     // textInputsValue
+                0                       // timeoutLimit
+            );
+
+            // Show output button if upload succeeded
+            if (uniqueId) {
+                document.getElementById("print-output").style.display = "block";
+            }
+        });
+
+        // Ignore this if you don't need a button to start workflow
+        document.getElementById('start-workflow').addEventListener('click', () => {
+            startWorkflow(WORKFLOW_NAME, true); // Initiate workflow
+        });
+
+        document.getElementById('print-output').addEventListener('click', async () => {
+            const htmlContent = await retrieveContent("html", uniqueId); // Retrieve and show output
+            document.getElementById('output').innerHTML = htmlContent;
+        });
+    </script>
+</body>
+
+</html>

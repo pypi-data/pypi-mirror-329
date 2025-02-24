@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme version="2.0" title="" description="">
+	<nodes>
+		<node id="0" name="Local Interface - Text" qualified_name="Orange.widgets.orangecontrib.AAIT.widgets.OWLocalInterfaceText.OWLocalInterfaceText" project_name="Orange3" version="" title="Local Interface - Text" position="(171.0, 241.0)" />
+		<node id="1" name="Python Script" qualified_name="Orange.widgets.data.owpythonscript.OWPythonScript" project_name="Orange3" version="" title="Python Script" position="(408.0, 285.0)" />
+		<node id="2" name="Data Table" qualified_name="Orange.widgets.data.owtable.OWTable" project_name="Orange3" version="" title="Data Table" position="(527.0, 146.0)" />
+		<node id="3" name="Display on Local Interface" qualified_name="Orange.widgets.orangecontrib.AAIT.widgets.OWDisplayOnInterface.OWDisplayOnInterface" project_name="Orange3" version="" title="Display on Local Interface" position="(570.0, 314.0)" />
+	</nodes>
+	<links>
+		<link id="0" source_node_id="0" sink_node_id="1" source_channel="data" sink_channel="Object" enabled="true" source_channel_id="data" sink_channel_id="object" />
+		<link id="1" source_node_id="1" sink_node_id="2" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+		<link id="2" source_node_id="1" sink_node_id="3" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+	</links>
+	<annotations />
+	<thumbnail />
+	<node_properties>
+		<properties node_id="0" format="literal">{'controlAreaVisible': True, 'input_id': 'text_input', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x01J\x00\x00\x00\xb0\x00\x00\x04V\x00\x00\x02\xa3\x00\x00\x01J\x00\x00\x00\xb0\x00\x00\x04V\x00\x00\x02\xa3\x00\x00\x00\x00\x00\x00\x00\x00\x05\xa0\x00\x00\x01J\x00\x00\x00\xb0\x00\x00\x04V\x00\x00\x02\xa3', 'workflow_id': 'simple_text', '__version__': 1}</properties>
+		<properties node_id="1" format="literal">{'controlAreaVisible': True, 'currentScriptIndex': 0, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x01@\x00\x00\x00~\x00\x00\x04_\x00\x00\x02\xd5\x00\x00\x01@\x00\x00\x00~\x00\x00\x04_\x00\x00\x02\xd5\x00\x00\x00\x00\x00\x00\x00\x00\x05\xa0\x00\x00\x01@\x00\x00\x00~\x00\x00\x04_\x00\x00\x02\xd5', 'scriptLibrary': [{'name': 'Table from numpy', 'script': 'print(in_object)\nreturn in_object', 'filename': None}], 'scriptText': 'import Orange\n\n# Prepare the input string\ninput_string = in_object\n# Define the domain with a proper configuration for meta attributes\nmeta_attr = Orange.data.StringVariable.make("Text")\ndomain = Orange.data.Domain([], metas=[meta_attr])\n\n# Use Table.from_list to construct the table\ntable = Orange.data.Table.from_list(domain, [[input_string]])\n\nout_data = table', 'splitterState': b'\x00\x00\x00\xff\x00\x00\x00\x01\x00\x00\x00\x02\x00\x00\x00\xa1\x00\x00\x00a\x01\xff\xff\xff\xff\x01\x00\x00\x00\x02\x00', 'vimModeEnabled': False, '__version__': 2}</properties>
+		<properties node_id="2" format="literal">{'auto_commit': True, 'color_by_class': True, 'controlAreaVisible': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x010\x00\x00\x00\xd8\x00\x00\x05|\x00\x00\x02\xf4\x00\x00\x010\x00\x00\x00\xd8\x00\x00\x05|\x00\x00\x02\xf4\x00\x00\x00\x00\x00\x00\x00\x00\x05\xa0\x00\x00\x010\x00\x00\x00\xd8\x00\x00\x05|\x00\x00\x02\xf4', 'select_rows': True, 'show_attribute_labels': True, 'show_distributions': True, 'stored_selection': {'rows': [], 'columns': []}, 'stored_sort': [], '__version__': 1}</properties>
+		<properties node_id="3" format="literal">{'CSVDelimiter': '\t', 'controlAreaVisible': True, 'output_fileId': 'output.csv', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x02\x83\x00\x00\x01E\x00\x00\x03\x1f\x00\x00\x02\\\x00\x00\x02\x84\x00\x00\x01b\x00\x00\x03\x1e\x00\x00\x02[\x00\x00\x00\x00\x00\x00\x00\x00\x05\xa0\x00\x00\x02\x84\x00\x00\x01b\x00\x00\x03\x1e\x00\x00\x02[', 'workflow_id': 'simple_text', '__version__': 1}</properties>
+	</node_properties>
+	<session_state>
+		<window_groups />
+	</session_state>
+</scheme>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orange Webserver Examples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 20px;
+            /* Increased margin for more space between items */
+            padding-bottom: 10px;
+            /* Adding padding below each item */
+            border-bottom: 1px solid #dcdcdc;
+            /* Adding a thin border for separation */
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .description {
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Orange Webserver Examples</h1>
+    <ul id="pages-list"></ul>
+
+    <script>
+        // Define the arrays for page names, paths, and descriptions
+        const page_names = [
+            "Lentilles classification",
+            "Simple image input",
+            "Simple multiple input",
+            "Simple single input",
+            "Simple text input",
+            "Various inputs",
+        ];
+
+        const page_paths = [
+            "lentilles.html",
+            "simple_images_input.html",
+            "simple_multiple_input.html",
+            "simple_single_file_input.html",
+            "simple_text.html",
+            "Various_input.html",
+        ];
+
+        const page_descriptions = [
+            "A workflow that classifies lentilles. It shows how to structure the workflow, and how to get the inputs from the user. This workflow is a production one, it could be used in a real application.",
+            "A basic example of uploading images files, and getting embedded answers.",
+            "A basic example of uploading multiple files. Answer will be a concatenation of the uploaded files.",
+            "A basic example of uploading a single file. Answer will be the content of the uploaded file.",
+            "A basic example of uploading a text. Answer will be a tab with the uploaded text.",
+            "A more complex example, combining multiple file uploads and text inputs."
+        ];
+
+        // Ensure arrays are of the same size, else raise an error
+        if (page_names.length !== page_paths.length || page_paths.length !== page_descriptions.length) {
+            throw new Error("The arrays 'page_names', 'page_paths', and 'page_descriptions' must have the same length.");
+        }
+
+        // Get the list element where pages will be appended
+        const listElement = document.getElementById('pages-list');
+
+        // Loop over the pages and create list items
+        for (let i = 0; i < page_names.length; i++) {
+            // Create list item
+            const listItem = document.createElement('li');
+
+            // Create hyperlink element
+            const linkElement = document.createElement('a');
+            linkElement.href = page_paths[i];
+            linkElement.textContent = page_names[i];
+
+            // Create description paragraph
+            const description = document.createElement('p');
+            description.className = 'description';
+            description.textContent = page_descriptions[i];
+
+            // Append link and description to list item
+            listItem.appendChild(linkElement);
+            listItem.appendChild(description);
+
+            // Append list item to the list
+            listElement.appendChild(listItem);
+        }
+    </script>
+
+</body>
+
+</html>

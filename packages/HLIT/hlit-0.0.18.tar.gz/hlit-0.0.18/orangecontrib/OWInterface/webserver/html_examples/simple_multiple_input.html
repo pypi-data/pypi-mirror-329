@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Multiple File Uploader</title>
+</head>
+
+<body>
+    <h1>Simple Multiple File Uploader</h1>
+    <button id="start-workflow" class="button">Start Workflow</button>
+
+    <input type="file" id="file-inputs" accept="*" multiple required />
+
+    <!--This line can be commented if you don't need a button-->
+    <button id="upload-files" class="button">Upload Files</button>
+
+    <button id="print-output" class="button" style="display: none;">Show Output</button>
+    <br><br>
+
+    <div id="output"></div>
+
+    <!-- Include utilities.js -->
+    <script src="utilities.js"></script>
+    <script>
+        const WORKFLOW_NAME = "simple_multiple_input.ows";
+        const WORKFLOW_ID = WORKFLOW_NAME; // Workflow Id specified in Orange
+        let uniqueId = null;
+
+        document.getElementById('upload-files').addEventListener('click', async function () {
+            const files = document.getElementById('file-inputs').files;
+            const numFiles = files.length;
+
+            if (numFiles === 0) {
+                alert("Please select files to upload.");
+                return;
+            }
+
+            const fileIds = Array(numFiles).fill("input");
+            const openingMethods = Array(numFiles).fill("multiple_file");
+
+            uniqueId = await uploadFilesAndInputs(
+                fileIds,                // fileIds
+                WORKFLOW_NAME,          // workflowId
+                openingMethods,         // openingMethods
+                1,                      // expectedNbOutputs
+                Array.from(files),      // files
+                [],                     // textInputsId
+                [],                     // textInputsValue
+                0                       // timeoutLimit
+            );
+
+            if (uniqueId) {
+                document.getElementById("print-output").style.display = "block";
+            }
+
+        });
+
+        // This line can be commented if you don't need a button
+        document.getElementById('start-workflow').addEventListener('click', () => {
+            startWorkflow(WORKFLOW_NAME, true);
+        });
+        document.getElementById('print-output').addEventListener('click', async () => {
+            const htmlContent = await retrieveContent("html", uniqueId);
+            document.getElementById('output').innerHTML = htmlContent;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-File Uploader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px 5px 5px 0;
+        }
+
+        .button:disabled {
+            background-color: grey;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Multi-File Uploader</h1>
+    <div>This page shows how to upload multiple files and text inputs to a workflow.</div>
+    <div class="button-container">
+        <button id="start-workflow" class="button">Start Workflow</button>
+        <button id="start-workflow-no-gui" class="button">Start Workflow (No GUI)</button>
+        <button id="stop-workflow" class="button">Stop Workflow</button>
+    </div>
+
+    <form id="upload-form">
+        <h2>Upload Section</h2>
+        <label for="single-file">Select a Single File:</label><br>
+        <input type="file" id="single-file" accept=".csv, .xlsx" required /><br><br>
+        <label for="csv-files">Select Multiple Files:</label><br>
+        <input type="file" id="csv-files" accept=".csv, .xlsx" multiple required /><br><br>
+        <label for="text-input-1">Enter First Text:</label><br>
+        <input type="text" id="text-input-1" name="text-input-1" required /><br><br>
+        <label for="text-input-2">Enter Second Text:</label><br>
+        <input type="text" id="text-input-2" name="text-input-2" required /><br><br>
+        <button type="submit" class="button">Submit</button>
+    </form>
+
+    <div id="download-section" style="display:none;">
+        <h2>Download Options</h2>
+        <button id="download-zip" class="button">Download ZIP</button>
+        <button id="download-csvs" class="button">Download CSVs</button>
+        <button id="download-json" class="button">Download JSON</button>
+        <button id="display-html" class="button">Display as HTML</button>
+    </div>
+
+    <div id="html-display"></div>
+
+    <script src="utilities.js"></script>
+
+    <script>
+        const WORKFLOW_NAME = 'various_input.ows';
+
+        document.getElementById('start-workflow').addEventListener('click', () => startWorkflow(WORKFLOW_NAME, true));
+        document.getElementById('start-workflow-no-gui').addEventListener('click', () => startWorkflow(WORKFLOW_NAME, false));
+        document.getElementById('stop-workflow').addEventListener('click', () => stopWorkflow(WORKFLOW_NAME));
+
+        document.getElementById('upload-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            resetUI();
+
+            const multipleFilesInput = document.getElementById('csv-files').files;
+            const singleFileInput = document.getElementById('single-file').files[0];
+            const textInput1 = document.getElementById('text-input-1').value;
+            const textInput2 = document.getElementById('text-input-2').value;
+
+            if (!multipleFilesInput.length || !singleFileInput || !textInput1 || !textInput2) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            const uniqueId = await uploadFilesAndInputs(
+                Array(multipleFilesInput.length).fill("input1").concat("input2"), // FilesId
+                WORKFLOW_NAME,                              // workflowId
+                Array(multipleFilesInput.length).fill("multiple_file").concat("file"), // openingMethods
+                2,                                          // expectedNbOutputs
+                [...multipleFilesInput, singleFileInput],   // files
+                ["text_input1", "text_input2"],             // textInputsId
+                [textInput1, textInput2],                   // textInputsValue
+                0                                           // timeoutLimit, optional and can be omitted if default is acceptable
+            );
+
+            if (uniqueId) {
+                setupDownloadButtons(uniqueId);
+            }
+        });
+
+        async function setupDownloadButtons(uniqueId) {
+            document.getElementById("download-section").style.display = "block";
+
+            document.getElementById('download-zip').onclick = () => handleDownload('file', uniqueId, `processed_data_${uniqueId}.zip`);
+            document.getElementById('download-csvs').onclick = async () => {
+                await handleDownload('file', uniqueId, 'file.csv', 'file.csv');
+                await handleDownload('file', uniqueId, 'multifile.csv', 'multifile.csv');
+            };
+            document.getElementById('download-json').onclick = () => handleDownload('json', uniqueId, 'output.json');
+            document.getElementById('display-html').onclick = () => displayHTML(uniqueId);
+        }
+
+        async function handleDownload(returnMode, uniqueId, defaultFileName, customFileName = null) {
+            let content = await retrieveContent(returnMode, uniqueId, customFileName);
+            if (returnMode == 'json') {
+                // Complete here to convert JSON to Blob
+                content = new Blob([JSON.stringify(content)], { type: 'application/json' });
+            }
+            createDownloadLink(content, defaultFileName);
+        }
+
+        async function displayHTML(uniqueId) {
+            const htmlData = await retrieveContent('html', uniqueId);
+            const displayContainer = document.getElementById('html-display');
+
+            displayContainer.innerHTML = "";
+            const newContent = document.createElement('div');
+            newContent.innerHTML = htmlData;
+            displayContainer.appendChild(newContent);
+        }
+
+        function resetUI() {
+            document.getElementById("download-section").style.display = "none";
+            document.getElementById('html-display').innerHTML = "";
+        }
+    </script>
+</body>
+
+</html>

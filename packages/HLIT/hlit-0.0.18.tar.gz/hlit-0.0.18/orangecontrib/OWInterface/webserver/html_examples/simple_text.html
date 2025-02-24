@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Workflow Interface</title>
+</head>
+
+<body>
+    <h1>Simple Workflow Interface</h1>
+
+    <button id="start-workflow" class="button">Start Workflow</button>
+    <!--This line can be commented if you don't need a button-->
+
+
+    <input type="text" id="text-input" placeholder="Enter text" required>
+    <button id="send-text" class="button">Send Text</button>
+    <button id="print-output" class="button">Show Output</button>
+
+    <div id="output"></div>
+    <script src="utilities.js"></script>
+    <script>
+        const WORKFLOW_NAME = 'simple_text.ows'; // Name of the workflow to start
+        const WORKFLOW_ID = 'simple_text.ows'; // Id of input Widget in the Orange workflow
+
+        let uniqueId = null;
+
+        document.getElementById('start-workflow').addEventListener('click', () => {
+            startWorkflow(WORKFLOW_NAME, true);
+        });
+        // This line can be commented if you don't need a button
+
+
+        document.getElementById('send-text').addEventListener('click', async () => {
+            const textInput = document.getElementById('text-input').value;
+            uniqueId = await uploadFilesAndInputs(
+                [],             // fileIds, optional
+                WORKFLOW_ID,    // workflowId, mandatory
+                [],             // openingMethods, optional
+                1,              // expectedNbOutputs, mandatory
+                [],             // files, optional
+                ['text_input'], // textInputsId
+                [textInput],    // textInputsValue
+                0               // timeoutLimit, optional
+            );
+        });
+
+        document.getElementById('print-output').addEventListener('click', async () => {
+            const htmlContent = await retrieveContent("html", uniqueId);
+            document.getElementById('output').innerHTML = htmlContent;
+        });
+    </script>
+</body>
+
+</html>
