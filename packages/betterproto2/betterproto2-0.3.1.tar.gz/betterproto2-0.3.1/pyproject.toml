@@ -1,0 +1,175 @@
+[project]
+name = "betterproto2"
+version = "0.3.1"
+description = "A better Protobuf / gRPC generator & library"
+authors = [
+    {name = "Adrien Vannson", email = "adrien.vannson@protonmail.com"},
+    {name = "Daniel G. Taylor", email = "danielgtaylor@gmail.com"}
+]
+readme = "README.md"
+keywords = ["protobuf", "gRPC"]
+license = "MIT"
+requires-python = ">=3.10,<4.0"
+dynamic = ["dependencies"]
+
+[project.urls]
+Documentation = "https://betterproto.github.io/python-betterproto2/"
+Repository = "https://github.com/betterproto/python-betterproto2"
+
+[project.optional-dependencies]
+rust-codec = ["betterproto2-rust-codec"]
+grpc-async = ["grpclib"]
+all = ["betterproto2-rust-codec", "grpclib"]
+
+[tool.poetry]
+packages = [
+    { include = "betterproto2", from = "src" }
+]
+
+[tool.poetry.dependencies]
+grpclib = { version = "^0.4.1", optional = true }
+python-dateutil = "^2.8"
+typing-extensions = "^4.7.1"
+betterproto2-rust-codec = { version = "^0.1.2", optional = true }
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.11.2"
+pre-commit = "^2.17.0"
+tox = "^4.0.0"
+mkdocs-material = {version = "^9.5.49", python = ">=3.10"}
+mkdocstrings = {version = "^0.27.0", python = ">=3.10", extras = ["python"]}
+# The Ruff version is pinned. To update it, also update it in .pre-commit-config.yaml
+ruff = { version = "~0.9.3" }
+ipykernel = "^6.29.5"
+pyright = "^1.1.392"
+
+[tool.poetry.group.test.dependencies]
+poethepoet = ">=0.9.0"
+pytest = "^6.2.5"
+pytest-asyncio = "^0.12.0"
+pytest-cov = "^2.9.0"
+pytest-mock = "^3.1.1"
+pydantic = ">=2.0,<3"
+protobuf = "^5.29.3"
+cachelib = "^0.10.2"
+
+[tool.ruff]
+extend-exclude = ["tests/output_*", "src/betterproto2/internal_lib"]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "F401",  # Unused imports
+    "F841",  # Unused local variables
+    "F821",  # Undefined names
+    "E501",  # Line length violations
+
+    "SIM101", # Simplify unnecessary if-else blocks
+    "SIM102", # Simplify return or yield statements
+    "SIM103", # Simplify list/set/dict comprehensions
+
+    "UP",
+
+    "I",
+]
+
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[tool.pytest.ini_options]
+python_files = "test_*.py"
+python_classes = ""
+norecursedirs = "**/output_*"
+addopts = "-p no:warnings"
+
+# Dev workflow tasks
+
+[tool.poe.tasks.test]
+cmd = "pytest"
+help = "Run tests"
+
+[tool.poe.tasks.typecheck]
+cmd  = "pyright src"
+help = "Typecheck the code with Pyright"
+
+[tool.poe.tasks.format]
+sequence = ["_format", "_sort-imports"]
+help = "Format the source code, and sort the imports"
+
+[tool.poe.tasks.check]
+sequence = ["_check-format", "_check"]
+help = "Check that the source code is formatted and the imports sorted"
+
+[tool.poe.tasks._format]
+cmd = "ruff format src tests"
+help = "Format the source code without sorting the imports"
+
+[tool.poe.tasks._sort-imports]
+cmd = "ruff check --select I --fix src tests"
+help = "Sort the imports"
+
+[tool.poe.tasks._check-format]
+cmd = "ruff format --diff src tests"
+help = "Check that the source code is formatted"
+
+[tool.poe.tasks._check]
+cmd = "ruff check src tests"
+help = "Check the code"
+
+[tool.poe.tasks.clean]
+cmd  = """
+rm -rf .coverage .mypy_cache .pytest_cache
+       dist betterproto.egg-info **/__pycache__
+       testsoutput_*
+"""
+help = "Clean out generated files from the workspace"
+
+[tool.poe.tasks.pull-compiled-tests]
+shell  = """
+rm -rf tests/output_* &&
+git clone https://github.com/betterproto/python-betterproto2-compiler --branch compiled-test-files --single-branch compiled_files &&
+mv compiled_files/tests_betterproto tests/output_betterproto &&
+mv compiled_files/tests_betterproto_pydantic tests/output_betterproto_pydantic &&
+mv compiled_files/tests_reference tests/output_reference &&
+rm -rf compiled_files
+"""
+help = "Pulls the compiled test files from the betterproto2-compiler repository"
+
+[tool.poe.tasks.serve-docs]
+cmd = "mkdocs serve"
+help = "Serve the documentation locally"
+
+# CI tasks
+
+[tool.poe.tasks.full-test]
+shell = "poe generate && tox"
+help = "Run tests with multiple pythons"
+
+[tool.coverage.run]
+omit = ["betterproto/tests/*"]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+requires =
+    tox>=4.2
+    tox-poetry-installer[poetry]==1.0.0b1
+env_list =
+    py311
+    py38
+    py37
+
+[testenv]
+commands =
+    pytest {posargs: --cov betterproto}
+poetry_dep_groups =
+    test
+require_locked_deps = true
+require_poetry = true
+"""
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3"]
+build-backend = "poetry.core.masonry.api"
