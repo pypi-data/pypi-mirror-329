@@ -1,0 +1,55 @@
+Metadata-Version: 2.2
+Name: moblin_assistant
+Version: 0.8.0
+Summary: Moblin remote control assistant
+Home-page: https://github.com/eerimoq/moblin_assistant
+Author: Erik Moqvist
+Author-email: erik.moqvist@gmail.com
+License: MIT
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.9
+Requires-Python: >=3.9
+License-File: LICENSE
+Requires-Dist: aiohttp
+Requires-Dist: websockets
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+About
+=====
+
+A Moblin assistant in the terminal.
+
+Installation
+============
+
+.. code-block:: python
+
+    pip install moblin_assistant
+
+Example usage
+=============
+
+Terminal 1. Start the server that a Moblin streamer can connect to.
+
+.. code-block:: text
+
+   $ moblin_assistant run --password my-password
+
+Terminal 2. Control Moblin streamer.
+
+.. code-block:: text
+
+   $ moblin_assistant set_scene Back
+   $ moblin_assistant go_live
+   $ moblin_assistant end
+   $ moblin_assistant set_zoom 2.5
+
+Open http://localhost:2345/preview in a web browser to see the preview.
