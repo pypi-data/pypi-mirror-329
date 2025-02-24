@@ -1,0 +1,72 @@
+Metadata-Version: 2.2
+Name: hi-gcp
+Version: 0.0.6
+Summary: GCP Utilities for BigQuery
+Home-page: https://github.com/xileven
+Author: J L
+Author-email: jliu5277@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Database
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: google-cloud-bigquery>=3.27.0
+Requires-Dist: google-cloud-storage>=2.18.2
+Requires-Dist: pandas>=2.2.3
+Requires-Dist: numpy>=2.0.2
+Requires-Dist: pandas-gbq>=0.24.0
+Requires-Dist: pyarrow>=18.1.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# hi-gcp
+
+A Python utility package for working with Google Cloud Platform (GCP) services, primarily focusing on BigQuery operations. Features more robust to prevent accidentallly delete or clean tables.
+
+## Installation
+
+```bash
+pip install hi-gcp
+```
+
+## Features
+
+- Easy-to-use BigQuery client wrapper
+- Simplified query execution and data retrieval
+- Efficient data loading and export operations
+- Additional step for sensitive operations (table deletion and cleaning)
+- Environment variable support for configuration
+
+## Usage
+
+```python
+from hi_gcp import BigQueryClient
+
+# Initialize the client
+
+gg = BigQueryClient(
+    project_id = "project_id",
+    dataset_id = "dataset_id",
+    table_id = "table_id",
+    key_file='path/to/service_account_key.json'
+)
+
+# Execute a query
+df = gg.sql2df("SELECT * FROM `project_id.dataset_id.table_id` LIMIT 100")
+```
+
+## License
+
+MIT License
