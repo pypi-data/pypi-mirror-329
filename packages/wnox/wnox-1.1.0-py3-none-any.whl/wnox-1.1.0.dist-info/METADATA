@@ -1,0 +1,32 @@
+Metadata-Version: 2.2
+Name: wnox
+Version: 1.1.0
+Summary: QE nexus client.
+Home-page: https://github.com/arminkardan/pywnox
+Author: Ethan (Armin) Cardan
+Author-email: "Ethan (Armin) Cardan" <armin.fire@gmail.com>
+Project-URL: homepage, https://github.com/arminkardan/pywnox
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: slixmpp
+Requires-Dist: python-dotenv
+Requires-Dist: pymongo
+Dynamic: author
+Dynamic: home-page
+Dynamic: requires-python
+
+QE nexus client.
+
+How to upload to PyPi:
+
+pip install build
+pip install twine
+
+python -m build
+twine upload dist/*
+
+pip install --upgrade --force-reinstall wnox
