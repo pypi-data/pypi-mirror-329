@@ -1,0 +1,11 @@
+---
+fixture: create_user
+settings:
+  fixture_dirs:
+    - fixtures
+---
+% test "$FIXTURE_SI_TEST_USER" = "$SI_TEST_USER"
+% echo $USRNAME
+create_user
+%~ id $USRNAME
+create_user
