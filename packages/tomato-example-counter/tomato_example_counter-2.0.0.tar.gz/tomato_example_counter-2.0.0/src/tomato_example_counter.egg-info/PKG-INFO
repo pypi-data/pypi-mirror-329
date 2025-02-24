@@ -1,0 +1,39 @@
+Metadata-Version: 2.2
+Name: tomato-example-counter
+Version: 2.0.0
+Summary: tomato example counter driver
+Author-email: Peter Kraus <peter.kraus@tu-berlin.de>
+Maintainer-email: Peter Kraus <peter.kraus@tu-berlin.de>
+Project-URL: Documentation, https://dgbowl.github.io/tomato-example-counter/main
+Project-URL: Issues, https://github.com/dgbowl/tomato-example-counter/issues
+Project-URL: Repository, https://github.com/dgbowl/tomato-example-counter/
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: tomato>=2.0rc2
+Provides-Extra: testing
+Requires-Dist: pytest; extra == "testing"
+
+# tomato-example-counter
+An example driver for `tomato`, used for testing purposes.
+
+This driver is developed by the [ConCat lab at TU Berlin](https://tu.berlin/en/concat).
+
+## Supported functions
+
+### Capabilities
+- `count`: for counting up every second
+- `random`: for returning a random number between `min` and `max` every query
+
+### Attributes
+- `max`: the upper limit to `random`, `float`
+- `min`: the lower limit to `random`, `float`
+- `param`: test attribute for validation, `param > pint.Quantity("0.1 seconds")`
+
+## Contributors
+- Peter Kraus
