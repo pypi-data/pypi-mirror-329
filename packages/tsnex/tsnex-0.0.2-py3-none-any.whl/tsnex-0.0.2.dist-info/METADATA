@@ -1,0 +1,82 @@
+Metadata-Version: 2.2
+Name: tsnex
+Version: 0.0.2
+Summary: Minimal t-distributed stochastic neighbor embedding (t-SNE) implementation in JAX.
+Author-email: Albert Alonso <alonfnt@pm.me>
+License: MIT License
+        
+        Copyright (c) 2023 Albert Alonso
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/alonfnt/tsnex
+Project-URL: Documentation, https://github.com/alonfnt/tsnex
+Project-URL: Source, https://github.com/alonfnt/tsnex
+Project-URL: Bug Tracker, https://github.com/alonfnt/tsnex/issues
+Keywords: jax,tsne,python,data-visualization
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: jax
+Requires-Dist: pcax
+
+# tsnex
+
+**t-SNEx** is a high-performance Python library for t-SNE, built on JAX for fast, scalable dimensionality reduction.
+It utilizes JIT compilation, automatic differentiation, and hardware acceleration to efficiently process high-dimensional data for visualization and clustering.
+
+## Installation
+Use the package manager [pip](https://pypi.org/project/tsnex/) to install `tsnex`.
+```bash
+pip install tsnex
+```
+
+## Usage
+```python
+import tsnex
+
+# Generate some high-dimensional data
+key = jax.random.key(0)
+X = jax.random.normal(key, shape=(10_000, 50))
+
+# Perform t-SNE dimensionality reduction
+X_embedded = tsnex.transform(X, n_components=2)
+```
+
+## Contributing
+We welcome contributions to **TSNEx**! Whether it's adding new features, improving documentation, or reporting issues, please feel free to make a pull request and/or open an issue.
+
+## Citation
+If you use `tsnex` in your research and need to reference it, please cite it as follows:
+```
+@software{alonso_tsnex,
+  author = {Alonso, Albert},
+  title = {tsnex: Minimal t-distributed stochastic neighbor embedding (t-SNE) implementation in JAX},
+  url = {https://github.com/alonfnt/tsnex},
+  version = {0.0.2}
+}
+```
+
+## License
+TSNEx is licensed under the MIT License. See the ![LICENSE](LICENSE) file for more details.
+
