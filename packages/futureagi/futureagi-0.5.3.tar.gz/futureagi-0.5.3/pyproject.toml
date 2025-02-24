@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "futureagi"
+version = "0.5.3"
+description = "We help GenAI teams maintain high-accuracy for their Models in production."
+authors = ["Future AGI <no-reply@futureagi.com>"]
+readme = "README.md"
+packages = [
+    { include = "fi" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.13"
+certifi = "2024.6.2"
+charset-normalizer = "3.3.2"
+idna = "3.7"
+numpy = "1.26.4"
+pandas = "2.2.2"
+python-dateutil = "2.9.0.post0"
+pytz = "2024.1"
+requests = "2.32.3"
+requests-futures = "1.0.1"
+six = "1.16.0"
+tzdata = "2024.1"
+urllib3 = "2.2.2"
+pydantic = "^2.9.2"
+tqdm = "^4.67.1"
+langchain = {version = ">=0.3.9,<0.4.0", markers = "python_version >= \"3.9\" and python_version < \"4.0\"", extras = ["all"]}
+langchain-community = {version = ">=0.3.9,<0.4.0", markers = "python_version >= \"3.9\" and python_version < \"4.0\"", extras = ["all"]}
+openai = "^1.57.1"
+tiktoken = "^0.8.0"
+opentelemetry-api = "^1.29.0"
+opentelemetry-sdk = "^1.29.0"
+opentelemetry-exporter-otlp-proto-http = "^1.29.0"
+openinference-instrumentation-openai = {markers = "python_version >= \"3.9\" and python_version < \"3.13\"", version = "^0.1.18"}
+opentelemetry-instrumentation-openai = {markers = "python_version >= \"3.9\" and python_version < \"4\"", version = "^0.34.1"}
+anthropic = "^0.42.0"
+crewai = {version = ">0.19.0", markers = "python_version >= \"3.10\" and python_version < \"3.13\""}
+dspy = ">=2.5.0"
+groq = ">=0.9.0"
+botocore = {version = ">=1.34.116", markers = "python_version > \"3.10\" and python_version < \"3.13\""}
+boto3 = ">=1.28.57"
+haystack-ai = ">=2.0.0"
+instructor = {version = ">=0.0.1", markers = "python_version > \"3.9\" and python_version < \"4.0\""}
+litellm = ">=1.43.0"
+llama-index-core = {version = ">=0.10.43", markers = "python_version > \"3.9\" and python_version < \"4.0\""}
+mistralai = {version = "^1.2.6", markers = "python_version > \"3.9\" and python_version < \"4.0\""}
+google-cloud-aiplatform = {version = ">= 1.49.0", markers = "python_version > \"3.9\" and python_version < \"4.0\""}
+dacite = "^1.9.1"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.0.1"
+pytest = "^8.3.3"
+pytest-cov = "^6.0.0"
+tox = "^4.23.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
