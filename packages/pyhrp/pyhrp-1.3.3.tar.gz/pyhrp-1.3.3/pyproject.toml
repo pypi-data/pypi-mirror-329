@@ -1,0 +1,44 @@
+[project]
+name = "pyhrp"
+version = "v1.3.3"
+description = "Hierarchial risk parity"
+authors = [{name = "Thomas Schmelzer", email = "thomas.schmelzer@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "binarytree>=6.5.1",
+    "numpy>=2",
+    "pandas>=2",
+    "scipy==1.15.1",
+]
+
+[project.urls]
+repository = "https://github.com/tschm/pyhrp"
+homepage = "https://tschm.github.io/pyhrp/book"
+
+[dependency-groups]
+dev = [
+    "pytest-cov>=6.0.0",
+    "matplotlib>=3.10.0",
+    "pytest>=8.3.3",
+    "pre-commit>=4.0.1",
+    "pyportfolioopt>=1.5.6",
+    "marimo>=0.11.5",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+exclude = [
+    "*__init__.py"
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pyhrp"]
