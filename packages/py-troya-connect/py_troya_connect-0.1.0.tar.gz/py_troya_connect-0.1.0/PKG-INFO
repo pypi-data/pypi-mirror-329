@@ -1,0 +1,73 @@
+Metadata-Version: 2.2
+Name: py-troya-connect
+Version: 0.1.0
+Summary: A Python interface for Attachmate Extra Terminal sessions
+Home-page: https://github.com/tolgakurtuluss/py-troya-connect
+Author: Tolga Kurtulus
+Author-email: tolgakurtulus95@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Microsoft :: Windows
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pywin32>=223
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# py-troya-connect
+
+A Python interface for Attachmate Extra Terminal sessions.
+
+## Installation
+
+```bash
+pip install py-troya-connect
+```
+
+## Usage
+
+```python
+from py_troya_connect import ExtraTerminal
+
+# Try basic operations
+# Connect to a session
+with ExtraTerminal("1") as terminal:
+    # Send a command
+    terminal.send_command("your command")
+    
+    # Read screen content
+    screen_content = terminal.read_screen()
+    for line in screen_content:
+        print(line)
+        
+    # Wait for specific text
+    if terminal.wait_for_text("Expected text", timeout=30):
+        print("Text found!")
+```
+
+## Features
+
+- Connect to Extra Terminal sessions
+- Send commands
+- Read screen content
+- Wait for specific text to appear
+- List available sessions
+
+## Requirements
+
+- Windows OS
+- Attachmate Extra! Terminal
+- Python 3.6+
+- pywin32
+
+## License
+
+MIT License
