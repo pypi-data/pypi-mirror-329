@@ -1,0 +1,81 @@
+Metadata-Version: 2.3
+Name: ormy
+Version: 0.1.5
+Summary: Python ORM wrappers
+License: MIT
+Author: Lev Litvinov
+Author-email: misery7100@gmail.com
+Requires-Python: >=3.11,<3.12
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Provides-Extra: all
+Provides-Extra: arango
+Provides-Extra: bigquery
+Provides-Extra: cache
+Provides-Extra: clickhouse
+Provides-Extra: firestore
+Provides-Extra: meilisearch
+Provides-Extra: mongo
+Provides-Extra: msgspec
+Provides-Extra: rabbitmq
+Provides-Extra: redis
+Provides-Extra: s3
+Requires-Dist: aio-pika (>=9.5.4,<10.0.0) ; extra == "rabbitmq" or extra == "all"
+Requires-Dist: aiocache (>=0.12.3,<0.13.0) ; extra == "cache" or extra == "all"
+Requires-Dist: anyio (>=4.8.0,<5.0.0) ; extra == "cache" or extra == "all"
+Requires-Dist: bcrypt (>=4.2.0,<5.0.0)
+Requires-Dist: boto3 (>=1.35.90,<2.0.0) ; extra == "s3" or extra == "all"
+Requires-Dist: boto3-stubs[full] (>=1.36.12,<2.0.0) ; extra == "s3" or extra == "all"
+Requires-Dist: botocore-stubs (>=1.36.12,<2.0.0) ; extra == "s3" or extra == "all"
+Requires-Dist: firebase-admin (>=6.5.0,<7.0.0) ; extra == "firestore" or extra == "all"
+Requires-Dist: google-cloud-bigquery (>=3.26.0,<4.0.0) ; extra == "bigquery" or extra == "all"
+Requires-Dist: httpx (>=0.28.1,<0.29.0) ; extra == "clickhouse" or extra == "all"
+Requires-Dist: infi-clickhouse-orm (>=2.1.3,<3.0.0) ; extra == "clickhouse" or extra == "all"
+Requires-Dist: meilisearch-python-sdk (>=3.2.0,<4.0.0) ; extra == "meilisearch" or extra == "all"
+Requires-Dist: motor (>=3.6.0,<4.0.0) ; extra == "mongo" or extra == "all"
+Requires-Dist: msgspec (>=0.19.0,<0.20.0) ; extra == "msgspec" or extra == "all"
+Requires-Dist: pika (>=1.3.2,<2.0.0) ; extra == "rabbitmq" or extra == "all"
+Requires-Dist: pydantic (>=2.8.2,<3.0.0)
+Requires-Dist: pymongo (>=4.9.0,<5.0.0) ; extra == "mongo" or extra == "all"
+Requires-Dist: python-arango (>=8.1.4,<9.0.0) ; extra == "arango" or extra == "all"
+Requires-Dist: pyyaml (>=6.0.2,<7.0.0)
+Requires-Dist: redis (<5.0.0) ; extra == "redis" or extra == "cache" or extra == "all"
+Description-Content-Type: text/markdown
+
+# Ormy the Ferret
+<!-- markdownlint-disable MD033 -->
+
+<p align="center">
+  <img src="/images/ormy_1.png" alt="Ormy the Ferret" height="400">
+</p>
+
+Pydantic-compatible ORM (and ORM-like) wrappers of various kinds.
+
+## Features
+
+Services:
+
+- MongoDB;
+- Firestore;
+- Redis;
+- Clickhouse;
+- BigQuery (partial implementation).
+
+Extensions:
+
+- MeiliSearch;
+- S3;
+- Redlock (custom implementation).
+
+## TO DO
+
+- [ ] Add indexing support for mongodb service;
+- [ ] Add indexing support for firestore service;
+- [ ] Add indexing support for clickhouse service;
+- [ ] Join support for clickhouse service;
+- [ ] Non-context clients for redis service;
+- [ ] Check `pytest-benchmark` for performance testing;
+- [ ] Check `pytest-meilisearch` for MeiliSearch testing;
+- [ ] Extend unit tests.
+
