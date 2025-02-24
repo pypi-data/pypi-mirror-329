@@ -1,0 +1,101 @@
+Metadata-Version: 2.2
+Name: controlled_vocabulary_fastapi
+Version: 0.1.0
+Summary: A lightweight REST API implemented using FastAPI for providing read-only endpoints for the controlled vocabulary implemented in the controlled-vocabulary-utils.
+Home-page: https://github.com/jai-python3/controlled-vocabulary-fastapi
+Author: Jaideep Sundaram
+Author-email: jai.python3@gmail.com
+Keywords: controlled_vocabulary_fastapi
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: AUTHORS.rst
+Requires-Dist: Click>=7.0
+Requires-Dist: PyYAML
+Requires-Dist: Rich
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# controlled-vocabulary-fastapi
+
+A lightweight REST API implemented using FastAPI for providing read-only endpoints for the controlled vocabulary implemented in the controlled-vocabulary-utils.
+
+- [controlled-vocabulary-fastapi](#controlled-vocabulary-fastapi)
+  - [Use Cases](#use-cases)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Step 1 - Create Python virtual environment](#step-1---create-python-virtual-environment)
+    - [Step 2 - Controlled vocabulary YAML file](#step-2---controlled-vocabulary-yaml-file)
+    - [Step 3 - Launch the REST API](#step-3---launch-the-rest-api)
+  - [Contributing](#contributing)
+  - [To-Do/Coming Next](#to-docoming-next)
+  - [CHANGELOG](#changelog)
+  - [License](#license)
+
+
+## Use Cases
+
+<img src="use_cases.png" width="400" height="400" alt="Use Cases diagram">
+
+## Installation
+
+Please see the [INSTALL](docs/INSTALL.md) guide for instructions.
+
+## Usage
+
+### Step 1 - Create Python virtual environment
+
+```bash
+python3 -m venv venv && source venv/bin/activate && pip install --upgrade && pip install -r requirements.txt
+```
+### Step 2 - Controlled vocabulary YAML file
+
+Prepare your controlled vocabulary YAML file.
+Then copy it to `./controlled_vocabulary.yaml`.
+
+### Step 3 - Launch the REST API
+
+```bash
+uvicorn main:app --reload
+```
+
+You can specify a different port number e.g.:
+
+```bash
+uvicorn main:app --reload --port 8082
+```
+
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+## To-Do/Coming Next
+
+Please view the listing of planned improvements [here](docs/TODO.md).
+
+## CHANGELOG
+
+Please view the CHANGELOG [here](docs/CHANGELOG.md).
+
+## License
+
+[No License](docs/LICENSE)
+
+
+## [v0.1.0](https://github.com/jai-python3/controlled-vocabulary-fastapi/tree/v0.1.0) - 2025-02-23
+
+ADDS:
+- Initial implementation
