@@ -1,0 +1,5 @@
+---
+title: Two
+---
+This is second file for the blog
+This should be the newest post

@@ -1,0 +1,49 @@
+[project]
+
+name = "gemerald"
+description = "Markdown-based static site generator"
+version = "0.2"
+readme = "README.md"
+license = {text = "GPLv3 or later"}
+authors = [
+  {name = "Wilmhit", email = "wilmhit@disroot.org"},
+]
+dependencies = [
+        "Jinja2",
+        "pyYAML"
+]
+
+[project.optional-dependencies]
+
+dev = [
+    "pdoc",
+    "pylint",
+    "black",
+    "pytest",
+    "coverage"
+]
+
+[build-system]
+
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.pylint.variables]
+
+disable = ['format', 'missing-function-docstring', 'missing-module-docstring',
+        'missing-class-docstring', 'too-few-public-methods', 'wrong-import-order', 'invalid-name',
+        'super-init-not-called']
+ignore-patterns = ['^\.#', '^_test_*']
+
+[tool.coverage.run]
+
+source = ["gemerald"]
+omit = ["test_*"]
+
+[tool.coverage.report]
+
+fail_under = 70
+
+[tool.pytest.ini_options]
+
+python_files = ['_test_*.py']

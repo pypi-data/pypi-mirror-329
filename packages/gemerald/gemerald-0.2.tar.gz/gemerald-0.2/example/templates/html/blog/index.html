@@ -1,0 +1,14 @@
+<html>
+        <body>
+                You on {{ Ctx.href }}.<br/>
+                Sites here:
+                <ol>
+                        {% for subpage in Ctx.siblings.by_date() %}
+                        <li>
+                                <a href="{{ subpage.ctx.href }}" >{{ subpage.ctx.title }}</a>
+                                <span>{{ subpage.ctx.site['content'][:40] }}...</span>
+                        </li>
+                        {% endfor %}
+                <ol>
+        </body>
+</html>

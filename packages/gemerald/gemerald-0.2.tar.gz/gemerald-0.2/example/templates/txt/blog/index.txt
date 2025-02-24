@@ -1,0 +1,6 @@
+
+=== Blog posts ===
+{% for subpage in Ctx.siblings %}
+{{subpage.ctx.title}}
+{{subpage.ctx.href}}  =:= {{subpage.ctx.dateReleased.date()}}
+{% endfor %}

@@ -1,0 +1,10 @@
+when:
+  - event: push
+
+steps:
+  test:
+    image: python:alpine
+    commands:
+      - pip install '.[dev]'
+      - apk add make
+      - make ci
