@@ -1,0 +1,29 @@
+[project]
+name = "zetic"
+version = "0.1.4"
+description = "Zetic AI CLI tool for model management and deployment."
+authors = [
+    {name = "Zetic AI",email = "geusan@zetic.ai"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "requests (>=2.32.3,<3.0.0)",
+    "click (>=8.1.8,<9.0.0)",
+    "termcolor (>=2.5.0,<3.0.0)",
+]
+keywords = ["ai", "model", "ondevice", "coreml", "qnn"]
+
+[project.scripts]
+zetic = "src.cli:main"
+
+[project.urls]
+Homepage = "https://zetic.ai"
+Documentation = "https://docs.zetic.ai"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
