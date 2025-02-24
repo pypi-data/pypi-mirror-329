@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "whiscraper"
+dynamic = [
+    "version",
+]
+description = "Your Stealthy Scraping Python Framework"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "nodriver>=0.38"
+]
+
+[tool.hatch.build]
+exclude = ["/tests", "/docs", "/examples"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/whiscraper"]
+
+[tool.hatch.version]
+path = "src/whiscraper/__init__.py"
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+extend-unsafe-fixes = ["UP"]
