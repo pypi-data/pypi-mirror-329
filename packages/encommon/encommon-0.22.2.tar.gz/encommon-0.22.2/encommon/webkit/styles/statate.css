@@ -1,0 +1,50 @@
+/*
+Functions and routines associated with Enasis Network Common Library.
+
+This file is part of Enasis Network software eco-system. Distribution
+is permitted, for more information consult the project license file.
+*/
+
+
+
+/*******************************************/
+/* Standard structure for statate elements */
+/*******************************************/
+
+div.encommon_statate {
+  border-width: .1rem .1rem .1rem .1rem;
+  border-style: solid;
+  border-radius: .5rem .5rem .5rem .5rem;
+  padding: .1rem .2rem .1rem .2rem; }
+
+
+
+/*******************************************/
+/* Extended structure for statate elements */
+/*******************************************/
+
+.encommon_statate[data-status='failure'] {
+  background-color: rgba(var(--color-red-lite), .15);
+  border-color: rgba(var(--color-red-lite), .9); }
+
+.encommon_statate[data-status='information'] {
+  background-color: rgba(var(--color-blue-lite), .15);
+  border-color: rgba(var(--color-blue-lite), .9); }
+
+.encommon_statate[data-status='success'] {
+  background-color: rgba(var(--color-green-lite), .15);
+  border-color: rgba(var(--color-green-lite), .9); }
+
+.encommon_statate[data-status='warning'] {
+  background-color: rgba(var(--color-yellow-lite), .15);
+  border-color: rgba(var(--color-yellow-lite), .9); }
+
+
+
+/********************************************/
+/* Extended structure for datagrid elements */
+/********************************************/
+
+table.encommon_datagrid
+ >tbody>tr>td:has(.encommon_statate) {
+  text-align: center; }
