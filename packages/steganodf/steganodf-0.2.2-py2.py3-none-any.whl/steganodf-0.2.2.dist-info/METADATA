@@ -1,0 +1,78 @@
+Metadata-Version: 2.4
+Name: steganodf
+Version: 0.2.2
+Summary: A library for hiding a secret message on tabulated data
+Author-email: Sacha Schutz <sacha.schutz@pm.me>
+License-Expression: MIT
+License-File: LICENSE
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Security :: Cryptography
+Requires-Dist: polars
+Requires-Dist: reedsolo
+Provides-Extra: dev
+Requires-Dist: build; extra == 'dev'
+Requires-Dist: numpy; extra == 'dev'
+Requires-Dist: pandas; extra == 'dev'
+Requires-Dist: pyarrow; extra == 'dev'
+Requires-Dist: pytest; extra == 'dev'
+Requires-Dist: twine; extra == 'dev'
+Description-Content-Type: text/markdown
+
+
+# Steganodf 
+
+A steganography tool for hiding a message in a dataset, such as CSV or parquet file..
+[![PyPi Version](https://img.shields.io/pypi/v/steganodf.svg)](https://pypi.python.org/pypi/steganodf/)
+[![PyPi Python Versions](https://img.shields.io/pypi/pyversions/yt2mp3.svg)](https://pypi.python.org/pypi/steganodf/)
+
+This tool hides a payload by permuting the rows of the dataset. The is tolerant
+to modification thanks to a [Reed-Solomon code](https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction) and a [Luby-s LT fontain code](https://en.wikipedia.org/wiki/Luby_transform_code).
+
+# Online demo 
+
+Steganodf is available as a static web page thanks to webAssemby.     
+[https://dridk.github.io/steganodf/](https://dridk.github.io/steganodf/)
+
+# Installation 
+
+```
+pip install steganodf
+```
+
+# Usage 
+
+## From command line 
+```bash 
+
+# Encoding 
+steganodf encode -m hello host.csv stegano.csv
+steganodf encode -m hello host.parquet stegano.parquet 
+steganodf encode -m hello -p password host.parquet stegano.parquet 
+
+# Decoding 
+steganodf decode stegano.csv
+steganodf decode stegano.csv -p password
+
+```
+
+## From Python
+
+```python
+import steganodf 
+import polars as pl
+ 
+df = pl.read_csv("https://gist.githubusercontent.com/netj/8836201/raw/6f9306ad21398ea43cba4f7d537619d0e07d5ae3/iris.csv")
+
+new_df = steganodf.encode(df, "made by steganodf", password="secret")
+
+# Extract your message 
+message = steganodf.decode(df, password="secret")
+
+```
+
+
+
+
