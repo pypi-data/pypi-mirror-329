@@ -1,0 +1,52 @@
+Metadata-Version: 2.2
+Name: spsscamera
+Version: 0.1.0
+Summary: A library to access the device's camera and preprocess images for decoding.
+Home-page: https://github.com/yourusername/spsscamera
+Author: Sumedh Patil
+Author-email: admin@aipresso.uk
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-python
+Dynamic: summary
+
+# spsscamera
+
+The `spsscamera` library accesses the device’s camera, captures high-quality frames, and preprocesses them for efficient decoding by `spssdecode`. It supports cross-platform compatibility for web, iOS, and Android.
+
+## Installation
+
+```bash
+pip install -r requirements.txt
+```
+
+USAGE:
+from spsscamera.camera import Camera
+
+# Initialize the Camera
+
+camera = Camera()
+
+# Capture a frame
+
+frame = camera.capture_frame()
+
+# Optimize for low-light conditions
+
+optimized_frame = camera.optimize_low_light(frame)
+
+# Preprocess the image
+
+preprocessed_frame = camera.preprocess_image(optimized_frame)
+
+print(preprocessed_frame)
