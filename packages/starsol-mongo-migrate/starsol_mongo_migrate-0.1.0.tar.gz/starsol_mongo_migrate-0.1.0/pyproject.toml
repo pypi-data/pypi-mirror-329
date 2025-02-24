@@ -1,0 +1,68 @@
+[project]
+name = "starsol-mongo-migrate"
+version = "0.1.0"
+description = "MongoDB migration tool"
+authors = [
+    { name = "StarSoultion Dev Team", "email" = "dev@starsolution.team" },
+]
+readme = "README.md"
+keywords = ["starsol"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Database",
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pymongo = "*"
+
+[tool.poetry.group.dev.dependencies]
+bandit = "*"
+mypy = "*"
+pylint = "*"
+ruff = "*"
+pytest = "*"
+pytest-asyncio = "*"
+pytest-cov = "*"
+pre-commit = "*"
+
+[tool.ruff]
+force-exclude = true
+extend-exclude = ["examples"]
+
+[tool.ruff.lint]
+select = ["I"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.pylint.main]
+ignore = ["examples"]
+
+[tool.pylint.FORMAT]
+max-line-length = 160
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+]
+
+[tool.mypy]
+python_version = "3.12"
+follow_imports = "skip"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_calls = false
+disallow_untyped_defs = true
+strict_optional = true
+exclude = ['examples/']
