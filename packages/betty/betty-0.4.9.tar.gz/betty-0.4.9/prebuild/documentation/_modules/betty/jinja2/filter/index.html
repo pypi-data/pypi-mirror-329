@@ -1,0 +1,1099 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="../../../../about/" /><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
+
+    <link rel="shortcut icon" href="../../../../_static/betty-512x512.png"/><!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
+        <title>betty.jinja2.filter - Betty documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../"><div class="brand">Betty  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../../../_static/betty-512x512.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Betty  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation/">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../usage/">Usage</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Usage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../usage/ancestry/">Ancestry</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Ancestry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/citation/">Citation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/date/">Dates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/enclosure/">Enclosure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/event/">Event</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/event-type/">Event Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/file/">File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/file-reference/">File reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/gender/">Gender</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/link/">Link</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/media-type/">Media Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/name/">Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/note/">Note</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/person/">Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/person-name/">Person Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/place/">Place</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/place-type/">Place Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/presence/">Presence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/presence-role/">Presence Role</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/privacy/">Privacy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/source/">Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/ancestry/static-translations/">Static translations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage/assets/">Asset Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage/cli/">The command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage/configuration/">Application configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage/copyright-notice/">Copyright notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage/env/">Environment variables</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../usage/extension/">Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/extension/cotton-candy/">The <em>Cotton Candy</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/extension/deriver/">The <em>Deriver</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/extension/gramps/">The <em>Gramps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/extension/http-api-doc/">The <em>HTTP API Documentation</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/extension/maps/">The <em>Maps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/extension/privatizer/">The <em>Privatizer</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/extension/raspberry-mint/">The <em>Raspberry Mint</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/extension/trees/">The <em>Trees</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/extension/wikipedia/">The <em>Wikipedia</em> extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage/gedcom/">GEDCOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage/license/">Licenses</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../usage/project/">Projects</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Projects</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/project/configuration/">Project configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../usage/templating/">Templating</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Templating</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/templating/filters/">Filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/templating/globals/">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage/templating/tests/">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage/translation/">Translations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../development/">Development</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Development</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../development/betty/">Developing Betty itself</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Developing Betty itself</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/betty/commands/">Helpful commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/betty/installation/">Installing a development environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/betty/localization/">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/betty/test/">Testing Betty’s source code</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../development/event-dispatcher/">Event dispatching</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../development/plugin/">Plugins</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Plugins</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/plugin/command/">CLI command plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/plugin/copyright-notice/">Copyright notice plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/plugin/entity-type/">Entity type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/plugin/event-type/">Event type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/plugin/extension/">Extension plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/plugin/gender/">Gender plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/plugin/license/">License plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/plugin/place-type/">Place type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/plugin/presence-role/">Presence role plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/plugin/renderer/">Renderer plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../development/plugin/serde-format/">Serialization format plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../development/test/">Testing your source code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../py-modindex/">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary/">Glossary</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../about/">About</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of About</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../about/contributing/">Contributing to Betty</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Contributing to Betty</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../about/contributing/code-of-conduct/">Code of Conduct</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../about/license/">Copyright &amp; license</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../about/sponsors/">Sponsors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../about/versions/">Versions</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for betty.jinja2.filter</h1><div class="highlight"><pre>
+<span></span>&quot;&quot;&quot;
+Provide Betty&#39;s default Jinja2 filters.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import json as stdjson
+import re
+import warnings
+from asyncio import get_running_loop, run
+from contextlib import suppress
+from io import BytesIO
+from typing import (
+    Callable,
+    Iterable,
+    Any,
+    Iterator,
+    TypeVar,
+    AsyncIterator,
+    TYPE_CHECKING,
+)
+from urllib.parse import quote
+
+import aiofiles
+from PIL import Image
+from PIL.Image import DecompressionBombWarning
+from aiofiles.os import makedirs
+from geopy import units
+from geopy.format import DEGREES_FORMAT
+from jinja2 import pass_context, pass_eval_context
+from jinja2.async_utils import auto_aiter, auto_await
+from jinja2.filters import prepare_map, make_attrgetter
+from jinja2.runtime import Context, Macro
+from markupsafe import Markup, escape
+from pdf2image.pdf2image import convert_from_path
+
+from betty.ancestry.file import File
+from betty.ancestry.file_reference import FileReference
+from betty.hashid import hashid_file_meta, hashid
+from betty.image import (
+    resize_cover,
+    Size,
+    FocusArea,
+    image_file_path_format,
+)
+from betty.locale import (
+    negotiate_locale,
+    Localey,
+    get_data,
+    UNDETERMINED_LOCALE,
+    SPECIAL_LOCALES,
+)
+from betty.locale.error import LocaleError
+from betty.media_type import MediaType
+from betty.media_type.media_types import HTML, SVG
+from betty.os import link_or_copy
+from betty.string import (
+    camel_case_to_snake_case,
+    camel_case_to_kebab_case,
+    upper_camel_case_to_lower_camel_case,
+)
+from betty.typing import internal
+from betty.locale.localized import LocalizedStr
+from betty.warnings import deprecated, deprecate
+
+if TYPE_CHECKING:
+    from betty.locale.localized import Localized
+    from betty.ancestry.date import HasDate
+    from betty.date import Datey
+    from betty.locale.localizable import Localizable
+    from jinja2.nodes import EvalContext
+    from pathlib import Path
+    from collections.abc import Awaitable, Mapping
+
+_T = TypeVar(&quot;_T&quot;)
+
+
+<div class="viewcode-block" id="filter_url">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_url">[docs]</a>
+@pass_context
+async def filter_url(
+    context: Context,
+    resource: Any,
+    locale: Localey | None = None,
+    media_type: str | None = None,
+    **kwargs: Any,
+) -&gt; str:
+    &quot;&quot;&quot;
+    Generate a URL for a resource.
+    &quot;&quot;&quot;
+    from betty.jinja2 import context_project, context_localizer
+
+    url_generator = await context_project(context).url_generator
+    return url_generator.generate(
+        resource,
+        media_type=MediaType(media_type) if media_type else HTML,
+        locale=locale or context_localizer(context).locale,
+        **kwargs,
+    )</div>
+
+
+
+<div class="viewcode-block" id="filter_localized_url">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_localized_url">[docs]</a>
+@deprecated(
+    &quot;This filter has been deprecated since Betty 0.4.8, and will be removed in Betty 0.5. Instead use the `url` filter.&quot;
+)
+@pass_context
+async def filter_localized_url(
+    context: Context,
+    resource: Any,
+    locale: Localey | None = None,
+    media_type: str | None = None,
+    **kwargs: Any,
+) -&gt; str:
+    &quot;&quot;&quot;
+    Generate a localized URL for a localizable resource.
+    &quot;&quot;&quot;
+    from betty.jinja2 import context_project, context_localizer
+
+    localized_url_generator = await context_project(context).localized_url_generator
+    return localized_url_generator.generate(
+        resource,
+        MediaType(media_type) if media_type else HTML,
+        locale=locale or context_localizer(context).locale,
+        **kwargs,
+    )</div>
+
+
+
+<div class="viewcode-block" id="filter_static_url">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_static_url">[docs]</a>
+@deprecated(
+    &quot;This filter has been deprecated since Betty 0.4.8, and will be removed in Betty 0.5. Instead use the `url` filter.&quot;
+)
+@pass_context
+async def filter_static_url(
+    context: Context,
+    resource: Any,
+    absolute: bool = False,
+) -&gt; str:
+    &quot;&quot;&quot;
+    Generate a static URL for a static resource.
+    &quot;&quot;&quot;
+    from betty.jinja2 import context_project
+
+    static_url_generator = await context_project(context).static_url_generator
+    return static_url_generator.generate(resource, absolute=absolute)</div>
+
+
+
+<div class="viewcode-block" id="filter_localize">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_localize">[docs]</a>
+@pass_context
+def filter_localize(
+    context: Context,
+    localizable: Localizable,
+) -&gt; str:
+    &quot;&quot;&quot;
+    Localize a value using the context&#39;s current localizer.
+    &quot;&quot;&quot;
+    from betty.jinja2 import context_localizer
+
+    return localizable.localize(context_localizer(context))</div>
+
+
+
+_CHARACTER_ORDER_TO_HTML_LANG_MAP = {
+    &quot;left-to-right&quot;: &quot;ltr&quot;,
+    &quot;right-to-left&quot;: &quot;rtl&quot;,
+}
+
+
+<div class="viewcode-block" id="filter_html_lang">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_html_lang">[docs]</a>
+@pass_context
+def filter_html_lang(
+    context: Context,
+    localized: LocalizedStr | str,
+) -&gt; str | Markup:
+    &quot;&quot;&quot;
+    Optionally add the necessary HTML to indicate the localized string has a different locale than the surrounding HTML.
+    &quot;&quot;&quot;
+    from betty.jinja2 import context_localizer
+
+    if not isinstance(localized, LocalizedStr):
+        return localized
+
+    localizer = context_localizer(context)
+    result: str | Markup = localized
+    if localized.locale != localizer.locale:
+        localizer_locale_data = get_data(localizer.locale)
+        localizer_dir = _CHARACTER_ORDER_TO_HTML_LANG_MAP[
+            localizer_locale_data.character_order
+        ]
+        try:
+            localized_locale_data = get_data(localized.locale)
+        except LocaleError:
+            localized_dir = &quot;auto&quot;
+        else:
+            localized_dir = _CHARACTER_ORDER_TO_HTML_LANG_MAP[
+                localized_locale_data.character_order
+            ]
+        dir_attribute = (
+            f&#39; dir=&quot;{localized_dir}&quot;&#39; if localized_dir != localizer_dir else &quot;&quot;
+        )
+        result = f&#39;&lt;span lang=&quot;{localized.locale}&quot;{dir_attribute}&gt;{localized}&lt;/span&gt;&#39;
+    if context.eval_ctx.autoescape:
+        result = Markup(result)
+    return result</div>
+
+
+
+<div class="viewcode-block" id="filter_format_datey">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_format_datey">[docs]</a>
+@pass_context
+def filter_format_datey(
+    context: Context,
+    datey: Datey,
+) -&gt; str:
+    &quot;&quot;&quot;
+    Format a date or a date range.
+    &quot;&quot;&quot;
+    from betty.jinja2 import context_localizer
+
+    return context_localizer(context).format_datey(datey)</div>
+
+
+
+<div class="viewcode-block" id="filter_json">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_json">[docs]</a>
+def filter_json(data: Any, indent: int | None = None) -&gt; str:
+    &quot;&quot;&quot;
+    Convert a value to a JSON string.
+    &quot;&quot;&quot;
+    return stdjson.dumps(data, indent=indent)</div>
+
+
+
+<div class="viewcode-block" id="filter_flatten">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_flatten">[docs]</a>
+async def filter_flatten(values_of_values: Iterable[Iterable[_T]]) -&gt; AsyncIterator[_T]:
+    &quot;&quot;&quot;
+    Flatten an iterable of iterables into a single iterable.
+    &quot;&quot;&quot;
+    async for values in auto_aiter(values_of_values):
+        async for value in auto_aiter(values):
+            yield value</div>
+
+
+
+_paragraph_re = re.compile(r&quot;(?:\r\n|\r|\n){2,}&quot;)
+
+
+<div class="viewcode-block" id="filter_paragraphs">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_paragraphs">[docs]</a>
+@pass_eval_context
+def filter_paragraphs(eval_ctx: EvalContext, text: str) -&gt; str | Markup:
+    &quot;&quot;&quot;
+    Convert newlines to &lt;p&gt; and &lt;br&gt; tags.
+
+    Taken from http://jinja.pocoo.org/docs/2.10/api/#custom-filters.
+    &quot;&quot;&quot;
+    result = &quot;\n\n&quot;.join(
+        &quot;&lt;p&gt;%s&lt;/p&gt;&quot; % p.replace(&quot;\n&quot;, Markup(&quot;&lt;br&gt;\n&quot;))
+        for p in _paragraph_re.split(escape(text))
+    )
+    if eval_ctx.autoescape:
+        result = Markup(result)
+    return result</div>
+
+
+
+<div class="viewcode-block" id="filter_format_degrees">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_format_degrees">[docs]</a>
+def filter_format_degrees(degrees: int) -&gt; str:
+    &quot;&quot;&quot;
+    Format geographic coordinates.
+    &quot;&quot;&quot;
+    arcminutes = units.arcminutes(degrees=degrees - int(degrees))
+    arcseconds = units.arcseconds(arcminutes=arcminutes - int(arcminutes))
+    format_dict = {
+        &quot;deg&quot;: &quot;°&quot;,
+        &quot;arcmin&quot;: &quot;&#39;&quot;,
+        &quot;arcsec&quot;: &#39;&quot;&#39;,
+        &quot;degrees&quot;: degrees,
+        &quot;minutes&quot;: round(abs(arcminutes)),
+        &quot;seconds&quot;: round(abs(arcseconds)),
+    }
+    return DEGREES_FORMAT % format_dict  # type: ignore[no-any-return]</div>
+
+
+
+<div class="viewcode-block" id="filter_unique">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_unique">[docs]</a>
+async def filter_unique(values: Iterable[_T]) -&gt; AsyncIterator[_T]:
+    &quot;&quot;&quot;
+    Iterate over an iterable of values and only yield those values that have not been yielded before.
+    &quot;&quot;&quot;
+    seen = []
+    async for value in auto_aiter(values):
+        if value not in seen:
+            yield value
+            seen.append(value)</div>
+
+
+
+<div class="viewcode-block" id="filter_map">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_map">[docs]</a>
+@pass_context
+async def filter_map(
+    context: Context, values: Iterable[Any], *args: Any, **kwargs: Any
+) -&gt; Any:
+    &quot;&quot;&quot;
+    Map an iterable&#39;s values.
+
+    This mimics Jinja2&#39;s built-in map filter, but allows macros as callbacks.
+    &quot;&quot;&quot;
+    if len(args) &gt; 0 and isinstance(args[0], Macro):
+        func: Macro | Callable[[Any], bool] = args[0]
+    else:
+        func = prepare_map(context, args, kwargs)
+    async for value in auto_aiter(values):
+        yield await auto_await(func(value))</div>
+
+
+
+<div class="viewcode-block" id="filter_file">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_file">[docs]</a>
+@pass_context
+async def filter_file(context: Context, file: File) -&gt; str:
+    &quot;&quot;&quot;
+    Preprocess a file for use in a page.
+
+    :return: The public path to the preprocessed file. This can be used on a web page.
+    &quot;&quot;&quot;
+    from betty.jinja2 import context_project, context_job_context
+
+    project = context_project(context)
+    job_context = context_job_context(context)
+
+    execute_filter = True
+    if job_context:
+        job_cache_item_id = f&quot;filter_file:{file.id}&quot;
+        async with job_context.cache.getset(job_cache_item_id, wait=False) as (
+            cache_item,
+            setter,
+        ):
+            if cache_item is None and setter is not None:
+                await setter(None)
+            else:
+                execute_filter = False
+    if execute_filter:
+        file_destination_path = (
+            project.configuration.www_directory_path
+            / &quot;file&quot;
+            / file.id
+            / &quot;file&quot;
+            / file.name
+        )
+        await makedirs(file_destination_path.parent, exist_ok=True)
+        await link_or_copy(file.path, file_destination_path)
+
+    return f&quot;/file/{quote(file.id)}/file/{quote(file.name)}&quot;</div>
+
+
+
+<div class="viewcode-block" id="filter_image_resize_cover">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_image_resize_cover">[docs]</a>
+@pass_context
+async def filter_image_resize_cover(
+    context: Context,
+    filey: File | FileReference,
+    size: Size | None = None,
+    *,
+    focus: FocusArea | None = None,
+) -&gt; str:
+    &quot;&quot;&quot;
+    Preprocess an image file for use in a page.
+
+    :return: The public path to the preprocessed file. This can be embedded in a web page.
+    &quot;&quot;&quot;
+    from betty.jinja2 import context_project, context_job_context
+
+    file = filey if isinstance(filey, File) else filey.file
+    assert file is not None
+    file_reference = filey if isinstance(filey, FileReference) else None
+
+    if (
+        focus is None
+        and file_reference is not None
+        and file_reference.focus is not None
+    ):
+        focus = file_reference.focus
+
+    # Treat SVGs as regular files.
+    if file.media_type and file.media_type == SVG:
+        return await filter_file(context, file)
+
+    project = context_project(context)
+    job_context = context_job_context(context)
+
+    destination_name = f&quot;{file.id}-&quot;
+    if size is not None:
+        width, height = size
+        if width is None:
+            destination_name += f&quot;-x{height}&quot;
+        elif height is None:
+            destination_name += f&quot;{width}x-&quot;
+        else:
+            destination_name += f&quot;{width}x{height}&quot;
+    if focus is not None:
+        destination_name += f&quot;-{focus[0]}x{focus[1]}x{focus[2]}x{focus[3]}&quot;
+
+    file_directory_path = project.configuration.www_directory_path / &quot;file&quot;
+
+    if file.media_type:
+        if file.media_type.type == &quot;image&quot;:
+            image_loader = _load_image_image
+            destination_name += file.path.suffix
+        elif file.media_type.type == &quot;application&quot; and file.media_type.subtype == &quot;pdf&quot;:
+            image_loader = _load_image_application_pdf
+            destination_name += &quot;.&quot; + &quot;jpg&quot;
+        else:
+            raise ValueError(
+                f&#39;Cannot convert a file of media type &quot;{file.media_type}&quot; to an image.&#39;
+            )
+    else:
+        raise ValueError(&quot;Cannot convert a file without a media type to an image.&quot;)
+
+    cache_item_id = f&quot;{await hashid_file_meta(file.path)}:{destination_name}&quot;
+    execute_filter = True
+    if job_context:
+        async with job_context.cache.with_scope(&quot;filter_image&quot;).getset(
+            cache_item_id, wait=False
+        ) as (cache_item, setter):
+            if cache_item is None and setter is not None:
+                await setter(True)
+            else:
+                execute_filter = False
+    if execute_filter:
+        loop = get_running_loop()
+        await loop.run_in_executor(
+            project.app.process_pool,
+            _execute_filter_image,
+            image_loader,
+            file.path,
+            project.app.binary_file_cache.with_scope(&quot;image&quot;).cache_item_file_path(
+                cache_item_id
+            ),
+            file_directory_path,
+            destination_name,
+            size,
+            focus,
+        )
+    destination_public_path = f&quot;/file/{quote(destination_name)}&quot;
+
+    return destination_public_path</div>
+
+
+
+async def _load_image_image(file_path: Path) -&gt; Image.Image:
+    # We want to read the image asynchronously and prevent Pillow from keeping too many file
+    # descriptors open simultaneously, so we read the image ourselves and store the contents
+    # in a synchronous file object.
+    async with aiofiles.open(file_path, &quot;rb&quot;) as f:
+        image_f = BytesIO(await f.read())
+    # Ignore warnings about decompression bombs, because we know where the files come from.
+    with warnings.catch_warnings(action=&quot;ignore&quot;, category=DecompressionBombWarning):
+        image = Image.open(image_f, formats=[image_file_path_format(file_path)])
+    return image
+
+
+async def _load_image_application_pdf(file_path: Path) -&gt; Image.Image:
+    # Ignore warnings about decompression bombs, because we know where the files come from.
+    with warnings.catch_warnings(action=&quot;ignore&quot;, category=DecompressionBombWarning):
+        image = convert_from_path(file_path)[0]
+    return image
+
+
+def _execute_filter_image(
+    image_loader: Callable[[Path], Awaitable[Image.Image]],
+    file_path: Path,
+    cache_item_file_path: Path,
+    destination_directory_path: Path,
+    destination_name: str,
+    size: Size | None,
+    focus: FocusArea | None,
+) -&gt; None:
+    run(
+        __execute_filter_image(
+            image_loader,
+            file_path,
+            cache_item_file_path,
+            destination_directory_path,
+            destination_name,
+            size,
+            focus,
+        )
+    )
+
+
+async def __execute_filter_image(
+    image_loader: Callable[[Path], Awaitable[Image.Image]],
+    file_path: Path,
+    cache_item_file_path: Path,
+    destination_directory_path: Path,
+    destination_name: str,
+    size: Size | None,
+    focus: FocusArea | None,
+) -&gt; None:
+    destination_file_path = destination_directory_path / destination_name
+    await makedirs(destination_directory_path, exist_ok=True)
+
+    # If no customizations are needed, work straight from the source.
+    if size is None and file_path.suffix == destination_file_path.suffix:
+        await link_or_copy(file_path, destination_file_path)
+        return
+
+    try:
+        # Try using a previously cached image.
+        await link_or_copy(cache_item_file_path, destination_file_path)
+    except FileNotFoundError:
+        # Apply customizations, and cache the customized image.
+        original_image = converted_image = await image_loader(file_path)
+        try:
+            await makedirs(cache_item_file_path.parent, exist_ok=True)
+            if size is not None:
+                converted_image = resize_cover(converted_image, size, focus=focus)
+            converted_image.save(
+                cache_item_file_path,
+                format=image_file_path_format(destination_file_path),
+            )
+            del converted_image
+        finally:
+            original_image.close()
+            del original_image
+        await link_or_copy(cache_item_file_path, destination_file_path)
+
+
+<div class="viewcode-block" id="filter_negotiate_localizeds">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_negotiate_localizeds">[docs]</a>
+@pass_context
+def filter_negotiate_localizeds(
+    context: Context, localizeds: Iterable[Localized]
+) -&gt; Localized | None:
+    &quot;&quot;&quot;
+    Try to find an object whose locale matches the context&#39;s current locale.
+    &quot;&quot;&quot;
+    from betty.jinja2 import context_localizer
+    from betty.locale import localized
+
+    return localized.negotiate_localizeds(
+        context_localizer(context).locale, list(localizeds)
+    )</div>
+
+
+
+<div class="viewcode-block" id="filter_sort_localizeds">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_sort_localizeds">[docs]</a>
+@pass_context
+def filter_sort_localizeds(
+    context: Context,
+    localizeds: Iterable[Localized],
+    localized_attribute: str,
+    sort_attribute: str,
+) -&gt; Iterable[Localized]:
+    &quot;&quot;&quot;
+    Sort localized objects.
+    &quot;&quot;&quot;
+    get_localized_attr = make_attrgetter(context.environment, localized_attribute)
+    get_sort_attr = make_attrgetter(context.environment, sort_attribute)
+
+    def _get_sort_key(x: Localized) -&gt; Any:
+        return get_sort_attr(
+            filter_negotiate_localizeds(context, get_localized_attr(x))
+        )
+
+    return sorted(localizeds, key=_get_sort_key)</div>
+
+
+
+<div class="viewcode-block" id="filter_select_localizeds">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_select_localizeds">[docs]</a>
+@pass_context
+def filter_select_localizeds(
+    context: Context, localizeds: Iterable[Localized], include_unspecified: bool = False
+) -&gt; Iterable[Localized]:
+    &quot;&quot;&quot;
+    Select all objects whose locale matches the context&#39;s current locale.
+
+    :param include_unspecified: If True, the return value includes all objects that do not have a locale specified.
+    &quot;&quot;&quot;
+    from betty.jinja2 import context_localizer
+
+    for localized in localizeds:
+        if include_unspecified and localized.locale in {
+            None,
+            *SPECIAL_LOCALES,
+        }:
+            yield localized
+        if (
+            localized.locale is not UNDETERMINED_LOCALE
+            and negotiate_locale(context_localizer(context).locale, [localized.locale])
+            is not None
+        ):
+            yield localized</div>
+
+
+
+<div class="viewcode-block" id="filter_negotiate_has_dates">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_negotiate_has_dates">[docs]</a>
+@pass_context
+def filter_negotiate_has_dates(
+    context: Context, has_dates: Iterable[HasDate], date: Datey | None
+) -&gt; HasDate | None:
+    &quot;&quot;&quot;
+    Try to find an object whose date falls in the given date.
+
+    :param date: A date to select by. If ``None``, then today&#39;s date is used.
+    &quot;&quot;&quot;
+    with suppress(StopIteration):
+        return next(filter_select_has_dates(context, has_dates, date))
+    return None</div>
+
+
+
+<div class="viewcode-block" id="filter_select_has_dates">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_select_has_dates">[docs]</a>
+@pass_context
+def filter_select_has_dates(
+    context: Context, has_dates: Iterable[HasDate], date: Datey | None
+) -&gt; Iterator[HasDate]:
+    &quot;&quot;&quot;
+    Select all objects whose date falls in the given date.
+
+    :param date: A date to select by. If ``None``, then today&#39;s date is used.
+    &quot;&quot;&quot;
+    if date is None:
+        date = context.resolve_or_missing(&quot;today&quot;)
+    return filter(
+        lambda dated: dated.date is None
+        or dated.date.comparable
+        and dated.date in date,
+        has_dates,
+    )</div>
+
+
+
+<div class="viewcode-block" id="filter_public_css">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_public_css">[docs]</a>
+@pass_context
+async def filter_public_css(context: Context, public_path: str) -&gt; None:
+    &quot;&quot;&quot;
+    Add a CSS file to the current page.
+    &quot;&quot;&quot;
+    if public_path.startswith(&quot;/&quot;) and len(public_path) &gt;= 2:
+        deprecate(
+            f&quot;Calling `public_css` with a URL path has been deprecated since Betty 0.4.8, and will be removed in Betty 0.5. Instead, prefix the URL path with betty-static://: &#39;betty-static://{public_path}&#39;.&quot;
+        )
+        public_path = f&quot;betty-static://{public_path}&quot;
+    context.resolve_or_missing(&quot;public_css_paths&quot;).append(
+        await filter_url(context, public_path)
+    )</div>
+
+
+
+<div class="viewcode-block" id="filter_public_js">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filter_public_js">[docs]</a>
+@pass_context
+async def filter_public_js(context: Context, public_path: str) -&gt; None:
+    &quot;&quot;&quot;
+    Add a JavaScript file to the current page.
+    &quot;&quot;&quot;
+    if public_path.startswith(&quot;/&quot;) and len(public_path) &gt;= 2:
+        deprecate(
+            f&quot;Calling `public_js` with a URL path has been deprecated since Betty 0.4.8, and will be removed in Betty 0.5. Instead, prefix the URL path with betty-static://: &#39;betty-static://{public_path}&#39;.&quot;
+        )
+        public_path = f&quot;betty-static://{public_path}&quot;
+    context.resolve_or_missing(&quot;public_js_paths&quot;).append(
+        await filter_url(context, public_path)
+    )</div>
+
+
+
+locale_get_data = get_data
+
+
+<div class="viewcode-block" id="filters">
+<a class="viewcode-back" href="../../../../betty.jinja2.filter/#betty.jinja2.filter.filters">[docs]</a>
+@internal
+async def filters() -&gt; Mapping[str, Callable[..., Any]]:
+    &quot;&quot;&quot;
+    Define the available filters.
+    &quot;&quot;&quot;
+    return {
+        &quot;camel_case_to_kebab_case&quot;: camel_case_to_kebab_case,
+        &quot;camel_case_to_snake_case&quot;: camel_case_to_snake_case,
+        &quot;file&quot;: filter_file,
+        &quot;flatten&quot;: filter_flatten,
+        &quot;format_datey&quot;: filter_format_datey,
+        &quot;format_degrees&quot;: filter_format_degrees,
+        &quot;hashid&quot;: hashid,
+        &quot;image_resize_cover&quot;: filter_image_resize_cover,
+        &quot;html_lang&quot;: filter_html_lang,
+        &quot;json&quot;: filter_json,
+        &quot;locale_get_data&quot;: locale_get_data,
+        &quot;localize&quot;: filter_localize,
+        &quot;localized_url&quot;: filter_localized_url,
+        &quot;map&quot;: filter_map,
+        &quot;negotiate_has_dates&quot;: filter_negotiate_has_dates,
+        &quot;negotiate_localizeds&quot;: filter_negotiate_localizeds,
+        &quot;paragraphs&quot;: filter_paragraphs,
+        &quot;select_has_dates&quot;: filter_select_has_dates,
+        &quot;select_localizeds&quot;: filter_select_localizeds,
+        &quot;static_url&quot;: filter_static_url,
+        &quot;sort_localizeds&quot;: filter_sort_localizeds,
+        &quot;str&quot;: str,
+        &quot;unique&quot;: filter_unique,
+        &quot;upper_camel_case_to_lower_camel_case&quot;: upper_camel_case_to_lower_camel_case,
+        &quot;public_css&quot;: filter_public_css,
+        &quot;public_js&quot;: filter_public_js,
+        &quot;url&quot;: filter_url,
+    }</div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; Bart Feenstra and contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../../_static/documentation_options.js?v=187304be"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    </body>
+</html>

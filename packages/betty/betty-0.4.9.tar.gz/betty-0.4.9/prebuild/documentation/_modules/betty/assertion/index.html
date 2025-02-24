@@ -1,0 +1,1080 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="../../../about/" /><link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" />
+
+    <link rel="shortcut icon" href="../../../_static/betty-512x512.png"/><!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
+        <title>betty.assertion - Betty documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../"><div class="brand">Betty  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../../_static/betty-512x512.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Betty  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../usage/">Usage</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Usage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../usage/ancestry/">Ancestry</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Ancestry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/citation/">Citation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/date/">Dates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/enclosure/">Enclosure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/event/">Event</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/event-type/">Event Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/file/">File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/file-reference/">File reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/gender/">Gender</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/link/">Link</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/media-type/">Media Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/name/">Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/note/">Note</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/person/">Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/person-name/">Person Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/place/">Place</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/place-type/">Place Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/presence/">Presence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/presence-role/">Presence Role</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/privacy/">Privacy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/source/">Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/static-translations/">Static translations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/assets/">Asset Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/cli/">The command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/configuration/">Application configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/copyright-notice/">Copyright notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/env/">Environment variables</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../usage/extension/">Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/cotton-candy/">The <em>Cotton Candy</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/deriver/">The <em>Deriver</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/gramps/">The <em>Gramps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/http-api-doc/">The <em>HTTP API Documentation</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/maps/">The <em>Maps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/privatizer/">The <em>Privatizer</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/raspberry-mint/">The <em>Raspberry Mint</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/trees/">The <em>Trees</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/wikipedia/">The <em>Wikipedia</em> extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/gedcom/">GEDCOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/license/">Licenses</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../usage/project/">Projects</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Projects</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/project/configuration/">Project configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../usage/templating/">Templating</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Templating</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/templating/filters/">Filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/templating/globals/">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/templating/tests/">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/translation/">Translations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../development/">Development</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Development</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../development/betty/">Developing Betty itself</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Developing Betty itself</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/commands/">Helpful commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/installation/">Installing a development environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/localization/">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/test/">Testing Betty’s source code</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development/event-dispatcher/">Event dispatching</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../development/plugin/">Plugins</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Plugins</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/command/">CLI command plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/copyright-notice/">Copyright notice plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/entity-type/">Entity type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/event-type/">Event type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/extension/">Extension plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/gender/">Gender plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/license/">License plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/place-type/">Place type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/presence-role/">Presence role plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/renderer/">Renderer plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/serde-format/">Serialization format plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development/test/">Testing your source code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../py-modindex/">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary/">Glossary</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../about/">About</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of About</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../about/contributing/">Contributing to Betty</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Contributing to Betty</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../about/contributing/code-of-conduct/">Code of Conduct</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../about/license/">Copyright &amp; license</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../about/sponsors/">Sponsors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../about/versions/">Versions</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for betty.assertion</h1><div class="highlight"><pre>
+<span></span>&quot;&quot;&quot;
+The Assertion API.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+from collections.abc import Mapping, MutableSequence
+from collections.abc import Sized, Sequence
+from dataclasses import dataclass
+from pathlib import Path
+from types import NoneType
+from typing import (
+    Callable,
+    Any,
+    Generic,
+    TypeVar,
+    MutableMapping,
+    overload,
+    cast,
+    TypeAlias,
+    final,
+)
+
+from betty.assertion.error import AssertionFailedGroup, AssertionFailed, Key, Index
+from betty.error import FileNotFound, UserFacingError
+from betty.locale import get_data, UNDETERMINED_LOCALE
+from betty.locale.localizable import _, Localizable, plain, join, do_you_mean
+from betty.typing import Void, Voidable, internal
+
+Number: TypeAlias = int | float
+
+
+_AssertionValueT = TypeVar(&quot;_AssertionValueT&quot;)
+_AssertionReturnT = TypeVar(&quot;_AssertionReturnT&quot;)
+_AssertionReturnU = TypeVar(&quot;_AssertionReturnU&quot;)
+_AssertionKeyT = TypeVar(&quot;_AssertionKeyT&quot;)
+
+Assertion: TypeAlias = Callable[
+    [
+        _AssertionValueT,
+    ],
+    _AssertionReturnT,
+]
+
+_AssertionsExtendReturnT = TypeVar(&quot;_AssertionsExtendReturnT&quot;)
+_AssertionsIntermediateValueReturnT = TypeVar(&quot;_AssertionsIntermediateValueReturnT&quot;)
+
+
+<div class="viewcode-block" id="AssertionChain">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.AssertionChain">[docs]</a>
+class AssertionChain(Generic[_AssertionValueT, _AssertionReturnT]):
+    &quot;&quot;&quot;
+    An assertion chain.
+
+    Assertion chains let you chain/link/combine assertions into pipelines that take an input
+    value and, if the assertions pass, return an output value. Each chain may be (re)used as many
+    times as needed.
+
+    Assertion chains are assertions themselves: you can use a chain wherever you can use a &#39;plain&#39;
+    assertion.
+
+    Assertions chains are `monads &lt;https://en.wikipedia.org/wiki/Monad_(functional_programming)&gt;`_.
+    While uncommon in Python, this allows us to create these chains in a type-safe way, and tools
+    like mypy can confirm that all assertions in any given chain are compatible with each other.
+    &quot;&quot;&quot;
+
+<div class="viewcode-block" id="AssertionChain.__init__">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.AssertionChain.__init__">[docs]</a>
+    def __init__(self, _assertion: Assertion[_AssertionValueT, _AssertionReturnT]):
+        self._assertion = _assertion</div>
+
+
+<div class="viewcode-block" id="AssertionChain.chain">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.AssertionChain.chain">[docs]</a>
+    def chain(
+        self, assertion: Assertion[_AssertionReturnT, _AssertionsExtendReturnT]
+    ) -&gt; AssertionChain[_AssertionValueT, _AssertionsExtendReturnT]:
+        &quot;&quot;&quot;
+        Extend the chain with the given assertion.
+        &quot;&quot;&quot;
+        return AssertionChain(lambda value: assertion(self(value)))</div>
+
+
+    def __or__(
+        self, _assertion: Assertion[_AssertionReturnT, _AssertionsExtendReturnT]
+    ) -&gt; AssertionChain[_AssertionValueT, _AssertionsExtendReturnT]:
+        return self.chain(_assertion)
+
+    def __call__(self, value: _AssertionValueT) -&gt; _AssertionReturnT:
+        &quot;&quot;&quot;
+        Invoke the chain with a value.
+
+        This method may be called more than once.
+
+        :raises betty.assertion.error.AssertionFailed: Raised if any part of the
+            assertion chain fails.
+        &quot;&quot;&quot;
+        return self._assertion(value)</div>
+
+
+
+<div class="viewcode-block" id="Field">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.Field">[docs]</a>
+@internal
+@dataclass(frozen=True)
+class Field(Generic[_AssertionValueT, _AssertionReturnT]):
+    &quot;&quot;&quot;
+    A key-value mapping field.
+
+    Do not instantiate this class directly. Use :py:class:`betty.assertion.RequiredField` or
+    :py:class:`betty.assertion.OptionalField` instead.
+    &quot;&quot;&quot;
+
+    name: str
+    assertion: Assertion[_AssertionValueT, _AssertionReturnT] | None = None</div>
+
+
+
+<div class="viewcode-block" id="RequiredField">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.RequiredField">[docs]</a>
+@final
+@dataclass(frozen=True)
+class RequiredField(
+    Generic[_AssertionValueT, _AssertionReturnT],
+    Field[_AssertionValueT, _AssertionReturnT],
+):
+    &quot;&quot;&quot;
+    A required key-value mapping field.
+    &quot;&quot;&quot;
+
+    pass  # pragma: no cover</div>
+
+
+
+<div class="viewcode-block" id="OptionalField">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.OptionalField">[docs]</a>
+@final
+@dataclass(frozen=True)
+class OptionalField(
+    Generic[_AssertionValueT, _AssertionReturnT],
+    Field[_AssertionValueT, _AssertionReturnT],
+):
+    &quot;&quot;&quot;
+    An optional key-value mapping field.
+    &quot;&quot;&quot;
+
+    pass  # pragma: no cover</div>
+
+
+
+_AssertionBuilderFunction = Callable[[_AssertionValueT], _AssertionReturnT]
+_AssertionBuilderMethod = Callable[[object, _AssertionValueT], _AssertionReturnT]
+_AssertionBuilder = &quot;_AssertionBuilderFunction[ValueT, ReturnT] | _AssertionBuilderMethod[ValueT, ReturnT]&quot;
+
+
+_AssertTypeType: TypeAlias = (
+    bool | float | int | Mapping[Any, Any] | None | Sequence[Any] | str
+)
+_AssertTypeTypeT = TypeVar(&quot;_AssertTypeTypeT&quot;, bound=_AssertTypeType)
+
+
+def _assert_type_violation_error_message(
+    asserted_type: type[_AssertTypeType],
+) -&gt; Localizable:
+    messages: Mapping[type[_AssertTypeType], Localizable] = {
+        bool: _(&quot;This must be a boolean.&quot;),
+        int: _(&quot;This must be a whole number.&quot;),
+        float: _(&quot;This must be a decimal number.&quot;),
+        Mapping: _(&quot;This must be a key-value mapping.&quot;),
+        NoneType: _(&quot;This must be none/null.&quot;),
+        Sequence: _(&quot;This must be a sequence.&quot;),
+        str: _(&quot;This must be a string.&quot;),
+    }
+    return messages[asserted_type]
+
+
+def _assert_type(
+    value: Any,
+    value_required_type: type[_AssertTypeTypeT],
+    value_disallowed_type: type[_AssertTypeType] | None = None,
+) -&gt; _AssertTypeTypeT:
+    if isinstance(value, value_required_type) and (
+        value_disallowed_type is None or not isinstance(value, value_disallowed_type)
+    ):
+        return value
+    raise AssertionFailed(
+        _assert_type_violation_error_message(
+            value_required_type,  # type: ignore[arg-type]
+        )
+    )
+
+
+<div class="viewcode-block" id="assert_or">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_or">[docs]</a>
+def assert_or(
+    if_assertion: Assertion[_AssertionValueT, _AssertionReturnT],
+    else_assertion: Assertion[_AssertionValueT, _AssertionReturnU],
+) -&gt; AssertionChain[_AssertionValueT, _AssertionReturnT | _AssertionReturnU]:
+    &quot;&quot;&quot;
+    Assert that at least one of the given assertions passed.
+    &quot;&quot;&quot;
+
+    def _assert_or(value: Any) -&gt; _AssertionReturnT | _AssertionReturnU:
+        assertions = (if_assertion, else_assertion)
+        errors = AssertionFailedGroup()
+        for assertion in assertions:
+            try:
+                return assertion(value)
+            except AssertionFailed as e:
+                errors.append(e)
+        raise errors
+
+    return AssertionChain(_assert_or)</div>
+
+
+
+<div class="viewcode-block" id="assert_none">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_none">[docs]</a>
+def assert_none() -&gt; AssertionChain[Any, None]:
+    &quot;&quot;&quot;
+    Assert that a value is ``None``.
+    &quot;&quot;&quot;
+
+    def _assert_none(value: Any) -&gt; None:
+        _assert_type(value, NoneType)
+
+    return AssertionChain(_assert_none)</div>
+
+
+
+<div class="viewcode-block" id="assert_bool">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_bool">[docs]</a>
+def assert_bool() -&gt; AssertionChain[Any, bool]:
+    &quot;&quot;&quot;
+    Assert that a value is a Python ``bool``.
+    &quot;&quot;&quot;
+
+    def _assert_bool(value: Any) -&gt; bool:
+        return _assert_type(value, bool)
+
+    return AssertionChain(_assert_bool)</div>
+
+
+
+<div class="viewcode-block" id="assert_int">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_int">[docs]</a>
+def assert_int() -&gt; AssertionChain[Any, int]:
+    &quot;&quot;&quot;
+    Assert that a value is a Python ``int``.
+    &quot;&quot;&quot;
+
+    def _assert_int(value: Any) -&gt; int:
+        return _assert_type(value, int, bool)
+
+    return AssertionChain(_assert_int)</div>
+
+
+
+<div class="viewcode-block" id="assert_float">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_float">[docs]</a>
+def assert_float() -&gt; AssertionChain[Any, float]:
+    &quot;&quot;&quot;
+    Assert that a value is a Python ``float``.
+    &quot;&quot;&quot;
+
+    def _assert_float(value: Any) -&gt; float:
+        return _assert_type(value, float)
+
+    return AssertionChain(_assert_float)</div>
+
+
+
+<div class="viewcode-block" id="assert_number">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_number">[docs]</a>
+def assert_number() -&gt; AssertionChain[Any, Number]:
+    &quot;&quot;&quot;
+    Assert that a value is a number (a Python ``int`` or ``float``).
+    &quot;&quot;&quot;
+    return assert_or(assert_int(), assert_float())</div>
+
+
+
+<div class="viewcode-block" id="assert_positive_number">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_positive_number">[docs]</a>
+def assert_positive_number() -&gt; AssertionChain[Any, Number]:
+    &quot;&quot;&quot;
+    Assert that a vaue is a positive nu,ber.
+    &quot;&quot;&quot;
+
+    def _assert_positive_number(
+        number: int | float,
+    ) -&gt; Number:
+        if number &lt;= 0:
+            raise AssertionFailed(_(&quot;This must be a positive number.&quot;))
+        return number
+
+    return assert_number() | _assert_positive_number</div>
+
+
+
+<div class="viewcode-block" id="assert_str">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_str">[docs]</a>
+def assert_str() -&gt; AssertionChain[Any, str]:
+    &quot;&quot;&quot;
+    Assert that a value is a Python ``str``.
+    &quot;&quot;&quot;
+
+    def _assert_str(value: Any) -&gt; str:
+        return _assert_type(value, str)
+
+    return AssertionChain(_assert_str)</div>
+
+
+
+@overload
+def assert_sequence(
+    value_assertion: None = None, /
+) -&gt; AssertionChain[Any, MutableSequence[Any]]:
+    pass
+
+
+@overload
+def assert_sequence(
+    value_assertion: Assertion[Any, _AssertionReturnT], /
+) -&gt; AssertionChain[Any, MutableSequence[_AssertionReturnT]]:
+    pass
+
+
+<div class="viewcode-block" id="assert_sequence">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_sequence">[docs]</a>
+def assert_sequence(
+    value_assertion: Assertion[Any, _AssertionReturnT] | None = None, /
+):
+    &quot;&quot;&quot;
+    Assert that a value is a sequence.
+
+    Optionally assert that values are of a given type.
+    &quot;&quot;&quot;
+
+    def _assert_sequence(value: Any) -&gt; MutableSequence[_AssertionReturnT]:
+        sequence = _assert_type(
+            value,
+            Sequence,  # type: ignore[type-abstract]
+        )
+        if value_assertion is None:
+            return list(sequence)
+        asserted_sequence = []
+        with AssertionFailedGroup().assert_valid() as errors:
+            for value_index, value_value in enumerate(sequence):
+                with errors.catch(Index(value_index)):
+                    asserted_sequence.append(value_assertion(value_value))
+        return asserted_sequence
+
+    return AssertionChain(_assert_sequence)</div>
+
+
+
+@overload
+def assert_mapping(
+    value_assertion: None = None, key_assertion: None = None, /
+) -&gt; AssertionChain[Any, MutableMapping[Any, Any]]:
+    pass
+
+
+@overload
+def assert_mapping(
+    value_assertion: Assertion[Any, _AssertionReturnT], key_assertion: None = None, /
+) -&gt; AssertionChain[Any, MutableMapping[Any, _AssertionReturnT]]:
+    pass
+
+
+@overload
+def assert_mapping(
+    value_assertion: None, key_assertion: Assertion[Any, _AssertionKeyT], /
+) -&gt; AssertionChain[Any, MutableMapping[_AssertionKeyT, Any]]:
+    pass
+
+
+@overload
+def assert_mapping(
+    value_assertion: Assertion[Any, _AssertionReturnT],
+    key_assertion: Assertion[Any, _AssertionKeyT],
+    /,
+) -&gt; AssertionChain[Any, MutableMapping[_AssertionKeyT, _AssertionReturnT]]:
+    pass
+
+
+<div class="viewcode-block" id="assert_mapping">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_mapping">[docs]</a>
+def assert_mapping(
+    value_assertion: Assertion[Any, _AssertionReturnT] | None = None,
+    key_assertion: Assertion[Any, _AssertionKeyT] | None = None,
+    /,
+):
+    &quot;&quot;&quot;
+    Assert that a value is a key-value mapping.
+
+    Optionally assert that keys and/or values are of a given type.
+    &quot;&quot;&quot;
+
+    def _assert_mapping(
+        value: Any,
+    ) -&gt; MutableMapping[_AssertionKeyT, _AssertionReturnT]:
+        mapping = _assert_type(
+            value,
+            Mapping,  # type: ignore[type-abstract]
+        )
+        if value_assertion is None and key_assertion is None:
+            return dict(mapping)
+        asserted_mapping = {}
+        with AssertionFailedGroup().assert_valid() as errors:
+            for value_key, value_value in mapping.items():
+                asserted_value_key = value_key
+                if key_assertion:
+                    with errors.catch(Key(value_key)):
+                        asserted_value_key = key_assertion(value_key)
+                asserted_value_value = value_value
+                if value_assertion:
+                    with errors.catch(Key(value_key)):
+                        asserted_value_value = value_assertion(value_value)
+                asserted_mapping[asserted_value_key] = asserted_value_value
+        return asserted_mapping
+
+    return AssertionChain(_assert_mapping)</div>
+
+
+
+<div class="viewcode-block" id="assert_fields">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_fields">[docs]</a>
+def assert_fields(
+    *fields: Field[Any, Any],
+) -&gt; AssertionChain[Any, MutableMapping[str, Any]]:
+    &quot;&quot;&quot;
+    Assert that a value is a key-value mapping of arbitrary value types, and assert several of its values.
+    &quot;&quot;&quot;
+
+    def _assert_fields(value: Mapping[Any, Any]) -&gt; MutableMapping[str, Any]:
+        mapping: MutableMapping[str, Any] = {}
+        with AssertionFailedGroup().assert_valid() as errors:
+            for field in fields:
+                with errors.catch(Key(field.name)):
+                    if field.name in value:
+                        mapping[field.name] = (
+                            field.assertion(value[field.name])
+                            if field.assertion
+                            else value[field.name]
+                        )
+                    elif isinstance(field, RequiredField):
+                        raise AssertionFailed(_(&quot;This field is required.&quot;))
+        return mapping
+
+    return assert_mapping() | _assert_fields</div>
+
+
+
+@overload
+def assert_field(
+    field: RequiredField[_AssertionValueT, _AssertionReturnT],
+) -&gt; AssertionChain[_AssertionValueT, _AssertionReturnT]:
+    pass
+
+
+@overload
+def assert_field(
+    field: OptionalField[_AssertionValueT, _AssertionReturnT],
+) -&gt; AssertionChain[_AssertionValueT, Voidable[_AssertionReturnT]]:
+    pass
+
+
+<div class="viewcode-block" id="assert_field">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_field">[docs]</a>
+def assert_field(
+    field: Field[_AssertionValueT, _AssertionReturnT],
+) -&gt; (
+    AssertionChain[_AssertionValueT, _AssertionReturnT]
+    | AssertionChain[_AssertionValueT, Voidable[_AssertionReturnT]]
+):
+    &quot;&quot;&quot;
+    Assert that a value is a key-value mapping of arbitrary value types, and assert a single of its values.
+    &quot;&quot;&quot;
+
+    def _assert_field(
+        fields: MutableMapping[str, Any],
+    ) -&gt; Voidable[_AssertionReturnT]:
+        try:
+            return cast(&quot;Voidable[_AssertionReturnT]&quot;, fields[field.name])
+        except KeyError:
+            return Void
+
+    return assert_fields(field) | _assert_field</div>
+
+
+
+<div class="viewcode-block" id="assert_record">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_record">[docs]</a>
+def assert_record(
+    *fields: Field[Any, Any],
+) -&gt; AssertionChain[Any, MutableMapping[str, Any]]:
+    &quot;&quot;&quot;
+    Assert that a value is a record: a key-value mapping of arbitrary value types, with a known structure.
+
+    To validate a key-value mapping as a records, assertions for all possible keys
+    MUST be provided. Any keys present in the value for which no field assertions
+    are provided will cause the entire record assertion to fail.
+    &quot;&quot;&quot;
+
+    def _assert_record(value: Mapping[Any, Any]) -&gt; MutableMapping[str, Any]:
+        known_keys = {x.name for x in fields}
+        unknown_keys = set(value.keys()) - known_keys
+        with AssertionFailedGroup().assert_valid() as errors:
+            for unknown_key in unknown_keys:
+                with errors.catch(Key(unknown_key)):
+                    raise AssertionFailed(
+                        join(
+                            _(&quot;Unknown key: {unknown_key}.&quot;).format(
+                                unknown_key=f&#39;&quot;{unknown_key}&quot;&#39;
+                            ),
+                            do_you_mean(*(f&#39;&quot;{x}&quot;&#39; for x in sorted(known_keys))),
+                        )
+                    )
+            return assert_fields(*fields)(value)
+
+    return assert_mapping() | _assert_record</div>
+
+
+
+<div class="viewcode-block" id="assert_isinstance">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_isinstance">[docs]</a>
+def assert_isinstance(
+    alleged_type: type[_AssertionValueT],
+) -&gt; Assertion[Any, _AssertionValueT]:
+    &quot;&quot;&quot;
+    Assert that a value is an instance of the given type.
+
+    This assertion is **NOT** optimized to be user-facing (it is untranslated)
+    because Python types are not user-facing.
+    &quot;&quot;&quot;
+
+    def _assert(value: Any) -&gt; _AssertionValueT:
+        if isinstance(value, alleged_type):
+            return value
+        raise AssertionFailed(plain(f&quot;{value} must be an instance of {alleged_type}.&quot;))
+
+    return _assert</div>
+
+
+
+<div class="viewcode-block" id="assert_path">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_path">[docs]</a>
+def assert_path() -&gt; AssertionChain[Any, Path]:
+    &quot;&quot;&quot;
+    Assert that a value is a path to a file or directory on disk that may or may not exist.
+    &quot;&quot;&quot;
+    return assert_or(assert_isinstance(Path), assert_str() | Path).chain(
+        lambda value: value.expanduser().resolve()
+    )</div>
+
+
+
+<div class="viewcode-block" id="assert_directory_path">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_directory_path">[docs]</a>
+def assert_directory_path() -&gt; AssertionChain[Any, Path]:
+    &quot;&quot;&quot;
+    Assert that a value is a path to an existing directory.
+    &quot;&quot;&quot;
+
+    def _assert_directory_path(directory_path: Path) -&gt; Path:
+        if directory_path.is_dir():
+            return directory_path
+        raise AssertionFailed(
+            _(&#39;&quot;{path}&quot; is not a directory.&#39;).format(path=str(directory_path))
+        )
+
+    return assert_path() | _assert_directory_path</div>
+
+
+
+<div class="viewcode-block" id="assert_file_path">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_file_path">[docs]</a>
+def assert_file_path() -&gt; AssertionChain[Any, Path]:
+    &quot;&quot;&quot;
+    Assert that a value is a path to an existing file.
+    &quot;&quot;&quot;
+
+    def _assert_file_path(file_path: Path) -&gt; Path:
+        if file_path.is_file():
+            return file_path
+        raise FileNotFound.new(file_path)
+
+    return assert_path() | _assert_file_path</div>
+
+
+
+<div class="viewcode-block" id="assert_locale">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_locale">[docs]</a>
+def assert_locale() -&gt; AssertionChain[Any, str]:
+    &quot;&quot;&quot;
+    Assert that a value is a valid `IETF BCP 47 language tag &lt;https://en.wikipedia.org/wiki/IETF_language_tag&gt;`_.
+    &quot;&quot;&quot;
+
+    def _assert_locale(
+        value: str,
+    ) -&gt; str:
+        # Allow locales for which no system information usually exists.
+        if value == UNDETERMINED_LOCALE:
+            return value
+
+        try:
+            get_data(value)
+        except UserFacingError as error:
+            raise AssertionFailed(error) from error
+        return value
+
+    return assert_locale_identifier() | _assert_locale</div>
+
+
+
+<div class="viewcode-block" id="assert_locale_identifier">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_locale_identifier">[docs]</a>
+def assert_locale_identifier() -&gt; AssertionChain[Any, str]:
+    &quot;&quot;&quot;
+    Assert that a value could be a valid `IETF BCP 47 language tag &lt;https://en.wikipedia.org/wiki/IETF_language_tag&gt;`_.
+    &quot;&quot;&quot;
+    return assert_str() | assert_len(minimum=1) | str</div>
+
+
+
+<div class="viewcode-block" id="assert_setattr">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_setattr">[docs]</a>
+def assert_setattr(
+    instance: object,
+    attr_name: str,
+) -&gt; AssertionChain[Any, Any]:
+    &quot;&quot;&quot;
+    Set a value for the given object&#39;s attribute.
+    &quot;&quot;&quot;
+
+    def _assert_setattr(value: Any) -&gt; Any:
+        setattr(instance, attr_name, value)
+        # Return the getter&#39;s return value rather than the assertion value, just
+        # in case the setter and/or getter perform changes to the value.
+        return getattr(instance, attr_name)
+
+    return AssertionChain(_assert_setattr)</div>
+
+
+
+_SizedT = TypeVar(&quot;_SizedT&quot;, bound=Sized)
+
+
+@overload
+def assert_len(exact: int) -&gt; AssertionChain[Sized, Sized]:
+    pass
+
+
+@overload
+def assert_len(
+    *, minimum: int | None, maximum: int | None = None
+) -&gt; AssertionChain[Sized, Sized]:
+    pass
+
+
+@overload
+def assert_len(
+    *, minimum: int | None = None, maximum: int | None
+) -&gt; AssertionChain[Sized, Sized]:
+    pass
+
+
+<div class="viewcode-block" id="assert_len">
+<a class="viewcode-back" href="../../../betty.assertion/#betty.assertion.assert_len">[docs]</a>
+def assert_len(
+    exact: int | None = None, *, minimum: int | None = None, maximum: int | None = None
+) -&gt; AssertionChain[Sized, Sized]:
+    &quot;&quot;&quot;
+    Assert the length of a value.
+
+    This assertion can be used in two ways:
+    - with an exact required length
+    - with minimum and/or maximum bounds (inclusive)
+    &quot;&quot;&quot;
+
+    def _assert_len(value: _SizedT) -&gt; _SizedT:
+        actual = len(value)
+        if exact is not None and actual != exact:
+            raise AssertionFailed(
+                _(&quot;Exactly {expected} items are required, but found {actual}.&quot;).format(
+                    expected=str(exact), actual=str(actual)
+                )
+            )
+        if minimum is not None and actual &lt; minimum:
+            raise AssertionFailed(
+                _(&quot;At least {expected} items are required, but found {actual}.&quot;).format(
+                    expected=str(minimum), actual=str(actual)
+                )
+            )
+        if maximum is not None and actual &gt; maximum:
+            raise AssertionFailed(
+                _(&quot;At most {expected} items are allowed, but found {actual}.&quot;).format(
+                    expected=str(maximum), actual=str(actual)
+                )
+            )
+        return value
+
+    return AssertionChain(_assert_len)</div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; Bart Feenstra and contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=187304be"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    </body>
+</html>

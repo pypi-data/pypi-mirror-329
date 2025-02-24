@@ -1,0 +1,919 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="author" title="About these documents" href="../../../about/" /><link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="The HTTP API Documentation extension" href="../http-api-doc/" /><link rel="prev" title="The Deriver extension" href="../deriver/" />
+
+    <link rel="shortcut icon" href="../../../_static/betty-512x512.png"/><!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
+        <title>The Gramps extension - Betty documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../"><div class="brand">Betty  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../../_static/betty-512x512.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Betty  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../">Usage</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Usage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../ancestry/">Ancestry</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Ancestry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/citation/">Citation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/date/">Dates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/enclosure/">Enclosure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/event/">Event</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/event-type/">Event Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/file/">File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/file-reference/">File reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/gender/">Gender</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/link/">Link</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/media-type/">Media Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/name/">Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/note/">Note</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/person/">Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/person-name/">Person Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/place/">Place</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/place-type/">Place Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/presence/">Presence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/presence-role/">Presence Role</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/privacy/">Privacy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/source/">Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ancestry/static-translations/">Static translations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../assets/">Asset Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cli/">The command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration/">Application configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../copyright-notice/">Copyright notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/">Environment variables</a></li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="../">Extensions</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../cotton-candy/">The <em>Cotton Candy</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../deriver/">The <em>Deriver</em> extension</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">The <em>Gramps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../http-api-doc/">The <em>HTTP API Documentation</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../maps/">The <em>Maps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../privatizer/">The <em>Privatizer</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../raspberry-mint/">The <em>Raspberry Mint</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trees/">The <em>Trees</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wikipedia/">The <em>Wikipedia</em> extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../gedcom/">GEDCOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../license/">Licenses</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../project/">Projects</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Projects</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../project/configuration/">Project configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../templating/">Templating</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Templating</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../templating/filters/">Filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../templating/globals/">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../templating/tests/">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../translation/">Translations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../development/">Development</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Development</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../development/betty/">Developing Betty itself</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Developing Betty itself</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/commands/">Helpful commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/installation/">Installing a development environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/localization/">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/test/">Testing Betty’s source code</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development/event-dispatcher/">Event dispatching</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../development/plugin/">Plugins</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Plugins</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/command/">CLI command plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/copyright-notice/">Copyright notice plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/entity-type/">Entity type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/event-type/">Event type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/extension/">Extension plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/gender/">Gender plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/license/">License plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/place-type/">Place type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/presence-role/">Presence role plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/renderer/">Renderer plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/serde-format/">Serialization format plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development/test/">Testing your source code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../py-modindex/">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary/">Glossary</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../about/">About</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of About</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../about/contributing/">Contributing to Betty</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Contributing to Betty</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../about/contributing/code-of-conduct/">Code of Conduct</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../about/license/">Copyright &amp; license</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../about/sponsors/">Sponsors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../about/versions/">Versions</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../../../_sources/usage/extension/gramps.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="the-gramps-extension">
+<h1>The <em>Gramps</em> extension<a class="headerlink" href="#the-gramps-extension" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">gramps</span></code> extension loads entities from <a class="reference external" href="https://gramps-project.org">Gramps</a> family trees into your Betty ancestry.</p>
+<p>Enable this extension in your project’s <a class="reference internal" href="../../project/configuration/"><span class="doc">configuration file</span></a> as follows:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+YAML</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">extensions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gramps</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+JSON</label><div class="sd-tab-content docutils">
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;extensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;gramps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">¶</a></h2>
+<p>This extension is configurable:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-2">
+YAML</label><div class="sd-tab-content docutils">
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">extensions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gramps</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">configuration</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">family_trees</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./gramps.gpkg</span>
+<span class="w">          </span><span class="nt">event-types</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">GrampsEventType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">betty-event-type</span>
+<span class="w">            </span><span class="nt">AnotherGrampsEventType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">another-betty-event-type</span>
+<span class="w">          </span><span class="nt">genders</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">F</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">female</span>
+<span class="w">            </span><span class="nt">M</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">male</span>
+<span class="w">            </span><span class="nt">U</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">            </span><span class="nt">NonBinary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">non-binary</span>
+<span class="w">          </span><span class="nt">place-types</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">GrampsPlaceType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">betty-place-type</span>
+<span class="w">            </span><span class="nt">AnotherGrampsPlaceType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">another-betty-place-type</span>
+<span class="w">          </span><span class="nt">presence-roles</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">GrampsRole</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">betty-presence-role</span>
+<span class="w">            </span><span class="nt">AnotherGrampsRole</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">another-betty-presence-role</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-3">
+JSON</label><div class="sd-tab-content docutils">
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;extensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;gramps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;configuration&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;family_trees&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;./gramps.gpkg&quot;</span>
+<span class="w">            </span><span class="nt">&quot;event-types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="s2">&quot;GrampsEventType: &quot;</span><span class="err">be</span><span class="kc">tt</span><span class="err">y</span><span class="mf">-e</span><span class="err">ve</span><span class="kc">nt</span><span class="mi">-</span><span class="kc">t</span><span class="err">ype</span><span class="s2">&quot;,</span>
+<span class="s2">              &quot;</span><span class="err">A</span><span class="kc">n</span><span class="err">o</span><span class="kc">t</span><span class="err">herGrampsEve</span><span class="kc">nt</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;another-betty-event-type&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;genders&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="s2">&quot;F: &quot;</span><span class="kc">fe</span><span class="err">male</span><span class="s2">&quot;,</span>
+<span class="s2">              &quot;</span><span class="err">M</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;male&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;U: &quot;</span><span class="err">u</span><span class="kc">n</span><span class="err">k</span><span class="kc">n</span><span class="err">ow</span><span class="kc">n</span><span class="s2">&quot;,</span>
+<span class="s2">              &quot;</span><span class="err">No</span><span class="kc">n</span><span class="err">Bi</span><span class="kc">nar</span><span class="err">y</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;non-binary&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;place-types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="s2">&quot;GrampsPlaceType: &quot;</span><span class="err">be</span><span class="kc">tt</span><span class="err">y</span><span class="mi">-</span><span class="err">place</span><span class="mi">-</span><span class="kc">t</span><span class="err">ype</span><span class="s2">&quot;,</span>
+<span class="s2">              &quot;</span><span class="err">A</span><span class="kc">n</span><span class="err">o</span><span class="kc">t</span><span class="err">herGrampsPlaceType</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;another-betty-place-type&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;presence-roles&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="s2">&quot;GrampsRole: &quot;</span><span class="err">be</span><span class="kc">tt</span><span class="err">y</span><span class="mi">-</span><span class="err">prese</span><span class="kc">n</span><span class="err">ce</span><span class="mi">-</span><span class="err">role</span><span class="s2">&quot;,</span>
+<span class="s2">              &quot;</span><span class="err">A</span><span class="kc">n</span><span class="err">o</span><span class="kc">t</span><span class="err">herGrampsRole</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;another-betty-presence-role&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="family-trees">
+<h3><code class="docutils literal notranslate"><span class="pre">family_trees</span></code><a class="headerlink" href="#family-trees" title="Link to this heading">¶</a></h3>
+<p><sup>required</sup></p>
+<p>An array defining zero or more Gramps family trees to load.</p>
+<p>If multiple family trees contain entities of the same type and with the same ID (e.g. a person with ID <code class="docutils literal notranslate"><span class="pre">I1234</span></code>) each
+entity will overwrite any previously loaded entity.</p>
+<p>Each item is an object with the following keys:</p>
+<section id="family-trees-file">
+<h4><code class="docutils literal notranslate"><span class="pre">family_trees[].file</span></code><a class="headerlink" href="#family-trees-file" title="Link to this heading">¶</a></h4>
+<p><sup>required</sup></p>
+<p>the path to a <em>Gramps XML</em> or <em>Gramps XML Package</em> file.</p>
+</section>
+<section id="family-trees-event-types">
+<h4><code class="docutils literal notranslate"><span class="pre">family_trees[].event_types</span></code><a class="headerlink" href="#family-trees-event-types" title="Link to this heading">¶</a></h4>
+<p><sup>optional</sup></p>
+<p>How to map Gramps event types to Betty event types. Each keys is a Gramps event type, and each value is the plugin ID of
+the Betty event type to import the Gramps event type as.</p>
+</section>
+<section id="family-trees-genders">
+<h4><code class="docutils literal notranslate"><span class="pre">family_trees[].genders</span></code><a class="headerlink" href="#family-trees-genders" title="Link to this heading">¶</a></h4>
+<p><sup>optional</sup></p>
+<p>How to map Gramps genders to Betty genders. Each keys is a Gramps gender, and each value is the plugin ID of the Betty
+gender to import the Gramps gender as.</p>
+</section>
+<section id="family-trees-place-types">
+<h4><code class="docutils literal notranslate"><span class="pre">family_trees[].place_types</span></code><a class="headerlink" href="#family-trees-place-types" title="Link to this heading">¶</a></h4>
+<p><sup>optional</sup></p>
+<p>How to map Gramps place types to Betty place types. Each keys is a Gramps place type, and each value is the plugin ID
+of the Betty place type to import the Gramps place type as.</p>
+</section>
+<section id="family-trees-presence-roles">
+<h4><code class="docutils literal notranslate"><span class="pre">family_trees[].presence_roles</span></code><a class="headerlink" href="#family-trees-presence-roles" title="Link to this heading">¶</a></h4>
+<p><sup>optional</sup></p>
+<p>How to map Gramps roles to Betty presence roles. Each keys is a Gramps role, and each value is the plugin ID of the
+Betty presence role to import the Gramps role as.</p>
+</section>
+</section>
+</section>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">¶</a></h2>
+<p>Gramps allows arbitrary attributes to be added to some of its data types. Betty can parse these to load additional
+information. Each of Betty’s Gramps attributes follows the same structure: <code class="docutils literal notranslate"><span class="pre">betty:...</span></code> (to load the attribute for any
+Betty project) or <code class="docutils literal notranslate"><span class="pre">betty-MyProject:..</span></code> (to load an attribute for the Betty project with machine name <code class="docutils literal notranslate"><span class="pre">MyProject</span></code>),
+where <code class="docutils literal notranslate"><span class="pre">...</span></code> is the name that identifies the attribute’s meaning. For the ‘privacy` attribute, the Gramps attribute’s full
+name would be <code class="docutils literal notranslate"><span class="pre">betty:privacy</span></code> or <code class="docutils literal notranslate"><span class="pre">betty-MyProject:privacy</span></code>.</p>
+<section id="privacy">
+<h3>Privacy<a class="headerlink" href="#privacy" title="Link to this heading">¶</a></h3>
+<p>Gramps has limited built-in support for people’s privacy. To fully control privacy for people, as well as events, files,
+sources, and citations, add a <code class="docutils literal notranslate"><span class="pre">betty:privacy</span></code> attribute to any of these types, with a value of <code class="docutils literal notranslate"><span class="pre">private</span></code> to explicitly
+declare the data always private or <code class="docutils literal notranslate"><span class="pre">public</span></code> to declare the data always public. Any other value will leave the privacy
+undecided, as well as person records marked public using Gramps’ built-in privacy selector. In such cases, the
+<code class="docutils literal notranslate"><span class="pre">privatizer</span></code> extension may decide if the data is public or private.</p>
+</section>
+<section id="gender">
+<h3>Gender<a class="headerlink" href="#gender" title="Link to this heading">¶</a></h3>
+<p>To set a person’s gender to a gender that is available in Betty, but not in Gramps, add a <code class="docutils literal notranslate"><span class="pre">betty:gender</span></code> attribute,
+whose value is the ID of the <a class="reference internal" href="../../ancestry/gender/"><span class="doc">Gender</span></a> you want to use.</p>
+</section>
+<section id="event-names">
+<h3>Event names<a class="headerlink" href="#event-names" title="Link to this heading">¶</a></h3>
+<p>Event names can be set using <code class="docutils literal notranslate"><span class="pre">betty:name</span></code>. Values are <a class="reference internal" href="#gramps-attributes-static-translations"><span class="std std-ref">static translations</span></a>.</p>
+</section>
+<section id="links">
+<h3>Links<a class="headerlink" href="#links" title="Link to this heading">¶</a></h3>
+<p>Gramps has limited built-in support to add links to entities. For those Gramps entities that support attributes,
+you may add links using those:</p>
+<div class="table-wrapper docutils container" id="id1">
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Link attributes</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Required/optional</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">betty:link-LINKNAME:url</span></code></p></td>
+<td><p><strong>required</strong></p></td>
+<td><p>The URL the link targets.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">betty:link-LINKNAME:description</span></code></p></td>
+<td><p>optional</p></td>
+<td><p>A human-friendly longer link description. This may contain <a class="reference internal" href="#gramps-attributes-static-translations"><span class="std std-ref">static translations</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">betty:link-LINKNAME:label</span></code></p></td>
+<td><p>optional</p></td>
+<td><p>A human-friendly short link label. This may contain <a class="reference internal" href="#gramps-attributes-static-translations"><span class="std std-ref">static translations</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">betty:link-LINKNAME:locale</span></code></p></td>
+<td><p>optional</p></td>
+<td><p>An <a class="reference external" href="https://en.wikipedia.org/wiki/IETF_language_tag">IETF BCP 47 language tag</a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">betty:link-LINKNAME:media_type</span></code></p></td>
+<td><p>optional</p></td>
+<td><p>An <a class="reference external" href="https://www.iana.org/assignments/media-types/media-types.xhtml">IANA media type</a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">betty:link-LINKNAME:relationship</span></code></p></td>
+<td><p>optional</p></td>
+<td><p>An <a class="reference external" href="https://www.iana.org/assignments/link-relations/link-relations.xhtml">IANA link relationship</a>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">LINKNAME</span></code> may be any value of your choosing, but must be unique per link. For example, where <code class="docutils literal notranslate"><span class="pre">LINKNAME</span></code> is <code class="docutils literal notranslate"><span class="pre">cheese</span></code>:</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">betty:link-cheese:url</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">https://en.wikipedia.org/wiki/Cheese</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">betty:link-cheese:label</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Learn</span> <span class="pre">about</span> <span class="pre">cheese</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">betty:link-cheese:description</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Read</span> <span class="pre">the</span> <span class="pre">Wikipedia</span> <span class="pre">article</span> <span class="pre">about</span> <span class="pre">cheese</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="static-translations">
+<span id="gramps-attributes-static-translations"></span><h3>Static translations<a class="headerlink" href="#static-translations" title="Link to this heading">¶</a></h3>
+<p>Static translations are not attributes on their own per se, but they are used by other attributes, such as links.</p>
+<p>If another attribute defines itself as containing static translations, that means you may add multiple variants of the
+attribute, each with a translation for a different locale.</p>
+<p>For example, given a translatable attribute called <code class="docutils literal notranslate"><span class="pre">betty:my-text</span></code>, you may add an actual attribute <code class="docutils literal notranslate"><span class="pre">betty:my-text</span></code>
+with any translation for a locale which Betty will consider <em>undetermined</em>. You may also add any number of
+<code class="docutils literal notranslate"><span class="pre">betty:my-text:LOCALE</span></code> attributes, where <code class="docutils literal notranslate"><span class="pre">LOCALE</span></code> is an <a class="reference external" href="https://tools.ietf.org/html/bcp47">IETF BCP 47</a> language
+tag, and the value is the translation for that specific locale/language.</p>
+</section>
+</section>
+<section id="dates">
+<h2>Dates<a class="headerlink" href="#dates" title="Link to this heading">¶</a></h2>
+<p>For unknown date parts, set those to all zeroes and Betty will ignore them. For instance, <code class="docutils literal notranslate"><span class="pre">0000-12-31</span></code> will be parsed as
+“December 31”, and <code class="docutils literal notranslate"><span class="pre">1970-01-00</span></code> as “January, 1970”.</p>
+</section>
+<section id="event-types">
+<h2>Event types<a class="headerlink" href="#event-types" title="Link to this heading">¶</a></h2>
+<p>Betty supports the following Gramps event types without any additional configuration:</p>
+<div class="table-wrapper docutils container" id="id2">
+<table class="docutils align-left" id="id2">
+<caption><span class="caption-text">Event types</span><a class="headerlink" href="#id2" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Gramps event type</p></th>
+<th class="head"><p>Betty event type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Adopted</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">adoption</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Adult</span> <span class="pre">Christening</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">baptism</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Baptism</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">baptism</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Bar</span> <span class="pre">Mitzvah</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bar-mitzvah</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Bat</span> <span class="pre">Mitzvah</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bat-mitzvah</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Birth</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">birth</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Burial</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">burial</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Christening</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">baptism</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Confirmation</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">confirmation</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Cremation</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">cremation</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Death</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">death</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Divorce</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">divorce</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Divorce</span> <span class="pre">Filing</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">divorce-announcement</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Emigration</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">emigration</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Engagement</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">engagement</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Immigration</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">immigration</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Marriage</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">marriage</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Marriage</span> <span class="pre">Banns</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">marriage-announcement</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Occupation</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">occupation</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Residence</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">residence</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Retirement</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">retirement</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Will</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">will</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="genders">
+<h2>Genders<a class="headerlink" href="#genders" title="Link to this heading">¶</a></h2>
+<p>Betty supports the following Gramps genders without any additional configuration:</p>
+<div class="table-wrapper docutils container" id="id3">
+<table class="docutils align-left" id="id3">
+<caption><span class="caption-text">Genders</span><a class="headerlink" href="#id3" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Gramps gender</p></th>
+<th class="head"><p>Betty gender</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">F</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">female</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">M</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">male</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">U</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">unknown</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="place-types">
+<h2>Place types<a class="headerlink" href="#place-types" title="Link to this heading">¶</a></h2>
+<p>Betty supports the following Gramps place types without any additional configuration:</p>
+<div class="table-wrapper docutils container" id="id4">
+<table class="docutils align-left" id="id4">
+<caption><span class="caption-text">Place types</span><a class="headerlink" href="#id4" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Gramps place type</p></th>
+<th class="head"><p>Betty place type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Borough</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">borough</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Building</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">building</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">City</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">city</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Country</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">country</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">County</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">county</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Department</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">department</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">District</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">district</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Farm</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">farm</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Hamlet</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hamlet</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Locality</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">locality</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Municipality</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">municipality</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Neighborhood</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">neighborhood</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Number</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">number</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Parish</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">parish</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Province</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">province</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Region</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">region</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">State</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">state</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Street</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">street</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Town</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">town</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Unknown</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Unknown</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Village</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">village</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="presence-roles">
+<h2>Presence roles<a class="headerlink" href="#presence-roles" title="Link to this heading">¶</a></h2>
+<p>Betty supports the following Gramps presence roles without any additional configuration:</p>
+<div class="table-wrapper docutils container" id="id5">
+<table class="docutils align-left" id="id5">
+<caption><span class="caption-text">Presence roles</span><a class="headerlink" href="#id5" title="Link to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Gramps role</p></th>
+<th class="head"><p>Betty presence role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Aide</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">attendee</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Bride</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">subject</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Celebrant</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">celebrant</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Clergy</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">celebrant</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Family</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">subject</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Groom</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">subject</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Informant</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">informant</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Primary</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">subject</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Unknown</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">unknown</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Witness</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">witness</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="order-priority">
+<h2>Order &amp; priority<a class="headerlink" href="#order-priority" title="Link to this heading">¶</a></h2>
+<p>The order of lists of data, or the priority of individual bits of data, can be automatically determined by Betty in
+multiple different ways, such as by matching dates, or locales. When not enough details are available, or in case of
+ambiguity, the original order is preserved. If only a single item must be retrieved from the list, this will be the
+first item, optionally after sorting.</p>
+<p>For example, if a place has multiple names (which may be historical or translations), Betty may try to
+filter names by the given locale and date, and then indiscriminately pick the first one of the remaining names to
+display as the canonical name.</p>
+<p>Tips:</p>
+<ul class="simple">
+<li><p>If you want one item to have priority over another, it should come before the other in a list (e.g. be higher up).</p></li>
+<li><p>Items with more specific or complete data, such as locales or dates, should come before items with less specific or
+complete data. However, items without dates at all are considered current and not historical.</p></li>
+<li><p>Unofficial names or nicknames, should generally be put at the end of lists.</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../http-api-doc/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">The <em>HTTP API Documentation</em> extension</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../deriver/">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">The <em>Deriver</em> extension</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; Bart Feenstra and contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">The <em>Gramps</em> extension</a><ul>
+<li><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li><a class="reference internal" href="#family-trees"><code class="docutils literal notranslate"><span class="pre">family_trees</span></code></a><ul>
+<li><a class="reference internal" href="#family-trees-file"><code class="docutils literal notranslate"><span class="pre">family_trees[].file</span></code></a></li>
+<li><a class="reference internal" href="#family-trees-event-types"><code class="docutils literal notranslate"><span class="pre">family_trees[].event_types</span></code></a></li>
+<li><a class="reference internal" href="#family-trees-genders"><code class="docutils literal notranslate"><span class="pre">family_trees[].genders</span></code></a></li>
+<li><a class="reference internal" href="#family-trees-place-types"><code class="docutils literal notranslate"><span class="pre">family_trees[].place_types</span></code></a></li>
+<li><a class="reference internal" href="#family-trees-presence-roles"><code class="docutils literal notranslate"><span class="pre">family_trees[].presence_roles</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#attributes">Attributes</a><ul>
+<li><a class="reference internal" href="#privacy">Privacy</a></li>
+<li><a class="reference internal" href="#gender">Gender</a></li>
+<li><a class="reference internal" href="#event-names">Event names</a></li>
+<li><a class="reference internal" href="#links">Links</a></li>
+<li><a class="reference internal" href="#static-translations">Static translations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dates">Dates</a></li>
+<li><a class="reference internal" href="#event-types">Event types</a></li>
+<li><a class="reference internal" href="#genders">Genders</a></li>
+<li><a class="reference internal" href="#place-types">Place types</a></li>
+<li><a class="reference internal" href="#presence-roles">Presence roles</a></li>
+<li><a class="reference internal" href="#order-priority">Order &amp; priority</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=187304be"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    </body>
+</html>

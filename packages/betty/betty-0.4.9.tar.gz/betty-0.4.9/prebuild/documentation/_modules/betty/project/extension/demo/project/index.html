@@ -1,0 +1,969 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="../../../../../../about/" /><link rel="index" title="Index" href="../../../../../../genindex/" /><link rel="search" title="Search" href="../../../../../../search/" />
+
+    <link rel="shortcut icon" href="../../../../../../_static/betty-512x512.png"/><!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
+        <title>betty.project.extension.demo.project - Betty documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../../../"><div class="brand">Betty  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../../../">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../../../../../_static/betty-512x512.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Betty  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../../../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../installation/">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../usage/">Usage</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Usage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../usage/ancestry/">Ancestry</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Ancestry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/citation/">Citation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/date/">Dates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/enclosure/">Enclosure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/event/">Event</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/event-type/">Event Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/file/">File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/file-reference/">File reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/gender/">Gender</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/link/">Link</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/media-type/">Media Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/name/">Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/note/">Note</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/person/">Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/person-name/">Person Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/place/">Place</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/place-type/">Place Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/presence/">Presence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/presence-role/">Presence Role</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/privacy/">Privacy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/source/">Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/static-translations/">Static translations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/assets/">Asset Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/cli/">The command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/configuration/">Application configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/copyright-notice/">Copyright notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/env/">Environment variables</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../usage/extension/">Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/cotton-candy/">The <em>Cotton Candy</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/deriver/">The <em>Deriver</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/gramps/">The <em>Gramps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/http-api-doc/">The <em>HTTP API Documentation</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/maps/">The <em>Maps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/privatizer/">The <em>Privatizer</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/raspberry-mint/">The <em>Raspberry Mint</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/trees/">The <em>Trees</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/wikipedia/">The <em>Wikipedia</em> extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/gedcom/">GEDCOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/license/">Licenses</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../usage/project/">Projects</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Projects</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/project/configuration/">Project configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../usage/templating/">Templating</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Templating</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/templating/filters/">Filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/templating/globals/">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/templating/tests/">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/translation/">Translations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../development/">Development</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Development</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../development/betty/">Developing Betty itself</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Developing Betty itself</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/betty/commands/">Helpful commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/betty/installation/">Installing a development environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/betty/localization/">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/betty/test/">Testing Betty’s source code</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../development/event-dispatcher/">Event dispatching</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../development/plugin/">Plugins</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Plugins</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/command/">CLI command plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/copyright-notice/">Copyright notice plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/entity-type/">Entity type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/event-type/">Event type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/extension/">Extension plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/gender/">Gender plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/license/">License plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/place-type/">Place type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/presence-role/">Presence role plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/renderer/">Renderer plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/serde-format/">Serialization format plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../development/test/">Testing your source code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../py-modindex/">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary/">Glossary</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../about/">About</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of About</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../about/contributing/">Contributing to Betty</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Contributing to Betty</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../about/contributing/code-of-conduct/">Code of Conduct</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../about/license/">Copyright &amp; license</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../about/sponsors/">Sponsors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../about/versions/">Versions</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for betty.project.extension.demo.project</h1><div class="highlight"><pre>
+<span></span>&quot;&quot;&quot;
+Provide the demonstration project.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+from random import choice
+from typing import TYPE_CHECKING
+
+from betty.ancestry.citation import Citation
+from betty.ancestry.enclosure import Enclosure
+from betty.ancestry.event import Event
+from betty.ancestry.event_type.event_types import Marriage, Birth, Death
+from betty.ancestry.file import File
+from betty.ancestry.file_reference import FileReference
+from betty.ancestry.gender.genders import Female, Male
+from betty.ancestry.link import Link
+from betty.ancestry.name import Name
+from betty.ancestry.note import Note
+from betty.ancestry.person import Person
+from betty.ancestry.person_name import PersonName
+from betty.ancestry.place import Place
+from betty.ancestry.place_type.place_types import (
+    Province,
+    Country,
+    Municipality,
+    Village,
+)
+from betty.ancestry.presence import Presence
+from betty.ancestry.presence_role.presence_roles import Subject
+from betty.ancestry.source import Source
+from betty.date import Date, DateRange
+from betty.fs import DATA_DIRECTORY_PATH
+from betty.license.licenses import spdx_license_id_to_license_id
+from betty.media_type.media_types import SVG
+from betty.model.config import EntityReference
+from betty.plugin.config import PluginInstanceConfiguration
+from betty.project import Project
+from betty.project.config import LocaleConfiguration, ProjectConfiguration
+from betty.project.extension.demo.copyright_notice import Streetmix
+from betty.project.extension.raspberry_mint import RaspberryMint
+from betty.project.extension.raspberry_mint.config import RaspberryMintConfiguration
+from betty.typing import internal
+
+if TYPE_CHECKING:
+    from pathlib import Path
+    from betty.machine_name import MachineName
+    from collections.abc import Mapping, Sequence
+    from betty.app import App
+
+
+<div class="viewcode-block" id="create_project">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.demo.project/#betty.project.extension.demo.project.create_project">[docs]</a>
+async def create_project(app: App, project_directory_path: Path) -&gt; Project:
+    &quot;&quot;&quot;
+    Create a new demonstration project.
+    &quot;&quot;&quot;
+    from betty.project.extension.demo import Demo
+
+    configuration = await ProjectConfiguration.new(
+        project_directory_path / &quot;betty.json&quot;,
+        name=Demo.plugin_id(),
+        license=PluginInstanceConfiguration(&quot;spdx-gpl-3--0-or-later&quot;),
+        title={
+            &quot;en-US&quot;: &quot;A Betty demonstration&quot;,
+            &quot;de-DE&quot;: &quot;Eine Betty-Demonstration&quot;,
+            &quot;fr-FR&quot;: &quot;Une démonstration de Betty&quot;,
+            &quot;nl-NL&quot;: &quot;Een demonstratie van Betty&quot;,
+            &quot;uk&quot;: &quot;Демонстрація Betty&quot;,
+        },
+        author={
+            &quot;en-US&quot;: &quot;Bart Feenstra and contributors&quot;,
+            &quot;fr-FR&quot;: &quot;Bart Feenstra et contributeurs&quot;,
+            &quot;nl-NL&quot;: &quot;Bart Feenstra en bijdragers&quot;,
+            &quot;uk&quot;: &quot;Bart Feenstra і учасники&quot;,
+        },
+        extensions=[
+            PluginInstanceConfiguration(Demo),
+            PluginInstanceConfiguration(
+                RaspberryMint,
+                configuration=RaspberryMintConfiguration(
+                    featured_entities=[
+                        EntityReference(Place, &quot;betty-demo-amsterdam&quot;),
+                        EntityReference(Person, &quot;betty-demo-liberta-lankester&quot;),
+                        EntityReference(Place, &quot;betty-demo-netherlands&quot;),
+                    ],
+                ),
+            ),
+        ],
+        locales=[
+            LocaleConfiguration(
+                &quot;en-US&quot;,
+                alias=&quot;en&quot;,
+            ),
+            LocaleConfiguration(&quot;ar&quot;),
+            LocaleConfiguration(
+                &quot;de-DE&quot;,
+                alias=&quot;de&quot;,
+            ),
+            LocaleConfiguration(
+                &quot;fr-FR&quot;,
+                alias=&quot;fr&quot;,
+            ),
+            LocaleConfiguration(&quot;he&quot;),
+            LocaleConfiguration(
+                &quot;nl-NL&quot;,
+                alias=&quot;nl&quot;,
+            ),
+            LocaleConfiguration(
+                &quot;uk&quot;,
+                alias=&quot;uk&quot;,
+            ),
+        ],
+    )
+    return await Project.new(app, configuration=configuration)</div>
+
+
+
+<div class="viewcode-block" id="load_ancestry">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.demo.project/#betty.project.extension.demo.project.load_ancestry">[docs]</a>
+@internal
+async def load_ancestry(project: Project) -&gt; None:
+    &quot;&quot;&quot;
+    Load the demo ancestry.
+    &quot;&quot;&quot;
+    ancestry = project.ancestry
+
+    streetmix_files_per_gender, fallback_streetmix_files = await _load_streetmix_images(
+        project
+    )
+
+    def _streetmix_image(person: Person) -&gt; None:
+        if person.file_references:
+            return
+
+        try:
+            streetmix_files = streetmix_files_per_gender[person.gender.plugin_id()]
+        except KeyError:
+            streetmix_files = fallback_streetmix_files
+        streetmix_file = choice(streetmix_files)
+        ancestry.add(FileReference(person, streetmix_file))
+
+    netherlands = Place(
+        id=&quot;betty-demo-netherlands&quot;,
+        names=[
+            Name(
+                {
+                    &quot;en&quot;: &quot;Netherlands&quot;,
+                    &quot;nl&quot;: &quot;Nederland&quot;,
+                    &quot;uk&quot;: &quot;Нідерланди&quot;,
+                    &quot;fr&quot;: &quot;Pays-Bas&quot;,
+                }
+            ),
+        ],
+        links=[Link(&quot;https://en.wikipedia.org/wiki/Netherlands&quot;)],
+        place_type=Country(),
+    )
+    ancestry.add(netherlands)
+
+    north_holland = Place(
+        id=&quot;betty-demo-north-holland&quot;,
+        names=[
+            Name(
+                {
+                    &quot;en&quot;: &quot;North Holland&quot;,
+                    &quot;nl&quot;: &quot;Noord-Holland&quot;,
+                    &quot;uk&quot;: &quot;Північна Голландія&quot;,
+                    &quot;fr&quot;: &quot;Hollande-Septentrionale&quot;,
+                }
+            ),
+        ],
+        links=[
+            Link(&quot;https://en.wikipedia.org/wiki/North_Holland&quot;),
+            Link(&quot;https://www.noord-holland.nl/&quot;),
+        ],
+        place_type=Province(),
+    )
+    ancestry.add(Enclosure(enclosee=north_holland, encloser=netherlands))
+    ancestry.add(north_holland)
+
+    amsterdam_note = Note(
+        &quot;&quot;&quot;
+Did you know that while Amsterdam is the country&#39;s official capital, The Hague is the Netherlands&#39; administrative center and seat of government?
+    &quot;&quot;&quot;
+    )
+
+    amsterdam = Place(
+        id=&quot;betty-demo-amsterdam&quot;,
+        names=[
+            Name({&quot;nl&quot;: &quot;Amsterdam&quot;, &quot;uk&quot;: &quot;Амстерда́м&quot;}),
+        ],
+        links=[
+            Link(&quot;https://nl.wikipedia.org/wiki/Amsterdam&quot;),
+            Link(&quot;https://www.amsterdam.nl/&quot;),
+        ],
+        notes=[amsterdam_note],
+        place_type=Municipality(),
+    )
+    ancestry.add(Enclosure(enclosee=amsterdam, encloser=north_holland))
+    ancestry.add(amsterdam)
+
+    ilpendam = Place(
+        id=&quot;betty-demo-ilpendam&quot;,
+        names=[
+            Name(
+                {
+                    &quot;nl&quot;: &quot;Ilpendam&quot;,
+                    &quot;uk&quot;: &quot;Илпендам&quot;,
+                }
+            ),
+        ],
+        links=[Link(&quot;https://nl.wikipedia.org/wiki/Ilpendam&quot;)],
+        place_type=Village(),
+    )
+    ancestry.add(Enclosure(enclosee=ilpendam, encloser=north_holland))
+    ancestry.add(ilpendam)
+
+    personal_accounts = Source(
+        id=&quot;betty-demo-personal-accounts&quot;,
+        name=&quot;Personal accounts&quot;,
+    )
+    ancestry.add(personal_accounts)
+
+    cite_first_person_account = Citation(
+        id=&quot;betty-demo-first-person-account&quot;,
+        source=personal_accounts,
+        location=&quot;Bart Feenstra&quot;,
+    )
+    ancestry.add(cite_first_person_account)
+
+    noord_hollands_archief = Source(
+        id=&quot;betty-demo-noord-hollands-archief&quot;,
+        name=&quot;Noord-Hollands Archief&quot;,
+        links=[Link(&quot;https://noord-hollandsarchief.nl/&quot;)],
+    )
+    ancestry.add(noord_hollands_archief)
+
+    bevolkingsregister_amsterdam = Source(
+        id=&quot;betty-demo-bevolkingsregister-amsterdam&quot;,
+        name=&quot;Bevolkingsregister Amsterdam&quot;,
+        author=&quot;Gemeente Amsterdam&quot;,
+        publisher=&quot;Gemeente Amsterdam&quot;,
+        contained_by=noord_hollands_archief,
+    )
+    ancestry.add(bevolkingsregister_amsterdam)
+
+    david_marinus_lankester = Person(
+        id=&quot;betty-demo-david-marinus-lankester&quot;, gender=Male()
+    )
+    _streetmix_image(david_marinus_lankester)
+    ancestry.add(
+        PersonName(
+            person=david_marinus_lankester,
+            individual=&quot;David Marinus&quot;,
+            affiliation=&quot;Lankester&quot;,
+        ),
+        david_marinus_lankester,
+    )
+
+    geertruida_van_ling = Person(id=&quot;betty-demo-geertruida-van-ling&quot;, gender=Female())
+    _streetmix_image(geertruida_van_ling)
+    ancestry.add(
+        PersonName(
+            person=geertruida_van_ling,
+            individual=&quot;Geertruida&quot;,
+            affiliation=&quot;Van Ling&quot;,
+        ),
+        geertruida_van_ling,
+    )
+
+    marriage_of_dirk_jacobus_lankester_and_jannigje_palsen = Event(
+        id=&quot;betty-demo-marriage-of-dirk-jacobus-lankester-and-jannigje-palsen&quot;,
+        event_type=Marriage(),
+        date=Date(1922, 7, 4),
+        place=ilpendam,
+    )
+    ancestry.add(marriage_of_dirk_jacobus_lankester_and_jannigje_palsen)
+
+    birth_of_dirk_jacobus_lankester = Event(
+        id=&quot;betty-demo-birth-of-dirk-jacobus-lankester&quot;,
+        event_type=Birth(),
+        date=Date(1897, 8, 25),
+        place=amsterdam,
+    )
+    ancestry.add(birth_of_dirk_jacobus_lankester)
+
+    death_of_dirk_jacobus_lankester = Event(
+        id=&quot;betty-demo-death-of-dirk-jacobus-lankester&quot;,
+        event_type=Death(),
+        date=Date(1986, 8, 18),
+        place=amsterdam,
+    )
+    ancestry.add(death_of_dirk_jacobus_lankester)
+
+    dirk_jacobus_lankester = Person(
+        id=&quot;betty-demo-dirk-jacobus-lankester&quot;,
+        gender=Male(),
+        parents=[david_marinus_lankester, geertruida_van_ling],
+    )
+    _streetmix_image(dirk_jacobus_lankester)
+    ancestry.add(
+        PersonName(
+            person=dirk_jacobus_lankester,
+            individual=&quot;Dirk Jacobus&quot;,
+            affiliation=&quot;Lankester&quot;,
+        ),
+        Presence(dirk_jacobus_lankester, Subject(), birth_of_dirk_jacobus_lankester),
+        Presence(dirk_jacobus_lankester, Subject(), death_of_dirk_jacobus_lankester),
+        Presence(
+            dirk_jacobus_lankester,
+            Subject(),
+            marriage_of_dirk_jacobus_lankester_and_jannigje_palsen,
+        ),
+    )
+    ancestry.add(dirk_jacobus_lankester)
+
+    birth_of_marinus_david_lankester = Event(
+        id=&quot;betty-demo-birth-of-marinus-david&quot;,
+        event_type=Birth(),
+        date=DateRange(
+            Date(1874, 1, 15),
+            Date(1874, 3, 21),
+            start_is_boundary=True,
+            end_is_boundary=True,
+        ),
+        place=amsterdam,
+    )
+    ancestry.add(birth_of_marinus_david_lankester)
+
+    death_of_marinus_david_lankester = Event(
+        id=&quot;betty-demo-death-of-marinus-david&quot;,
+        event_type=Death(),
+        date=Date(1971),
+        place=amsterdam,
+    )
+    ancestry.add(death_of_marinus_david_lankester)
+
+    marinus_david_lankester = Person(
+        id=&quot;betty-demo-marinus-david-lankester&quot;,
+        gender=Male(),
+        parents=[david_marinus_lankester, geertruida_van_ling],
+    )
+    _streetmix_image(marinus_david_lankester)
+    ancestry.add(
+        PersonName(
+            person=marinus_david_lankester,
+            individual=&quot;Marinus David&quot;,
+            affiliation=&quot;Lankester&quot;,
+        ),
+        Presence(marinus_david_lankester, Subject(), birth_of_marinus_david_lankester),
+        Presence(marinus_david_lankester, Subject(), death_of_marinus_david_lankester),
+    )
+    ancestry.add(marinus_david_lankester)
+
+    birth_of_jacoba_gesina_lankester = Event(
+        id=&quot;betty-demo-birth-of-jacoba-gesina&quot;,
+        event_type=Birth(),
+        date=Date(1900, 3, 14),
+        place=amsterdam,
+    )
+    ancestry.add(birth_of_jacoba_gesina_lankester)
+
+    jacoba_gesina_lankester = Person(
+        id=&quot;betty-demo-jacoba-gesina-lankester&quot;,
+        gender=Female(),
+        parents=[david_marinus_lankester, geertruida_van_ling],
+    )
+    _streetmix_image(jacoba_gesina_lankester)
+    ancestry.add(
+        PersonName(
+            person=jacoba_gesina_lankester,
+            individual=&quot;Jacoba Gesina&quot;,
+            affiliation=&quot;Lankester&quot;,
+        ),
+        Presence(jacoba_gesina_lankester, Subject(), birth_of_jacoba_gesina_lankester),
+    )
+    ancestry.add(jacoba_gesina_lankester)
+
+    jannigje_palsen = Person(id=&quot;betty-demo-jannigje-palsen&quot;, gender=Female())
+    _streetmix_image(jannigje_palsen)
+    ancestry.add(
+        PersonName(
+            person=jannigje_palsen,
+            individual=&quot;Jannigje&quot;,
+            affiliation=&quot;Palsen&quot;,
+        ),
+        Presence(
+            jannigje_palsen,
+            Subject(),
+            marriage_of_dirk_jacobus_lankester_and_jannigje_palsen,
+        ),
+        jannigje_palsen,
+    )
+
+    marriage_of_johan_de_boer_and_liberta_lankester = Event(
+        id=&quot;betty-demo-marriage-of-johan-de-boer-and-liberta-lankester&quot;,
+        event_type=Marriage(),
+        date=Date(1953, 6, 19),
+        place=amsterdam,
+    )
+    ancestry.add(marriage_of_johan_de_boer_and_liberta_lankester)
+
+    cite_birth_of_liberta_lankester_from_bevolkingsregister_amsterdam = Citation(
+        id=&quot;betty-demo-birth-of-liberta-lankester-from-bevolkingsregister-amsterdam&quot;,
+        source=bevolkingsregister_amsterdam,
+        location=&quot;Amsterdam&quot;,
+    )
+    ancestry.add(cite_birth_of_liberta_lankester_from_bevolkingsregister_amsterdam)
+
+    birth_of_liberta_lankester = Event(
+        id=&quot;betty-demo-birth-of-liberta-lankester&quot;,
+        event_type=Birth(),
+        date=Date(1929, 12, 22),
+        place=amsterdam,
+        citations=[cite_birth_of_liberta_lankester_from_bevolkingsregister_amsterdam],
+    )
+    ancestry.add(birth_of_liberta_lankester)
+
+    death_of_liberta_lankester = Event(
+        id=&quot;betty-demo-death-of-liberta-lankester&quot;,
+        event_type=Death(),
+        date=Date(2015, 1, 17),
+        place=amsterdam,
+        citations=[cite_first_person_account],
+    )
+    ancestry.add(death_of_liberta_lankester)
+
+    liberta_lankester_note = Note(
+        {
+            &quot;en-US&quot;: &quot;&quot;&quot;Did you know that Liberta &quot;Betty&quot; Lankester is Betty&#39;s namesake?&quot;&quot;&quot;,
+            &quot;nl&quot;: &quot;&quot;&quot;Wist je dat Betty vernoemd is naar Liberta &quot;Betty&quot; Lankester?&quot;&quot;&quot;,
+        }
+    )
+
+    liberta_lankester = Person(
+        id=&quot;betty-demo-liberta-lankester&quot;,
+        gender=Female(),
+        parents=[dirk_jacobus_lankester, jannigje_palsen],
+        notes=[liberta_lankester_note],
+    )
+    _streetmix_image(liberta_lankester)
+    ancestry.add(
+        PersonName(
+            person=liberta_lankester,
+            individual=&quot;Liberta&quot;,
+            affiliation=&quot;Lankester&quot;,
+        ),
+        PersonName(
+            person=liberta_lankester,
+            individual=&quot;Betty&quot;,
+            citations=[cite_first_person_account],
+        ),
+        Presence(liberta_lankester, Subject(), birth_of_liberta_lankester),
+        Presence(liberta_lankester, Subject(), death_of_liberta_lankester),
+        Presence(
+            liberta_lankester,
+            Subject(),
+            marriage_of_johan_de_boer_and_liberta_lankester,
+        ),
+    )
+    ancestry.add(liberta_lankester)
+
+    birth_of_johan_de_boer = Event(
+        id=&quot;betty-demo-birth-of-johan-de-boer&quot;,
+        event_type=Birth(),
+        date=Date(1930, 6, 20),
+        place=amsterdam,
+    )
+    ancestry.add(birth_of_johan_de_boer)
+
+    death_of_johan_de_boer = Event(
+        id=&quot;betty-demo-death-of-johan-de-boer&quot;,
+        event_type=Death(),
+        date=Date(1999, 3, 10),
+        place=amsterdam,
+        citations=[cite_first_person_account],
+    )
+    ancestry.add(death_of_johan_de_boer)
+
+    johan_de_boer = Person(id=&quot;betty-demo-johan-de-boer&quot;, gender=Male())
+    _streetmix_image(johan_de_boer)
+    ancestry.add(
+        PersonName(
+            person=johan_de_boer,
+            individual=&quot;Johan&quot;,
+            affiliation=&quot;De Boer&quot;,
+        ),
+        PersonName(
+            person=johan_de_boer,
+            individual=&quot;Hans&quot;,
+        ),
+        Presence(johan_de_boer, Subject(), birth_of_johan_de_boer),
+        Presence(johan_de_boer, Subject(), death_of_johan_de_boer),
+        Presence(
+            johan_de_boer,
+            Subject(),
+            marriage_of_johan_de_boer_and_liberta_lankester,
+        ),
+        johan_de_boer,
+    )
+
+    parent_of_bart_feenstra_child_of_liberta_lankester = Person(
+        id=&quot;betty-demo-parent-of-bart-feenstra-child-of-liberta-lankester&quot;,
+        parents=[johan_de_boer, liberta_lankester],
+    )
+    _streetmix_image(parent_of_bart_feenstra_child_of_liberta_lankester)
+    ancestry.add(
+        PersonName(
+            person=parent_of_bart_feenstra_child_of_liberta_lankester,
+            individual=&quot;Bart&#39;s parent&quot;,
+        )
+    )
+    ancestry.add(parent_of_bart_feenstra_child_of_liberta_lankester)
+
+    birth_of_bart_feenstra = Event(
+        id=&quot;betty-demo-birth-of-bart-feenstra&quot;,
+        event_type=Birth(),
+        date=DateRange(Date(1970, 1, 1), start_is_boundary=True),
+        place=netherlands,
+        citations=[cite_first_person_account],
+        description={
+            &quot;en-US&quot;: &quot;The &#39;birth of the author&#39;, so to speak.&quot;,
+            &quot;nl-NL&quot;: &quot;De &#39;geboorte van de auteur&#39;, om het zo maar te zeggen.&quot;,
+        },
+    )
+    ancestry.add(birth_of_johan_de_boer)
+
+    bart_feenstra = Person(
+        id=&quot;betty-demo-bart-feenstra&quot;,
+        gender=Male(),
+        parents=[parent_of_bart_feenstra_child_of_liberta_lankester],
+    )
+    Presence(bart_feenstra, Subject(), birth_of_bart_feenstra)
+    _streetmix_image(bart_feenstra)
+    ancestry.add(
+        PersonName(
+            person=bart_feenstra,
+            individual=&quot;Bart&quot;,
+            affiliation=&quot;Feenstra&quot;,
+        )
+    )
+    ancestry.add(bart_feenstra)</div>
+
+
+
+async def _load_streetmix_images(
+    project: Project,
+) -&gt; tuple[Mapping[MachineName, Sequence[File]], Sequence[File]]:
+    licenses = await project.license_repository
+    license = await licenses.new_target(  # noqa A001
+        spdx_license_id_to_license_id(&quot;AGPL-3.0-or-later&quot;)
+    )
+    copyright_notice = await project.copyright_notice_repository.new_target(Streetmix)
+    streetmix_image_directory_path = DATA_DIRECTORY_PATH / &quot;images&quot; / &quot;streetmix&quot;
+    masculine: Sequence[File] = []
+    feminine: Sequence[File] = []
+    androgynous: Sequence[File] = []
+    file_names = [
+        (&quot;johnny-01.svg&quot;, masculine),
+        (&quot;johnny-02.svg&quot;, masculine),
+        (&quot;junebug-01.svg&quot;, feminine),
+        (&quot;junebug-02.svg&quot;, feminine),
+        (&quot;people-01.svg&quot;, feminine),
+        (&quot;people-02.svg&quot;, androgynous),
+        (&quot;people-06.svg&quot;, androgynous),
+        (&quot;people-07.svg&quot;, feminine),
+        (&quot;people-08.svg&quot;, feminine),
+        (&quot;people-09.svg&quot;, androgynous),
+        (&quot;people-11.svg&quot;, masculine),
+        (&quot;people-13.svg&quot;, feminine),
+        (&quot;people-14.svg&quot;, masculine),
+        (&quot;people-15.svg&quot;, masculine),
+        (&quot;people-16.svg&quot;, androgynous),
+        (&quot;people-17.svg&quot;, feminine),
+        (&quot;people-18.svg&quot;, feminine),
+        (&quot;people-19.svg&quot;, feminine),
+        (&quot;people-23.svg&quot;, feminine),
+        (&quot;people-24.svg&quot;, androgynous),
+        (&quot;people-31.svg&quot;, masculine),
+    ]
+    for file_name, appearance in file_names:
+        file = File(
+            streetmix_image_directory_path / file_name,
+            id=f&quot;streetmix-{file_name}&quot;,
+            media_type=SVG,
+            copyright_notice=copyright_notice,
+            license=license,
+        )
+        appearance.append(file)
+        project.ancestry.add(file)
+
+    return {
+        Female.plugin_id(): feminine + androgynous,
+        Male.plugin_id(): masculine + androgynous,
+    }, androgynous
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; Bart Feenstra and contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../../../../_static/documentation_options.js?v=187304be"></script>
+    <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    </body>
+</html>
