@@ -1,0 +1,154 @@
+[project]
+name = "holobench"
+version = "1.41.0"
+
+authors = [{ name = "Austin Gregg-Smith", email = "blooop@gmail.com" }]
+description = "A package for benchmarking the performance of arbitrary functions"
+readme = "README.md"
+license = "MIT"
+
+requires-python = ">=3.10,<3.13"
+
+dependencies = [
+    "holoviews>=1.15,<=1.20.0",
+    "numpy>=1.0,<=2.2.3",
+    "param>=1.13.0,<=2.2.0",
+    "hvplot>=0.8,<=0.10.0",      #greater versions cause an error
+    "panel>=1.3.6,<=1.6.1",
+    "diskcache>=5.6,<=5.6.3",
+    "optuna>=3.2,<=4.2.1",
+    "xarray>=2023.7,<=2025.1.2",
+    "plotly>=5.15,<=6.0.0",
+    "pandas>=2.0,<=2.2.3",
+    "strenum>=0.4.0,<=0.4.15",
+    "scikit-learn>=1.2,<=1.6.1",
+    "moviepy>=2.1.2,<=2.1.2",
+]
+
+[project.urls]
+Repository = "https://github.com/dyson-ai/bencher"
+Home = "https://github.com/dyson-ai/bencher"
+Documentation = "https://bencher.readthedocs.io/en/latest/"
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[tool.pixi.system-requirements]
+libc = "2.31"
+
+[tool.pixi.feature.py310.dependencies]
+python = "3.10.*"
+[tool.pixi.feature.py311.dependencies]
+python = "3.11.*"
+[tool.pixi.feature.py312.dependencies]
+python = "3.12.*"
+
+
+[tool.pixi.pypi-dependencies]
+holobench = { path = ".", editable = true }
+
+[project.optional-dependencies]
+test = [
+    "pylint>=3.2.5,<=3.3.4",
+    "pytest-cov>=4.1,<=6.0.0",
+    "pytest>=7.4,<=8.3.4",
+    "hypothesis>=6.104.2,<=6.125.3",
+    "ruff>=0.5.0,<=0.9.6",
+    "coverage>=7.5.4,<=7.6.12",
+    "pre-commit<=4.1.0",
+    "nbformat",
+    "ipykernel",
+    "pip",
+    "jupyter_bokeh",
+]
+
+#adds support for embedding rerun windows (alpha)
+rerun = ["rerun-sdk==0.22.0", "rerun-notebook", "flask", "flask-cors"]
+
+#unused for the moment but may turn on later
+# scoop = ["scoop>=0.7.0,<=0.7.2.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = ["bencher", "CHANGELOG.md"]
+
+# Environments
+[tool.pixi.environments]
+default = { features = ["test", "rerun"], solve-group = "default" }
+py310 = ["py310", "test", "rerun"]
+py311 = ["py311", "test", "rerun"]
+py312 = ["py312", "test", "rerun"]
+
+
+[tool.pixi.tasks]
+pre-commit = "pre-commit run -a"
+pre-commit-update = "pre-commit autoupdate"
+format = "ruff format ."
+check-clean-workspace = "git diff --exit-code"
+ruff-lint = "ruff check . --fix"
+pylint = "pylint --version && echo 'running pylint...' && pylint $(git ls-files '*.py')"
+lint = { depends-on = ["ruff-lint", "pylint"] }
+style = { depends-on = ["format", "lint"] }
+commit-format = "git commit -a -m'autoformat code' || true"
+test = "pytest"
+coverage = "coverage run -m pytest && coverage xml -o coverage.xml"
+coverage-report = "coverage report -m"
+update-lock = "pixi update && git commit -a -m'update pixi.lock' || true"
+push = "git push"
+update-lock-push = { depends-on = ["update-lock", "push"] }
+fix = { depends-on = ["update-lock", "format", "ruff-lint", "pre-commit"] }
+fix-commit-push = { depends-on = ["fix", "commit-format", "update-lock-push"] }
+ci-no-cover = { depends-on = ["style", "test"] }
+ci = { depends-on = [
+    "format",
+    "ruff-lint",
+    "pylint",
+    "coverage",
+    "coverage-report",
+] }
+ci-push = { depends-on = ["format", "ruff-lint", "update-lock", "ci", "push"] }
+clear-pixi = "rm -rf .pixi pixi.lock"
+setup-git-merge-driver = "git config merge.ours.driver true"
+update-from-template-repo = "./scripts/update_from_template.sh"
+
+docs = "rm -rf docs/builtdocs; rm -rf docs/jupyter_execute; sphinx-build -b html docs docs/builtdocs"
+
+
+#demos
+demo = "python3 bencher/example/example_image.py"
+demo_rerun = "python3 bencher/example/example_rerun.py"
+
+[tool.pixi.dependencies]
+sqlite = "==3.48.0"
+
+
+[tool.pylint]
+extension-pkg-whitelist = ["numpy", "scipy"]
+jobs = 16                                    #detect number of cores
+ignore-paths = "docs/*"
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = "C,logging-fstring-interpolation,line-too-long,fixme,missing-module-docstring,too-many-instance-attributes,too-few-public-methods,too-many-arguments,too-many-locals,too-many-branches,too-many-statements,use-dict-literal,duplicate-code,too-many-public-methods,too-many-nested-blocks,cyclic-import,too-many-positional-arguments"
+enable = "no-else-return,consider-using-in"
+
+[tool.coverage.run]
+omit = ["*/test/*", "__init__.py"]
+
+[tool.coverage.report]
+exclude_also = [
+    "def __repr__",
+    "if False:",
+    "if 0:",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "(_):",
+]
+
+[tool.pytest.ini_options]
+tmp_path_retention_count = 0
