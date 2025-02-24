@@ -1,0 +1,37 @@
+[project]
+name = "pydoover"
+authors = [{ name = "Doover Team", email = "developers@doover.com" }]
+version = "0.2.0-a1"
+description = "Python package for interacting with Doover"
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["doover", "pydoover", "doover cli"]
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Programming Language :: Python',
+    'Intended Audience :: Developers',
+    "Natural Language :: English",
+    "Operating System :: OS Independent"
+]
+dependencies = ["requests"]
+
+[project.optional-dependencies]
+cli = ["simple-term-menu", "fuzzywuzzy", "python-Levenshtein"]
+
+
+[tool.setuptools]
+packages = [
+    "pydoover",
+    "pydoover.cli",
+    "pydoover.cloud",
+    "pydoover.docker",
+    "pydoover.ui",
+    "pydoover.utils"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+Homepage = "https://doover.com"
