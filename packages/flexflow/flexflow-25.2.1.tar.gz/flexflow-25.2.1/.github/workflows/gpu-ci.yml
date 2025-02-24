@@ -1,0 +1,156 @@
+name: "GPU-based Tests"
+on:
+  push:
+    branches:
+      - "inference"
+  workflow_dispatch:
+
+concurrency:
+  group: gpu-ci-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  python-interface-check:
+    name: Check Python Interface
+    runs-on: "runs-on=${{ github.run_id }}/runner=gpu-nvidia"
+    defaults:
+      run:
+        shell: bash -l {0} # required to use an activated conda environment
+    env:
+      CUDA_PATH: /usr/local/cuda
+      CONDA: "3"
+      HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+    steps:
+      - name: Set Path
+        run: echo "/opt/amazon/openmpi/bin:/opt/amazon/efa/bin:/opt/conda/bin:/usr/local/cuda/bin:/usr/local/cuda/include" >> $GITHUB_PATH
+      
+      # - name: Check GPU/CUDA availability
+      #   run: |
+      #     printenv CUDA_PATH
+      #     printenv PATH
+      #     printenv LD_LIBRARY_PATH
+      #     nvidia-smi
+      #     nvcc --version
+      # - name: Display disk space
+      #   run: df -h
+      
+      - name: Checkout Git Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          
+      - name: Install conda and FlexFlow dependencies
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniconda-version: "latest"
+          activate-environment: flexflow
+          environment-file: conda/flexflow.yml
+          auto-activate-base: false
+          auto-update-conda: false
+          
+      - name: Build FlexFlow
+        run: |
+          mkdir build
+          cd build
+          ../config/config.linux
+          make -j
+
+      - name: Check FlexFlow Python interface (before installation)
+        run: ./tests/python_interface_test.sh before-installation
+
+      - name: Install FlexFlow
+        run: |
+          cd build
+          ../config/config.linux
+          make install
+
+      - name: Check FlexFlow Python interface (after installation)
+        run: ./tests/python_interface_test.sh after-installation
+
+  inference-tests:
+    name: Inference Tests
+    runs-on: "runs-on=${{ github.run_id }}/runner=gpu-nvidia"
+    defaults:
+      run:
+        shell: bash -l {0} # required to use an activated conda environment
+    env:
+      CUDA_PATH: /usr/local/cuda
+      CONDA: "3"
+      HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+    steps:
+      - name: Set Path
+        run: echo "/opt/amazon/openmpi/bin:/opt/amazon/efa/bin:/opt/conda/bin:/usr/local/cuda/bin:/usr/local/cuda/include" >> $GITHUB_PATH
+      
+      # - name: Check GPU/CUDA availability
+      #   run: |
+      #     printenv CUDA_PATH
+      #     printenv PATH
+      #     printenv LD_LIBRARY_PATH
+      #     nvidia-smi
+      #     nvcc --version
+      # - name: Display disk space
+      #   run: df -h
+
+      - name: Checkout Git Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          
+      - name: Install conda and FlexFlow dependencies
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniconda-version: "latest"
+          activate-environment: flexflow
+          environment-file: conda/flexflow.yml
+          auto-activate-base: false
+          auto-update-conda: false
+
+      - name: Build FlexFlow
+        run: |
+          mkdir build
+          cd build
+          ../config/config.linux
+          make -j
+      
+      - name: Run inference tests
+        env:
+          CPP_INFERENCE_TESTS: ${{ vars.CPP_INFERENCE_TESTS }}
+        run: |
+          source ./build/set_python_envs.sh
+          ./tests/fine_grained_alignment_test.sh
+          ./tests/inference_tests.sh
+      
+      - name: Run PEFT tests
+        run: |
+          source ./build/set_python_envs.sh
+          ./tests/peft_test.sh
+      
+      - name: Save inference output as an artifact
+        if: always()
+        run: |
+          cd inference
+          tar -zcvf output.tar.gz ./output
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: output
+          path: inference/output.tar.gz
+      
+      # Github persists the .cache folder across different runs/containers
+      - name: Clear cache
+        if: always()
+        run: sudo rm -rf ~/.cache 

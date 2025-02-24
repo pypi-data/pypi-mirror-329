@@ -1,0 +1,82 @@
+name: "Build Test"
+on:
+  pull_request:
+  push:
+    branches:
+      - "inference"
+  workflow_dispatch:
+concurrency:
+  group: build-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  cmake-build:
+    name: Build FlexFlow Serve
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash -l {0} # required to use an activated conda environment
+    strategy:
+      matrix:
+        gpu_backend: ["cuda", "hip_rocm"]
+      fail-fast: false
+    env:
+      FF_GPU_BACKEND: ${{ matrix.gpu_backend }}
+    steps:
+      - name: Checkout Git Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Free additional space on runner
+        run: .github/workflows/helpers/free_space_on_runner.sh
+
+      - name: Install CUDA
+        uses: Jimver/cuda-toolkit@v0.2.16
+        if: ${{ matrix.gpu_backend == 'cuda' }}
+        id: cuda-toolkit
+        with:
+          cuda: "12.1.1"
+          # Disable caching of the CUDA binaries, since it does not give us any significant performance improvement
+          use-github-cache: "false"
+          log-file-suffix: 'cmake_${{matrix.gpu_backend}}.txt'
+
+      - name: Install system dependencies
+        run: .github/workflows/helpers/install_dependencies.sh
+
+      - name: Install conda and FlexFlow Serve dependencies
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: flexflow
+          environment-file: conda/flexflow.yml
+          auto-activate-base: false
+
+      - name: Build and Install FlexFlow Serve
+        run: |
+          export CUDNN_DIR="$CUDA_PATH"
+          export CUDA_DIR="$CUDA_PATH"
+          export FF_CUDA_ARCH=80
+          export FF_HIP_ARCH=gfx1100,gfx1036
+          export hip_version=5.6
+
+          cores_available=$(nproc --all)
+          n_build_cores=$(( cores_available -1 ))
+          if (( $n_build_cores < 1 )) ; then n_build_cores=1 ; fi
+          mkdir build
+          cd build
+          
+          ../config/config.linux
+          make -j $n_build_cores 
+          make install
+
+      - name: Check availability of flexflow modules in Python
+        run: |
+          if [[ "${FF_GPU_BACKEND}" == "cuda" ]]; then
+            export LD_LIBRARY_PATH="$CUDA_PATH/lib64/stubs:$LD_LIBRARY_PATH"
+            sudo ln -s $CUDA_PATH/lib64/stubs/libcuda.so $CUDA_PATH/lib64/stubs/libcuda.so.1
+          else
+            sudo ln -sf /usr/lib/x86_64-linux-gnu/libstdc++.so.6 $CONDA_PREFIX/lib/libstdc++.so.6
+          fi
+          # Remove build folder to check that the installed version can run independently of the build files
+          rm -rf build
+          python -c "import flexflow.core; import flexflow.serve as ff; exit()"
