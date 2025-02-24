@@ -1,0 +1,56 @@
+root:
+             creates   file:./
+             creates   file:plan.py
+             creates   step:./plan.py
+
+file:./
+               state = STATIC
+          created by   root:
+            supplies   file:dst.pdf
+            supplies   file:notes.pdf
+            supplies   file:plan.py
+            supplies   file:src.pdf
+            supplies   step:./plan.py
+            supplies   step:rr-add-notes-pdf src.pdf notes.pdf dst.pdf
+
+file:plan.py
+               state = STATIC
+          created by   root:
+            consumes   file:./
+            supplies   step:./plan.py
+
+step:./plan.py
+               state = SUCCEEDED
+          created by   root:
+            consumes   file:./
+            consumes   file:plan.py
+             creates   file:notes.pdf
+             creates   file:src.pdf
+             creates   step:rr-add-notes-pdf src.pdf notes.pdf dst.pdf
+
+file:notes.pdf
+               state = STATIC
+          created by   step:./plan.py
+            consumes   file:./
+            supplies   step:rr-add-notes-pdf src.pdf notes.pdf dst.pdf
+
+file:src.pdf
+               state = STATIC
+          created by   step:./plan.py
+            consumes   file:./
+            supplies   step:rr-add-notes-pdf src.pdf notes.pdf dst.pdf
+
+step:rr-add-notes-pdf src.pdf notes.pdf dst.pdf
+               state = SUCCEEDED
+          created by   step:./plan.py
+            consumes   file:./
+            consumes   file:notes.pdf
+            consumes   file:src.pdf
+             creates   file:dst.pdf
+            supplies   file:dst.pdf
+
+file:dst.pdf
+               state = BUILT
+          created by   step:rr-add-notes-pdf src.pdf notes.pdf dst.pdf
+            consumes   file:./
+            consumes   step:rr-add-notes-pdf src.pdf notes.pdf dst.pdf

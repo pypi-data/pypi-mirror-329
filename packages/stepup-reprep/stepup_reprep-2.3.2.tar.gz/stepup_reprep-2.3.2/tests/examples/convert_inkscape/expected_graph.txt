@@ -1,0 +1,79 @@
+root:
+             creates   file:./
+             creates   file:plan.py
+             creates   step:./plan.py
+
+file:./
+               state = STATIC
+          created by   root:
+            supplies   file:final.pdf
+            supplies   file:glasses.png
+            supplies   file:glasses.svg
+            supplies   file:plan.py
+            supplies   file:smile.svg
+            supplies   step:./plan.py
+            supplies   step:rr-convert-inkscape glasses.svg glasses.png
+            supplies   step:rr-convert-inkscape smile.svg final.pdf
+
+file:plan.py
+               state = STATIC
+          created by   root:
+            consumes   file:./
+            supplies   step:./plan.py
+
+step:./plan.py
+               state = SUCCEEDED
+          created by   root:
+            consumes   file:./
+            consumes   file:plan.py
+             creates   file:glasses.svg
+             creates   file:smile.svg
+             creates   step:rr-convert-inkscape glasses.svg glasses.png
+             creates   step:rr-convert-inkscape smile.svg final.pdf
+
+file:glasses.svg
+               state = STATIC
+          created by   step:./plan.py
+            consumes   file:./
+            supplies   step:rr-convert-inkscape glasses.svg glasses.png
+
+file:smile.svg
+               state = STATIC
+          created by   step:./plan.py
+            consumes   file:./
+            supplies   step:rr-convert-inkscape smile.svg final.pdf
+
+step:rr-convert-inkscape glasses.svg glasses.png
+               state = SUCCEEDED
+           mandatory = REQUIRED
+             env_var = REPREP_INKSCAPE [amended]
+                     = REPREP_INKSCAPE_PNG_ARGS [amended]
+          created by   step:./plan.py
+            consumes   file:./
+            consumes   file:glasses.svg
+             creates   file:glasses.png
+            supplies   file:glasses.png
+
+file:glasses.png
+               state = BUILT
+          created by   step:rr-convert-inkscape glasses.svg glasses.png
+            consumes   file:./
+            consumes   step:rr-convert-inkscape glasses.svg glasses.png
+            supplies   step:rr-convert-inkscape smile.svg final.pdf
+
+step:rr-convert-inkscape smile.svg final.pdf
+               state = SUCCEEDED
+             env_var = REPREP_INKSCAPE [amended]
+                     = REPREP_INKSCAPE_PDF_ARGS [amended]
+          created by   step:./plan.py
+            consumes   file:./
+            consumes   file:glasses.png [amended]
+            consumes   file:smile.svg
+             creates   file:final.pdf
+            supplies   file:final.pdf
+
+file:final.pdf
+               state = BUILT
+          created by   step:rr-convert-inkscape smile.svg final.pdf
+            consumes   file:./
+            consumes   step:rr-convert-inkscape smile.svg final.pdf

@@ -1,0 +1,67 @@
+root:
+             creates   file:./
+             creates   file:plan.py
+             creates   step:./plan.py
+
+file:./
+               state = STATIC
+          created by   root:
+            supplies   file:plan.py
+            supplies   file:rastered/
+            supplies   file:smile.pdf
+            supplies   step:./plan.py
+            supplies   step:mkdir -p rastered/
+            supplies   step:rr-raster-pdf smile.pdf rastered/smile.pdf
+
+file:plan.py
+               state = STATIC
+          created by   root:
+            consumes   file:./
+            supplies   step:./plan.py
+
+step:./plan.py
+               state = SUCCEEDED
+          created by   root:
+            consumes   file:./
+            consumes   file:plan.py
+             creates   file:smile.pdf
+             creates   step:mkdir -p rastered/
+             creates   step:rr-raster-pdf smile.pdf rastered/smile.pdf
+
+file:smile.pdf
+               state = STATIC
+          created by   step:./plan.py
+            consumes   file:./
+            supplies   step:rr-raster-pdf smile.pdf rastered/smile.pdf
+
+step:mkdir -p rastered/
+               state = SUCCEEDED
+          created by   step:./plan.py
+            consumes   file:./
+             creates   file:rastered/
+            supplies   file:rastered/
+
+file:rastered/
+               state = BUILT
+          created by   step:mkdir -p rastered/
+            consumes   file:./
+            consumes   step:mkdir -p rastered/
+            supplies   file:rastered/smile.pdf
+            supplies   step:rr-raster-pdf smile.pdf rastered/smile.pdf
+
+step:rr-raster-pdf smile.pdf rastered/smile.pdf
+               state = SUCCEEDED
+             env_var = REPREP_RASTER_QUALITY [amended]
+                     = REPREP_RASTER_RESOLUTION [amended]
+          created by   step:./plan.py
+            consumes   file:./
+            consumes   file:rastered/
+            consumes   file:smile.pdf
+             creates   file:rastered/smile.pdf
+            supplies   file:rastered/smile.pdf
+
+file:rastered/smile.pdf
+               state = BUILT
+          created by   step:rr-raster-pdf smile.pdf rastered/smile.pdf
+            consumes   file:rastered/
+            consumes   step:rr-raster-pdf smile.pdf rastered/smile.pdf
