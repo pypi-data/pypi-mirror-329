@@ -1,0 +1,94 @@
+Metadata-Version: 2.2
+Name: commit-crafter-ai
+Version: 1.4.5
+Summary: AI-powered commit message generator
+Home-page: https://github.com/SerhatUzbas/commit-crafter-ai/
+Author: Serhat Uzbas
+Author-email: serhatuzbas@gmail.com
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: typer[all]
+Requires-Dist: openai==1.57.4
+Requires-Dist: pyperclip
+Requires-Dist: ollama
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# commit-crafter-ai
+
+An AI-powered commit message generator that uses either OpenAI's GPT models or Ollama's local models to create meaningful git commit messages.
+
+## Installation
+
+```bash
+pip install commit-crafter-ai
+```
+
+## Setup
+
+1. Export your OpenAI API key:
+
+```bash
+# Linux/macOS
+export OPENAI_API_KEY="your-api-key-here"
+
+# Windows (Command Prompt)
+set OPENAI_API_KEY=your-api-key-here
+
+# Windows (PowerShell)
+$env:OPENAI_API_KEY="your-api-key-here"
+```
+
+2. The API key can also be added to your shell configuration file (~/.bashrc, ~/.zshrc, etc.) for persistence:
+
+```bash
+echo 'export OPENAI_API_KEY="your-api-key-here"' >> ~/.bashrc  # or ~/.zshrc
+```
+
+## Usage
+
+### Craft a commit message and directly create a commit
+
+Default client is OpenAI:
+
+```bash
+commit-crafter-ai craft
+```
+
+If you want to use Ollama with a specific model:
+
+```bash
+commit-crafter-ai craft --ollama 'model-name'
+```
+
+### Craft a commit message and copy it to clipboard
+
+If you want to copy the commit message to clipboard instead of directly creating a commit:
+
+```bash
+commit-crafter-ai craft --copy
+```
+
+## Configuration
+
+You can customize the commit message generation prompt by creating a `craft.config` file in your project root directory. If no config file is found, the default prompt will be used.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
