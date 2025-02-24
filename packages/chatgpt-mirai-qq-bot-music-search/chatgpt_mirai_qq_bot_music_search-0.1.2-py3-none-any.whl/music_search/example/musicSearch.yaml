@@ -1,0 +1,83 @@
+name: 听歌
+description: ''
+blocks:
+  - type: internal:get_message
+    name: 023f2123-ae43-42c8-a9d3-08a45f635606
+    params: {}
+    position:
+      x: 213
+      y: 230
+    connected_to:
+      - target: 55e0a28d-e07b-4a6d-a0a5-dde8148dcb17
+        mapping:
+          from: msg
+          to: msg
+  - type: internal:im_message_to_text
+    name: 55e0a28d-e07b-4a6d-a0a5-dde8148dcb17
+    params: {}
+    position:
+      x: 507
+      y: 206
+    connected_to:
+      - target: aba01bb0-6591-4f10-b492-14ae9bcb3bad
+        mapping:
+          from: text
+          to: text
+  - type: internal:text_block
+    name: 9c7209b0-943c-4042-b812-5953eb589dba
+    params:
+      text: ''
+    position:
+      x: 419
+      y: 326
+    connected_to:
+      - target: aba01bb0-6591-4f10-b492-14ae9bcb3bad
+        mapping:
+          from: text
+          to: new_text
+  - type: music:music_url_to_imMessage
+    name: 25ad170e-5cff-4a51-8494-95b8c304cb8c
+    params: {}
+    position:
+      x: 1601
+      y: 215
+    connected_to:
+      - target: 62d2b725-40d9-4d42-bd34-ef9faa17c2f2
+        mapping:
+          from: msg
+          to: msg
+  - type: internal:send_message
+    name: 62d2b725-40d9-4d42-bd34-ef9faa17c2f2
+    params:
+      im_name: ''
+    position:
+      x: 1903
+      y: 210
+  - type: internal:text_replace_block
+    name: aba01bb0-6591-4f10-b492-14ae9bcb3bad
+    params:
+      variable: '#听歌'
+    position:
+      x: 798
+      y: 203
+    connected_to:
+      - target: 076669bb-1aae-46d5-96ac-ab433f648ab1
+        mapping:
+          from: text
+          to: music_name
+  - type: music:music_search
+    name: 076669bb-1aae-46d5-96ac-ab433f648ab1
+    params:
+      source: 酷美
+    position:
+      x: 1207
+      y: 202
+    connected_to:
+      - target: 25ad170e-5cff-4a51-8494-95b8c304cb8c
+        mapping:
+          from: music_url
+          to: music_url
+      - target: 25ad170e-5cff-4a51-8494-95b8c304cb8c
+        mapping:
+          from: lyrics
+          to: lyrics
