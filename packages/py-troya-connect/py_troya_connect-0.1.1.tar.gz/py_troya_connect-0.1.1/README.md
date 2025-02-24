@@ -1,0 +1,67 @@
+# py-troya-connect
+
+A Python interface for Attachmate Extra Terminal sessions.
+
+## Installation
+
+```bash
+pip install py-troya-connect
+```
+
+## Basic Usage
+
+```python
+from py_troya_connect import ExtraTerminal
+
+# Simple screen reading
+with ExtraTerminal("1") as terminal:
+    screen_content = terminal.read_screen()
+    for line in screen_content:
+        print(line)
+```
+
+## Interactive Session Selection
+
+```python
+from py_troya_connect import ExtraTerminal
+
+# Let user select session interactively
+session_choice = ExtraTerminal.select_session()
+
+# Connect to selected session
+with ExtraTerminal(session_choice) as terminal:
+    screen_content = terminal.read_screen()
+    for line in screen_content:
+        if line.strip():  # Only print non-empty lines
+            print(line)
+```
+
+## Advanced Usage
+
+```python
+from py_troya_connect import ExtraTerminal
+
+with ExtraTerminal("1") as terminal:
+    # List available sessions
+    sessions = terminal.list_available_sessions()
+    print("Available sessions:", sessions)
+    
+    # Check system status
+    status = terminal.check_system_status()
+    print("System status:", status)
+    
+    # Get cursor position
+    cursor_pos = terminal.get_cursor_position()
+    print("Cursor position:", cursor_pos)
+```
+
+## Requirements
+
+- Windows OS
+- Attachmate Extra! Terminal
+- Python 3.6+
+- pywin32
+
+## License
+
+MIT License
