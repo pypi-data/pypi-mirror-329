@@ -1,0 +1,127 @@
+#:kivy 2.3.1
+#:import Clipboard kivy.core.clipboard.Clipboard
+
+<IssueWidget>:
+    canvas:
+        Color:
+            rgba: root.color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    orientation: "horizontal"
+    size_hint_y: 0.2
+    BoxLayout:
+        size_hint_x: 0.9
+        orientation: "vertical"
+        padding: '3dp'
+        spacing: '3dp'
+        Label:
+            text_size: self.size
+            font_size: '20sp'
+            halign: 'left'
+            valign: 'top'
+            text: root.issue.title
+            text_size: self.size
+            max_lines: 2
+            size_hint_y: 0.6
+        Label:
+            text_size: self.size
+            halign: 'left'
+            valign: 'bottom'
+            font_size: '16sp'
+            text: "@" + root.issue.author
+            size_hint_y: 0.2
+            bold: True
+        Label:
+            halign: 'left'
+            valign: 'bottom'
+            text_size: self.size
+            font_size: '16sp'
+            text: root.issue.repo.owner + '/' + root.issue.repo.name + '#' + str(root.issue.number)
+            size_hint_y: 0.2
+    Button:
+        size_hint: (None, None)
+        size: '100dp', root.height
+        text: "dismiss"
+        on_release: root.do_dismiss_callback()
+    
+<LoginScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            font_size: '24sp'
+            text: "Login to Github by using this code"
+        RelativeLayout:
+            Button:
+                font_size: '32sp'
+                text: root.device_flow.user_code
+                on_release: Clipboard.copy(self.text);
+            Label:
+                pos_hint: {'top': 0.65, 'right': 1.4}
+                text: "Click to copy"
+        Label:
+            font_size: '24sp'
+            text: "at this web page"
+        RelativeLayout:
+            Button:
+                font_size: '24sp'
+                text: root.device_flow.verification_uri
+                on_release: root.open_browser(self.text)
+            Label:
+                pos_hint: {'top': 0.65, 'right': 1.34}
+                text: "Click to open browser"
+
+<RepoLoadingScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            font_size: '24sp'
+            text: "Loading repositories"
+
+<IssueLoadingScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: '10dp'
+        Label:
+            font_size: '24sp'
+            text: "Loading issues and pull requests"
+        ProgressBar:
+            value: root.progress
+
+
+<IssueScreen>:
+    StackLayout:
+        id: stack
+        orientation: "tb-lr"
+        padding: '3dp'
+        spacing: '3dp'
+
+
+<RepoPickerScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            font_size: '24sp'
+            text: "Pick repos to list issues from"
+        Button:
+            text: "Public repos I own"
+            on_release: root.use_all_user_repos()
+        Button:
+            text: "Gazebo simulator repos"
+            on_release: root.use_all_gazebo_repos()
+        Button:
+            text: "Open-RMF repos"
+            on_release: root.use_all_rmf_repos()
+        Button:
+            text: "OSRA Infrastructure repos"
+            on_release: root.use_all_infra_repos()
+        Button:
+            text: "ROS PMC repos"
+            on_release: root.use_all_ros_repos()
+
+
+<foobar>:
+    BoxLayout:
+        size_x: root.width
+        
