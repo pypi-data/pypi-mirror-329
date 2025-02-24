@@ -1,0 +1,3 @@
+def OwlSense():
+    print("Owl")
+    
