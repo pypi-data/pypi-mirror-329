@@ -1,0 +1,55 @@
+[project]
+name = "promuet"
+version = "0.3.3"
+description = 'A simple yet powerful prompt templating engine'
+readme = "README.md"
+requires-python = ">= 3.10"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Matthew D. Scholefield", email = "matthew331199@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = ["pydantic", "openai", "loguru"]
+
+[project.urls]
+Documentation = "https://github.com/MatthewScholefield/promuet#readme"
+Issues = "https://github.com/MatthewScholefield/promuet/issues"
+Source = "https://github.com/MatthewScholefield/promuet"
+
+[tool.rye]
+managed = true
+dev-dependencies = ["pytest>=8.1.1"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/promuet"]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+ignore = [
+  "B008",
+  "E501",   # Long prompt strings
+  "RUF012", # Annoying to mark all mutable class attributes as mutable
+]
+
+[tool.ruff.lint.per-file-ignores]
+"models.py" = ["A003"]
+"llm_processor.py" = ["E501"]
+"tests/**/*" = ["PLR2004", "S101", "S106"]
+
+[tool.ruff.format]
+quote-style = "single"
