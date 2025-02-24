@@ -1,0 +1,38 @@
+[project]
+name = "nonebot-plugin-meme-stickers"
+dynamic = []
+description = "Make PJSK like meme stickers in one place"
+authors = [
+    { name = "LgCookie", email = "lgc2333@126.com" },
+]
+dependencies = [
+    "nonebot2>=2.4.1",
+    "nonebot-plugin-alconna>=0.55.1",
+    "nonebot-plugin-waiter>=0.8.1",
+    "skia-python>=134.0b12",
+    "cookit[loguru,pydantic,nonebot-base,nonebot-alconna]>=0.9.7",
+    "httpx>=0.27.2",
+    "tenacity>=9.0.0",
+]
+requires-python = ">=3.9,<4.0"
+readme = "README.md"
+version = "0.1.0"
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+homepage = "https://github.com/lgc-NB2Dev/nonebot-plugin-meme-stickers"
+
+[build-system]
+requires = [
+    "pdm-backend",
+]
+build-backend = "pdm.backend"
+
+[tool.pdm.build]
+includes = []
+
+[tool.pdm.version]
+source = "file"
+path = "nonebot_plugin_meme_stickers/__init__.py"
