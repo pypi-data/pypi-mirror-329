@@ -1,0 +1,113 @@
+Metadata-Version: 2.2
+Name: spectrocrunch
+Version: 1.0.0
+Summary: Spectroscopic imaging library (XRF/XAS)
+Author-email: ESRF <dau-pydev@esrf.fr>
+License: # MIT License
+        
+        **Copyright (c) 2021 European Synchrotron Radiation Facility**
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy of
+        this software and associated documentation files (the "Software"), to deal in
+        the Software without restriction, including without limitation the rights to
+        use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+        the Software, and to permit persons to whom the Software is furnished to do so,
+        subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+        FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+        COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+        IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+        CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/woutdenolf/spectrocrunch
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE.md
+Requires-Dist: setuptools
+Requires-Dist: numpy
+Requires-Dist: future
+Requires-Dist: scipy
+Requires-Dist: h5py
+Requires-Dist: fabio
+Requires-Dist: silx
+Requires-Dist: pyparsing
+Requires-Dist: shapely
+Requires-Dist: matplotlib
+Requires-Dist: uncertainties
+Requires-Dist: pint
+Requires-Dist: pandas
+Requires-Dist: scikit-image
+Requires-Dist: xlsxwriter
+Requires-Dist: xlrd
+Requires-Dist: openpyxl
+Requires-Dist: python-dateutil
+Requires-Dist: jsonpickle
+Requires-Dist: testfixtures
+Requires-Dist: future
+Requires-Dist: cvxopt
+Requires-Dist: pymca5
+Provides-Extra: physics
+Requires-Dist: xraylib; extra == "physics"
+Requires-Dist: cctbx; extra == "physics"
+Requires-Dist: fdmnes; extra == "physics"
+Requires-Dist: PyTMM; extra == "physics"
+Provides-Extra: elastix
+Requires-Dist: SimpleITK; extra == "elastix"
+Provides-Extra: test
+Requires-Dist: pytest; extra == "test"
+Requires-Dist: testfixtures; extra == "test"
+Provides-Extra: dev
+Requires-Dist: spectrocrunch[test]; extra == "dev"
+Requires-Dist: black[jupyter]>=25; extra == "dev"
+Requires-Dist: flake8>=4; extra == "dev"
+Requires-Dist: flake8_nb>=0.3.1; extra == "dev"
+Provides-Extra: doc
+Requires-Dist: spectrocrunch[test]; extra == "doc"
+Requires-Dist: sphinx; extra == "doc"
+Requires-Dist: nbsphinx; extra == "doc"
+Requires-Dist: sphinx-autodoc-typehints; extra == "doc"
+Requires-Dist: pydata-sphinx-theme; extra == "doc"
+
+# SpectroCrunch: spectroscopic imaging library (XRF/XAS)
+
+> **Warning:**  
+> This library is deprecated and no longer maintained.  
+> It is replaced by [ewoksfluo](https://ewoksfluo.readthedocs.io) and [ewoksndreg](https://ewoksndreg.readthedocs.io).
+
+## Getting started
+
+### Install from PyPi
+
+```bash
+pip install [--user] spectrocrunch
+```
+
+### Install from source
+
+```bash
+git clone https://github.com/woutdenolf/spectrocrunch
+cd spectrocrunch
+pip install [--user] .
+```
+
+### Install non-pypi dependencies
+
+```bash
+git clone https://github.com/woutdenolf/spectrocrunch
+. spectrocrunch/tools/linux-install-deps.sh [-u]
+```
+
+### Test
+
+```bash
+pip install -e .[test]
+pytest .
+```
