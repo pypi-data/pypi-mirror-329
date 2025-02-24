@@ -1,0 +1,5 @@
+ALL = 'all'
+FOUND = 'found'
+NONE = 'none'
+NOT_FOUND = 'not_found'
+OVERWRITE = 'overwrite'
