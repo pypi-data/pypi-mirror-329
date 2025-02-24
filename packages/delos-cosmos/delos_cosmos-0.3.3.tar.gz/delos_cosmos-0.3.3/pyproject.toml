@@ -1,0 +1,183 @@
+[tool.poetry]
+name = "delos-cosmos"
+version = "0.3.3"
+description = "Cosmos client."
+authors = ["Maria <mariaibanez@delosintelligence.fr>"]
+readme = "README.md"
+keywords = ["AI", "LLM", "generative"]
+
+packages = [
+  { include = "cosmos", from = "src" },
+  { include = "src/cosmos/py.typed" },
+]
+include = ["src/**/*.pyi"] # Include stub files
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.5"
+requests = "^2.32.3"
+loguru = "^0.7.2"
+pydantic = "^2.10.5"
+aiofiles = "^24.1.0"
+
+[tool.poetry.group.dev.dependencies]
+python-dotenv = "^1.0.1"
+pytest = "^8.3.4"
+pytest-cov = ">=3,<6"
+# ipdb = "^0.13.13"
+mypy = "^1.13.0"
+pyright = "^1.1.390"
+ruff = "^0.8.3"
+
+[tool.poetry.build]
+generate-setup-file = true
+
+
+# [tool.poetry.package.include]
+# a = "py.typed"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pydocstyle]
+pydocstyle.convention = "google"
+
+[tool.ruff]
+# fix = true
+src = ["src"]
+line-length = 120
+
+
+[tool.ruff.lint]
+extend-select = [
+  "F",     # pyflakes
+  "E",     # pycodestyle errors
+  "W",     # pycodestyle warnings
+  "C",     # Pylint convention messages
+  "C90",   # mccabe
+  "I",     # isort
+  "N",     # PEP8 Naming
+  "D",     # pydocstyle
+  "UP",    # pyupgrade
+  "YTT",   # flake8-2020
+  "ANN",   # flake8-annotations errors and warnings
+  "ASYNC", # flake8-async errors and warnings
+  "S",     # flake8-bandit security warnings
+  "BLE",   # flake8-blind-except errors
+  "FBT",   # flake8-boolean-trap errors and warnings
+  "B",     # flake8-bugbear warnings
+  "A",     # flake8-builtins errors
+  "COM",   # flake8-commas errors
+  "CPY",   # flake8-copyright errors
+  "C4",    # flake8-comprehensions warnings
+  "DTZ",   # flake8-datetimez errors and warnings
+  "T10",   # flake8-debugger errors
+  "DJ",    # flake8-django errors and warnings
+  "EM",    # flake8-errmsg errors
+  "EXE",   # flake8-executable errors
+  # "FA",    # flake8-future-annotations errors
+  "ISC",  # flake8-implicit-str-concat warnings
+  "ICN",  # flake8-import-conventions errors and warnings
+  "LOG",  # flake8-logging errors
+  "G",    # flake8-logging-format warnings
+  "INP",  # flake8-no-pep420 errors
+  "PIE",  # flake8-pie errors and warnings
+  "T20",  # flake8-print errors
+  "PYI",  # flake8-pyi errors and warnings
+  "PT",   # flake8-pytest-style errors and warnings
+  "Q",    # flake8-quotes errors
+  "RSE",  # flake8-raise errors
+  "SLF",  # flake8-self errors
+  "RET",  # flake8-return errors
+  "SLOT", # flake8-slots errors
+  "SIM",  # flake8-simplify errors and warnings
+  "TID",  # flake8-tidy-imports errors
+  "TCH",  # flake8-type-checking errors and warnings
+  "INT",  # flake8-gettext errors and warnings
+  "ARG",  # flake8-unused-arguments warnings
+  "PTH",  # flake8-use-pathlib warnings
+  "TD",   # flake8-todos warnings
+  "FIX",  # flake8-fixme warnings
+  "ERA",  # eradicate
+  "PD",   # pandas-vet.
+  "PGH",  # pygrep-hooks,
+  "PL",   # pylint
+  "R",    # Pylint refactor messages
+  "TRY",  # tryceratops
+  "FLY",  # flyint
+  "NPY",  # numpy,
+  "AIR",  # airflow
+  "PERF", # perflint # performance -> check @bernadotte
+  "FURB", # refurb
+  "RUF",  # ruff # check @translate
+]
+
+
+ignore = [
+  # "E501",    # line too long
+  "FBT001",  # bool arguments
+  "FBT002",  # bool arguments
+  "ANN401",  # Any for kwargs
+  "CPY001",  # copyright
+  "PLR0913", # Too many arguments in function definition (> 5)
+  "PLR0917", # Too many positional arguments (> 5)
+  "N806",    # Variable `X` in function should be lowercase
+
+  # docstrings
+  "D203", # warning: `incorrect-blank-line-before-class` (D203) and `no-blank-line-before-class` (D211) are incompatible. Ignoring `incorrect-blank-line-before-class`.
+  "D213", # warning: `multi-line-summary-first-line` (D212) and `multi-line-summary-second-line` (D213) are incompatible. Ignoring `multi-line-summary-second-line`.
+
+]
+
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+  "S101",    # asserts allowed in tests...
+  # "D103",    # Missing docstring in public function
+  # "C901",    # too complex (> 10)
+  # "PLR0915", # Too many statements (> 50)
+  # "PLR0912", # Too many branches (> 12)
+  "BLE001",  # Do not catch blind exception: `Exception`
+]
+
+
+[tool.pyright]
+typeCheckingMode = "strict"
+reportMissingParameterType = "warning"
+reportMissingTypeArguments = "warning"
+reportMissingTypeArgument = "warning"
+reportMissingTypeImports = "error"
+reportMissingTypeStubs = "warning"
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "warning"
+reportUnknownParameterType = "warning"
+reportUnnecessaryTypeIgnoreComment = "warning"
+reportUnusedVariable = "warning"
+reportUnknownVariableType = "none"
+reportUnknownMemberType = "none"
+include = ["src", "tests"]
+exclude = ["venv", "**/__pycache__"]
+reportMissingImports = true
+
+extraPaths = ["src"]
+executionEnvironments = [
+  { root = "src", extraPaths = [
+    "../src",
+  ] },
+  { root = "tests", extraPaths = [
+    "../src",
+  ] },
+]
+
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+disable_error_code = [
+  "import-untyped",
+  "no-any-return",
+  "unused-ignore",
+  "no-untyped-call",
+  "attr-defined",
+]
