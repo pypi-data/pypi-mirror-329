@@ -1,0 +1,754 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="../../../../../../about/" /><link rel="index" title="Index" href="../../../../../../genindex/" /><link rel="search" title="Search" href="../../../../../../search/" />
+
+    <link rel="shortcut icon" href="../../../../../../_static/betty-512x512.png"/><!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
+        <title>betty.project.extension.gramps.config - Betty documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../../../"><div class="brand">Betty  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../../../">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../../../../../_static/betty-512x512.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Betty  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../../../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../installation/">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../usage/">Usage</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Usage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../usage/ancestry/">Ancestry</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Ancestry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/citation/">Citation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/date/">Dates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/enclosure/">Enclosure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/event/">Event</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/event-type/">Event Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/file/">File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/file-reference/">File reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/gender/">Gender</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/link/">Link</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/media-type/">Media Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/name/">Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/note/">Note</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/person/">Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/person-name/">Person Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/place/">Place</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/place-type/">Place Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/presence/">Presence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/presence-role/">Presence Role</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/privacy/">Privacy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/source/">Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/ancestry/static-translations/">Static translations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/assets/">Asset Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/cli/">The command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/configuration/">Application configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/copyright-notice/">Copyright notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/env/">Environment variables</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../usage/extension/">Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/cotton-candy/">The <em>Cotton Candy</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/deriver/">The <em>Deriver</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/gramps/">The <em>Gramps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/http-api-doc/">The <em>HTTP API Documentation</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/maps/">The <em>Maps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/privatizer/">The <em>Privatizer</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/raspberry-mint/">The <em>Raspberry Mint</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/trees/">The <em>Trees</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/extension/wikipedia/">The <em>Wikipedia</em> extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/gedcom/">GEDCOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/license/">Licenses</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../usage/project/">Projects</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Projects</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/project/configuration/">Project configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../usage/templating/">Templating</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Templating</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/templating/filters/">Filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/templating/globals/">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../usage/templating/tests/">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../usage/translation/">Translations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../development/">Development</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Development</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../development/betty/">Developing Betty itself</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Developing Betty itself</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/betty/commands/">Helpful commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/betty/installation/">Installing a development environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/betty/localization/">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/betty/test/">Testing Betty’s source code</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../development/event-dispatcher/">Event dispatching</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../development/plugin/">Plugins</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Plugins</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/command/">CLI command plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/copyright-notice/">Copyright notice plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/entity-type/">Entity type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/event-type/">Event type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/extension/">Extension plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/gender/">Gender plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/license/">License plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/place-type/">Place type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/presence-role/">Presence role plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/renderer/">Renderer plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../development/plugin/serde-format/">Serialization format plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../development/test/">Testing your source code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../py-modindex/">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../glossary/">Glossary</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../about/">About</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of About</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../../about/contributing/">Contributing to Betty</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Contributing to Betty</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../about/contributing/code-of-conduct/">Code of Conduct</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../about/license/">Copyright &amp; license</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../about/sponsors/">Sponsors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../about/versions/">Versions</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for betty.project.extension.gramps.config</h1><div class="highlight"><pre>
+<span></span>&quot;&quot;&quot;
+Provide configuration for the :py:class:`betty.project.extension.gramps.Gramps` extension.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Any, final, TYPE_CHECKING, TypeVar
+
+from typing_extensions import override
+
+from betty.ancestry.event_type.event_types import (
+    Adoption,
+    Baptism,
+    Birth,
+    Burial,
+    Confirmation,
+    Cremation,
+    Death,
+    Divorce,
+    DivorceAnnouncement,
+    Emigration,
+    Engagement,
+    Immigration,
+    Marriage,
+    MarriageAnnouncement,
+    Occupation,
+    Residence,
+    Retirement,
+    Will,
+    BarMitzvah,
+    BatMitzvah,
+)
+from betty.ancestry.gender.genders import Female, Male, Unknown as UnknownGender
+from betty.ancestry.place_type.place_types import (
+    Borough,
+    Building,
+    City,
+    Country,
+    County,
+    Department,
+    District,
+    Farm,
+    Hamlet,
+    Locality,
+    Municipality,
+    Neighborhood,
+    Number,
+    Parish,
+    Province,
+    Region,
+    State,
+    Street,
+    Town,
+    Unknown as UnknownPlaceType,
+    Village,
+)
+from betty.ancestry.presence_role.presence_roles import (
+    Celebrant,
+    Subject,
+    Unknown as UnknownPresenceRole,
+    Witness,
+    Attendee,
+    Informant,
+)
+from betty.assertion import (
+    RequiredField,
+    OptionalField,
+    assert_record,
+    assert_path,
+    assert_setattr,
+    assert_mapping,
+    assert_len,
+    assert_str,
+)
+from betty.config import Configuration
+from betty.config.collections.sequence import ConfigurationSequence
+from betty.plugin import Plugin
+from betty.plugin.config import PluginInstanceConfiguration
+from betty.typing import internal
+
+if TYPE_CHECKING:
+    from betty.serde.dump import Dump, DumpMapping
+    from collections.abc import Mapping, MutableMapping, Iterable, Iterator
+
+_PluginT = TypeVar(&quot;_PluginT&quot;, bound=Plugin)
+
+
+DEFAULT_EVENT_TYPE_MAP: Mapping[str, PluginInstanceConfiguration] = {
+    &quot;Adopted&quot;: PluginInstanceConfiguration(Adoption),
+    &quot;Adult Christening&quot;: PluginInstanceConfiguration(Baptism),
+    &quot;Baptism&quot;: PluginInstanceConfiguration(Baptism),
+    &quot;Bar Mitzvah&quot;: PluginInstanceConfiguration(BarMitzvah),
+    &quot;Bat Mitzvah&quot;: PluginInstanceConfiguration(BatMitzvah),
+    &quot;Birth&quot;: PluginInstanceConfiguration(Birth),
+    &quot;Burial&quot;: PluginInstanceConfiguration(Burial),
+    &quot;Christening&quot;: PluginInstanceConfiguration(Baptism),
+    &quot;Confirmation&quot;: PluginInstanceConfiguration(Confirmation),
+    &quot;Cremation&quot;: PluginInstanceConfiguration(Cremation),
+    &quot;Death&quot;: PluginInstanceConfiguration(Death),
+    &quot;Divorce&quot;: PluginInstanceConfiguration(Divorce),
+    &quot;Divorce Filing&quot;: PluginInstanceConfiguration(DivorceAnnouncement),
+    &quot;Emigration&quot;: PluginInstanceConfiguration(Emigration),
+    &quot;Engagement&quot;: PluginInstanceConfiguration(Engagement),
+    &quot;Immigration&quot;: PluginInstanceConfiguration(Immigration),
+    &quot;Marriage&quot;: PluginInstanceConfiguration(Marriage),
+    &quot;Marriage Banns&quot;: PluginInstanceConfiguration(MarriageAnnouncement),
+    &quot;Occupation&quot;: PluginInstanceConfiguration(Occupation),
+    &quot;Residence&quot;: PluginInstanceConfiguration(Residence),
+    &quot;Retirement&quot;: PluginInstanceConfiguration(Retirement),
+    &quot;Will&quot;: PluginInstanceConfiguration(Will),
+}
+
+
+DEFAULT_PLACE_TYPE_MAP: Mapping[str, PluginInstanceConfiguration] = {
+    &quot;Borough&quot;: PluginInstanceConfiguration(Borough),
+    &quot;Building&quot;: PluginInstanceConfiguration(Building),
+    &quot;City&quot;: PluginInstanceConfiguration(City),
+    &quot;Country&quot;: PluginInstanceConfiguration(Country),
+    &quot;County&quot;: PluginInstanceConfiguration(County),
+    &quot;Department&quot;: PluginInstanceConfiguration(Department),
+    &quot;District&quot;: PluginInstanceConfiguration(District),
+    &quot;Farm&quot;: PluginInstanceConfiguration(Farm),
+    &quot;Hamlet&quot;: PluginInstanceConfiguration(Hamlet),
+    &quot;Locality&quot;: PluginInstanceConfiguration(Locality),
+    &quot;Municipality&quot;: PluginInstanceConfiguration(Municipality),
+    &quot;Neighborhood&quot;: PluginInstanceConfiguration(Neighborhood),
+    &quot;Number&quot;: PluginInstanceConfiguration(Number),
+    &quot;Parish&quot;: PluginInstanceConfiguration(Parish),
+    &quot;Province&quot;: PluginInstanceConfiguration(Province),
+    &quot;Region&quot;: PluginInstanceConfiguration(Region),
+    &quot;State&quot;: PluginInstanceConfiguration(State),
+    &quot;Street&quot;: PluginInstanceConfiguration(Street),
+    &quot;Town&quot;: PluginInstanceConfiguration(Town),
+    &quot;Unknown&quot;: PluginInstanceConfiguration(UnknownPlaceType),
+    &quot;Village&quot;: PluginInstanceConfiguration(Village),
+}
+
+
+DEFAULT_PRESENCE_ROLE_MAP: Mapping[str, PluginInstanceConfiguration] = {
+    &quot;Aide&quot;: PluginInstanceConfiguration(Attendee),
+    &quot;Bride&quot;: PluginInstanceConfiguration(Subject),
+    &quot;Celebrant&quot;: PluginInstanceConfiguration(Celebrant),
+    &quot;Clergy&quot;: PluginInstanceConfiguration(Celebrant),
+    &quot;Family&quot;: PluginInstanceConfiguration(Subject),
+    &quot;Groom&quot;: PluginInstanceConfiguration(Subject),
+    &quot;Informant&quot;: PluginInstanceConfiguration(Informant),
+    &quot;Primary&quot;: PluginInstanceConfiguration(Subject),
+    &quot;Unknown&quot;: PluginInstanceConfiguration(UnknownPresenceRole),
+    &quot;Witness&quot;: PluginInstanceConfiguration(Witness),
+}
+
+
+DEFAULT_GENDER_MAP: Mapping[str, PluginInstanceConfiguration] = {
+    &quot;F&quot;: PluginInstanceConfiguration(Female),
+    &quot;M&quot;: PluginInstanceConfiguration(Male),
+    &quot;U&quot;: PluginInstanceConfiguration(UnknownGender),
+}
+
+
+def _assert_gramps_type(value: Any) -&gt; str:
+    event_type = assert_str()(value)
+    assert_len(minimum=1)(event_type)
+    return event_type
+
+
+<div class="viewcode-block" id="PluginMapping">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.PluginMapping">[docs]</a>
+@internal
+@final
+class PluginMapping(Configuration):
+    &quot;&quot;&quot;
+    Map Gramps types to Betty plugin instances.
+    &quot;&quot;&quot;
+
+<div class="viewcode-block" id="PluginMapping.__init__">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.PluginMapping.__init__">[docs]</a>
+    def __init__(
+        self,
+        default_mapping: Mapping[str, PluginInstanceConfiguration],
+        mapping: Mapping[str, PluginInstanceConfiguration],
+    ):
+        super().__init__()
+        self._default_mapping = default_mapping
+        self._mapping: MutableMapping[str, PluginInstanceConfiguration] = {
+            **default_mapping,
+            **mapping,
+        }</div>
+
+
+<div class="viewcode-block" id="PluginMapping.load">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.PluginMapping.load">[docs]</a>
+    @override
+    def load(self, dump: Dump) -&gt; None:
+        self._mapping = {
+            **self._default_mapping,
+            **assert_mapping(self._load_item, _assert_gramps_type)(dump),
+        }</div>
+
+
+    def _load_item(self, dump: Dump) -&gt; PluginInstanceConfiguration:
+        configuration = PluginInstanceConfiguration(&quot;-&quot;)
+        configuration.load(dump)
+        return configuration
+
+<div class="viewcode-block" id="PluginMapping.dump">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.PluginMapping.dump">[docs]</a>
+    @override
+    def dump(self) -&gt; Dump:
+        return {
+            gramps_type: configuration.dump()
+            for gramps_type, configuration in self._mapping.items()
+        }</div>
+
+
+    def __getitem__(self, gramps_type: str) -&gt; PluginInstanceConfiguration:
+        return self._mapping[gramps_type]
+
+    def __setitem__(
+        self, gramps_type: str, configuration: PluginInstanceConfiguration
+    ) -&gt; None:
+        self._mapping[gramps_type] = configuration
+
+    def __delitem__(self, gramps_type: str) -&gt; None:
+        del self._mapping[gramps_type]
+
+    def __iter__(self) -&gt; Iterator[str]:
+        return iter(self._mapping)</div>
+
+
+
+<div class="viewcode-block" id="FamilyTreeConfiguration">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.FamilyTreeConfiguration">[docs]</a>
+class FamilyTreeConfiguration(Configuration):
+    &quot;&quot;&quot;
+    Configure a single Gramps family tree.
+    &quot;&quot;&quot;
+
+<div class="viewcode-block" id="FamilyTreeConfiguration.__init__">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.FamilyTreeConfiguration.__init__">[docs]</a>
+    def __init__(
+        self,
+        file_path: Path,
+        *,
+        event_types: Mapping[str, PluginInstanceConfiguration] | None = None,
+        place_types: Mapping[str, PluginInstanceConfiguration] | None = None,
+        presence_roles: Mapping[str, PluginInstanceConfiguration] | None = None,
+        genders: Mapping[str, PluginInstanceConfiguration] | None = None,
+    ):
+        super().__init__()
+        self.file_path = file_path
+        self._event_types = PluginMapping(DEFAULT_EVENT_TYPE_MAP, event_types or {})
+        self._genders = PluginMapping(DEFAULT_GENDER_MAP, genders or {})
+        self._place_types = PluginMapping(DEFAULT_PLACE_TYPE_MAP, place_types or {})
+        self._presence_roles = PluginMapping(
+            DEFAULT_PRESENCE_ROLE_MAP, presence_roles or {}
+        )</div>
+
+
+    @property
+    def file_path(self) -&gt; Path | None:
+        &quot;&quot;&quot;
+        The path to the Gramps family tree file.
+        &quot;&quot;&quot;
+        return self._file_path
+
+    @file_path.setter
+    def file_path(self, file_path: Path | None) -&gt; None:
+        self._file_path = file_path
+
+    @property
+    def event_types(self) -&gt; PluginMapping:
+        &quot;&quot;&quot;
+        How to map event types.
+        &quot;&quot;&quot;
+        return self._event_types
+
+    @property
+    def genders(self) -&gt; PluginMapping:
+        &quot;&quot;&quot;
+        How to map genders.
+        &quot;&quot;&quot;
+        return self._genders
+
+    @property
+    def place_types(self) -&gt; PluginMapping:
+        &quot;&quot;&quot;
+        How to map place types.
+        &quot;&quot;&quot;
+        return self._place_types
+
+    @property
+    def presence_roles(self) -&gt; PluginMapping:
+        &quot;&quot;&quot;
+        How to map presence roles.
+        &quot;&quot;&quot;
+        return self._presence_roles
+
+<div class="viewcode-block" id="FamilyTreeConfiguration.load">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.FamilyTreeConfiguration.load">[docs]</a>
+    @override
+    def load(self, dump: Dump) -&gt; None:
+        assert_record(
+            RequiredField(&quot;file&quot;, assert_path() | assert_setattr(self, &quot;file_path&quot;)),
+            OptionalField(&quot;event_types&quot;, self.event_types.load),
+            OptionalField(&quot;genders&quot;, self.genders.load),
+            OptionalField(&quot;place_types&quot;, self.place_types.load),
+            OptionalField(&quot;presence_roles&quot;, self.presence_roles.load),
+        )(dump)</div>
+
+
+<div class="viewcode-block" id="FamilyTreeConfiguration.dump">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.FamilyTreeConfiguration.dump">[docs]</a>
+    @override
+    def dump(self) -&gt; DumpMapping[Dump]:
+        return {
+            &quot;file&quot;: str(self.file_path) if self.file_path else None,
+            &quot;event_types&quot;: self.event_types.dump(),
+            &quot;genders&quot;: self.genders.dump(),
+            &quot;place_types&quot;: self.place_types.dump(),
+            &quot;presence_roles&quot;: self.presence_roles.dump(),
+        }</div>
+</div>
+
+
+
+<div class="viewcode-block" id="FamilyTreeConfigurationSequence">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.FamilyTreeConfigurationSequence">[docs]</a>
+class FamilyTreeConfigurationSequence(ConfigurationSequence[FamilyTreeConfiguration]):
+    &quot;&quot;&quot;
+    Configure zero or more Gramps family trees.
+    &quot;&quot;&quot;
+
+    @override
+    def _load_item(self, dump: Dump) -&gt; FamilyTreeConfiguration:
+        # Use a dummy path to satisfy initializer arguments.
+        # It will be overridden when loading the dump.
+        item = FamilyTreeConfiguration(Path())
+        item.load(dump)
+        return item</div>
+
+
+
+<div class="viewcode-block" id="GrampsConfiguration">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.GrampsConfiguration">[docs]</a>
+class GrampsConfiguration(Configuration):
+    &quot;&quot;&quot;
+    Provide configuration for the :py:class:`betty.project.extension.gramps.Gramps` extension.
+    &quot;&quot;&quot;
+
+<div class="viewcode-block" id="GrampsConfiguration.__init__">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.GrampsConfiguration.__init__">[docs]</a>
+    def __init__(
+        self, *, family_trees: Iterable[FamilyTreeConfiguration] | None = None
+    ):
+        super().__init__()
+        self._family_trees = FamilyTreeConfigurationSequence(family_trees)</div>
+
+
+    @property
+    def family_trees(self) -&gt; FamilyTreeConfigurationSequence:
+        &quot;&quot;&quot;
+        The Gramps family trees to load.
+        &quot;&quot;&quot;
+        return self._family_trees
+
+<div class="viewcode-block" id="GrampsConfiguration.load">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.GrampsConfiguration.load">[docs]</a>
+    @override
+    def load(self, dump: Dump) -&gt; None:
+        assert_record(OptionalField(&quot;family_trees&quot;, self.family_trees.load))(dump)</div>
+
+
+<div class="viewcode-block" id="GrampsConfiguration.dump">
+<a class="viewcode-back" href="../../../../../../betty.project.extension.gramps.config/#betty.project.extension.gramps.config.GrampsConfiguration.dump">[docs]</a>
+    @override
+    def dump(self) -&gt; DumpMapping[Dump]:
+        return {&quot;family_trees&quot;: self.family_trees.dump()}</div>
+</div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; Bart Feenstra and contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../../../../_static/documentation_options.js?v=187304be"></script>
+    <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    </body>
+</html>

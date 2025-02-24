@@ -1,0 +1,946 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="author" title="About these documents" href="../../../about/" /><link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" />
+
+    <link rel="shortcut icon" href="../../../_static/betty-512x512.png"/><!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
+        <title>betty.date - Betty documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../"><div class="brand">Betty  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../../_static/betty-512x512.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Betty  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../usage/">Usage</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Usage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../usage/ancestry/">Ancestry</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Ancestry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/citation/">Citation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/date/">Dates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/enclosure/">Enclosure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/event/">Event</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/event-type/">Event Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/file/">File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/file-reference/">File reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/gender/">Gender</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/link/">Link</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/media-type/">Media Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/name/">Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/note/">Note</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/person/">Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/person-name/">Person Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/place/">Place</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/place-type/">Place Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/presence/">Presence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/presence-role/">Presence Role</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/privacy/">Privacy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/source/">Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/ancestry/static-translations/">Static translations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/assets/">Asset Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/cli/">The command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/configuration/">Application configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/copyright-notice/">Copyright notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/env/">Environment variables</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../usage/extension/">Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/cotton-candy/">The <em>Cotton Candy</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/deriver/">The <em>Deriver</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/gramps/">The <em>Gramps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/http-api-doc/">The <em>HTTP API Documentation</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/maps/">The <em>Maps</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/privatizer/">The <em>Privatizer</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/raspberry-mint/">The <em>Raspberry Mint</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/trees/">The <em>Trees</em> extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/extension/wikipedia/">The <em>Wikipedia</em> extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/gedcom/">GEDCOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/license/">Licenses</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../usage/project/">Projects</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Projects</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/project/configuration/">Project configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../usage/templating/">Templating</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Templating</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/templating/filters/">Filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/templating/globals/">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage/templating/tests/">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage/translation/">Translations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../development/">Development</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Development</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../development/betty/">Developing Betty itself</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Developing Betty itself</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/commands/">Helpful commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/installation/">Installing a development environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/localization/">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/betty/test/">Testing Betty’s source code</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development/event-dispatcher/">Event dispatching</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../development/plugin/">Plugins</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Plugins</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/command/">CLI command plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/copyright-notice/">Copyright notice plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/entity-type/">Entity type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/event-type/">Event type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/extension/">Extension plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/gender/">Gender plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/license/">License plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/place-type/">Place type plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/presence-role/">Presence role plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/renderer/">Renderer plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../development/plugin/serde-format/">Serialization format plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development/test/">Testing your source code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../py-modindex/">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary/">Glossary</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../about/">About</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of About</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../about/contributing/">Contributing to Betty</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Contributing to Betty</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../about/contributing/code-of-conduct/">Code of Conduct</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../about/license/">Copyright &amp; license</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../about/sponsors/">Sponsors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../about/versions/">Versions</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for betty.date</h1><div class="highlight"><pre>
+<span></span>&quot;&quot;&quot;
+Localize dates.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import calendar
+import operator
+from functools import total_ordering
+from typing import Any, Callable, TypeAlias, Mapping, TYPE_CHECKING, final, Self
+
+from typing_extensions import override
+
+from betty.json.linked_data import (
+    dump_context,
+    JsonLdObject,
+    LinkedDataDumpableJsonLdObject,
+    JsonLdSchema,
+)
+from betty.json.schema import String, Boolean, Null, OneOf, Number
+
+if TYPE_CHECKING:
+    from types import NotImplementedType
+    from betty.serde.dump import DumpMapping, Dump
+    from betty.project import Project
+
+
+<div class="viewcode-block" id="IncompleteDateError">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.IncompleteDateError">[docs]</a>
+class IncompleteDateError(ValueError):
+    &quot;&quot;&quot;
+    Raised when a datey was unexpectedly incomplete.
+    &quot;&quot;&quot;
+
+    pass  # pragma: no cover</div>
+
+
+
+<div class="viewcode-block" id="DateSchema">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateSchema">[docs]</a>
+@final
+class DateSchema(JsonLdObject):
+    &quot;&quot;&quot;
+    A JSON Schema for :py:type:`betty.date.Date`.
+    &quot;&quot;&quot;
+
+<div class="viewcode-block" id="DateSchema.__init__">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateSchema.__init__">[docs]</a>
+    def __init__(self, json_ld_schema: JsonLdSchema):
+        super().__init__(json_ld_schema, def_name=&quot;date&quot;, title=&quot;Date&quot;)
+        self.add_property(&quot;fuzzy&quot;, Boolean(title=&quot;Fuzzy&quot;))
+        self.add_property(&quot;year&quot;, Number(title=&quot;Year&quot;), False)
+        self.add_property(&quot;month&quot;, Number(title=&quot;Month&quot;), False)
+        self.add_property(&quot;day&quot;, Number(title=&quot;Day&quot;), False)
+        self.add_property(
+            &quot;iso8601&quot;,
+            String(
+                pattern=&quot;^\\d\\d\\d\\d-\\d\\d-\\d\\d$&quot;, description=&quot;An ISO 8601 date.&quot;
+            ),
+            False,
+        )</div>
+
+
+<div class="viewcode-block" id="DateSchema.new">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateSchema.new">[docs]</a>
+    @classmethod
+    async def new(cls) -&gt; Self:
+        &quot;&quot;&quot;
+        Create a new instance.
+        &quot;&quot;&quot;
+        return cls(await JsonLdSchema.new())</div>
+</div>
+
+
+
+<div class="viewcode-block" id="Date">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.Date">[docs]</a>
+class Date(LinkedDataDumpableJsonLdObject):
+    &quot;&quot;&quot;
+    A (Gregorian) date.
+    &quot;&quot;&quot;
+
+    year: int | None
+    month: int | None
+    day: int | None
+    fuzzy: bool
+
+<div class="viewcode-block" id="Date.__init__">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.Date.__init__">[docs]</a>
+    def __init__(
+        self,
+        year: int | None = None,
+        month: int | None = None,
+        day: int | None = None,
+        fuzzy: bool = False,
+    ):
+        self.year = year
+        self.month = month
+        self.day = day
+        self.fuzzy = fuzzy</div>
+
+
+    @property
+    def comparable(self) -&gt; bool:
+        &quot;&quot;&quot;
+        If this date is comparable to other dateys.
+        &quot;&quot;&quot;
+        return self.year is not None
+
+    @property
+    def complete(self) -&gt; bool:
+        &quot;&quot;&quot;
+        Whether this date is complete.
+        &quot;&quot;&quot;
+        return self.year is not None and self.month is not None and self.day is not None
+
+    @property
+    def parts(self) -&gt; tuple[int | None, int | None, int | None]:
+        &quot;&quot;&quot;
+        The date parts: a 3-tuple of the year, month, and day.
+        &quot;&quot;&quot;
+        return self.year, self.month, self.day
+
+<div class="viewcode-block" id="Date.to_range">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.Date.to_range">[docs]</a>
+    def to_range(self) -&gt; DateRange:
+        &quot;&quot;&quot;
+        Convert this date to a date range.
+        &quot;&quot;&quot;
+        if not self.comparable:
+            raise ValueError(
+                f&quot;Cannot convert non-comparable date {self} to a date range.&quot;
+            )
+        if self.month is None:
+            month_start = 1
+            month_end = 12
+        else:
+            month_start = month_end = self.month
+        if self.day is None:
+            day_start = 1
+            day_end = calendar.monthrange(
+                self.year,  # type: ignore[arg-type]
+                month_end,
+            )[1]
+        else:
+            day_start = day_end = self.day
+        return DateRange(
+            Date(self.year, month_start, day_start), Date(self.year, month_end, day_end)
+        )</div>
+
+
+    def _compare(
+        self, other: Any, comparator: Callable[[Any, Any], bool]
+    ) -&gt; bool | NotImplementedType:
+        if not isinstance(other, Date):
+            return NotImplemented  # type: ignore[no-any-return]
+        selfish = self
+        if not selfish.comparable or not other.comparable:
+            return NotImplemented  # type: ignore[no-any-return]
+        if selfish.complete and other.complete:
+            return comparator(selfish.parts, other.parts)
+        if not other.complete:
+            other = other.to_range()
+        if not selfish.complete:
+            selfish = selfish.to_range()  # type: ignore[assignment]
+        return comparator(selfish, other)
+
+    def __contains__(self, other: Datey) -&gt; bool:
+        if isinstance(other, Date):
+            return self == other
+        return self in other
+
+    def __lt__(self, other: Any) -&gt; bool:
+        return self._compare(other, operator.lt)
+
+    def __le__(self, other: Any) -&gt; bool:
+        return self._compare(other, operator.le)
+
+    @override
+    def __eq__(self, other: Any) -&gt; bool:
+        if not isinstance(other, Date):
+            return NotImplemented
+        return self.parts == other.parts
+
+    def __ge__(self, other: Any) -&gt; bool:
+        return self._compare(other, operator.ge)
+
+    def __gt__(self, other: Any) -&gt; bool:
+        return self._compare(other, operator.gt)
+
+<div class="viewcode-block" id="Date.dump_linked_data">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.Date.dump_linked_data">[docs]</a>
+    @override
+    async def dump_linked_data(
+        self,
+        project: Project,
+        context_definition: str | None = None,
+    ) -&gt; DumpMapping[Dump]:
+        dump = await super().dump_linked_data(project)
+        dump[&quot;fuzzy&quot;] = self.fuzzy
+        if self.year:
+            dump[&quot;year&quot;] = self.year
+        if self.month:
+            dump[&quot;month&quot;] = self.month
+        if self.day:
+            dump[&quot;day&quot;] = self.day
+        if self.comparable:
+            dump[&quot;iso8601&quot;] = _dump_date_iso8601(self)
+            # Set a single term definition because JSON-LD does not let us apply multiple
+            # for the same term (key).
+            if context_definition:
+                dump_context(dump, iso8601=context_definition)
+        return dump</div>
+
+
+<div class="viewcode-block" id="Date.linked_data_schema">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.Date.linked_data_schema">[docs]</a>
+    @override
+    @classmethod
+    async def linked_data_schema(cls, project: Project) -&gt; DateSchema:
+        return await DateSchema.new()</div>
+</div>
+
+
+
+def _dump_date_iso8601(date: Date) -&gt; str | None:
+    if not date.complete:
+        return None
+    assert date.year
+    assert date.month
+    assert date.day
+    return f&quot;{date.year:04d}-{date.month:02d}-{date.day:02d}&quot;
+
+
+<div class="viewcode-block" id="DateRangeSchema">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateRangeSchema">[docs]</a>
+@final
+class DateRangeSchema(JsonLdObject):
+    &quot;&quot;&quot;
+    A JSON Schema for :py:type:`betty.date.DateRange`.
+    &quot;&quot;&quot;
+
+<div class="viewcode-block" id="DateRangeSchema.__init__">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateRangeSchema.__init__">[docs]</a>
+    def __init__(self, json_ld_schema: JsonLdSchema, date_schema: DateSchema):
+        super().__init__(json_ld_schema, def_name=&quot;dateRange&quot;, title=&quot;Date range&quot;)
+        self._schema[&quot;additionalProperties&quot;] = False
+        self.add_property(&quot;start&quot;, OneOf(date_schema, Null(), title=&quot;Start date&quot;))
+        self.add_property(&quot;end&quot;, OneOf(date_schema, Null(), title=&quot;End date&quot;))</div>
+
+
+<div class="viewcode-block" id="DateRangeSchema.new">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateRangeSchema.new">[docs]</a>
+    @classmethod
+    async def new(cls) -&gt; Self:
+        &quot;&quot;&quot;
+        Create a new instance.
+        &quot;&quot;&quot;
+        return cls(await JsonLdSchema.new(), await DateSchema.new())</div>
+</div>
+
+
+
+<div class="viewcode-block" id="DateRange">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateRange">[docs]</a>
+@total_ordering
+class DateRange(LinkedDataDumpableJsonLdObject):
+    &quot;&quot;&quot;
+    A date range can describe a period of time between, before, after, or around start and/or end dates.
+    &quot;&quot;&quot;
+
+    start: Date | None
+    start_is_boundary: bool
+    end: Date | None
+    end_is_boundary: bool
+
+<div class="viewcode-block" id="DateRange.__init__">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateRange.__init__">[docs]</a>
+    def __init__(
+        self,
+        start: Date | None = None,
+        end: Date | None = None,
+        start_is_boundary: bool = False,
+        end_is_boundary: bool = False,
+    ):
+        self.start = start
+        self.start_is_boundary = start_is_boundary
+        self.end = end
+        self.end_is_boundary = end_is_boundary</div>
+
+
+    @property
+    def comparable(self) -&gt; bool:
+        &quot;&quot;&quot;
+        If this date is comparable to other dateys.
+        &quot;&quot;&quot;
+        return (
+            self.start is not None
+            and self.start.comparable
+            or self.end is not None
+            and self.end.comparable
+        )
+
+    def __contains__(self, other: Datey) -&gt; bool:
+        if not self.comparable:
+            return False
+
+        if isinstance(other, Date):
+            others = [other]
+        else:
+            if not other.comparable:
+                return False
+            others = []
+            if other.start is not None and other.start.comparable:
+                others.append(other.start)
+            if other.end is not None and other.end.comparable:
+                others.append(other.end)
+
+        if self.start is not None and self.end is not None:
+            if isinstance(other, DateRange) and (
+                other.start is None or other.end is None
+            ):
+                if other.start is None:
+                    return self.start &lt;= other.end or self.end &lt;= other.end
+                if other.end is None:
+                    return self.start &gt;= other.start or self.end &gt;= other.start
+            for another in others:
+                if self.start &lt;= another &lt;= self.end:
+                    return True
+            if isinstance(other, DateRange):
+                for selfdate in [self.start, self.end]:
+                    if other.start &lt;= selfdate &lt;= other.end:
+                        return True
+
+        elif self.start is not None:
+            # Two date ranges with start dates only always overlap.
+            if isinstance(other, DateRange) and other.end is None:
+                return True
+
+            for other in others:
+                if self.start &lt;= other:
+                    return True
+        elif self.end is not None:
+            # Two date ranges with end dates only always overlap.
+            if isinstance(other, DateRange) and other.start is None:
+                return True
+
+            for other in others:
+                if other &lt;= self.end:
+                    return True
+        return False
+
+<div class="viewcode-block" id="DateRange.dump_linked_data">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateRange.dump_linked_data">[docs]</a>
+    @override
+    async def dump_linked_data(
+        self,
+        project: Project,
+        start_context_definition: str | None = None,
+        end_context_definition: str | None = None,
+    ) -&gt; DumpMapping[Dump]:
+        return {
+            &quot;start&quot;: await self.start.dump_linked_data(
+                project, start_context_definition
+            )
+            if self.start
+            else None,
+            &quot;end&quot;: await self.end.dump_linked_data(project, end_context_definition)
+            if self.end
+            else None,
+        }</div>
+
+
+<div class="viewcode-block" id="DateRange.linked_data_schema">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateRange.linked_data_schema">[docs]</a>
+    @override
+    @classmethod
+    async def linked_data_schema(cls, project: Project) -&gt; DateRangeSchema:
+        return await DateRangeSchema.new()</div>
+
+
+    def _get_comparable_date(self, date: Date | None) -&gt; Date | None:
+        if date and date.comparable:
+            return date
+        return None
+
+    _LT_DATE_RANGE_COMPARATORS = {
+        (
+            True,
+            True,
+            True,
+            True,
+        ): lambda self_start, self_end, other_start, other_end: self_start
+        &lt; other_start,
+        (
+            True,
+            True,
+            True,
+            False,
+        ): lambda self_start, self_end, other_start, other_end: self_start
+        &lt;= other_start,
+        (
+            True,
+            True,
+            False,
+            True,
+        ): lambda self_start, self_end, other_start, other_end: self_start &lt; other_end
+        or self_end &lt;= other_end,
+        (
+            True,
+            True,
+            False,
+            False,
+        ): lambda self_start, self_end, other_start, other_end: NotImplemented,
+        (
+            True,
+            False,
+            True,
+            True,
+        ): lambda self_start, self_end, other_start, other_end: self_start
+        &lt; other_start,
+        (
+            True,
+            False,
+            True,
+            False,
+        ): lambda self_start, self_end, other_start, other_end: self_start
+        &lt; other_start,
+        (
+            True,
+            False,
+            False,
+            True,
+        ): lambda self_start, self_end, other_start, other_end: self_start &lt; other_end,
+        (
+            True,
+            False,
+            False,
+            False,
+        ): lambda self_start, self_end, other_start, other_end: NotImplemented,
+        (
+            False,
+            True,
+            True,
+            True,
+        ): lambda self_start, self_end, other_start, other_end: self_end &lt;= other_start,
+        (
+            False,
+            True,
+            True,
+            False,
+        ): lambda self_start, self_end, other_start, other_end: self_end &lt;= other_start,
+        (
+            False,
+            True,
+            False,
+            True,
+        ): lambda self_start, self_end, other_start, other_end: self_end &lt; other_end,
+        (
+            False,
+            True,
+            False,
+            False,
+        ): lambda self_start, self_end, other_start, other_end: NotImplemented,
+        (
+            False,
+            False,
+            True,
+            True,
+        ): lambda self_start, self_end, other_start, other_end: NotImplemented,
+        (
+            False,
+            False,
+            True,
+            False,
+        ): lambda self_start, self_end, other_start, other_end: NotImplemented,
+        (
+            False,
+            False,
+            False,
+            True,
+        ): lambda self_start, self_end, other_start, other_end: NotImplemented,
+        (
+            False,
+            False,
+            False,
+            False,
+        ): lambda self_start, self_end, other_start, other_end: NotImplemented,
+    }
+
+    _LT_DATE_COMPARATORS = {
+        (True, True): lambda self_start, self_end, other: self_start &lt; other,
+        (True, False): lambda self_start, self_end, other: self_start &lt; other,
+        (False, True): lambda self_start, self_end, other: self_end &lt;= other,
+        (False, False): lambda self_start, self_end, other: NotImplemented,
+    }
+
+    def __lt__(self, other: Any) -&gt; bool:
+        if not isinstance(other, (Date, DateRange)):
+            return NotImplemented
+
+        self_start = self._get_comparable_date(self.start)
+        self_end = self._get_comparable_date(self.end)
+        signature = (
+            self_start is not None,
+            self_end is not None,
+        )
+        if isinstance(other, DateRange):
+            other_start = self._get_comparable_date(other.start)
+            other_end = self._get_comparable_date(other.end)
+            return self._LT_DATE_RANGE_COMPARATORS[
+                (
+                    *signature,
+                    other_start is not None,
+                    other_end is not None,
+                )
+            ](self_start, self_end, other_start, other_end)
+        else:
+            return self._LT_DATE_COMPARATORS[signature](self_start, self_end, other)
+
+    @override
+    def __eq__(self, other: Any) -&gt; bool:
+        if isinstance(other, Date):
+            return False
+
+        if not isinstance(other, DateRange):
+            return NotImplemented
+        return (self.start, self.end, self.start_is_boundary, self.end_is_boundary) == (
+            other.start,
+            other.end,
+            other.start_is_boundary,
+            other.end_is_boundary,
+        )</div>
+
+
+
+<div class="viewcode-block" id="DateySchema">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateySchema">[docs]</a>
+class DateySchema(OneOf):
+    &quot;&quot;&quot;
+    A JSON Schema for :py:type:`betty.date.Datey`.
+    &quot;&quot;&quot;
+
+<div class="viewcode-block" id="DateySchema.__init__">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateySchema.__init__">[docs]</a>
+    def __init__(self, date_schema: DateSchema, date_range_schema: DateRangeSchema):
+        super().__init__(
+            date_schema,
+            date_range_schema,
+            def_name=&quot;datey&quot;,
+            title=&quot;Date or date range&quot;,
+        )</div>
+
+
+<div class="viewcode-block" id="DateySchema.new">
+<a class="viewcode-back" href="../../../betty.date/#betty.date.DateySchema.new">[docs]</a>
+    @classmethod
+    async def new(cls) -&gt; Self:
+        &quot;&quot;&quot;
+        Create a new instance.
+        &quot;&quot;&quot;
+        return cls(await DateSchema.new(), await DateRangeSchema.new())</div>
+</div>
+
+
+
+Datey: TypeAlias = Date | DateRange
+DatePartsFormatters: TypeAlias = Mapping[tuple[bool, bool, bool], str]
+DateFormatters: TypeAlias = Mapping[tuple[bool | None], str]
+DateRangeFormatters: TypeAlias = Mapping[
+    tuple[bool | None, bool | None, bool | None, bool | None], str
+]
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; Bart Feenstra and contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=187304be"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    </body>
+</html>
