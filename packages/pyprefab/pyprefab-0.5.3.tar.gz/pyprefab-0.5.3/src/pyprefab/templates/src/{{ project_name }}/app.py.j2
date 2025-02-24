@@ -1,0 +1,28 @@
+import structlog
+from rich.console import Console
+from rich.panel import Panel
+
+logger = structlog.get_logger()
+
+
+def main():
+    """{{ project_name }} starting point."""
+    logger.info('starting {{ project_name }}...')
+
+    console = Console()
+    console.print(Panel(
+        ':tada: Hello from the {{ project_name }} Python package!',
+        border_style='green',
+        expand=False,
+        padding=(1, 4),
+        subtitle='[italic]created by pyprefab[/italic]',
+        subtitle_align='right',
+        title='{{ project_name }}',
+        title_align='left',
+        )
+    )
+
+
+if __name__ == '__main__':
+    main()
+
