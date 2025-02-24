@@ -1,0 +1,73 @@
+Metadata-Version: 2.2
+Name: epubparser
+Version: 0.1.0
+Summary: Parse ebooks, extracts chapters and contents.
+Author: lvxvvv
+Maintainer: lvxvvv
+Project-URL: Homepage, https://github.com/lvxvvv/epubparser
+Project-URL: Repository, https://github.com/lvxvvv/epubparser.git
+Project-URL: Issues, https://github.com/lvxvvv/epubparser/issues
+Project-URL: Mastodon, https://mastodon.social/@lvxvvv
+Project-URL: Twitter, https://x.com/lvxvvv
+Project-URL: Changelog, https://github.com/lvxvvv/epubparser/blob/main/CHANGELOG.md
+Keywords: epub,ebook,conversion,filter
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
+Classifier: Programming Language :: Python
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Text Processing
+Classifier: Topic :: Text Processing :: Filters
+Classifier: Topic :: Text Processing :: General
+Classifier: Topic :: Text Processing :: Markup :: XML
+Classifier: Topic :: Text Processing :: Markup :: HTML
+Classifier: Topic :: Text Processing :: Markup
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: ebooklib<0.20,>=0.18
+
+# EpubParser
+
+Parses epub files (wrapper around `ebooklib` package). Extract chapter titles and their corresponding texts. Can also extract the cover image.
+
+
+## Installation
+
+You can install **epubparse** via pip:
+
+```bash
+pip install epubparse
+```
+
+## Usage
+
+```
+epubparse input.epub output.txt 
+```
+
+You can apply some arguments: 
+
+`--skip-toc`
+Skip chapters whose titles match common Table of Contents variants.
+
+`--skip-license`
+Skip chapters whose titles match common License variants.
+
+The arguments above may not be perfect, since it depends on regex an language.
+
+`--extract-cover`
+extracts cover to covers directory. If this argument is passed, output fule must be specified as `None`
+
+
+## License
+This project is licensed under the MIT License.
+
