@@ -1,0 +1,134 @@
+Metadata-Version: 2.1
+Name: gel
+Version: 3.0.0
+Summary: Gel Python driver
+Home-page: https://github.com/edgedb/edgedb-python
+Author: MagicStack Inc
+Author-email: hello@magic.io
+License: Apache License, Version 2.0
+Platform: macOS
+Platform: POSIX
+Platform: Windows
+Provides: edgedb
+Provides: gel
+Requires-Python: >=3.8
+License-File: LICENSE
+Requires-Dist: certifi >=2021.5.30 ; platform_system == "Windows"
+Provides-Extra: ai
+Requires-Dist: httpx ~=0.27.0 ; extra == 'ai'
+Requires-Dist: httpx-sse ~=0.4.0 ; extra == 'ai'
+Provides-Extra: dev
+Requires-Dist: Cython <3.1.0,>=3.0.11 ; extra == 'dev'
+Requires-Dist: pytest >=3.6.0 ; extra == 'dev'
+Requires-Dist: sphinx ~=4.2.0 ; extra == 'dev'
+Requires-Dist: sphinxcontrib-asyncio ~=0.3.0 ; extra == 'dev'
+Requires-Dist: sphinx-rtd-theme ~=1.0.0 ; extra == 'dev'
+Requires-Dist: pycodestyle ~=2.11.1 ; extra == 'dev'
+Requires-Dist: pyflakes ~=3.2.0 ; extra == 'dev'
+Requires-Dist: flake8-bugbear ~=24.4.26 ; extra == 'dev'
+Requires-Dist: flake8 ~=7.0.0 ; extra == 'dev'
+Requires-Dist: SQLAlchemy >=2.0.0 ; extra == 'dev'
+Requires-Dist: sqlmodel >=0.0.22 ; extra == 'dev'
+Requires-Dist: Django >=5.1.3 ; extra == 'dev'
+Requires-Dist: psycopg2-binary >=2.9.10 ; extra == 'dev'
+Requires-Dist: uvloop >=0.15.1 ; (platform_system != "Windows") and extra == 'dev'
+Provides-Extra: docs
+Requires-Dist: sphinx ~=4.2.0 ; extra == 'docs'
+Requires-Dist: sphinxcontrib-asyncio ~=0.3.0 ; extra == 'docs'
+Requires-Dist: sphinx-rtd-theme ~=1.0.0 ; extra == 'docs'
+Provides-Extra: sqltest
+Requires-Dist: SQLAlchemy >=2.0.0 ; extra == 'sqltest'
+Requires-Dist: sqlmodel >=0.0.22 ; extra == 'sqltest'
+Requires-Dist: Django >=5.1.3 ; extra == 'sqltest'
+Requires-Dist: psycopg2-binary >=2.9.10 ; extra == 'sqltest'
+Provides-Extra: test
+Requires-Dist: pycodestyle ~=2.11.1 ; extra == 'test'
+Requires-Dist: pyflakes ~=3.2.0 ; extra == 'test'
+Requires-Dist: flake8-bugbear ~=24.4.26 ; extra == 'test'
+Requires-Dist: flake8 ~=7.0.0 ; extra == 'test'
+Requires-Dist: uvloop >=0.15.1 ; (platform_system != "Windows") and extra == 'test'
+
+The Python driver for Gel
+=========================
+
+.. image:: https://github.com/geldata/gel-python/workflows/Tests/badge.svg?event=push&branch=master
+    :target: https://github.com/geldata/gel-python/actions
+
+.. image:: https://img.shields.io/pypi/v/gel.svg
+    :target: https://pypi.python.org/pypi/gel
+
+.. image:: https://img.shields.io/badge/join-github%20discussions-green
+    :target: https://github.com/geldata/gel/discussions
+
+
+**gel-python** is the official Gel driver for Python.
+It provides both blocking IO and asyncio implementations.
+
+The library requires Python 3.8 or later.
+
+
+Documentation
+-------------
+
+The project documentation can be found
+`here <https://www.geldata.com/docs/clients/00_python/index>`_.
+
+
+Installation
+------------
+
+The library is available on PyPI.  Use ``pip`` to install it::
+
+    $ pip install gel
+
+
+Basic Usage
+-----------
+
+.. code-block:: python
+
+    import datetime
+    import gel
+
+    def main():
+        client = gel.create_client()
+        # Create a User object type
+        client.execute('''
+            CREATE TYPE User {
+                CREATE REQUIRED PROPERTY name -> str;
+                CREATE PROPERTY dob -> cal::local_date;
+            }
+        ''')
+
+        # Insert a new User object
+        client.query('''
+            INSERT User {
+                name := <str>$name,
+                dob := <cal::local_date>$dob
+            }
+        ''', name='Bob', dob=datetime.date(1984, 3, 1))
+
+        # Select User objects.
+        user_set = client.query(
+            'SELECT User {name, dob} FILTER .name = <str>$name', name='Bob')
+        # *user_set* now contains
+        # Set{Object{name := 'Bob', dob := datetime.date(1984, 3, 1)}}
+
+        # Close the client.
+        client.close()
+
+    if __name__ == '__main__':
+        main()
+
+Development
+-----------
+
+Instructions for installing Gel and gel-python locally can be found at
+`www.geldata.com/docs/reference/dev <https://www.geldata.com/docs/reference/dev>`_.
+
+To run the test suite, run ``$ python setup.py test``.
+
+License
+-------
+
+gel-python is developed and distributed under the Apache 2.0 license.
