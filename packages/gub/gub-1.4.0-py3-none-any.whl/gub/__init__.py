@@ -1,0 +1,1 @@
+from .ghubscan import main
