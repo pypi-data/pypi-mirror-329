@@ -1,0 +1,68 @@
+Metadata-Version: 2.3
+Name: gronpy
+Version: 1.0.0
+Summary: A Python port of `gron`
+Author: Adam McKay
+Author-email: adam@beepboop.digital
+Requires-Python: >=3.10,<3.12
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Dist: fake-useragent (>=2.0.3,<3.0.0)
+Requires-Dist: httpx (>=0.25,<0.29)
+Requires-Dist: js2py (>=0.74,<0.75)
+Requires-Dist: rich (>=13.6.0,<14.0.0)
+Requires-Dist: typer (>=0.9,<0.16)
+Description-Content-Type: text/markdown
+
+# Gronpy
+
+A Python port of [gron](https://github.com/tomnomnom/gron/) to make JSON greppable.
+
+## Installation
+
+The recommended way to install is to use `pipx`:
+
+`pipx install gronpy`
+
+## Usage
+
+```
+ % gronpy --help
+
+ Usage: gronpy [OPTIONS] [INPUT_PATH]
+
+╭─ Arguments ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│   input_path      [INPUT_PATH]  Input file path or URL. If not specified uses stdin. [default: (stdin)]                                                           │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --gron                    --ungron                                       Transform JSON into GRON or back again [default: gron]                                   │
+│ --color                   --no-color                                     Enable colouring in terminal. [default: color]                                           │
+│ --user-agent          -u                TEXT                             Set custom User-Agent header for HTTP requests [default: None]                           │
+│ --user-agent-random                                                      Use a random User-Agent header                                                           │
+│ --timeout             -t                INTEGER                          Timeout in seconds for HTTP requests [default: 30]                                       │
+│ --version             -v                                                                                                                                          │
+│ --install-completion                    [bash|zsh|fish|powershell|pwsh]  Install completion for the specified shell. [default: None]                              │
+│ --show-completion                       [bash|zsh|fish|powershell|pwsh]  Show completion for the specified shell, to copy it or customize the installation.       │
+│                                                                          [default: None]                                                                          │
+│ --help                                                                   Show this message and exit.                                                              │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+### Example
+
+```
+% gronpy "https://api.tvmaze.com/schedule?country=GB" | grep "show.name" | grep -i "news"
+json[34].show.name = "Newsround";
+json[40].show.name = "Channel 4 News Summary";
+json[43].show.name = "BBC News at One";
+json[44].show.name = "ITV Lunchtime News";
+json[45].show.name = "5 News Lunchtime";
+json[53].show.name = "5 News";
+json[56].show.name = "BBC News at Six";
+json[58].show.name = "ITV Evening News";
+json[59].show.name = "Channel 4 News";
+json[76].show.name = "ITV News at Ten";
+json[77].show.name = "Newsnight";
+```
+

@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "gronpy"
+version = "1.0.0"
+description = "A Python port of `gron`"
+authors = ["Adam McKay <adam@beepboop.digital>"]
+readme = "README.md"
+packages = [
+    {include = "gronpy", from = "src"},
+]
+
+[tool.poetry.scripts]
+gronpy = "gronpy.__main__:app"
+
+[tool.poetry.dependencies]
+python = "^3.10,<3.12"
+httpx = ">=0.25,<0.29"
+typer = ">=0.9,<0.16"
+rich = "^13.6.0"
+js2py = "^0.74"
+fake-useragent = "^2.0.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+ruff = "^0.2.0"
+pytest-mock = "^3.14.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "I", "PL"]
+ignore = ["E501", "W191"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["gronpy"]
+
+[tool.ruff.lint.pylint]
+max-returns = 10
+max-branches = 20
