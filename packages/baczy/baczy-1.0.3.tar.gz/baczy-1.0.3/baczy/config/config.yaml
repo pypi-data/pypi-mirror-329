@@ -1,0 +1,32 @@
+baczy:
+  args:
+    _input: sample-data/illumina
+    conda_prefix: /home/nala0006/miniconda3/envs/baczy/lib/python3.13/site-packages/baczy/workflow/conda
+    configfile: baczy/config/config.yaml
+    gen_size: 5000000
+    input: null
+    log: test/baczy.log
+    organism: ''
+    output: test
+    profile: null
+    sequencing: paired
+    snake_args:
+    - --cores
+    - '1'
+    - --sdm
+    - apptainer
+    snake_default:
+    - --printshellcmds
+    - --nolock
+    - --show-failed-logs
+    system_config: /home/nala0006/miniconda3/envs/baczy/lib/python3.13/site-packages/baczy/config/config.yaml
+    temp_dir: /tmp
+    threads: 1
+    use_conda: true
+    use_singularity: true
+db_dir: $BACZY_DATABASE_DIR
+gtdbtk:
+  outgroup: d__Archaea
+  taxa_filter: d__Bacteria
+singularity: true
+useconda: true
