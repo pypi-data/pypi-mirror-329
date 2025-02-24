@@ -1,0 +1,24 @@
+{% extends "se/base.html" %}
+{% block top_bar %}
+    <div id="top_bar_links">
+        <ul class="archive_links" style="margin-bottom: 20px">
+            <li>🔗<a href="{% url 'search_redirect' %}?ft1=inc&ff1=lto_url&fo1=equal&fv1={{ doc.url|urlencode }}">Links to here</a></li>
+            <li>🔗<a href="{% url 'search_redirect' %}?ft1=inc&ff1=lby_url&fo1=equal&fv1={{ doc.url|urlencode }}">Links from here</a></li>
+            <li>🌍<a href="{{ url }}" {{ extern_link_flags }}>Source</a></li>
+        </ul>
+    </div>
+{% endblock %}
+{% block body %}
+    <p>
+        🚫 This page has not been indexed yet.
+    </p>
+    <p>
+    </p>
+    {% if 'se.add_document' in perms %}
+        <form method="post" action="{% url 'admin:queue_confirm' %}">
+            {% csrf_token %}
+            <input type="hidden" name="urls" value="{{ url }}">
+            <input type="submit" name="action" value="Add to crawl queue" style="margin-top: 16px">
+        </form>
+    {% endif %}
+{% endblock %}
