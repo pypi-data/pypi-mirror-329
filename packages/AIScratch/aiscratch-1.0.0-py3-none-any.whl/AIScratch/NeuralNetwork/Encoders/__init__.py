@@ -1,0 +1,2 @@
+from AIScratch.NeuralNetwork.Encoders.encoder import Encoder
+from AIScratch.NeuralNetwork.Encoders.minmax_scaling import MinMaxEncoder
