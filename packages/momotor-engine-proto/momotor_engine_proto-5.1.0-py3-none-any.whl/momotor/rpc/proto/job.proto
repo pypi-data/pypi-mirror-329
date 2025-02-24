@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+import "google/protobuf/duration.proto";
+import "momotor/rpc/proto/exception.proto";
+import "momotor/rpc/proto/priority.proto";
+import "momotor/rpc/proto/resource.proto";
+
+package momotor.rpc.proto;
+
+enum JobType {
+    NO_JOB_TYPE = 0;
+    TEST_RECIPE = 1;
+    VERIFY_PRODUCT = 2;
+}
+
+enum JobState {
+    NO_JOB_STATE = 0;
+    INITIALIZING = 1;
+    QUEUED = 2;
+    STARTED = 3;
+    FINISHED = 4;
+    CANCELLED = 5;
+    FAILED = 6;
+    reserved 100 to max;  // Reserved for internal use by clients
+}
+
+message JobStatus {
+    JobState state = 1;  // required
+    google.protobuf.Duration time = 2;  // optional -- expected time remaining until completion
+    uint32 tasks = 3; // optional -- total number of tasks for this job
+    uint32 tasksActive = 4; // optional -- number of currently active tasks
+    uint32 tasksFinished = 5; // optional -- number of finished tasks
+    string failure = 6;  // optional
+    Priority priority = 7;  // optional
+}
+
+message CreateJobRequest {
+    JobType type = 1;  // required
+    bool noCache = 2;  // if set, do not cache assets. optional. Whether caching actually happens is up to the server
+    repeated Resource resource = 3;  // optional
+    Priority priority = 4;  // optional
+};
+
+message CreateJobResponse {
+    string jobId = 1;  // required
+    Exception exception = 1000; // optional
+}
+
+message StartJobRequest {
+    string jobId = 1;  // required
+}
+
+message StartJobResponse {
+    Exception exception = 1000; // optional
+}
+
+message JobStatusRequest {
+    string jobId = 1;  // required
+}
+
+message JobStatusResponse {
+    JobStatus status = 1;
+    Exception exception = 1000; // optional
+}
+
+message EndJobRequest {
+    string jobId = 1;  // required
+}
+
+message EndJobResponse {
+    Exception exception = 1000; // optional
+}
+
+message JobStatusStream {
+    string jobId = 1;  // required
+    JobStatus status = 2;  // required
+    Exception exception = 1000; // optional
+}

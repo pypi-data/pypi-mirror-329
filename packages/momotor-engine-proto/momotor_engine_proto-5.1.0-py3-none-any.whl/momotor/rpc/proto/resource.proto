@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+import "momotor/rpc/proto/exception.proto";
+
+package momotor.rpc.proto;
+
+message Resource {
+    string name = 1;  // required
+    string value = 2;  // required
+}
+
+enum UpdateResourceAction {
+    NO_RESOURCE_ACTION = 0;
+    ADD_RESOURCE_ACTION = 1;
+    REMOVE_RESOURCE_ACTION = 2;
+    SET_RESOURCE_ACTION = 3;
+}
+
+message UpdateResourceRequest {
+    UpdateResourceAction action = 1;  // required
+    repeated Resource resource = 2;  // optional, resources to add or remove
+}
+
+message UpdateResourceResponse {
+    Exception exception = 1000; // optional
+}

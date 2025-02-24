@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "momotor/rpc/proto/asset.proto";
+import "momotor/rpc/proto/job.proto";
+import "momotor/rpc/proto/resource.proto";
+import "momotor/rpc/proto/stats.proto";
+
+package momotor.rpc.proto;
+
+// Service for Momotor clients to start a job
+service Client {
+    // Begin a new job
+    rpc createJob (CreateJobRequest) returns (CreateJobResponse);
+
+    // Upload an asset for the job.
+    // If it returns an UploadAssetResponse with 'assetSelected=true', the asset was already known and has been
+    // selected and the steams are closed.
+    // When 'assetSelected=false' subsequent UploadAssetRequests with the 'chunk' field set should be sent until
+    // all data has been sent. When all data has been received, a final response is sent with 'assetSelected=true'
+    rpc uploadAsset (stream UploadAssetRequest) returns (stream UploadAssetResponse);
+
+    // Start processing the assets in the job.
+    // All required assets for the job type must be selected and uploaded.
+    // If successful, returns an empty response, otherwise returns an exception.
+    rpc startJob (StartJobRequest) returns (StartJobResponse);
+
+    // Get status of a single job
+    rpc jobStatus (JobStatusRequest) returns (JobStatusResponse);
+
+    // Download asset from a job
+    rpc downloadAsset (stream DownloadAssetRequest) returns (stream DownloadAssetResponse);
+
+    // End the job. If processing has not finished, this will cancel any further processing
+    // Assets will be deleted after this call
+    rpc endJob (EndJobRequest) returns (EndJobResponse);
+
+    // Stream version of 'jobStatus'.
+    // Continuously pushes status changes for any active job for the client.
+    // If no jobs are active, the stream is closed.
+    rpc multiJobStatusStream (google.protobuf.Empty) returns (stream JobStatusStream);
+
+    // Update resource settings.
+    // Allows an authorized client to add, remove or list their resources
+    rpc updateResources (UpdateResourceRequest) returns (UpdateResourceResponse);
+
+    // Get statistics for the broker
+    rpc statistics (google.protobuf.Empty) returns (StatisticsResponse);
+};
