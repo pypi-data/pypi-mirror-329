@@ -1,0 +1,53 @@
+[project]
+name = "autochat"
+version = "0.9.0"
+description = "Small OpenAI/Anthropic library to support chat templates, and function calls."
+authors = [
+    {name = "Benjamin Derville", email = "benderville@gmail.com"}
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pillow==10.4.0",
+    "pydantic>=2.10.3",
+]
+
+[project.urls]
+Repository = "https://github.com/BenderV/autochat"
+Changelog = "https://github.com/BenderV/autochat/blob/master/CHANGELOG.md"
+
+[project.optional-dependencies]
+anthropic = ["anthropic>=0.46.0"]
+openai = ["openai>=1.63.2"]
+all = [
+    "anthropic>=0.46.0",
+    "openai>=1.63.2",
+]
+dev = [
+    "anthropic>=0.46.0",
+    "openai>=1.52.2",
+    "pytest-recording>=0.13.2",
+    "pytest>=8.3.4",
+    "ruff>=0.8.3",
+]
+
+[tool.semantic_release]
+version_source = "commit"
+version_variables = [
+    "src/autochat/__init__.py:__version__",
+]
+version_toml = [
+    "pyproject.toml:project.version",
+]
+branch = "master"
+upload_to_pypi = false
+upload_to_release = true
+build_command = "pip install build && python -m build"
+changelog_file = "CHANGELOG.md"
+dist_path = "dist/"
+commit_message = "chore(release): bump version to {version}"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
