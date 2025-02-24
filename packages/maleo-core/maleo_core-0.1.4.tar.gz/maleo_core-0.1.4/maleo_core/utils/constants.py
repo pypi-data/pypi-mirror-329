@@ -1,0 +1,4 @@
+EMAIL_REGEX:str = r"^[^\s@]+@[^\s@]+\.[^\s@]+$"
+TOKEN_COOKIE_KEY_NAME="token"
+REFRESH_TOKEN_DURATION_DAYS:int = 7
+ACCESS_TOKEN_DURATION_MINUTES:int = 5
