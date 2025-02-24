@@ -1,0 +1,179 @@
+Metadata-Version: 2.2
+Name: cogrow-protean
+Version: 0.0.1
+Summary: The official Python library for the Protean API
+Author-email: CoGrow <support@cogrow.tech>
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: httpx<1,>=0.28.1
+Requires-Dist: pydantic<3,>=2.10.6
+Provides-Extra: test
+Requires-Dist: pytest==8.*; extra == "test"
+Requires-Dist: pytest-cov==6.*; extra == "test"
+Requires-Dist: pytest-httpx<1,>=0.35.0; extra == "test"
+
+from protean.models import VectorSearchRequestfrom protean.models import QuestionRequest
+
+# Protean SDK Python
+
+The CoGrow Protean Python library provides convenient access to the Protean REST API from any Python 3.11+ application.
+The library includes type definitions for all request params and response fields, and offers synchronous client powered
+by httpx.
+
+## Installation
+
+```sh
+# install from PyPI
+pip install cogrow-protean
+```
+
+## Chat
+
+### Question
+
+Given a user message and provided datasets, the model will generate appropriate response.
+
+#### Example of base request that includes foundational configuration parameters
+
+```python
+import os
+from protean import Protean
+from protean.models import QuestionRequest
+
+client = Protean(
+    base_url=os.environ.get("PROTEAN_BASE_KEY"),  # This is the default and can be omitted.
+    api_key=os.environ.get("PROTEAN_API_KEY"),  # This is the default and can be omitted.
+)
+
+question_request = QuestionRequest(
+    user_message="Write hello world in python",
+    system_message="You are Protean, a friendly, helpful, kind and good at writing chatbot.",
+    model_id="6e081e54-4866-4729-9cf4-8fe32f2c0533",
+    temperature=0.1,  # This is the default and can be omitted.
+    datasets=["*"],
+    # Include all datasets available to you. Otherwise provide dataset GUIDs to include only specific datasets.
+    limit=3,  # This is the default and can be omitted.
+    relevance_threshold=0.8  # This is the default and can be omitted.
+)
+
+chat_question = client.chat.question(question_request=question_request)
+```
+
+#### Example of assistant based request where model, system message, temperature and datasets values are taken from the Assistant configuration
+
+```python
+import os
+from protean import Protean
+from protean.models import QuestionRequest
+
+client = Protean(
+    base_url=os.environ.get("PROTEAN_BASE_KEY"),  # This is the default and can be omitted.
+    api_key=os.environ.get("PROTEAN_API_KEY"),  # This is the default and can be omitted.
+)
+
+question_request = QuestionRequest(
+    user_message="Write hello world in python",
+    assistant_id="d0201a23-e04f-4269-b252-648120fd81df",
+    limit=3,  # This is the default and can be omitted.
+    relevance_threshold=0.8  # This is the default and can be omitted.
+)
+
+chat_question = client.chat.question(question_request=question_request)
+```
+
+#### Example of request that generates tool input response
+
+```python
+import os
+from protean import Protean
+from protean.models import QuestionRequest, ClientTools, ToolDefinition
+
+client = Protean(
+    base_url=os.environ.get("PROTEAN_BASE_KEY"),  # This is the default and can be omitted.
+    api_key=os.environ.get("PROTEAN_API_KEY"),  # This is the default and can be omitted.
+)
+
+client_tools = ClientTools(parallel_calls=True, definitions=[
+    ToolDefinition(
+        name="get_current_weather",
+        description="Get current weather",
+        input_schema={
+            "type": "object",
+            "properties": {
+                "location": {
+                    "type": "string",
+                    "description": "The city and country, eg. San Francisco, USA"
+                },
+                "format": {
+                    "type": "string",
+                    "enum": [
+                        "celsius",
+                        "fahrenheit"
+                    ]
+                }
+            },
+            "required": [
+                "location",
+                "format"
+            ]
+        }
+    ),
+    ToolDefinition(
+        name="get_current_time",
+        description="Get the current time",
+        input_schema={
+            "type": "object",
+            "properties": {
+                "location": {
+                    "type": "string",
+                    "description": "The city and country, eg. San Francisco, USA"
+                }
+            },
+            "required": [
+                "location"
+            ]
+        }
+    )
+])
+
+question_request = QuestionRequest(
+    user_message="What is the time and weather in Eindhoven?",
+    system_message="You are Protean, a friendly, helpful, kind and good at writing chatbot.",
+    model_id="6e081e54-4866-4729-9cf4-8fe32f2c0533",
+    client_tools=client_tools
+)
+
+chat_question = client.chat.question(question_request=question_request)
+```
+
+## Vector
+
+### Search
+
+Search for vector documents that closely match provided query. Service utilizes both hybrid search and reranking to
+retrieve the best possible match.
+
+```python
+import os
+from protean import Protean
+from protean.models import VectorSearchRequest
+
+client = Protean(
+    base_url=os.environ.get("PROTEAN_BASE_KEY"),  # This is the default and can be omitted.
+    api_key=os.environ.get("PROTEAN_API_KEY"),  # This is the default and can be omitted.
+)
+
+vector_search_request = VectorSearchRequest(
+    query="What are the company security policies for handling data?",
+    resource_ids=["840a228d-a718-40b7-9ac5-b0a716b3896b"], # Existing dataset GUIDs to query against.
+    limit=3,  # This is the default and can be omitted.
+    relevance_threshold=0.8  # This is the default and can be omitted.
+)
+
+vector_search = client.vector.search(vector_search_request=vector_search_request)
+```
