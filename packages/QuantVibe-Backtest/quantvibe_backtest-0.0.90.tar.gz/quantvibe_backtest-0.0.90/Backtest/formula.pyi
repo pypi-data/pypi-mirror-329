@@ -1,0 +1,23 @@
+import pandas as pd
+import numpy as np
+
+def rolling_ema(data: np.ndarray, window: int) -> np.ndarray:
+    ...
+
+def rolling_wma(data: np.ndarray, window: int) -> np.ndarray:
+    ...
+
+def rolling_mean_normalize(df: pd.DataFrame, rolling_window: int) -> pd.DataFrame:
+    ...
+
+def rolling_zscore(df: pd.DataFrame, rolling_window: int) -> pd.DataFrame:
+    ...
+
+def rolling_rsi(df: pd.DataFrame, rolling_window: int) -> pd.DataFrame:
+    ...
+
+def rolling_bollinger_bands(df: pd.DataFrame, rolling_window: int, multiplier: float) -> pd.DataFrame:
+    ...
+
+def calculate_macd(df: pd.DataFrame, short_window: int, long_window: int, signal_window: int = 9) -> pd.DataFrame:
+    ...
