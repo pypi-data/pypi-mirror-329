@@ -1,0 +1,147 @@
+Metadata-Version: 2.2
+Name: crewai-adapters
+Version: 0.1.2
+Summary: Native adapter support for CrewAI with Model Context Protocol (MCP) integration
+Author-email: Shivendra Kumar <dshivendra88@gmail.com>
+License: MIT
+Project-URL: Homepage, https://github.com/dshivendra/crewai_mcp_adapter
+Project-URL: Documentation, https://github.com/dshivendra/crewai_mcp_adapter/tree/main/docs
+Project-URL: Repository, https://github.com/dshivendra/crewai_mcp_adapter.git
+Project-URL: Issues, https://github.com/dshivendra/crewai_mcp_adapter/issues
+Keywords: crewai,mcp,adapters,ai,agents
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: crewai>=0.1.0
+Requires-Dist: pydantic>=2.0.0
+Requires-Dist: mcp>=1.3.0
+Requires-Dist: pydantic-core>=2.0.0
+Requires-Dist: build>=1.2.2.post1
+Requires-Dist: twine>=6.1.0
+Provides-Extra: test
+Requires-Dist: pytest>=8.3.4; extra == "test"
+Requires-Dist: pytest-asyncio>=0.25.3; extra == "test"
+Provides-Extra: docs
+Requires-Dist: mkdocs>=1.5.0; extra == "docs"
+Requires-Dist: mkdocs-material>=9.5.0; extra == "docs"
+
+# CrewAI MCP Adapter
+
+A Python library extending CrewAI's adapter ecosystem with [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) integration support and comprehensive tooling for custom agent and tool development.
+
+## Features
+
+- 🔌 Native CrewAI integration and adapter patterns 
+- 🛠️ MCP protocol support for tool integration
+- 🧩 Easy-to-use interface for extending and creating new adapters
+- 📝 Type-safe implementation with Pydantic
+- 🔍 JSON Schema validation for tool parameters
+- 🚀 Async/await support
+- 📊 Detailed execution metadata
+
+## Installation
+
+You can install the package directly from PyPI:
+
+```bash
+pip install crewai-adapters
+```
+
+Or install from source:
+
+```bash
+pip install git+https://github.com/dshivendra/crewai_mcp_adapter.git
+```
+
+## Quick Start
+
+```python
+from crewai import Agent, Task
+from crewai_adapters import CrewAIAdapterClient
+from crewai_adapters.types import AdapterConfig
+
+async def main():
+    async with CrewAIAdapterClient() as client:
+        # Connect to MCP server
+        await client.connect_to_mcp_server(
+            "math",
+            command="python",
+            args=["math_server.py"]
+        )
+
+        # Create agent with tools
+        agent = Agent(
+            name="Calculator",
+            goal="Perform calculations",
+            tools=client.get_tools()
+        )
+
+        # Execute task
+        task = Task(
+            description="Calculate (3 + 5) × 12",
+            agent=agent
+        )
+        result = await task.execute()
+        print(f"Result: {result}")
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())
+```
+
+## Documentation
+
+For detailed documentation, see:
+- [Getting Started Guide](docs/index.md)
+- [API Reference](docs/api_reference.md)
+- [Examples](docs/examples.md)
+
+## Development
+
+### Prerequisites
+
+- Python 3.11 or higher
+- `crewai` package
+- `pydantic` package
+- `mcp` package
+
+### Install Development Dependencies
+
+```bash
+pip install -e ".[test,docs]"
+```
+
+### Running Tests
+
+```bash
+pytest tests/ -v
+```
+
+## Publishing
+
+To publish a new version to PyPI:
+
+1. Update version in pyproject.toml
+2. Build the package:
+   ```bash
+   python -m build
+   ```
+3. Upload to PyPI:
+   ```bash
+   python -m twine upload dist/*
+   ```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
