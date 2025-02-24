@@ -1,0 +1,1 @@
+from PictureTextCreator.PTC import GetPictureWithText
