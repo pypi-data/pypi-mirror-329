@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "kantrack"
+version = "0.1.1"
+description = "Super lightweight task tracker that integrates directly with Git repositories."
+authors = ["Ed Collins <edward.g.collins.1995@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/EdCo95/kantrack"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.115.8"
+uvicorn = "^0.34.0"
+typer = "^0.15.1"
+requests = "^2.32.3"
+
+
+[tool.poetry.scripts]
+kantrack = "kantrack.cli:app"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.1.0"
+black = "^25.1.0"
+isort = "^6.0.0"
+
+
+[tool.black]
+line-length = 88
+target-version = ['py39', 'py310', 'py311']
+
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
