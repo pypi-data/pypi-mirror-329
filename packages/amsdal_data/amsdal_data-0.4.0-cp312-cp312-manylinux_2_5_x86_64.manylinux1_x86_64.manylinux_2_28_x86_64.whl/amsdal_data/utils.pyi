@@ -1,0 +1,29 @@
+import amsdal_glue as glue
+from amsdal_data.connections.constants import SECONDARY_PARTITION_KEY as SECONDARY_PARTITION_KEY
+from amsdal_data.connections.db_alias_map import CONNECTION_BACKEND_ALIASES as CONNECTION_BACKEND_ALIASES
+from amsdal_data.connections.historical.data_query_transform import META_PRIMARY_KEY_FIELDS as META_PRIMARY_KEY_FIELDS
+from amsdal_glue_core.common.interfaces.connection import ConnectionBase as ConnectionBase
+from amsdal_utils.config.data_models.repository_config import RepositoryConfig as RepositoryConfig
+from amsdal_utils.schemas.schema import ObjectSchema as ObjectSchema
+from amsdal_utils.utils.singleton import Singleton
+from typing import Any
+
+TABLE_NAME_PROPERTY: str
+PRIMARY_KEY_PROPERTY: str
+FOREIGN_KEYS_PROPERTY: str
+UNIQUE_PROPERTY: str
+INDEXED_PROPERTY: str
+
+class SchemaManagerBase: ...
+
+class SchemaManagerHandler(metaclass=Singleton):
+    _schema_manager: SchemaManagerBase | None
+    def __init__(self) -> None: ...
+    def set_schema_manager(self, schema_manager: SchemaManagerBase) -> None: ...
+    def get_schema_manager(self) -> SchemaManagerBase: ...
+
+def resolve_backend_class(backend: str) -> type[ConnectionBase]: ...
+def get_schemas_for_connection_name(connection_name: str, repository_config: RepositoryConfig) -> list[str | None]: ...
+def object_schema_to_glue_schema(object_schema: ObjectSchema, *, is_lakehouse_only: bool = False, use_foreign_keys: bool = False) -> glue.Schema: ...
+def object_schema_type_to_glue_type(property_type: str) -> glue.Schema | glue.SchemaReference | type[Any]: ...
+def is_reference_type(property_type: str) -> bool: ...
