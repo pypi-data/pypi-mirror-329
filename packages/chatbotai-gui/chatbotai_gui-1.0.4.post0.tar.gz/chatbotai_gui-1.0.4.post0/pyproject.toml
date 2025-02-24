@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=66", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chatbotai-gui"
+version = "1.0.4-r"
+description = "A chatbot GUI that uses OpenAI, MetaAI, and Google Generative AI."
+authors = [{ name = "ProgMEM-CC" }]
+license = { text = "AGPL-3.0-or-later" }  # ✅ No `license-file`
+dependencies = [
+    "openai",
+    "meta_ai_api",
+    "google-generativeai"
+]
+readme = "README.rst"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "coverage",
+    "flake8",
+    "black",
+    "isort"
+]
+
+[tool.setuptools]
+packages = ["chatai"]
+license-files = []  # ✅ Explicitly disable auto-detecting LICENSE file
+
+[tool.setuptools.package-data]
+"chatai" = ["*.txt", "*.md", "*.json"]
