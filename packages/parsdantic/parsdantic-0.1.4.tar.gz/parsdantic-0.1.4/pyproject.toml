@@ -1,0 +1,21 @@
+[project]
+name = "parsdantic"
+version = "0.1.4"
+description = "Parsdantic is a powerful Python package that automatically generates Pydantic models from JSON schemas."
+readme = "README.md"
+authors = [
+    { name = "SergiFuster", email = "sergifusterdura@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "jsonref>=1.1.0",
+    "pydantic>=2.10.6",
+    "pytest>=8.3.4",
+]
+
+[project.scripts]
+parsdantic = "parsdantic:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
