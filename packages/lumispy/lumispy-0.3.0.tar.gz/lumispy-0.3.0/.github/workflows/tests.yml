@@ -1,0 +1,90 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  run_test_suite:
+    name: ${{ matrix.os }}-py${{ matrix.PYTHON_VERSION }}${{ matrix.LABEL }}
+    runs-on: ${{ matrix.os }}-latest
+    timeout-minutes: 30
+    env:
+      MPLBACKEND: agg
+      PIP_ARGS: --upgrade -e
+      PYTEST_ARGS: --pyargs lumispy
+      PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu, windows, macos]
+        PYTHON_VERSION: ['3.10', '3.12']
+        PIP_SELECTOR: ['[tests]',]
+        include:
+          - os: ubuntu
+            PYTHON_VERSION: '3.11'
+            PIP_SELECTOR: '[tests]'
+          - os: ubuntu
+            PYTHON_VERSION: '3.13'
+            PIP_SELECTOR: '[tests]'
+            # test for dev as long as HyperSpy 3.13 support is not released
+            LABEL: '-dev'
+          # dev
+          - os: ubuntu
+            PYTHON_VERSION: '3.12'
+            PIP_SELECTOR: '[tests]'
+            LABEL: '-dev'
+          # minimum
+          - os: ubuntu
+            PYTHON_VERSION: '3.9'
+            PIP_SELECTOR: '[tests]'
+            LABEL: '-minimum'
+          # oldest
+          - os: ubuntu 
+            PYTHON_VERSION: '3.9'
+            PIP_SELECTOR: '[tests]'
+            LABEL: -release-oldest
+            # Matching pyproject.toml
+            DEPENDENCIES: hyperspy==1.7.3
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        name: Install Python
+        with:
+          python-version: ${{ matrix.PYTHON_VERSION }}
+
+      - name: Display version
+        run: |
+          python --version
+          pip --version
+
+      - name: Install
+        shell: bash # needed for pip-selector under windows
+        run: |
+          pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
+
+      - name: Install (HyperSpy dev)
+        # Test against the hyperspy `RELEASE_next_minor` branch
+        if: contains( matrix.LABEL, 'dev')
+        shell: bash
+        run: |
+          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
+
+      - name: Install oldest supported version
+        if: contains( matrix.LABEL, 'oldest')
+        run: |
+          pip install ${{ matrix.DEPENDENCIES }}
+
+      - name: Pip list
+        run: |
+          pip list
+
+      - name: Run test suite
+        run: |
+          pytest ${{ env.PYTEST_ARGS }} ${{ matrix.PYTEST_ARGS_COVERAGE }}
+
+      - name: Upload coverage to Codecov
+        if: ${{ always() }} && ${{ matrix.PYTEST_ARGS_COVERAGE }} 
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
