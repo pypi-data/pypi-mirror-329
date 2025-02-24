@@ -1,0 +1,128 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "owlsight"
+dynamic = ["version"]
+description = "Owlsight is a commandline tool which combines open-source AI models with Python functionality to create a powerful AI assistant."
+authors = [{ name = "Vincent Ouwendijk" }]
+license = { text = "MIT" }
+readme = "README.md"
+dependencies = [
+    "transformers",
+    "pandas",
+    "numpy",
+    "torch",
+    "bitsandbytes",
+    "accelerate",
+    "sentencepiece",
+    "prompt_toolkit==2.0.10",
+    "keyboard",
+    "scikit-learn",
+    "beautifulsoup4",
+    "jinja2",
+    "tqdm",
+    "pynput",
+    "dill",
+    "tika",
+    "html5lib",
+    "aiohttp",
+    "duckduckgo_search",
+]
+
+[project.optional-dependencies]
+dev = [
+    "build",
+    "twine",
+    "pytest",
+    "pytest-asyncio<=0.24",
+    "ruff",
+    "black",
+]
+
+gguf = [
+    "llama-cpp-python",
+]
+
+onnx = [
+    "onnxruntime-genai",
+    "onnxruntime-genai-cuda",
+]
+
+search = [
+    "sentence-transformers",
+]
+
+multimodal = [
+    "pytesseract",
+    "pillow",
+]
+
+offline = []
+
+# more info: https://pypi.org/project/RealtimeSTT/
+voice = [
+    "pyaudio",
+    "RealtimeSTT",
+    "ctranslate2==3.24.0",
+]
+
+# Define the "all" option to include everything (base + optional dependencies)
+all = [
+    # Base dependencies
+    "psutil",
+    "transformers",
+    "pandas",
+    "numpy",
+    "torch",
+    "bitsandbytes",
+    "accelerate",
+    "sentencepiece",
+    "prompt_toolkit<=2.0.10",
+    "keyboard",
+    "scikit-learn",
+    "beautifulsoup4",
+    "jinja2",
+    "tqdm",
+    "pynput",
+    "tika",
+    "aiohttp",
+    "html5lib",
+    "duckduckgo_search",
+    # Optional dependencies
+    "llama-cpp-python",
+    "onnxruntime-genai",
+    "onnxruntime-genai-cuda",
+    "sentence-transformers",
+    "pytesseract",
+    "pillow",
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+
+[project.entry-points.console_scripts]
+owlsight = "owlsight.main:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.package-data]
+"owlsight.offline" = ["blobs/**/*"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["blobs/**/*"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 120
+
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "node-and-date"
