@@ -1,0 +1,240 @@
+Metadata-Version: 2.2
+Name: vedro-spec-compare
+Version: 0.9.0
+Summary: OpenAPI spec compare
+Home-page: https://github.com/kvs8/vedro-spec-compare
+Author: Konstantin Shefer
+Author-email: kostya.shefer.999@gmail.com
+License: Apache-2.0
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: jinja2<4.0.0,>=3.1.4
+Requires-Dist: schemax<3.0.0,>=2.0.2
+Requires-Dist: PyYAML<7.0.0,>=6.0.2
+Requires-Dist: requests<3.0.0,>=2.32.3
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# vedro-spec-compare
+
+[![PyPI](https://img.shields.io/pypi/v/vedro-spec-compare.svg?style=flat-square)](https://pypi.org/project/vedro-spec-compare/)
+[![Python Version](https://img.shields.io/pypi/pyversions/vedro-spec-compare.svg?style=flat-square)](https://pypi.org/project/vedro-spec-compare/)
+
+# Description
+
+`vedro-spec-compare` is a tool for comparing two OpenAPI specifications and generating reports.
+
+
+# Installation
+
+```bash
+pip3 install vedro-spec-compare
+```
+
+
+# Usage
+
+## Help
+
+```bash
+vsc --help
+```
+```
+usage: vsc [-h] {coverage,discrepancy,changes} ...
+
+vedro-spec-compare commands
+
+positional arguments:
+  {coverage,discrepancy,changes}
+                        Available commands
+    coverage            Generate coverage report
+    discrepancy         Generate discrepancy report
+    changes             Generate changes report
+
+options:
+  -h, --help            show this help message and exit
+```
+
+
+## Coverage
+The `coverage` command compares a "golden" OpenAPI spec with a "testing" spec and generates a coverage report.
+[Sample report](https://github.com/kvs8/vedro-spec-compare/tree/main/tests/e2e/test_data/coverage).
+
+![Coverage report](https://raw.githubusercontent.com/kvs8/vedro-spec-compare/refs/heads/main/images/coverage_report.png)
+
+```bash
+vsc coverage --help
+```
+```
+usage: vsc coverage [-h] [--report-path REPORT_PATH] golden_spec_path testing_spec_path
+
+positional arguments:
+  golden_spec_path      Path to the golden OpenAPI spec
+  testing_spec_path     Path to the testing OpenAPI spec
+
+options:
+  -h, --help            show this help message and exit
+  --report-path REPORT_PATH
+                        The path of the coverage report
+```
+
+### Examples
+
+#### From yml files
+```bash
+vsc coverage golden_spec.yml testing_spec.yml
+```
+```bash
+google-chrome coverage.html 
+```
+
+#### From json files
+```bash
+vsc coverage golden_spec.json testing_spec.json
+```
+```bash
+google-chrome coverage.html 
+```
+
+#### From urls
+```bash
+vsc coverage https://raw.githubusercontent.com/kvs8/vedro-spec-compare/refs/heads/main/tests/e2e/test_data/coverage/golden.yml https://raw.githubusercontent.com/kvs8/vedro-spec-compare/refs/heads/main/tests/e2e/test_data/coverage/testing.yml
+```
+```bash
+google-chrome coverage.html 
+```
+
+#### With report path
+```bash
+vsc coverage golden_spec.yml testing_spec.yml --report-path coverage_report.html
+```
+```bash
+google-chrome coverage_report.html 
+```
+
+
+## Discrepancy
+The `discrepancy` command highlights differences or inconsistencies between a "golden" spec and a "testing" spec. 
+[Sample report](https://github.com/kvs8/vedro-spec-compare/tree/main/tests/e2e/test_data/discrepancy).
+
+![Discrepancy report](https://raw.githubusercontent.com/kvs8/vedro-spec-compare/refs/heads/main/images/discrepancy_report.png)
+
+```bash
+vsc discrepancy --help
+```
+```
+usage: vsc discrepancy [-h] [--report-path REPORT_PATH] golden_spec_path testing_spec_path
+
+positional arguments:
+  golden_spec_path      Path to the golden OpenAPI spec
+  testing_spec_path     Path to the testing OpenAPI spec
+
+options:
+  -h, --help            show this help message and exit
+  --report-path REPORT_PATH
+                        The path of the discrepancy report
+```
+
+### Examples
+
+#### From yml files
+```bash
+vsc discrepancy golden_spec.yml testing_spec.yml
+```
+```bash
+google-chrome discrepancy.html 
+```
+
+#### From json files
+```bash
+vsc discrepancy golden_spec.json testing_spec.json
+```
+```bash
+google-chrome discrepancy.html 
+```
+
+#### From urls
+```bash
+vsc discrepancy https://raw.githubusercontent.com/kvs8/vedro-spec-compare/refs/heads/main/tests/e2e/test_data/discrepancy/golden.yml https://raw.githubusercontent.com/kvs8/vedro-spec-compare/refs/heads/main/tests/e2e/test_data/discrepancy/testing.yml
+```
+```bash
+google-chrome discrepancy.html 
+```
+
+#### With report path
+```bash
+vsc discrepancy golden_spec.yml testing_spec.yml --report-path coverage_report.html
+```
+```bash
+google-chrome discrepancy.html 
+```
+
+
+## Changes
+The `changes` command shows the changes between two versions of the specification: the current and the previous.
+[Sample report](https://github.com/kvs8/vedro-spec-compare/tree/main/tests/e2e/test_data/changes).
+
+![Changes report](https://raw.githubusercontent.com/kvs8/vedro-spec-compare/refs/heads/main/images/changes_report.png)
+
+```bash
+vsc changes --help
+```
+```
+usage: vsc changes [-h] [--report-path REPORT_PATH] current_spec_path previous_spec_path
+
+positional arguments:
+  current_spec_path     Path to the current OpenAPI spec
+  previous_spec_path    Path to the previous OpenAPI spec
+
+options:
+  -h, --help            show this help message and exit
+  --report-path REPORT_PATH
+                        The path of the changes report
+```
+
+### Examples
+
+#### From yml files
+```bash
+vsc changes current_spec.yml previous_spec.yml
+```
+```bash
+google-chrome changes.html 
+```
+
+#### From json files
+```bash
+vsc changes current_spec.json previous_spec.json
+```
+```bash
+google-chrome changes.html 
+```
+
+#### From urls
+```bash
+vsc changes https://raw.githubusercontent.com/kvs8/vedro-spec-compare/refs/heads/main/tests/e2e/test_data/changes/current.yml https://raw.githubusercontent.com/kvs8/vedro-spec-compare/refs/heads/main/tests/e2e/test_data/changes/previous.yml
+```
+```bash
+google-chrome changes.html 
+```
+
+#### With report path
+```bash
+vsc changes current_spec.yml previous_spec.yml --report-path changes_report.html
+```
+```bash
+google-chrome changes.html 
+```

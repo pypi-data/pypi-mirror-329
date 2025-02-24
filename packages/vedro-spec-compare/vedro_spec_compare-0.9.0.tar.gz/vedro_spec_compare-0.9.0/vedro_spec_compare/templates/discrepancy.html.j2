@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="color-scheme" content="light dark" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css"/>
+        <title>Discrepancy report</title>
+
+        <style>
+            button:hover {
+                opacity: 0.6;
+            }
+            .center-text {
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 60vh;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header class="container">
+            <h1>Discrepancy report:</h1>
+        </header>
+
+        <main class="container">
+
+            {% if methods_partial or methods_empty %}
+                {% for discrepancy_type, methods, color in [('Partially described', methods_partial, 'pumpkin-300'), ('Not described', methods_empty, 'red-500')] %}
+                    <div>
+                        {% if methods %}
+                            <h2 class="pico-color-{{ color }}">{{ discrepancy_type }}:</h2>
+                            {% for method in methods %}
+                                <details>
+                                    <summary role="button" class="outline secondary">
+                                        <b class="pico-color-grey-50">{{ method.method|upper }} {{ method.route }}</b>
+                                    </summary>
+
+                                {% if method.missed_query_params %}
+                                    <article>
+                                        <h3> Query-parameters:</h3>
+
+                                        <hr>
+                                        <h6> Undocumented parameters:</h6>
+                                        {% for query in method.missed_query_params %}
+                                            <kbd>{{ query }}</kbd>
+                                        {% endfor %}
+
+                                    </article>
+                                {% endif %}
+
+
+                                {% if method.request_body_diff %}
+                                    <article>
+                                    <h3> Request body:</h3>
+
+                                    {% for content_diff in method.request_body_diff.values() %}
+                                        <hr>
+                                        <h5> Content <u>{{ content_diff.content }}</u>: </h5>
+
+                                        {% if content_diff.missed_fields %}
+                                            <hr>
+                                            <h6> Uncovered fields: </h6>
+                                            {% for fields in content_diff.missed_fields %}
+                                                <kbd>{{ fields }}</kbd>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    </article>
+                                {% endif %}
+
+
+                                {% if method.response_body_diff or method.missed_status_codes %}
+                                    <article>
+                                    <h3> Response body:</h3>
+
+                                    {% if method.missed_status_codes %}
+                                        <hr>
+                                        <h6> Uncovered status codes:</h6>
+                                        {% for code in method.missed_status_codes %}
+                                            <kbd>{{ code }}</kbd>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    {% for body_diff in method.response_body_diff.values() %}
+                                        <hr>
+                                        <h4> Status <u>{{ body_diff.code }}</u>: </h4>
+
+                                        {% for content_diff in body_diff.content_diff.values() %}
+                                            <hr>
+                                            <h5> Content <u>{{ content_diff.content }}</u>: </h5>
+
+                                            {% if content_diff.missed_fields %}
+                                                <hr>
+                                                <h6> Uncovered fields: </h6>
+                                                {% for fields in content_diff.missed_fields %}
+                                                    <kbd>{{ fields }}</kbd>
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+
+                                    </article>
+                                {% endif %}
+
+                                </details>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h1 class= "pico-color-green-500 center-text">No discrepancy detected :)</h1>
+            {% endif %}
+
+        </main>
+    </body>
+</html>
