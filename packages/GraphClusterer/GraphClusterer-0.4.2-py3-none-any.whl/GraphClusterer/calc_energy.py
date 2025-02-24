@@ -1,0 +1,178 @@
+import os
+import pickle
+import numpy as np
+import dcor
+from copy import deepcopy
+from scipy.stats import gaussian_kde
+from . import embed_abstract as ea  # Change to relative import in pip version
+from sklearn.decomposition import PCA
+
+
+def load_embedding(ds_name, embeddings_dir='data/embeddings'):
+    """Load embeddings only once to avoid redundant loading."""
+    embedding_path = None
+    if not os.path.exists(embeddings_dir):  # Create directory if it does not exist
+        os.makedirs(embeddings_dir, exist_ok=True)
+
+    for _embedding in os.listdir(embeddings_dir):
+        if _embedding.startswith(ds_name):
+            embedding_path = os.path.join(embeddings_dir, _embedding)
+            break
+
+    if embedding_path is None or not os.path.exists(embedding_path):  # If the embedding file does not exist, create it.
+        print(f"Embedding file for {ds_name} does not exist. Creating a new embedding file...")
+        path = input(f"Enter the path to the dataset file for {ds_name}: ")
+        if not os.path.exists(path):
+            print('Using the default dataset: 3D printing.')
+            path = 'data/3D printing_papers.csv'
+
+        embedding_dct = ea.make_embedding_file(ds_name, path)
+        return embedding_dct
+
+    with open(embedding_path, 'rb') as f:
+        embedding_dct = pickle.load(f)
+
+    return embedding_dct
+
+
+def load_kde_vals(ds_name, kde_dir='data/kde_values'):
+    """Load KDE values only once to avoid redundant loading."""
+    kde_path = None
+
+    if not os.path.exists(kde_dir):  # Create directory if it does not exist
+        os.makedirs(kde_dir, exist_ok=True)
+
+    for _kde in os.listdir(kde_dir):
+        if _kde.startswith(ds_name):
+            kde_path = os.path.join(kde_dir, _kde)
+            break
+
+    if kde_path is None:
+        return None
+
+    with open(kde_path, 'rb') as f:
+        kde_vals = pickle.load(f)
+
+    return kde_vals
+
+
+def get_kde_values(ds_name, embeddings_dict, n_components_=5):
+    """
+    Reduce dimensionality using PCA and compute KDE values.
+    Save KDE values to a file.
+    :param ds_name:  Name of the dataset
+    :param embeddings_dict:  Dictionary of embeddings
+    :param n_components_:   Number of components for PCA
+    :return:
+    """
+    values = []  # Combine all embedding arrays into a single list for KDE filtering
+    id_map = {k: [] for k in embeddings_dict.keys()}  # Map ID to sentence embeddings
+
+    for k, v in embeddings_dict.items():
+        for i in range(v.shape[0]):
+            values.append(v[i])
+            id_map[k].append((v[i], 0))  # Map sentence embedding to its ID
+
+    values = np.array(values)  # Convert to numpy array
+
+    vals = PCA(n_components=n_components_).fit_transform(values)
+    values = vals.T
+
+    kde = gaussian_kde(values)
+
+    # Compute KDE values
+    for k in id_map.keys():
+        for i in range(len(id_map[k])):
+            id_map[k][i] = (id_map[k][i][0], kde.logpdf(vals[i]))  # Update KDE values
+
+    # Save KDE values to a file
+    kde_file = f'data/kde_values/{ds_name}.pkl'
+    try:
+        with open(kde_file, 'wb') as f:
+            pickle.dump(id_map, f)
+    except OSError:
+        dir_ = 'data/kde_values'
+        os.makedirs(dir_, exist_ok=True)  # Create directory if it does not exist
+        with open(kde_file, 'wb') as f:
+            pickle.dump(id_map, f)
+
+    return id_map
+
+
+def filter_data(ds_name, embedding_dict, _lb, _ub, n_components_=5):
+    """
+    Filter data points based on KDE values.
+    :param ds_name:  Data to be filtered
+    :param embedding_dict:  Dictionary of embeddings
+    :param _lb:  Lower threshold for KDE values
+    :param _ub:  Upper threshold for KDE values
+    :param n_components_:  Number of components for PCA
+    """
+    kde_vals = load_kde_vals(ds_name)  # Load KDE values
+    if kde_vals is None:
+        kde_vals = get_kde_values(ds_name, embedding_dict, n_components_)  # Compute KDE values.
+
+    for k, values in kde_vals.items():  # Filter embeddings based on KDE values
+        embeddings_to_keep = []
+        for v in values:
+            if _lb <= v[1] <= _ub:
+                embeddings_to_keep.append(v[0])
+        embedding_dict[k] = np.array(embeddings_to_keep)  # Update embeddings
+
+    return embedding_dict  # Return filtered embeddings
+
+
+def compute_energy_distance_matrix(ds_name, _lb, _ub, n_components_=5):
+    """Compute the energy distance matrix for the embedding file that starts with 'ds_name'."""
+    embedding_dict = load_embedding(ds_name)  # Load embeddings
+
+    # Filter embeddings based on KDE values
+    filtered_data = filter_data(ds_name, embedding_dict, _lb, _ub, n_components_)
+    ids = list(filtered_data.keys())
+
+    # Create a deep copy of the original embedding dictionary for modification
+    temp_dict = deepcopy(filtered_data)
+
+    # Filter the dictionary by removing embeddings identified as outliers
+    for key, value in filtered_data.items():
+        temp_dict[key] = np.array(value)  # Convert list to numpy array
+
+    # Initialize energy distance matrix
+    energy_distance_matrix = np.zeros(shape=(len(ids), len(ids)))
+
+    # Compute energy distances
+    for i in range(len(ids)):
+        for j in range(i + 1, len(ids)):
+            id_i = ids[i]
+            id_j = ids[j]
+            embedding_i = temp_dict[id_i]
+            embedding_j = temp_dict[id_j]
+
+            if embedding_i.size > 0 and embedding_j.size > 0:
+                energy_distance = dcor.energy_distance(embedding_i, embedding_j)
+                energy_distance_matrix[i, j] = energy_distance
+                energy_distance_matrix[j, i] = energy_distance
+            else:
+                print(f"Warning: One or both of the embeddings for {id_i} and {id_j} are empty after filtering.")
+
+    # Save the energy distance matrix to a file
+    filename = 'data/distances/' + ds_name + '_energy_distance_matrix.pkl'
+    try:
+        with open(filename, 'wb') as f:
+            pickle.dump(energy_distance_matrix, f)
+    except OSError:  # Create directory if it does not exist
+        dir_ = 'data/distances'
+        os.makedirs(dir_, exist_ok=True)
+        with open(filename, 'wb') as f:
+            pickle.dump(energy_distance_matrix, f)
+
+    return energy_distance_matrix
+
+
+"""DS_NAMES = ['apple', 'car', 'clock', 'London', 'turtle', '3D printing', 'additive manufacturing', 
+            'autonomous drones', 'composite material', 'hypersonic missile', 'nuclear reactor', 'quantum computing', 
+            'scramjet', 'smart material', 'wind tunnel']
+
+for ds_name in DS_NAMES:
+    print(f"Computing energy distance matrix for {ds_name}...")
+    compute_energy_distance_matrix(ds_name, 0.1, 5.0, 5)"""
