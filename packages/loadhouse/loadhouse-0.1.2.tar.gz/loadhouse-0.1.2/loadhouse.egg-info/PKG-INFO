@@ -1,0 +1,49 @@
+Metadata-Version: 2.1
+Name: loadhouse
+Version: 0.1.2
+Summary: A data loading and transformation engine for data lakehouses
+Home-page: https://github.com/flynn/loadhouse
+Author: Flynn
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: pyspark>=3.2.0
+Requires-Dist: delta-spark>=3.2.0
+Requires-Dist: great-expectations>=0.15.0
+
+# Loadhouse
+
+A powerful ETL (Extract, Transform, Load) tool designed for data lakehouse architectures with JSON-based configuration.
+
+## Overview
+
+Loadhouse is a flexible data processing tool that simplifies ETL operations through JSON configuration. It supports various data sources and provides robust data transformation capabilities using Apache Spark.
+
+## Features
+
+- **Configurable Data Sources**
+  - File-based (CSV, Delta, etc.)
+  - JDBC connections
+  - SQL queries
+  - DataFrame operations
+
+- **Data Transformations**
+  - Expression filtering
+  - Custom transformations
+  - Data quality validation
+
+- **Multiple Output Formats**
+  - Delta Lake
+  - File formats (CSV, Parquet, etc.)
+  - Console output for debugging
+- **Quality Checker**
+  - Data quality patterns with Apache Airflow
+  - Unit test Spark
+  - Data validation with GX
