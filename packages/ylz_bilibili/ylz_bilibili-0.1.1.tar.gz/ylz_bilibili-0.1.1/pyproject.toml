@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "ylz_bilibili"
+version = "0.1.1"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "bilibili", from = "src"}]
+
+[tool.poetry.scripts]
+ylz_bilibili = "ylz_bilibili.cli.main:run"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+langchain = "^0.3.19"
+langchain-community = "^0.3.18"
+fastapi = "^0.115.8"
+asyncio = "^3.4.3"
+uvicorn = "^0.34.0"
+argparse = "^1.4.0"
+fastapi-cdn-host = "^0.8.4"
+pydantic = "^2.10.6"
+python-dotenv = "^1.0.1"
+bilibili-api-python = "^17.1.2"
+httpx = "^0.28.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "tsinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+priority = "primary"
