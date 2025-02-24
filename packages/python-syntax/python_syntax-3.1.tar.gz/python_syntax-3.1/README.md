@@ -1,0 +1,58 @@
+
+# Python Syntax Helper CLI
+
+Welcome to the **Python Syntax Helper CLI** tool! This tool allows you to quickly add commonly used Python syntax templates (such as lists, tuples, dictionaries, functions, and more) directly into your Python files. It's perfect for beginners and experienced developers alike, helping you speed up the coding process by providing quick code templates.
+
+## Project Structure
+```
+python_syntax/
+├── python_syntax/
+│   ├── __init__.py           # Initializes the module
+│   ├── main.py               # Main logic for handling user input and syntax generation
+├── setup.py                  # The setup script for packaging
+├── pyproject.toml            # Build system requirements
+├── LICENSE                   # The project’s license (MIT License)
+├── README.md                 # Project documentation
+└── MANIFEST.in               # Specifies additional files to include in the distribution
+```
+## Deployment
+
+To install theb package run
+
+```bash
+  pip install python_syntax
+```
+To selct the syntax
+
+```bash
+  python_syntax
+```
+select the option according to the syntax you want to include
+
+```
+Welcome to Python Syntax Helper CLI!
+Please select a Python syntax template to include in your file:
+1. List Syntax
+2. Tuple Syntax
+3. Dictionary Syntax
+4. Function Syntax
+5. If-Else Syntax
+Enter your choice (1-5): 2
+
+
+```
+
+
+Select the file you want to include the syntax
+
+```
+Enter the file path where you want to save this syntax (e.g., main.py): my_tuple_code.py
+
+You can specify any valid file path to save the selected syntax template. If the file doesn't exist, it will be created. For example:
+
+your_file.py – An existing file.
+new_file.py – A new file will be created.
+
+
+```
+
