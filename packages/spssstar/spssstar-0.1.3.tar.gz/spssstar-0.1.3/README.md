@@ -1,0 +1,34 @@
+# spssstar
+
+A Python library for encoding session-specific data into star maps. This library generates star properties (positions, colors, twinkling patterns) based on unique session identifiers.
+
+## Features
+
+- Encode session IDs into star positions, colors, and twinkling patterns.
+- Embed blockchain hashes for tamper-proof validation.
+- Generate reproducible but unique star maps.
+- Lightweight and easy to integrate with rendering libraries like `spssimage`.
+
+## Installation
+
+Install the library using pip:
+
+```bash
+pip install spssstar
+```
+
+USAGE:
+from spssstar.core import StarEncoder
+
+# Initialize the encoder
+
+encoder = StarEncoder(width=400, height=400)
+
+# Encode a session ID into a star map
+
+star_map = encoder.encode_star_map("test-session", num_stars=10)
+
+# Export the star map for rendering
+
+exported_data = star_map.export()
+print(exported_data)
