@@ -1,0 +1,27 @@
+# Authors
+
+The list of contributors in alphabetical order:
+
+- [Adelina Lintuluoto](https://orcid.org/0000-0002-0726-1452)
+- [Alp Tuna](https://orcid.org/0009-0001-1915-3993)
+- [Anton Khodak](https://orcid.org/0000-0003-3263-4553)
+- [Audrius Mecionis](https://orcid.org/0000-0002-3759-1663)
+- [Bruno Rosendo](https://orcid.org/0000-0002-0923-3148)
+- [Camila Diaz](https://orcid.org/0000-0001-5543-797X)
+- [Daan Rosendal](https://github.com/DaanRosendal)
+- [Diego Rodriguez](https://orcid.org/0000-0003-0649-2002)
+- [Dinos Kousidis](https://orcid.org/0000-0002-4914-4289)
+- [Domenic Gosein](https://orcid.org/0000-0002-1546-0435)
+- [Giuseppe Steduto](https://orcid.org/0009-0002-1258-8553)
+- [Harri Hirvonsalo](https://orcid.org/0000-0002-5503-510X)
+- [Jan Okraska](https://orcid.org/0000-0002-1416-3244)
+- [Jelizaveta Lemeševa](https://orcid.org/0009-0003-6606-9270)
+- [Leticia Wanderley](https://orcid.org/0000-0003-4649-6630)
+- [Marco Donadoni](https://orcid.org/0000-0003-2922-5505)
+- [Marco Vidal](https://orcid.org/0000-0002-9363-4971)
+- [Michael R. Crusoe](https://orcid.org/0000-0002-2961-9670)
+- [Parth Shandilya](https://github.com/ParthS007)
+- [Rokas Maciulaitis](https://orcid.org/0000-0003-1064-6967)
+- [Sinclert Perez](https://www.linkedin.com/in/sinclert)
+- [Tibor Simko](https://orcid.org/0000-0001-7202-5803)
+- [Vladyslav Moisieienkov](https://orcid.org/0000-0001-9717-0775)
