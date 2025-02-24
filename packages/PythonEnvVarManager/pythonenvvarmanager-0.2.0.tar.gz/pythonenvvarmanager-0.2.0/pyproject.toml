@@ -1,0 +1,138 @@
+# Project settings -----------------------------------------------------------------------------------------------------
+[project]
+name = "PythonEnvVarManager"  # Required
+version = "0.2.0"
+description = "A simple manager to handle env variables"  # Optional
+readme = "README.md"  # Optional
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+keywords = ["EnvVar", "Os", "Python"]  # Optional
+authors = [
+    { name = "Lukas H L", email = "lukhl@ntnu.no" } # Optional
+]
+maintainers = [
+    { name = "Lukas H L", email = "lukhl@ntnu.no" } # Optional
+]
+
+# Required dependencies ------------------------------------------------------------------------------------------------
+dependencies = [
+    "ruff>=0.1",
+    "loguru>=0.7",
+    "python-dotenv",
+]
+
+# Optional dependencies ------------------------------------------------------------------------------------------------
+[project.optional-dependencies]
+dev = [
+  "buildtools==1.0.6",
+  "build",
+  "pytest",
+  "bumpver",
+  "twine"
+]
+
+[tool.bumpver]
+current_version = "0.2.0"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message  = "Bump version {old_version} -> {new_version}"
+commit          = true
+tag             = true
+push            = false
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
+"env_manager/__init__.py" = ["{version}"]
+
+[tool.setuptools]
+packages = ["env_manager"]
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.pydoctor]
+add-package = ["env_manager"]
+docformat = "google"
+html-output = "doc"
+intersphinx = [
+  "https://docs.python.org/3/objects.inv",
+  "https://googleapis.dev/python/protobuf/latest/objects.inv",
+  "https://opentelemetry-python.readthedocs.io/en/latest/objects.inv",
+  "https://docs.pydantic.dev/objects.inv"
+]
+project-name = "Biometrics PNR"
+project-version = "0.2.0"
+sidebar-expand-depth = 2
+
+[tool.pytest.ini_options]
+log_file = "test_output/pytest.xml"
+testpaths = "tests"
+pythonpath = "."
+markers = [
+  "integration: integration tests that should only be run in those steps. (Deselect with '-m \"not integration\"')",
+]
+
+
+
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+combine-as-imports = true
+
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint]
+select = [
+  "D", # pycodestyle
+  "F",# Pyflakes
+  "E", #Pydocstyle
+  "I", #Isort
+  "INP", #implicit-namespace-package
+  "RSE102", #unnecessary-paren-on-raise-exception
+  "SIM", # flake-8 Simplify
+  "TD", # TODO: comments
+  "FIX", # Fix Comments
+  "ERA001", # commented-out-code
+  "RUF", # Ruff rules
+  "UP",# pyupgrade
+  "B",# flake8-bugbear
+  "ANN",# Flake-8 annotation
+
+  "COM819", # Remove trailing
+  "N", # Pep-8 naming
+  "A", # Avoid shadwoing
+  "UP031", # Use fstrings instead of format
+  "BLE001", # Don't have blind exc
+  "B904", # Reraise from inside ex
+  "B006", # Mutable argument
+  "S101", # Don't use asserts h
+
+  ## Just stuff
+  "PIE790", ## Rmoves uneccesary pass under fuctions/classes and stuff
+
+]
+
+task-tags = ["HACK"]
+
+# On top of the Google convention, disable `D417`, which requires
+# documentation for every function parameter.
+ignore = [
+  "E501",
+  "ANN003",
+  "ANN101",
+  "ANN102",
+  "ANN204",
+  "FIX002",
+]
+
+
+[tool.ruff]
+line-length = 79
+target-version = "py310"
+exclude=["scripts", "old_tests"]
+
+[tool.ruff.lint.per-file-ignores]
+# Ignore all directories named `tests`.
+"tests/**" = ["N","INP","ANN","D", "ERA", "S101"]
