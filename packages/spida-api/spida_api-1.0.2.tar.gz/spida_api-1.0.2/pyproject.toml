@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "spida-api"
+version = "1.0.2"
+description = ""
+authors = [{ name = "Keagan McNew", email = "kmcnew@techserv.com" }, { name = "Logan Henson", email = "lhenson@techserv.com" }]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic==2.8.2",
+    "requests==2.32.3"
+]
+
+[project.optional-dependencies]
+dev = [
+    "flask",
+    "python-dotenv",
+    "flask_socketio"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["spida_api"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
