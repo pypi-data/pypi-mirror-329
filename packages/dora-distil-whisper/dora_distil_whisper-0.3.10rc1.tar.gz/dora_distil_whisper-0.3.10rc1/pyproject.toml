@@ -1,0 +1,29 @@
+[project]
+name = "dora-distil-whisper"
+version = "0.3.10-rc1"
+authors = [
+    { name = "Haixuan Xavier Tao", email = "tao.xavier@outlook.com" },
+    { name = "Enzo Le Van", email = "dev@enzo-le-van.fr" },
+]
+description = "Dora dora-distil-whisper"
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.8"
+
+dependencies = [
+    "dora-rs >= 0.3.6",
+    "numpy < 2.0.0",
+    "pyarrow >= 5.0.0",
+    "transformers >= 4.0.0",
+    "accelerate >= 0.29.2",
+    "torch >= 2.2.0",
+    "modelscope >= 1.18.1",
+    "mlx-whisper >= 0.4.1; sys_platform == 'darwin'",
+]
+
+
+[dependency-groups]
+dev = ["pytest >=8.1.1", "ruff >=0.9.1"]
+
+[project.scripts]
+dora-distil-whisper = "dora_distil_whisper.main:main"
