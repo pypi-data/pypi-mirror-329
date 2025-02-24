@@ -1,0 +1,41 @@
+[build-system]
+requires = ["maturin>=1.5,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "zksnake"
+dependencies = [
+  "joblib>=1.4.0",
+]
+requires-python = ">=3.9"
+authors = [
+  {name = "Merricx", email = "imam@merri.cx"},
+]
+maintainers = [
+  {name = "Merricx", email = "imam@merri.cx"},
+]
+description = "zkSNARKs in Python"
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+keywords = ["cryptography", "zksnark", "zkp", "r1cs", "zk-snarks"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python",
+  "Intended Audience :: Science/Research",
+  "Topic :: Security :: Cryptography"
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.2.0"]
+
+[project.urls]
+Homepage = "https://github.com/merricx/zksnake"
+Repository = "https://github.com/merricx/zksnake.git"
+"Bug Tracker" = "https://github.com/merricx/zksnake/issues"
+
+
+[tool.maturin]
+python-source = "python"
+module-name = "zksnake._algebra"
+features = ["pyo3/extension-module"]
