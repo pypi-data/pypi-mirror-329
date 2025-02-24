@@ -1,0 +1,38 @@
+[project]
+name = "hyperfetch-py"
+version = "0.0.1a"
+authors = [
+    { name = "Masroor Ehsan", email = "masroore@gmail.com" },
+]
+description = "High-performance, async, parallel HTTP downloader for Python 3"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+dependencies = [
+    "aiofiles>=24.1.0",
+    "asyncio",
+    "brotli>=1.1.0",
+    "build>=1.2.2.post1",
+    "click>=8.1.8",
+    "httpx[socks]>=0.28.1",
+    "twine>=6.1.0",
+    "zstandard>=0.23.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/masroore/hyper_fetch.py"
+Issues = "https://github.com/masroore/hyper_fetch.py/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["hyper_fetch"]
