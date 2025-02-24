@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "TinyLean"
+version = "0.4.0"
+description = "Tiny theorem prover with syntax like Lean 4"
+readme = ".github/README.md"
+requires-python = ">=3.12"
+license = { file = "LICENSE" }
+keywords = [
+    "lean",
+    "lean4",
+    "theorem-proving",
+    "theorem-prover",
+    "programming-language",
+]
+authors = [
+    { name = "Anqur", email = "anqurvanillapy@gmail.com" },
+]
+classifiers = [
+    "Intended Audience :: Education",
+    "Topic :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+]
+dependencies = [
+    "pyparsing==3.2.1"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/anqurvanillapy/TinyLean"
+"Bug Reports" = "https://github.com/anqurvanillapy/TinyLean/issues"
+"Source" = "https://github.com/anqurvanillapy/TinyLean"
+
+[project.scripts]
+tinylean = "TinyLean.__main__:main"
