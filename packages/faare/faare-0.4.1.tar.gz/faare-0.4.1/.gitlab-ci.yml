@@ -1,0 +1,159 @@
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+################################################################################
+# Check that all three versions match
+################################################################################
+check-versions:
+  image: python:3.11
+  before_script:
+    - python --version ; pip --version  # for debugging purposes
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+  script:
+    - python versiontest.py
+
+################################################################################
+# PIP
+################################################################################
+build-pip:
+  image: python:3.11
+  cache:
+    paths:
+      - .cache/pip
+  needs:
+    - job: check-versions
+  before_script:
+    - python --version ; pip --version  # for debugging purposes
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install build
+  script:
+    - python -m build
+  artifacts:
+    paths:
+      - dist/*
+
+test-pip:
+  image: python:3.11
+  cache:
+    paths:
+      - .cache/pip
+  before_script:
+    - python --version ; pip --version  # for debugging purposes
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install build
+  needs:
+    - job: build-pip
+      artifacts: true
+  before_script:
+    - python -m pip install dist/faare-*.whl
+    - python -m pip install ase numpy pytest
+  script:
+    - python -m pytest tests/*
+
+code-coverage:
+  image: python:3.11
+  cache:
+    paths:
+      - .cache/pip
+  before_script:
+    - python --version ; pip --version  # for debugging purposes
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+  needs:
+    - job: test-pip
+  before_script:
+    - python -m pip install ase numpy coverage pytest
+  script:
+    - coverage run -m pytest tests/*
+    - coverage xml faare/*.py
+    - coverage report faare/*.py
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+deploy-pip:
+  image: python:3.11
+  cache:
+    paths:
+      - .cache/pip
+  before_script:
+    - python --version ; pip --version  # for debugging purposes
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install build
+  needs:
+    - job: build-pip
+      artifacts: true
+    - job: test-pip
+  before_script:
+    - python -m pip install twine
+  script:
+    - twine upload -u __token__ -p ${pypi_token} dist/*
+  only:
+    - tags
+  except:
+    - branches
+
+deployment-pip-verification:
+  image: python:3.11
+  cache:
+    paths:
+      - .cache/pip
+  before_script:
+    - python --version ; pip --version  # for debugging purposes
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install build
+  needs:
+    - job: deploy-pip
+  before_script:
+    - python -m pip install numpy scipy matplotlib pytest faare
+  script:
+    - python -m pytest tests/*
+  only:
+    - tags
+  except:
+    - branches
+
+################################################################################
+# Documentation
+################################################################################
+
+# build the Sphinx documentation
+build-docs:
+  image: ghcr.io/ifilot/sphinx-qm:v0.2.0
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "docs"'
+  script:
+    - cd docs
+    - make html
+  artifacts:
+    paths:
+      - docs/build/html/
+    expire_in: 1 hour
+
+# copy the documentation over to Gitlab pages
+pages: # do not change this name
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "docs"'
+  needs:
+    - job: build-docs
+      artifacts: true
+  script:
+    - cp -rv docs/build/html public
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week
