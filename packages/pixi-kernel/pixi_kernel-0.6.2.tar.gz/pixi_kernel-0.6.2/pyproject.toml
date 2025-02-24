@@ -1,0 +1,134 @@
+[project]
+name = "pixi-kernel"
+version = "0.6.2"
+description = "Jupyter kernels using Pixi for reproducible notebooks"
+license = { text = "MIT" }
+authors = [
+    { name = "Renan Rodrigues dos Santos", email = "renan.engmec@gmail.com" },
+]
+
+readme = "README.md"
+keywords = ["kernel", "jupyter", "jupyterlab", "jupyterlab-extension", "pixi"]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Framework :: Jupyter",
+    "Framework :: Jupyter :: JupyterLab",
+    "Framework :: Jupyter :: JupyterLab :: 4",
+    "Framework :: Jupyter :: JupyterLab :: Extensions",
+    "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+
+requires-python = ">=3.9,<4.0"
+dependencies = [
+    "ipykernel>=6",
+    "jupyter-client>=7",
+    "jupyter_server>=2.4.0,<3",
+    "pydantic>=2,<3",
+    "returns>=0.23,<0.24",      # 0.24 drops Python 3.9 support
+]
+
+[project.urls]
+Documentation = "https://github.com/renan-r-santos/pixi-kernel"
+Homepage = "https://github.com/renan-r-santos/pixi-kernel"
+Repository = "https://github.com/renan-r-santos/pixi-kernel"
+
+[tool.uv]
+dev-dependencies = [
+    "jupyter-kernel-test>=0.7,<0.8",
+    "jupyterlab>=4,<5",
+    "mypy>=1,<2",
+    "pytest>=8,<9",
+    "pytest-asyncio>=0.25,<0.26",
+    "pytest-cov>=6,<7",
+    "ruff>=0.9,<0.10",
+    "tox-uv>=1,<2",
+]
+
+[project.entry-points."jupyter_client.kernel_provisioners"]
+pixi-kernel-provisioner = "pixi_kernel.provisioner:PixiKernelProvisioner"
+
+[tool.ruff]
+src = ["pixi_kernel"]
+line-length = 99
+target-version = "py39"
+
+[tool.ruff.lint]
+extend-select = [
+    "I",     # isort
+    "N",     # pep8-naming
+    "RUF",   # ruff
+    "ASYNC", # flake8-async
+    "B",     # flake8-bugbear
+    "N",     # flake8-broken-line
+    "C4",    # flake8-comprehensions
+    "D",     # pydocstyle
+    "PIE",   # flake8-pie
+    "PT",    # flake8-pytest-style
+    "PTH",   # flake8-use-pathlib
+    "ERA",   # flake8-eradicate
+]
+
+# D1xx: Missing docstrings
+#`one-blank-line-before-class` (D203) and `no-blank-line-before-class` (D211) are incompatible.
+#`multi-line-summary-first-line` (D212) and `multi-line-summary-second-line` (D213) are incompatible.
+extend-ignore = ["D1", "D203", "D213"]
+
+[tool.mypy]
+strict = true
+
+[tool.pytest.ini_options]
+addopts = ["--strict-config", "--strict-markers"]
+asyncio_default_fixture_loop_scope = "function"
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore:Jupyter is migrating its paths to use standard platformdirs",
+]
+xfail_strict = true
+
+[tool.coverage.run]
+branch = true
+source = ["pixi_kernel"]
+
+[tool.coverage.report]
+skip_empty = true
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = ["hatch-jupyter-builder>=0.9"]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = ["pixi_kernel/labextension/package.json"]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+build_cmd = "build:prod"
+npm = ["jlpm"]
+
+[tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
+build_cmd = "install:extension"
+npm = ["jlpm"]
+source_dir = "src"
+build_dir = "pixi_kernel/labextension"
+
+[tool.hatch.build.targets.sdist]
+artifacts = ["pixi_kernel/labextension"]
+exclude = [".github"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"jupyter-config/server-config" = "etc/jupyter/jupyter_server_config.d"
+"kernels" = "share/jupyter/kernels"
+"pixi_kernel/labextension" = "share/jupyter/labextensions/pixi-kernel"
+
+[build-system]
+requires = ["hatchling", "jupyterlab>=4,<5"]
+build-backend = "hatchling.build"
