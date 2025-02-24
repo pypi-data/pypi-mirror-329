@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Common Library</title>
+
+    <!-- meta data -->
+    <meta charset="utf-8">
+    <meta
+     name="viewport"
+     content="width=device-width, initial-scale=1.0">
+    <!-- meta data -->
+
+    <!-- link hrefs -->
+    <link rel="icon" href="images/enasis.svg">
+    <link rel="stylesheet" href="styles/default.css">
+    <link rel="stylesheet" href="styles/datagrid.css">
+    <link rel="stylesheet" href="styles/datetime.css">
+    <link rel="stylesheet" href="styles/duration.css">
+    <link rel="stylesheet" href="styles/image.css">
+    <link rel="stylesheet" href="styles/message.css">
+    <link rel="stylesheet" href="styles/moderate.css">
+    <link rel="stylesheet" href="styles/numeric.css">
+    <link rel="stylesheet" href="styles/statate.css">
+    <!-- link hrefs -->
+
+    <!-- scripts -->
+    <script src="scripts/default.js"></script>
+    <script src="scripts/helpers.js"></script>
+    <script src="scripts/datagrid.js"></script>
+    <script src="scripts/datetime.js"></script>
+    <script src="scripts/duration.js"></script>
+    <script src="scripts/image.js"></script>
+    <script src="scripts/message.js"></script>
+    <script src="scripts/moderate.js"></script>
+    <script src="scripts/numeric.js"></script>
+    <script src="scripts/statate.js"></script>
+    <!-- scripts -->
+
+    <!-- overrides -->
+    <style>
+
+      body {
+        padding: .75rem 1rem .75rem 1rem; }
+
+      .encommon_message {
+        margin: .1rem 0 .1rem 0; }
+
+      :root {
+        --svgicon-failure: url('../images/failure.svg');
+        --svgicon-information: url('../images/information.svg');
+        --svgicon-success: url('../images/success.svg');
+        --svgicon-warning: url('../images/warning.svg'); }
+
+    </style>
+    <!-- overrides -->
+
+  </head>
+  <body>
+
+
+    <!-- introduction -->
+    <h1>Enasis Network Vanilla Elements</h1>
+    <p>This page helps demonstrate the various elements available in
+    the <a href="https://github.com/enasisnetwork">Enasis Network</a>
+    vanilla JavaScript library. All CSS is based on REM unit.</p>
+    <p>It is a long-term goal that all the CSS also be responsive to
+    the latest and most common mobile devices.</p>
+    <!-- introduction -->
+
+
+    <!-- message function -->
+    <h2>Simple Toast Generator</h2>
+    <div id="message"></div>
+    <script>
+
+      let _MESSAGE =
+        'Lorem ipsum dolor sit amet,'
+        + ' conseteur adipiscing.';
+
+      let _MESSAGES = [
+        'success',
+        'failure',
+        'information',
+        'warning'];
+
+      _MESSAGES.forEach(
+        (x) => {
+
+          let append = () => {
+
+            let element =
+              message(x, _MESSAGE);
+
+            $('#message')
+              .append(element);
+
+            $('#message')
+              .append($('<br/>')); }
+
+          whenready(append); });
+
+    </script>
+    <!-- message function -->
+
+
+    <!-- datagrid function -->
+    <h2>Simple Table Generator</h2>
+    <div id="datagrid"></div>
+    <script>
+
+
+      let _FIELDS = {
+        'moderate': 'Moderate',
+        'statate': 'Statate',
+        'plain': 'Plaintext',
+        'numeric': 'Numeric',
+        'datestamp': 'Timestamp',
+        'duration': 'Duration'};
+
+
+      let _VALUES = [
+
+        {'moderate':
+           moderate(
+             'Value One',
+             'information',
+             'value_one'),
+         'datestamp':
+           datestamp(
+             '2024-04-20T16:20:00Z'),
+         'duration':
+           duration(
+             '2024-04-20T16:20:00Z'),
+         'statate':
+           statate(
+             'success',
+             'Success',
+             'All seems normal'),
+         'numeric':
+           numeric_count(1e10 + 1e8),
+         'plain': _MESSAGE},
+
+        {'moderate':
+           moderate(
+             'Value Two',
+             'information',
+             'value_two'),
+         'datestamp':
+           datestamp(
+             '2024-04-20T16:20:00Z'),
+         'duration':
+           duration(
+             '2024-04-20T16:20:00Z'),
+         'statate':
+           statate(
+             'failure',
+             'Failure',
+             'Something is wrong'),
+         'numeric':
+           numeric_bytes(1e10 + 1e8),
+         'plain': _MESSAGE},
+
+        {'moderate':
+           moderate(
+             'Value Three',
+             'information',
+             'value_three'),
+         'datestamp':
+           datestamp(
+             '2024-04-20T16:20:00Z'),
+         'duration':
+           duration(
+             '2024-04-20T16:20:00Z'),
+         'statate':
+           statate(
+             'information',
+             'Waiting',
+             'Waiting on status'),
+         'numeric':
+           numeric_ftemp(69),
+         'plain': _MESSAGE},
+
+        {'moderate':
+           moderate(
+             'Value Four',
+             'information',
+             'value_four'),
+         'datestamp':
+           datestamp(
+             '2024-04-20T16:20:00Z'),
+         'duration':
+           duration(
+             '2024-04-20T16:20:00Z'),
+         'statate':
+           statate(
+             'warning',
+             'Warning',
+             'What is going on'),
+         'numeric':
+           numeric_cftemp(69),
+         'plain': _MESSAGE}];
+
+
+      whenready(function() {
+
+        let element =
+          datagrid(_FIELDS, _VALUES);
+
+        $('#datagrid')
+          .replace(element); });
+
+
+    </script>
+    <!-- datagrid function -->
+
+
+  </body>
+</html>
