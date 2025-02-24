@@ -1,0 +1,43 @@
+Metadata-Version: 2.1
+Name: medvedi
+Version: 0.1.68
+Summary: Memory Efficient Deconstructed Vectorized Dataframe Interface
+Home-page: https://github.com/athenianco/medvedi
+Download-URL: https://github.com/athenianco/medvedi
+Author: Athenian
+Author-email: vadim@athenian.co
+License: Apache 2.0
+Classifier: Development Status :: 3 - Alpha
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy<2.0,>=1.23
+Requires-Dist: pyarrow>=14.0.0
+Provides-Extra: arrow
+Requires-Dist: pyarrow; extra == "arrow"
+
+# MEDVeDI [![Build status](https://github.com/athenianco/medvedi/actions/workflows/push.yml/badge.svg)](https://github.com/athenianco/medvedi/actions/workflows/push.yml) [![codecov](https://codecov.io/gh/athenianco/medvedi/branch/master/graph/badge.svg?token=rkTwlIlCaI)](https://codecov.io/gh/athenianco/medvedi) [![Latest Version](https://img.shields.io/pypi/v/medvedi.svg)](https://pypi.python.org/pypi/medvedi) [![Python Versions](https://img.shields.io/pypi/pyversions/medvedi.svg)](https://pypi.python.org/pypi/medvedi) [![License](https://img.shields.io/pypi/l/medvedi.svg)](https://github.com/athenianco/medvedi/blob/main/LICENSE)
+
+![logo](docs/logo.png)
+
+Memory Efficient Deconstructed Vectorized Dataframe Interface.
+
+Design goals:
+
+- Favor performance over nice syntax features. Sacrifice fool-proof for efficient zero-copy operations.
+- Ensure ideal micro-performance and optimize for moderate data sizes (megabytes).
+- The use-case is API server code that you write once and execute many times.
+- Try to stay compatible with the Pandas interface. There is no `Series`, however.
+- Rely on numpy.
+- Friends with Arrow.
+- Frequently release GIL and depend on native extensions doing unsafe things.
+- Test only CPython and Linux.
+- Support only x86-64 CPUs with AVX2.
+- Support only Python 3.10+.
+- 100% test coverage.
+
+Otherwise, you should be way better with regular Pandas.
+
+Medvedi used to be heavily used in production at [Athenian](https://athenian.co).
