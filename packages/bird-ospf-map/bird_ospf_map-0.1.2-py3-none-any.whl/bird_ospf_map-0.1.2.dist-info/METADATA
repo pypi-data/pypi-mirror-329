@@ -1,0 +1,40 @@
+Metadata-Version: 2.3
+Name: bird-ospf-map
+Version: 0.1.2
+Summary: 
+Author: Pavel Dostál
+Author-email: pdostal@pdostal.cz
+Requires-Python: <4.0,>=3.11
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Dist: argparse (>=1.4.0,<2.0.0)
+Requires-Dist: click (>=8.1.8,<9.0.0)
+Requires-Dist: paramiko (>=3.5.1,<4.0.0)
+Requires-Dist: pathlib (>=1.0.1,<2.0.0)
+Requires-Dist: pyyaml (>=6.0.2,<7.0.0)
+Description-Content-Type: text/markdown
+
+# bird-ospf-map
+
+OSPF connection parser and maybe later even map generator
+
+
+## Usage
+
+```bash
+poetry env activate
+poetry install
+ssh router sudo birdc show ospf state all ngn | poetry run bird_ospf_map -c ~/.bird-ospf-map.yaml
+```
+
+
+## Prerequisities
+ * Bird2 with OSPF running
+
+
+## Resources
+ * We generate the graph using [the `Mermaid` library](https://mermaid.js.org/syntax/flowchart.html).
+
+
