@@ -1,0 +1,2 @@
+class StrEnum(str):
+    pass
