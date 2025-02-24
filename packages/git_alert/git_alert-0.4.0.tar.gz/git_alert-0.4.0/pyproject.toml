@@ -1,0 +1,30 @@
+# [build-system]
+# requires = ["setuptools>=61.0"]
+# build-backend = "setuptools.build_meta"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "git_alert"
+version = "0.4.0"
+description = "Checks a given path and its sub-directories for dirty git repositories."
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.11.9"
+dependencies = [
+    "rich>=13.9.4",
+]
+
+[project.scripts]
+git_alert = "git_alert.scripts.git_alert:run"
+
+[dependency-groups]
+dev = [
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.4",
+    "flake8>=7.1.1",
+    "black>=24.10.0",
+    "pre-commit>=4.0.1",
+]
