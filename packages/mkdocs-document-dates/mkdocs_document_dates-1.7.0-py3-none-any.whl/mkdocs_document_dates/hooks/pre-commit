@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+import os
+import sys
+import json
+import platform
+import subprocess
+from datetime import datetime
+from pathlib import Path
+
+def find_mkdocs_projects():
+    """查找当前 git 仓库中的所有 MkDocs 项目"""
+    try:
+        git_root = Path(subprocess.check_output(
+            ['git', 'rev-parse', '--show-toplevel'],
+            text=True
+        ).strip())
+        
+        projects = []
+        for config_file in git_root.rglob('mkdocs.y*ml'):
+            if config_file.name in ('mkdocs.yml', 'mkdocs.yaml'):
+                projects.append(config_file.parent)
+        return projects
+    except subprocess.CalledProcessError as e:
+        print(f"Error finding git root: {e}")
+        return []
+
+def get_file_dates(file_path):
+    """获取文件的创建和修改时间"""
+    try:
+        stat = os.stat(file_path)
+        modified = datetime.fromtimestamp(stat.st_mtime)
+
+        system = platform.system().lower()
+        if system == 'darwin':  # macOS
+            try:
+                created = datetime.fromtimestamp(stat.st_birthtime)
+            except AttributeError:
+                created = datetime.fromtimestamp(stat.st_ctime)
+        elif system == 'windows':  # Windows
+            created = datetime.fromtimestamp(stat.st_ctime)
+        else:  # Linux 和其他系统
+            created = modified
+
+        return created.isoformat(), modified.isoformat()
+    except (OSError, ValueError):
+        current_time = datetime.now()
+        return current_time.isoformat(), current_time.isoformat()
+
+
+def update_dates_cache():
+    """更新文档时间缓存"""
+    for project_dir in find_mkdocs_projects():
+        docs_dir = project_dir / 'docs'
+        if not docs_dir.exists():
+            continue
+
+        # 添加调试信息
+        print(f"Processing MkDocs project: {project_dir}")
+        print(f"Docs directory: {docs_dir}")
+
+        dates_cache = {}
+        # 获取所有 markdown 文件的时间信息
+        for md_file in docs_dir.rglob("*.md"):
+            rel_path = str(md_file.relative_to(docs_dir))
+            created, modified = get_file_dates(md_file)
+            dates_cache[rel_path] = {
+                "created": created,
+                "modified": modified
+            }
+            print(f"Processing file: {rel_path}")
+
+        # 保存缓存文件
+        cache_file = docs_dir / '.dates_cache.json'
+        print(f"Saving cache to: {cache_file}")
+        with open(cache_file, "w") as f:
+            json.dump(dates_cache, f, indent=2, ensure_ascii=False)
+        
+        try:
+            subprocess.run(["git", "add", str(cache_file)], check=True)
+            print(f"Added cache file to git: {cache_file}")
+        except subprocess.CalledProcessError as e:
+            print(f"Error adding cache file to git: {e}")
+
+if __name__ == "__main__":
+    try:
+        print("Starting pre-commit hook...")
+        update_dates_cache()
+        print("Pre-commit hook completed successfully")
+    except Exception as e:
+        print(f"Error in pre-commit hook: {e}", file=sys.stderr)
+        sys.exit(1)
