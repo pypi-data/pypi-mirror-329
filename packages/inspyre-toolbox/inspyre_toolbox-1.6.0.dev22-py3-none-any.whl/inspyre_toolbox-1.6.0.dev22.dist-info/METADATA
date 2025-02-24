@@ -1,0 +1,126 @@
+Metadata-Version: 2.3
+Name: inspyre-toolbox
+Version: 1.6.0.dev22
+Summary: Inspyre Toolbox is a collection of tools designed to simplify programming tasks, reducing repetitive code. Initially for internal use at Inspyre Softworks, it benefits other developers too with features like a live timer, humanize class for numerical operations, extended argparse, process management, and miscellaneous Python helpers.
+License: MIT
+Keywords: toolbox,timer,commify,strings,elapsed
+Author: T Blackstone
+Author-email: t.blackstone@inspyre.tech
+Requires-Python: >=3.10,<4.0
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Software Development
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Terminals
+Classifier: Topic :: Utilities
+Requires-Dist: DateTime (>=4.3,<5.0)
+Requires-Dist: inflect (>=7.4.0,<8.0.0)
+Requires-Dist: inspy-logger (>=3.2.0)
+Requires-Dist: inspyred-print (>=1.2.1,<2.0.0)
+Requires-Dist: platformdirs (>=4.3.6,<5.0.0)
+Requires-Dist: psutil (>=6.0.0,<7.0.0)
+Requires-Dist: pypattyrn (>=1.2,<2.0)
+Requires-Dist: python-box (>=7.2.0,<8.0.0)
+Requires-Dist: requests (>=2.32.3,<3.0.0)
+Requires-Dist: rich (>=13.9.4,<14.0.0)
+Requires-Dist: tqdm (>=4.66.4,<5.0.0)
+Project-URL: Homepage, https://github.com/Inspyre-Softworks/Inspyre-Toolbox
+Project-URL: Repository, https://pypi.org/project/inspyre-toolbox/
+Description-Content-Type: text/markdown
+
+# Inspyre Toolbox
+
+----
+*A collection of kinda useful tools*
+
+
+[![Python package](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/python-package.yml)
+![Lines of Code](https://badgen.net/codeclimate/loc/tayjaybabee/Inspyre-Toolbox)
+[![CodeQL](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/tayjaybabee/Inspyre-Toolbox/actions/workflows/codeql-analysis.yml)
+![Latest Github Release](https://badgen.net/github/release/tayjaybabee/Inspyre-Toolbox)
+![Latest Stable Release](https://badgen.net/github/release/tayjaybabee/Inspyre-Toolbox/stable)
+![PyPi Version](https://badgen.net/pypi/v/Inspyre-Toolbox)
+![PyPi Version](https://badgen.net/pypi/python/Inspyre-Toolbox)
+
+## ...But Why?
+
+----
+
+This toolkit was developed by me in an effort to cut down on having to write the same things over and over again for the various applications I've made. I don't expect that many will find it super useful, but hey, who knows.
+
+----
+
+Getting Started
+----
+
+----
+
+## The Goodies
+
+*(...a word which here means 'the modules and packages'....)*
+
+* .live_timer: <br>
+  
+  * Timer: <br>
+    A class that keeps real time accurate to the second for you, allowing you to query 'get_elapsed' and get how much time has elapsed since the timer started. Functions include:
+  
+    * **start**: <br>
+      Start the timer.
+    * **pause**: <br>
+      Pause the timer.
+    * **unpause**: <br>
+      Unpause a paused timer.
+    
+* .humanize: <br>
+  
+  * Numerical: <br>
+    A class that allows you to deal with numbers in your Python programs a little easier. Functions include:
+    
+    * **commify**: <br>
+      Return your principle number to you in a commified string form.
+    * **count_noun**: <br>
+      Return your number and the proper plural form of the thing your number is representing a count of if it's needed. If it's a singular item, (or, the number is 1)
+
+* .spanners: <br>
+
+  * **.spanner_arg_parse**: <br>
+    Extend argparse's ArgumentParser by allowing your sub-commands to have aliases!
+    
+* .proc_man: <br>
+  
+  A module that contains a way to easily find or kill processes by their name. Functions include:
+  
+  * **kill_all_by_name**: <br>
+  
+    Kills all processes with names with a substring that include the string provided as an argument.
+    
+   * **list_all_by_name**: <br>
+     
+     Lists all running processes with names with a substring that include the string provided as an argument.
+     
+* .syntactic_sweets: <br>
+  
+  Contains miscellaneous helpers to help make your Python programming a little easier. Right now there's one function:
+  
+    * suppress_stdout:
+      A file object that while in-use supporesses standard output from the console.
+  
+### Live Timer
+
+----
+
+
