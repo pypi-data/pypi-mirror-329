@@ -1,0 +1,101 @@
+[build-system]
+
+requires = ["setuptools>=75.8.0", "setuptools_scm>=8.2.0"]
+build-backend = "setuptools.build_meta"
+
+
+["project"]
+name = "pt_vid"
+dynamic = ["version"] 
+description = "Process Gantt Chart"
+readme = "README.md"
+
+authors = [
+    {name = "Rúben Almeida", email = "ruben.f.almeida@inesctec.pt"},
+    {name = "Hugo Sousa", email = "hugo.o.sousa@inesctec.pt"}
+
+]
+requires-python = ">=3.10"
+
+dependencies = [
+    "pandas>=2.2.1",
+    "tqdm>=4.66.2",
+    "environs>=10.3.0",
+    "jupyter>=1.1.1",
+    "notebook>=7.3.2",
+    "pydantic>=2.10.6",
+    "numpy==1.26.4",
+]
+
+[project.optional-dependencies]
+
+langdetect = [
+    "fasttext-langdetect>=1.0.5",
+]
+
+data-cleaning = [
+    "clean-text[gpl]>=0.6.0",
+    "justext==3.0.1",
+    "nltk>=3.9.1",
+    "beautifulsoup4>=4.12.3",
+    "zstandard>=0.22.0",
+    "lxml>=5.2.1",
+]
+
+huggingface = [
+    "accelerate>=0.27.0",
+    "torch>=2.2.1",
+    "transformers>=4.38.1",
+    "datasets>=2.17.1",
+    "huggingface_hub>=0.21.3",
+    "evaluate>=0.4.1",
+]
+
+sklearn = [
+    "scikit-learn>=1.4.1",
+    "imbalanced-learn==0.12.3",
+]
+
+spacy = [
+    "spacy==3.7.5",
+]
+
+demo = [
+    "fastapi[standard]>=0.115.2",
+    "streamlit>=1.42.0",
+    "pt_vid[huggingface]",
+    "pt_vid[langdetect]",
+    "pt_vid[demo]",
+]
+
+test = [
+    "pytest>=8.3.3"
+]
+
+stats = [
+    "plotly>=6.0.0",
+    "kaleido"
+]
+
+dev = [
+    "pt_vid[langdetect]",
+    "pt_vid[data-cleaning]",
+    "pt_vid[huggingface]",
+    "pt_vid[sklearn]",
+    "pt_vid[spacy]",
+    "pt_vid[demo]",
+    "pt_vid[test]",
+    "pt_vid[stats]",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["pt_vid", "pt_vid.*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+"pt_vid" = ["*.json"]
+
+[tool.setuptools_scm]
+write_to = "._version.py"
+local_scheme = "no-local-version"

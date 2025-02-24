@@ -1,0 +1,95 @@
+Metadata-Version: 2.2
+Name: pt_vid
+Version: 0.1.dev1
+Summary: Process Gantt Chart
+Author-email: Rúben Almeida <ruben.f.almeida@inesctec.pt>, Hugo Sousa <hugo.o.sousa@inesctec.pt>
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pandas>=2.2.1
+Requires-Dist: tqdm>=4.66.2
+Requires-Dist: environs>=10.3.0
+Requires-Dist: jupyter>=1.1.1
+Requires-Dist: notebook>=7.3.2
+Requires-Dist: pydantic>=2.10.6
+Requires-Dist: numpy==1.26.4
+Provides-Extra: langdetect
+Requires-Dist: fasttext-langdetect>=1.0.5; extra == "langdetect"
+Provides-Extra: data-cleaning
+Requires-Dist: clean-text[gpl]>=0.6.0; extra == "data-cleaning"
+Requires-Dist: justext==3.0.1; extra == "data-cleaning"
+Requires-Dist: nltk>=3.9.1; extra == "data-cleaning"
+Requires-Dist: beautifulsoup4>=4.12.3; extra == "data-cleaning"
+Requires-Dist: zstandard>=0.22.0; extra == "data-cleaning"
+Requires-Dist: lxml>=5.2.1; extra == "data-cleaning"
+Provides-Extra: huggingface
+Requires-Dist: accelerate>=0.27.0; extra == "huggingface"
+Requires-Dist: torch>=2.2.1; extra == "huggingface"
+Requires-Dist: transformers>=4.38.1; extra == "huggingface"
+Requires-Dist: datasets>=2.17.1; extra == "huggingface"
+Requires-Dist: huggingface_hub>=0.21.3; extra == "huggingface"
+Requires-Dist: evaluate>=0.4.1; extra == "huggingface"
+Provides-Extra: sklearn
+Requires-Dist: scikit-learn>=1.4.1; extra == "sklearn"
+Requires-Dist: imbalanced-learn==0.12.3; extra == "sklearn"
+Provides-Extra: spacy
+Requires-Dist: spacy==3.7.5; extra == "spacy"
+Provides-Extra: demo
+Requires-Dist: fastapi[standard]>=0.115.2; extra == "demo"
+Requires-Dist: streamlit>=1.42.0; extra == "demo"
+Requires-Dist: pt_vid[huggingface]; extra == "demo"
+Requires-Dist: pt_vid[langdetect]; extra == "demo"
+Requires-Dist: pt_vid[demo]; extra == "demo"
+Provides-Extra: test
+Requires-Dist: pytest>=8.3.3; extra == "test"
+Provides-Extra: stats
+Requires-Dist: plotly>=6.0.0; extra == "stats"
+Requires-Dist: kaleido; extra == "stats"
+Provides-Extra: dev
+Requires-Dist: pt_vid[langdetect]; extra == "dev"
+Requires-Dist: pt_vid[data-cleaning]; extra == "dev"
+Requires-Dist: pt_vid[huggingface]; extra == "dev"
+Requires-Dist: pt_vid[sklearn]; extra == "dev"
+Requires-Dist: pt_vid[spacy]; extra == "dev"
+Requires-Dist: pt_vid[demo]; extra == "dev"
+Requires-Dist: pt_vid[test]; extra == "dev"
+Requires-Dist: pt_vid[stats]; extra == "dev"
+
+# Portuguese Variety Identifier
+
+A classifier for distinguishing between European and Brazilian Portuguese.
+
+## Development Environment
+
+### 1. Set Up a Virtual Environment
+
+To create a virtual environment using Conda, run the following commands:
+
+```sh
+conda create --name .conda python=3.11
+conda activate .conda
+```
+
+### 2. Install Dependencies
+
+Install the necessary dependencies by running:
+
+```sh
+pip install -e .
+```
+
+## Training
+
+Training scripts are located in the [train](scripts/train/) folder. For example, to find the best hyperparameters for the BERT model, run:
+
+```sh
+sh scripts/train/search_bert.sh
+```
+
+## Evaluation
+
+To evaluate the trained models, execute the evaluation script:
+
+```sh
+sh scripts/eval/run.sh
+```
