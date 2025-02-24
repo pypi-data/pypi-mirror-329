@@ -1,0 +1,60 @@
+model_name: unsloth/Phi-4 # unsloth/Meta-Llama-3.1-8B "unsloth/Llama-3.2-3B-Instruct-bnb-4bit"
+chat_template: phi-4 # base or instruct
+max_seq_length: 2048
+load_in_4bit: true
+test_size: 0.0
+save_method: adapters # adapters vs full
+model_save_model: "model/Phi_4_chunk_selector"
+
+unsloth:
+  fast_language_model_config:
+    r: 16
+    target_modules:
+      - "q_proj"
+      - "k_proj"
+      - "v_proj"
+      - "o_proj"
+      - "gate_proj"
+      - "up_proj"
+      - "down_proj"
+    lora_alpha: 16
+    lora_dropout: 0
+    bias: "none"
+    use_gradient_checkpointing: "unsloth"
+    random_state: 3407
+    use_rslora: false
+    loftq_config: null
+    
+trl:
+  dataset_text_field: "text"
+  dataset_num_proc: 2
+  packing: false
+  callbacks:
+      use_callbaks: false # Add if you want to use early stopping 
+      early_stopping_patience: 3
+      early_stopping_threshold: 0
+  args:
+    run_name: "myrun"
+    max_steps: 2 # Add null is you want to run for more time
+    per_device_train_batch_size: 2
+    gradient_accumulation_steps: 4
+    warmup_steps: 5
+    num_train_epochs: 10
+    do_eval: false  # add True to do a evalutation 
+    eval_steps: 50
+    learning_rate: 0.0002
+    logging_steps: 1
+    optim: "adamw_8bit"
+    weight_decay: 0.01
+    lr_scheduler_type: "linear"
+    seed: 3407
+    logging_first_step: true
+    eval_strategy: "no" # "steps"
+    save_strategy: "steps"
+    output_dir: "model/Phi_4_chunk_selector/outputs"
+    report_to: "none"
+    load_best_model_at_end: false
+
+train_on_responses_only:
+  instruction_part: "<|im_start|>user<|im_sep|>\n\n"
+  response_part: "<|im_start|>assistant<|im_sep|>\n\n"
