@@ -1,0 +1,99 @@
+Metadata-Version: 2.1
+Name: sensirion-i2c-sfm3304
+Version: 1.0.0
+Summary: I2C driver for the Sensirion SFM3304 sensor family
+Author: Sensirion
+Author-email: info@sensirion.com
+License: BSD
+Project-URL: Documentation, https://sensirion.github.io/python-i2c-sfm3304
+Project-URL: Repository, https://github.com/Sensirion/python-i2c-sfm3304
+Project-URL: Changelog, https://github.com/Sensirion/python-i2c-sfm3304/blob/master/CHANGELOG.md
+Keywords: Sensirion SFM3304
+        I2C
+        SFM3304
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.6, <4
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: sensirion-i2c-driver<2.0,>=1.0.0
+Requires-Dist: sensirion-driver-adapters<3.0,>=2.1.9
+Requires-Dist: sensirion-driver-support-types~=0.2.0
+Requires-Dist: sensirion-shdlc-sensorbridge<0.3.0,>=0.1.0
+Provides-Extra: test
+Requires-Dist: flake8~=3.7.8; extra == "test"
+Requires-Dist: pytest~=6.2.5; extra == "test"
+Requires-Dist: pytest-cov~=3.0.0; extra == "test"
+
+# Python I2C Driver for Sensirion SFM3304
+
+This repository contains the Python driver to communicate with a Sensirion SFM3304 sensor over I2C.
+
+<img src="https://raw.githubusercontent.com/Sensirion/python-i2c-sfm3304/master/images/SFM3304.png"
+    width="300px" alt="SFM3304 picture">
+
+
+Click [here](https://sensirion.com/products/catalog/SFM3304-D) to learn more about the Sensirion SFM3304 sensor.
+
+
+
+The default IÂ²C address of [SFM3304](https://sensirion.com/products/catalog/SFM3304-D) is **0x2E**.
+
+
+
+## Connect the sensor
+
+You can connect your sensor over a [SEK-SensorBridge](https://developer.sensirion.com/sensirion-products/sek-sensorbridge/).
+For special setups you find the sensor pinout in the section below.
+
+<details><summary>Sensor pinout</summary>
+<p>
+<img src="https://raw.githubusercontent.com/Sensirion/python-i2c-sfm3304/master/images/Pinout-SFM3304.png"
+     width="300px" alt="sensor wiring picture">
+
+| *Pin* | *Cable Color* | *Name* | *Description*  | *Comments* |
+|-------|---------------|:------:|----------------|------------|
+| 1 |  | NC | Do not connect | Ground for the heater
+| 2 | red | VDD | Supply Voltage | 3.15V to 3.45V
+| 3 | yellow | SCL | I2C: Serial clock input |
+| 4 | black | GND | Ground |
+| 5 | green | SDA | I2C: Serial data input / output |
+| 6 |  | NC | Do not connect | Supply voltage to the heater
+
+
+</p>
+</details>
+
+
+## Documentation & Quickstart
+
+See the [documentation page](https://sensirion.github.io/python-i2c-sfm3304) for an API description and a
+[quickstart](https://sensirion.github.io/python-i2c-sfm3304/execute-measurements.html) example.
+
+
+## Contributing
+
+### Check coding style
+
+The coding style can be checked with [`flake8`](http://flake8.pycqa.org/):
+
+```bash
+pip install -e .[test]  # Install requirements
+flake8                  # Run style check
+```
+
+In addition, we check the formatting of files with
+[`editorconfig-checker`](https://editorconfig-checker.github.io/):
+
+```bash
+pip install editorconfig-checker==2.0.3   # Install requirements
+editorconfig-checker                      # Run check
+```
+
+## License
+
+See [LICENSE](LICENSE).
