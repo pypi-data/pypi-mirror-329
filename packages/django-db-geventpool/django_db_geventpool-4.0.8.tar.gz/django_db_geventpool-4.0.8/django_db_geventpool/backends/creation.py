@@ -1,0 +1,16 @@
+from django.db.backends.postgresql.creation import (
+    DatabaseCreation as OriginalDatabaseCreation,
+)
+
+
+class DatabaseCreationMixin:
+    def _create_test_db(self, verbosity, autoclobber, keepdb=False):
+        return super()._create_test_db(verbosity, autoclobber, keepdb)
+
+    def _destroy_test_db(self, test_database_name, verbosity):
+        self.connection.closeall()
+        return super()._destroy_test_db(test_database_name, verbosity)
+
+
+class DatabaseCreation(DatabaseCreationMixin, OriginalDatabaseCreation):
+    pass
