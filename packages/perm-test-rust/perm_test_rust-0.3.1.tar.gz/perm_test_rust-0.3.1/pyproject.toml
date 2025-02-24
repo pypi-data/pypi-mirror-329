@@ -1,0 +1,25 @@
+[build-system]
+requires = ["maturin>=1.8,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "perm_test_rust"
+description = "A rust implementation for fast permutation testing"
+authors = [{ name = "Puck van Gijzen", email = "puckvangijzen@proton.me"}]
+license = "MIT"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+readme = "readme.md"
+
+dynamic = ["version"]
+[tool.maturin]
+features = ["pyo3/extension-module"]
+compatibility = "linux"
+[project.urls]
+Homepage = "https://github.com/puncks/perm_test"
+Issues = "https://github.com/puncks/perm_test/issues"
+
