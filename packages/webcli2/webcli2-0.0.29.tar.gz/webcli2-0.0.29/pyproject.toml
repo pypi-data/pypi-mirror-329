@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "webcli2"
+version = "0.0.29"
+authors = [
+  { name="Stone Zhong", email="stone.zhong@gmail.com" },
+]
+description = "Tool to build CLI like web application"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "SQLAlchemy",
+    "pydantic",
+    "fastapi",
+    "PyYAML",
+    "uvicorn",
+    "Jinja2",
+    "websockets",
+    "python-multipart",
+    "pyjwt",
+    "cryptography",
+    "bcrypt"
+]
+
+[project.scripts]
+webcli = "webcli2.cli:webcli"
+
+[tool.hatch.build.targets.wheel]
+exclude = [
+    "src/webcli2/web/.babelrc",
+    "src/webcli2/web/.gitignore",
+    "src/webcli2/web/README.md",
+    "src/webcli2/web/package.json",
+    "src/webcli2/web/package-lock.json",
+    "src/webcli2/web/webpack.config.js",
+    "src/webcli2/web/templates/*",
+    "src/webcli2/web/javascripts/*"
+]
+
+
+[project.urls]
+Homepage = "https://github.com/stonezhong/webcli"
+Issues = "https://github.com/stonezhong/webcli/issues"
