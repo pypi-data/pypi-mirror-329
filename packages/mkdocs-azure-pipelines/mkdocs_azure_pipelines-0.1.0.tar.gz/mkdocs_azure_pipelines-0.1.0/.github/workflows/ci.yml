@@ -1,0 +1,66 @@
+name: ci
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: "0 8 * * *" # Every day at 8am UTC
+  release:
+    types: [created]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test with Python ${{ matrix.py }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        py:
+          - "3.12"
+          - "3.11"
+          - "3.10"
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup python for test ${{ matrix.py }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.py }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.py }}
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+      - name: Run pytest
+        run: uv run pytest
+      - name: Run pre-commit
+        run: uv run pre-commit run --all-files
+
+  publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'release'
+    permissions:
+      id-token: write
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Update version in pyproject.toml
+        run: sed -i -e "s/0.0.0/${GITHUB_REF#refs/*/}/" pyproject.toml
+      - name: Build package
+        run: uv build
+      - name: Publish package
+        run: uv publish --trusted-publishing always
