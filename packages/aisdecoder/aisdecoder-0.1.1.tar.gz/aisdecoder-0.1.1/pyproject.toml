@@ -1,0 +1,46 @@
+[project]
+name = "aisdecoder"
+version = "0.1.1"
+description = "Parse raw NMEA AIS mesasges to a variety of formats. Works also with historical AIS data decorated with timestamps."
+readme = "README.md"
+license = {text = "Apache-2.0"}
+authors = [
+    { name = "Giampaolo Cimino", email = "gcimino@gmail.com" }
+]
+keywords = ["AIS", "maritime", "AIS processing", "density map", "ship", "GIS", "CSV", "CUI"]
+requires-python = ">=3.10"
+dependencies = [
+    "libais>=0.17",
+    "matplotlib>=3.10.0",
+    "numpy>=2.2.2",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: GIS",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
+]
+
+[project.scripts]
+aisdecoder = "aisdecoder.cli.main:main" 
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "assertpy>=1.1",
+    "deptry>=0.22.0",
+    "lxml>=5.3.1",
+    "mypy>=1.14.1",
+    "pandas>=2.2.3",
+    "xlsx2csv>=0.8.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aisdecoder"]
