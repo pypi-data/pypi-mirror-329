@@ -1,0 +1,55 @@
+Metadata-Version: 2.2
+Name: vdc
+Version: 1.0.1
+Summary: A Python package for verifying consistency between multimodal data
+Home-page: https://github.com/zihao-ai/vdc
+Author: Zihao Zhu
+Author-email: zihaozhu1996@gmail.com
+License: MIT
+Project-URL: Bug Tracker, https://github.com/zihao-ai/vdc/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: openai>=1.12.0
+Requires-Dist: requests>=2.24.0
+Requires-Dist: pandas>=1.0.0
+
+This is a Python package for VDC: Versatile Data Cleanser Based on Semantic Inconsistency.
+
+## Installation
+
+```bash
+pip install vdc
+```
+
+## Usage
+
+```python
+from vdc.cleanser import DataCleanser
+from vdc.utils.config import VDCConfig
+
+config = VDCConfig(
+    llm_base_url="https://api.openai.com/v1/",
+    llm_api_key="sk-xxx",
+    mllm_base_url="https://api.openai.com/v1/",
+    mllm_api_key="sk-xxx",
+)
+
+cleanser = DataCleanser(
+    config=config, llm_model="gpt-4o-mini", mllm_model="gpt-4o-mini"
+)
+
+res = cleanser.process_image_text_pair(
+    img_path="test.jpeg",
+    text="A black cat is sitting on a wooden table.",
+    num_questions=5,
+)
+
+consistency_score = res.consistency_score   
+is_consistent = res.is_consistent
+
+print(res)
+```
