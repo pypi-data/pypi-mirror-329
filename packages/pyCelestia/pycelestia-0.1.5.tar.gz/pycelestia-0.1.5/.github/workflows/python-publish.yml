@@ -1,0 +1,59 @@
+# This workflow will upload a Python Package using Twine when a release is created
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-package-registries
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Upload Python Package
+
+on:
+  workflow_dispatch:  # Allow manual triggers
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        pip install build
+
+    - name: Run tests
+      run: |
+        pip install .[test]
+        pytest
+
+    - name: Build package
+      run: |
+        python3 -m build -s
+        docker run --rm -v `pwd`:/io quay.io/pypa/manylinux_2_28_x86_64 bash /io/build-wheels.sh
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
+    - name: Generation documentation
+      run: |
+        pip install sphinx sphinx_rtd_theme myst_parser
+    - name: Sphinx build
+      run: |
+        sphinx-build docs/ _build
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        publish_branch: gh-pages
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: _build/
+        force_orphan: true
