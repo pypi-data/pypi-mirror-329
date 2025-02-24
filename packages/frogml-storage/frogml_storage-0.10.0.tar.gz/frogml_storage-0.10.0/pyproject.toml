@@ -1,0 +1,57 @@
+
+[project]
+name = "frogml-storage"
+version = "0.10.0"
+
+[tool.poetry]
+name = "frogml-storage"
+version = "0.10.0"
+description = "JFrog ML Storage package"
+authors = ["JFrog"]
+readme = "README.md"
+packages = [
+    { include = "frogml_storage", from = "src" },
+]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython"
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.13"
+requests = "^2.26"
+pydantic = "^2.5.0"
+typer = "^0.9.0"
+tqdm = "^4.40.0"
+setuptools = "^70.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+black = "^24.3.0"
+mypy = "^1.9.0"
+isort = "^5.13.0"
+flake8 = "^7.0.0"
+coverage = "^7.4.0"
+setuptools = "^70.0.0"
+types-setuptools = "^70.0.0"
+types-requests = "^2.28.0"
+
+[tool.poetry.scripts]
+frogml = "frogml_storage.cli._frogml_cli:main"
+
+[tool.poetry.urls]
+Homepage = "https://github.com/jfrog/frogml"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+markers = [
+    "integration: Marker for integration tests"
+]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
