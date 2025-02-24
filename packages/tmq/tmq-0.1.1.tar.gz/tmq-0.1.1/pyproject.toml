@@ -1,0 +1,28 @@
+[build-system]
+requires = [
+ "setuptools>=42",
+ "wheel",
+ "pybind11>=2",
+ "ninja",
+ "cmake"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tmq"
+version = "0.1.1"
+description = "Quantization-aware neural network layers using controllable soft-quantization"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+authors = [{name="Martin Wawro", email="martin.wawro@gmail.com"}]
+
+[project.urls]
+"Homepage" = "https://github.com/mtnwrw/tmq"
+"Bug Tracker" = "https://github.com/mtnwrw/tmq/issues"
+
+[tool.setuptools]
+zip-safe = false
+
+[tools.setuptools.editable]
+mode = "compat"
