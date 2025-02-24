@@ -1,0 +1,47 @@
+digraph invocation_tree {
+	node [shape=plaintext]
+	0 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ccffcc">
+  <TR><TD ALIGN="left">➤&lt;module&gt;</TD></TR>
+  <TR><TD ALIGN="left">   tree: Invocation_Tree(filename=&#x27;tree.png&#x27;, show=False, block=False, each_line=False, outcount=1)</TD></TR>
+</TABLE>>]
+	1 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ccffcc">
+  <TR><TD ALIGN="left">➤main</TD></TR>
+  <TR><TD ALIGN="left">   students: {&#x27;Ann&#x27;: [7.5, 8.0], &#x27;Bob&#x27;: [4.5, 6.0], &#x27;Coy&#x27;: [6.0, 7.5]}</TD></TR>
+  <TR><TD ALIGN="left">   student: &#x27;Bob&#x27;</TD></TR>
+  <TR><TD ALIGN="left">   grades: [4.5, 6.0]</TD></TR>
+</TABLE>>]
+	2 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ffcccc">
+  <TR><TD ALIGN="left">➤compute_average</TD></TR>
+  <TR><TD ALIGN="left">   grades: [7.5, 8.0]</TD></TR>
+  <TR><TD ALIGN="left">   average: 7.75</TD></TR>
+  <TR><TD ALIGN="left">return 7.8</TD></TR>
+</TABLE>>]
+	3 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ffcccc">
+  <TR><TD ALIGN="left">➤my_round</TD></TR>
+  <TR><TD ALIGN="left">   value: 7.75</TD></TR>
+  <TR><TD ALIGN="left">   digits: 1</TD></TR>
+  <TR><TD ALIGN="left">   shift: 10</TD></TR>
+  <TR><TD ALIGN="left">return 7.8</TD></TR>
+</TABLE>>]
+	4 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ccffcc">
+  <TR><TD ALIGN="left">➤compute_average</TD></TR>
+  <TR><TD ALIGN="left">   grades: [4.5, 6.0]</TD></TR>
+  <TR><TD ALIGN="left">   <B>average</B>: <B>5.25</B></TD></TR>
+</TABLE>>]
+	5 [label=<
+<TABLE BORDER="3" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ffffff">
+  <TR><TD ALIGN="left">➤<B>my_round</B></TD></TR>
+  <TR><TD ALIGN="left">   <B>value</B>: <B>5.25</B></TD></TR>
+  <TR><TD ALIGN="left">   <B>digits</B>: <B>1</B></TD></TR>
+</TABLE>>]
+	0 -> 1
+	1 -> 2
+	2 -> 3
+	1 -> 4
+	4 -> 5
+}
