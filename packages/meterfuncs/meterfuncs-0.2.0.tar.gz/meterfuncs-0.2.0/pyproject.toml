@@ -1,0 +1,43 @@
+[project]
+name = "meterfuncs"
+dynamic = []
+description = "meter reading model build functions"
+authors = [
+    { name = "svtter", email = "svtter@qq.com" },
+]
+dependencies = [
+    "pydantic>=2.10.4",
+    "loguru>=0.7.3",
+]
+requires-python = ">=3.9,<4.0"
+readme = "README.rst"
+version = "0.2.0"
+
+[project.license]
+text = "NOT OPEN"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.version]
+source = "file"
+path = "./src/meterfuncs/__init__.py"
+
+[tool.ruff]
+line-length = 88
+indent-width = 2
+exclude = [
+    "node_modules",
+    "venv",
+]
+
+[dependency-groups]
+dev = [
+    "pip>=24.3.1",
+]
+
+[build-system]
+requires = [
+    "pdm-backend",
+]
+build-backend = "pdm.backend"
