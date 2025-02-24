@@ -1,0 +1,4 @@
+from AIScratch.NeuralNetwork.ErrorFunctions.function import ErrorFunction
+from AIScratch.NeuralNetwork.ErrorFunctions.mse import MSE
+from AIScratch.NeuralNetwork.ErrorFunctions.cross_entropy import CrossEntropy
+from AIScratch.NeuralNetwork.ErrorFunctions.hinge_loss import HingeLoss
