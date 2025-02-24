@@ -1,0 +1,1 @@
+# lazy input for cli
