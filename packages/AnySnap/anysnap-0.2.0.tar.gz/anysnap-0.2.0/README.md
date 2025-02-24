@@ -1,0 +1,179 @@
+# AnySnap - Snapshot manager for various filesystems 
+
+## Description
+
+## Usage
+
+ Creating a snapshot and deleting the excess ones is as simple as
+
+     anysnap /path/to/a/supported/target
+
+Without more arguments, it will create a new snapshot called
+`target@anysnap-TIMESTAMP` and remove older snapshots (only those created by
+`anysnap`, hence the "anysnap" in the snapshot name).
+
+The two most important arguments are
+- `--keep`: define the number of snapshots to keep at all time (default value
+  10, 0 indicates to keep everything)
+- `--label`: change the name of the snapshot (default value `anysnap`), only
+  snapshots with this label are taken into account for removal
+
+A more interesting example is:
+
+     anysnap --label before-upgrade --keep 1 /usr
+     apt/yum/pacman/whatever upgrade
+     anysnap --label after-upgrade --keep 1 /usr
+
+Assuming `/usr` is an admissible target, it will create two new snapshots and remove all other (since keep is 1). The new snapshots will be called:
+- `usr@before-upgrade-TIMESTAMP1`
+- `usr@after-upgrade-TIMESTAMP2`
+
+See [the section on supported
+filesystem](#user-content-supported-filesystems-and-their-specificities) for
+details about the possible targets and the meaning of other arguments.
+
+The choice of keeping or deleting a snapshot is purely made upon the number of
+snapshot already existing, the timestamp is only here to sort the snapshots and
+to inform the user and is not interpreted by `anysnap`.
+
+### Periodic snapshots
+
+A typical usecase is to make periodic snapshots of a filesystem (here a ZFS
+one): every day, every week, every month and every year. The `--label` argument
+is used to differentiate between the various periods:
+
+```` crontab
+ 0  * * * * anysnap --keep 36 --label  hourly home/someuser
+30 20 * * * anysnap --keep 14 --label   daily home/someuser
+ 0  0 * * 1 anysnap --keep  6 --label  weekly home/someuser
+ 0 16 1 * * anysnap --keep  6 --label monthly home/someuser
+````
+
+### Installation
+
+Use your preferred Python package manager. For example:
+
+    pipx install anysnap
+
+or
+
+    uv tool install anysnap
+
+You will also need the userspace tools for the filesystems you want to use.
+
+## Supported filesystems and their specificities
+
+### ZFS
+
+The userspace tools are needed (package `zfsutils-linux` in Debian). For a
+precise semantic of snapshots with ZFS, see the relevant manpages (in particular
+[zfsconcepts(7)](https://openzfs.github.io/openzfs-docs/man/master/7/zfsconcepts.7.html)).
+
+#### Target
+
+With the ZFS commands, it's a filesystem which is snapshotted and not a path.
+For example, if your layout is the following
+
+```` shell
+$ zfs list
+NAME             USED  AVAIL  REFER  MOUNTPOINT
+rpool/home       337G  338G     26K       /home
+rpool/home/user  337G  338G    184G  /home/user
+````
+
+then the target will be `rpool/home/user` (and not `/home/user`).
+
+#### Snapshot location
+
+Snapshots does not live in the same namespace as the filesystems, and are at a
+fixed location. Therefor the `--snapdir` option is meaningless for ZFS.
+
+#### Recursion
+
+Snapshots can be recursive and therefore the `--recursive` option is supported
+for ZFS.
+
+### BTRFS
+
+The `btrfs` userspace tools are needed (package `btrfs-progs` in Debian). For a
+precise semantic of snapshots with BTRFS, see the project website (in particular
+the page on
+[subvolumes](https://btrfs.readthedocs.io/en/latest/Subvolumes.html)).
+
+#### Target
+
+A target can be the path of any subvolume inside a BTRFS filesystem (including
+the root subvolume).
+
+#### Snapshot location
+
+Snapshot can be located anywhere inside the filesystem, the `--snapdir` argument
+is a path relative to the target and set the precise location. Beware of not
+build a path outside the filesystem. For example, assuming we have following
+layout:
+
+    root:~# btrfs subvolume list /home
+    ID 258 gen 53189 top level 5 path user
+
+With the default `--snapdir` value (`../`), we get the snapshot outside the
+`/home/user` subvolume:
+
+    root:~# btrfs subvolume list /home
+    ID 258 gen 53189 top level 5 path user
+    ID 258 gen 53189 top level 5 path user@anysnap-2024-11-29T12:00:00
+
+Beware that this setup does not allow to snapshot the root directory, since it
+would point outside the filesystem.
+
+With `--snapdir ./`, we get the snapshot inside:
+
+    root:~# btrfs subvolume list /home
+    ID 258 gen 53189 top level 5 path user
+    ID 258 gen 53189 top level 5 path user/user@anysnap-2024-11-29T12:00:00
+
+Although not so elegant, it is not a problem given the subvolume barrier (see
+below).
+
+#### Recursion
+
+BTRFS snapshots are not recursive and snapshotting stops at the so-called
+subvolume barrier: subvolume will appear as empty subvolume inside the snapshot.
+Therefore, the `--recursive` option is silently ignored with this filesystem.
+
+### S3QL
+
+The S3QL FUSE filesystem need to be installed. A snapshot is a server-side copy
+made with [`s3qlcp`](https://www.rath.org/s3ql-docs/man/cp.html) and made
+immutable with [`s3qllock`](https://www.rath.org/s3ql-docs/man/lock.html). See
+the manpages and the [documentation](https://www.rath.org/s3ql-docs/) for more
+precise details.
+
+#### Target
+
+The target can be any subdirectory of the filesystem.
+
+#### Snapshot location
+
+A snapshot can be located anywhere inside the filesystem. The `--snapdir`
+options allows to set this precise location. With the default value, the
+snapshots are siblings of the target directory:
+
+````
+$ ls /path/to/s3ql/
+mydirectory/
+mydirectory@anysnap-2024-11-28T12:00:00/
+mydirectory@anysnap-2024-11-29T12:00:00/
+````
+
+#### Recursion
+
+All copies are recursive by design so the `--recursive` option is ignored.
+Moreover, care should be take to not make infinite recursion of snapshots.
+
+## Contributing
+
+This project is distributed under the terms of the GPL-3.0-or-later license.
+
+All development happens on https://codeberg.org/oschwand/anysnap
+
+The project is managed with [`uv`](https://docs.astral.sh/uv/).
