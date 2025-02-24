@@ -1,0 +1,29 @@
+[project]
+name = "dora-opus"
+version = "0.3.10-rc1"
+description = "Dora Node for Text translating using Opus"
+authors = [
+    { name = "Haixuan Xavier Tao", email = "tao.xavier@outlook.com" },
+    { name = "Enzo Le Van", email = "dev@enzo-le-van.fr" },
+    { name = "Félix Huang", email = "felix.huang.net@gmail.com" },
+]
+
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.8"
+
+dependencies = [
+    "dora-rs >= 0.3.6",
+    "numpy < 2.0.0",
+
+    "transformers >= 4.45",
+    "modelscope >= 1.18.1",
+    "sentencepiece >= 0.1.99",
+    "torch >= 2.2.0",
+]
+
+[dependency-groups]
+dev = ["pytest >=8.1.1", "ruff >=0.9.1"]
+
+[project.scripts]
+dora-opus = "dora_opus.main:main"
