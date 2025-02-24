@@ -1,0 +1,24 @@
+[project]
+dependencies = [
+    "click (>=8.1.8)",
+    "pythonnet>=3.0.5",
+    "psutil (>=6.1.1,<7.0.0)",
+    "requests (>=2.32.3,<3.0.0)",
+    "questionary (>=2.1.0,<3.0.0)",
+    "nuitka (>=2.6.6,<3.0.0)",
+    "jinja2 (>=3.1.5,<4.0.0)",
+]
+name = "nyvalis"
+version = "0.1.2"
+description = "Nyvalis is a lightweight Python library for building modern desktop applications using web technologies and webview."
+authors = [{ name = "beqm", email = "brenomartinsmb@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+
+[tool.poetry.scripts]
+nyvalis = "nyvalis.cli:main"
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
