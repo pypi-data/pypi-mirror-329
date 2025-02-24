@@ -1,0 +1,33 @@
+[project]
+name = "bird-ospf-map"
+version = "0.1.2"
+description = ""
+authors = [
+    {name = "Pavel Dostál",email = "pdostal@pdostal.cz"}
+]
+readme = "README.md"
+requires-python = "<4.0,>=3.11"
+dependencies = [
+    "argparse (>=1.4.0,<2.0.0)",
+    "paramiko (>=3.5.1,<4.0.0)",
+    "pathlib (>=1.0.1,<2.0.0)",
+    "pyyaml (>=6.0.2,<7.0.0)",
+    "click (>=8.1.8,<9.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+include = [
+    "tests/**/*",
+]
+
+[tool.poetry.scripts]
+bird_ospf_map = "bird_ospf_map.cli:cli"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+
