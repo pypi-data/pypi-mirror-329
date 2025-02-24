@@ -1,0 +1,16 @@
+Extract the following information from the sea waybill document.
+
+1. **blNumber:** Find the value labeled as "B/L No.".
+2. **bookingNumber:** Look for the value associated with "Booking No.".
+3. **vessel:** Extract the text from the field "Vessel".
+4. **voyage:** Get the "Voyage No." value.
+5. **portOfLoading:** Find the value in the "Port of Loading" field.
+6. **portOfDischarge:** Extract the text from the "Port of Discharge" field.
+7. **containers:**
+    The document may contain multiple containers listed within the section "PARTICULARS FURNISHED BY SHIPPER" under the line starting with "Kind of Packages; Description of goods; Marks and Numbers; Container No./Seal No.".  Look for container information that starts with a line that includes "Container Said to Contain" and continues until the next instance of "Container Said to Contain" or the end of the section. For each container, extract the following:
+    * **containerNumber:**  Find the container number. It starts with "MRKU" and is followed by a sequence of digits. It is found on the same line as the text "Container Said to Contain".
+    * **packageType:** Extract the value from the "Kind of Packages" field.
+    * **sealNumber:** Get the "Shipper Seal" value. It follows after the text "Shipper Seal :".
+    * **containerType:** Extract the container type information. It is usually a combination of numbers, the word "DRY", and may include additional characters. It is found on the same line as the container number.
+    * **grossWeight:** Find the value corresponding to the "gross weight" of the container. It is usually represented in KGS and is found on the same line as the container number.
+    * **packageQuantity:** Extract the "package quantity" information. It is usually a whole number and precedes the text "PACKAGE".  All container information will be on the same line as the "package quantity".
