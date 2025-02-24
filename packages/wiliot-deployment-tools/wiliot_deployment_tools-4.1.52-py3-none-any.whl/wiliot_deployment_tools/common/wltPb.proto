@@ -1,0 +1,150 @@
+
+syntax = "proto3";
+
+package wltPb;
+
+
+/* ############### Utilities ############### */
+
+message Location 
+{
+    double lat = 1;
+    double lng = 2;
+}
+
+/* using this class as google.protobuf.Value alternative as there are issues for some vedors to use the google one
+* in addition we added integerValue because of precision issues of double for integer
+* for example 4 can be represented as 3.9999999...
+* so its safer to use integerValue for integer values
+*/
+
+message Value
+{
+    oneof type
+    {
+        int64 integerValue = 1;
+        double numberValue = 2;
+        string stringValue = 3;
+        bool boolValue = 4;
+    }
+}
+
+/* ############### Uplink ############### */
+
+message GatewayData 
+{
+    string gatewayId = 1;
+    uint64 timestamp = 2;
+
+    message Packet 
+    {
+        bytes payload = 1;
+        uint64 timestamp = 2;
+        uint32 sequenceId = 3;
+        optional uint32 rssi = 4;
+        string aliasBridgeId = 5;
+    }
+
+    repeated Packet packets = 3;
+    optional Location location = 4;
+}
+
+message UplinkMessage
+{
+    oneof type
+    {
+        GatewayStatus gatewayStatus = 1;
+        GatewayInfo gatewayInfo = 2;
+        GatewayLogs gatewayLogs = 3;
+        ActionStatus actionStatus = 4;
+    }
+}
+
+message GatewayStatus 
+{
+    string gatewayId = 1;
+    string gatewayType = 2;
+    bool downlinkSupported = 3;
+    bool bridgeOtaUpgradeSupported = 4;
+    uint32 apiVersion = 5;
+    optional string version = 6;
+    optional string bleSwVersion = 7;
+    optional string interfaceSwVersion = 8;
+    optional Location location = 9;
+    map<string, Value> config = 10;
+    optional string bleAddress = 11;
+}
+
+message GatewayInfo
+{
+    map<string, Value> entries = 1;
+}
+
+message GatewayLogs
+{
+    repeated string logs = 1;
+}
+
+message ActionStatus
+{
+    uint32 action = 1;
+    uint32 status = 2;
+}
+
+/* ############### Downlink ############### */
+
+message DownlinkMessage
+{
+    oneof type
+    {
+        TxPacket txPacket = 1;
+        GatewayAction gatewayAction = 2;
+        BridgeUpgrade bridgeUpgrade = 3;
+        GatewayConfig gatewayConfig = 4;
+        CustomBroker customBroker = 5;
+    }
+}
+
+message TxPacket 
+{
+    bytes payload = 1;
+    uint32 maxRetries = 2;
+    uint32 maxDurationMs = 3;
+}
+
+message GatewayAction 
+{
+    string action = 1;
+}
+
+message BridgeUpgrade 
+{
+    bytes rebootPacket = 1;
+    uint32 txMaxDurationMs = 2;
+    uint32 txMaxRetries = 3;
+    string bridgeId = 4;
+    string versionUuid = 5;
+    bool upgradeBlSd = 6;
+    string imageDirUrl = 7;
+}
+
+message GatewayConfig 
+{
+    optional string version = 1;
+    optional string bleSwVersion = 2;
+    optional string interfaceSwVersion = 3;
+    optional Location location = 4;
+    map<string, Value> config = 5;
+}
+
+message CustomBroker
+{
+    bool customBroker = 1;
+    uint32 port = 2;
+    string brokerUrl = 3;
+    string username = 4;
+    string password = 5;
+    string updateTopic = 6;
+    string statusTopic = 7;
+    string dataTopic = 8;
+}
