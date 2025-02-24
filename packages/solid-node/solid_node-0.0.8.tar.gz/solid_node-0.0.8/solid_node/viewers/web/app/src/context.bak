@@ -1,0 +1,83 @@
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { Scene } from 'three';
+
+interface ContextType {
+  scene: Scene;
+  time: number;
+  fps: number;
+  frames: number;
+  buildError: string;
+  setScene: React.Dispatch<React.SetStateAction<Scene>>;
+  setTime: React.Dispatch<React.SetStateAction<number>>;
+  setFps: React.Dispatch<React.SetStateAction<number>>;
+  setFrames: React.Dispatch<React.SetStateAction<number>>;
+  setBuildError: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const Context = createContext<ContextType>({
+  scene: new Scene(),
+  time: 0,
+  fps: 0,
+  frames: 0,
+  buildError: '',
+  setScene: () => {},
+  setTime: () => {},
+  setFps: () => {},
+  setFrames: () => {},
+  setBuildError: () => {},
+});
+
+interface NodeProviderProps {
+  children: React.ReactNode;
+}
+
+export const useNodeContext = () => useContext(Context);
+
+export const NodeProvider: React.FC<NodeProviderProps> = ({ children }) => {
+  const [scene, setScene] = useState<Scene>(new Scene());
+  const [time, setTime] = useState<number>(0);
+  const [fps, setFps] = useState<number>(0);
+  const [frames, setFrames] = useState<number>(0);
+  const [buildError, setBuildError] = useState<string>('');
+  const [last, setLast] = useState<number>(new Date().getTime());
+
+
+export const NodeProvider: React.FC<NodeProviderProps> = ({ children }) => {
+  // ... (rest of your state and logic)
+
+  useEffect(() => {
+    if (!frames || !fps) {
+      setTime(0);
+      return;
+    }
+    const frameDuration = 1000 / fps;
+    const timeInc = 1 / frames;
+
+    const update = () => {
+      const now = new Date().getTime();
+      if (now - last >= frameDuration) {
+        setTime(prevTime => (prevTime + timeInc) % 1);
+        setLast(now);
+      }
+
+      requestAnimationFrame(update);
+    };
+
+    requestAnimationFrame(update);
+    return () => { /* Handle cleanup if necessary */ };
+  }, [frames, fps]); // Adjust dependencies based on your logic
+
+  const context = {
+    scene, setScene,
+    time, setTime,
+    fps, setFps,
+    frames, setFrames,
+    buildError, setBuildError,
+  }
+
+  return (
+    <Context.Provider value={context}>
+      {children}
+    </Context.Provider>
+  );
+};
