@@ -1,0 +1,69 @@
+<head>
+    <!-- file css  -->
+    <style>
+        .btn-export {
+            color: white;
+            background-color: #ae3ec9;
+        }
+
+        #exportModal {
+            .modal-content {
+                width: 800px;
+                height: 200px;
+            }
+        }
+
+        #submit_form_export {
+            display: inline-block !important;
+        }
+    </style>
+
+    <!-- script click -->
+    <script>
+        function submit_export() {
+            // get value search set on input
+            let quick_search = document.getElementById('quicksearch').value;
+            document.getElementById('quick_search_export').value = quick_search;
+
+            // set input feild type
+            let type = document.getElementById('type_select').value;
+            document.getElementById('type_export').value = type;
+        }
+    </script>
+</head>
+<!-- Button trigger modal -->
+<button id="export_excel" type="button" class="btn btn-export" data-bs-toggle="modal" data-bs-target="#exportModal">
+    <i class="mdi mdi-download"></i>
+    Export excel
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/plugins/netbox-excel/export/excel" method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exportModalLabel">Export Device</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="type_export" class="form-label">Type export</label>
+                    <select class="form-select" aria-label="Default select example" id="type_select">
+                        <option value="all_view_rack" selected>All view rack</option>
+                        <option value="only_device">Only device</option>
+                    </select>
+                    <input type="hidden" name="type" id="type_export" class="hidden" value="all_data">
+                    <input type="hidden" name="quick_search" id="quick_search_export" class="hidden">
+                    <div class=" valid-feedback">Please select the type you want to export.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancle</button>
+                    <button type="submit" class="btn btn-primary" id="submit_form_export" data-bs-dismiss="modal"
+                        onclick="submit_export()">Export</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
