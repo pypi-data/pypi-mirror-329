@@ -1,0 +1,151 @@
+Metadata-Version: 2.4
+Name: swecc-email-scraper
+Version: 0.1.1
+Summary: A Python CLI tool for analyzing email data in mbox format
+Project-URL: Homepage, https://github.com/swecc/email-scraper
+Project-URL: Documentation, https://github.com/swecc/email-scraper#readme
+Project-URL: Issues, https://github.com/swecc/email-scraper/issues
+Author-email: SWECC Labs <swecc@uw.edu>
+License-Expression: MIT
+License-File: LICENSE
+Keywords: analysis,cli,email,mbox
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.10
+Requires-Dist: click
+Requires-Dist: rich
+Provides-Extra: dev
+Requires-Dist: black; extra == 'dev'
+Requires-Dist: build; extra == 'dev'
+Requires-Dist: mkdocs; extra == 'dev'
+Requires-Dist: mkdocs-material; extra == 'dev'
+Requires-Dist: mkdocstrings[python]; extra == 'dev'
+Requires-Dist: mypy; extra == 'dev'
+Requires-Dist: pre-commit; extra == 'dev'
+Requires-Dist: pytest; extra == 'dev'
+Requires-Dist: pytest-asyncio; extra == 'dev'
+Requires-Dist: ruff; extra == 'dev'
+Requires-Dist: twine; extra == 'dev'
+Requires-Dist: types-click; extra == 'dev'
+Requires-Dist: types-markdown; extra == 'dev'
+Requires-Dist: types-pyyaml; extra == 'dev'
+Requires-Dist: types-requests; extra == 'dev'
+Provides-Extra: docs
+Requires-Dist: mkdocs; extra == 'docs'
+Requires-Dist: mkdocs-material; extra == 'docs'
+Requires-Dist: mkdocstrings[python]; extra == 'docs'
+Provides-Extra: lint
+Requires-Dist: black; extra == 'lint'
+Requires-Dist: mypy; extra == 'lint'
+Requires-Dist: pre-commit; extra == 'lint'
+Requires-Dist: ruff; extra == 'lint'
+Requires-Dist: types-click; extra == 'lint'
+Requires-Dist: types-markdown; extra == 'lint'
+Requires-Dist: types-pyyaml; extra == 'lint'
+Requires-Dist: types-requests; extra == 'lint'
+Provides-Extra: test
+Requires-Dist: pytest; extra == 'test'
+Requires-Dist: pytest-asyncio; extra == 'test'
+Description-Content-Type: text/markdown
+
+# SWECC Email Scraper
+
+A Python CLI tool for analyzing email data in mbox format. This tool helps you extract insights and perform analysis on email archives.
+
+## Features
+
+- 📧 Process mbox format email archives
+- 📊 Extendable framework for building analysis pipelines
+- 🎨 Rich command-line interface with progress reporting
+- Coming soon: Actual analysis...
+
+## Installation
+
+### From PyPI
+
+```bash
+pip install swecc-email-scraper
+```
+
+### From Source
+
+```bash
+git clone https://github.com/swecc/email-scraper.git
+cd email-scraper
+pip install -e ".[dev]"  # Install with development dependencies
+
+# Run tests
+pytest
+```
+
+## Quick Start
+
+1. Basic usage with default statistics processor:
+```bash
+swecc-email-scraper process path/to/mailbox.mbox
+```
+
+2. Use multiple processors and specify output format:
+```bash
+swecc-email-scraper process path/to/mailbox.mbox -p statistics -p headers -f json -o results.json
+```
+
+3. List available processors:
+```bash
+swecc-email-scraper list-processors
+```
+
+4. List available output formats:
+```bash
+swecc-email-scraper list-formats
+```
+
+
+## Basic Example Usage
+
+1. Basic email statistics:
+```bash
+swecc-email-scraper process inbox.mbox
+```
+
+2. Export analysis to a file:
+```bash
+swecc-email-scraper process inbox.mbox -o analysis.json
+```
+
+3. Use multiple processors:
+```bash
+swecc-email-scraper process inbox.mbox -p statistics -p <processor_name>
+```
+
+## Extending the Tool
+
+The tool is designed to be easily extensible. See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed information on:
+
+- Creating custom processors
+- Adding new output formats
+- Contributing to the project
+- Development setup and guidelines
+
+## Architecture
+
+The tool uses a pipeline architecture where:
+
+1. `EmailData` objects represent individual emails with parsed metadata
+2. `Pipeline` manages the flow of data through processors
+3. `EmailProcessor`s transform or analyze the data
+4. `OutputFormatter`s convert results to different formats
+
+
+## License
+
+MIT License - See [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+Developed as part of SWECC Labs at the University of Washington.
