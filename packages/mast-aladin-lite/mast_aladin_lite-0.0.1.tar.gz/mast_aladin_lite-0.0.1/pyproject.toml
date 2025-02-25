@@ -1,0 +1,44 @@
+[project]
+name = "mast-aladin-lite"
+description = "Visualize MAST data products in Aladin Lite"
+requires-python = ">=3.10"
+authors = [
+    { name = "mast-aladin-lite developers", email = "help@stsci.edu" },
+]
+dependencies = [
+    "ipyaladin",
+    "astroquery",
+    "sidecar",
+]
+dynamic = [
+    "version",
+]
+
+[project.optional-dependencies]
+docs = [
+    "sphinx-astropy[confv2]>=1.9.1",
+    "sphinx_design"
+]
+
+[project.urls]
+Homepage = "https://mast-aladin-lite.readthedocs.io/en/latest/"
+
+[project.readme]
+file = "README.rst"
+content-type = "text/x-rst"
+
+[project.license]
+file = "LICENSE"
+content-type = "text/plain"
+
+[tool.setuptools.packages.find]
+include = ["mast_aladin_lite"]
+
+[build-system]
+requires = [
+    "setuptools",
+    "setuptools_scm"
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
