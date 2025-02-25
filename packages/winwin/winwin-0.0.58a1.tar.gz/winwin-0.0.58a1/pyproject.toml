@@ -1,0 +1,52 @@
+[project]
+name = "winwin"
+version = "0.0.58a1"
+description = "Add your description here"
+readme = "README.md"
+authors = [{ name = "赵斌", email = "zhaobin@brandct.com" }]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "python-dotenv>=1.0.1",
+    "pandas>=2.2.3",
+    "pyyaml>=6.0.2",
+]
+
+[project.optional-dependencies]
+oss = [
+    "ossfs>=2023.12.0",
+]
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "build>=1.2.2.post1",
+    "ossfs>=2023.12.0",
+    "pytest>=8.3.4",
+    "ruff>=0.9.2",
+]
+
+[tool.ruff.lint]
+select = [
+    "B", # flake8-bugbear
+    "C", # flake8-comprehensions
+    "E", # pycodestyle errors
+    "F", # pyflakes
+    "I", # isort
+    "N", # pep8-naming
+    "PT", # flake8-pytest-style
+    "RET", # flake8-return
+    "RUF", # Ruff-specific rules
+    "SIM", # flake8-simplify
+    "T20", # flake8-print
+    "UP", # pypupgrade
+    "W", # pycodestyle warnings
+]
