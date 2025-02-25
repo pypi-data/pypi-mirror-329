@@ -1,0 +1,37 @@
+// File name starts with 1 so it is included at the start of the concatenated player.js script, after 0strict
+
+const MusicEvent = {
+    METADATA_CHANGE: 'metadata_change', // Tracks or playlists have been changed, added, or removed. Any HTML with playlist/track info should be updated. Track with updated metadata may be provided as parameter to the callable.
+    TRACK_CHANGE: 'track_change', // Track that is playing changed (skipped to next or previous track). New DownloadedTrack is provided as parameter to the callable
+    SETTINGS_LOADED: 'settings_loaded',
+    PLAYLIST_CHANGE: `playlist_change` // Active playlists changed
+}
+
+class EventBus {
+    /** @type{Object.<string, Array<Function>} */
+    listeners;
+
+    constructor() {
+        this.listeners = {};
+
+        for (const event of Object.values(MusicEvent)) {
+            this.listeners[event] = [];
+        }
+    }
+
+    subscribe(name, callable) {
+        this.listeners[name].push(callable);
+    }
+
+    publish(name, ...params) {
+        for (const callable of this.listeners[name]) {
+            try {
+                callable(...params);
+            } catch (error) {
+                sendErrorReport(error);
+            }
+        }
+    }
+}
+
+const eventBus = new EventBus();

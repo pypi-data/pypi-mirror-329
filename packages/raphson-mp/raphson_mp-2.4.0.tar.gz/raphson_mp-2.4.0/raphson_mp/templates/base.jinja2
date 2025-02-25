@@ -1,0 +1,65 @@
+{% macro icon(icon_name) %}
+    <div class="icon icon-{{ icon_name }}"></div>
+{% endmacro %}
+
+{% macro icon_button(icon_name, id = None, title = None) %}
+    <button {% if id %}id="{{id}}"{% endif %} class="icon-button" {% if title %} title="{{title}}"{% endif %}>
+        {{ icon(icon_name) }}
+    </button>
+{% endmacro %}
+{% macro page_heading(title, back_url='/') %}
+    <div class="page-heading">
+        <a href="{{ back_url }}">
+            {{ icon_button('arrow-left') }}
+        </a>
+        <h1>{{ title }}</h1>
+    </div>
+{% endmacro %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#202020">
+
+    <title>{% block title %}{% endblock title %}</title>
+
+    <link rel="icon" href="/static/img/favicon.ico">
+    <link rel="manifest" href="/static/manifest.json">
+
+    {% if not user or user.theme == "default" %}
+        <link rel="preload" href="/static/img/background-colorful.jpg" as="image">
+        <link rel="preload" href="/static/font/quicksand-v30-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+    {% endif %}
+
+    <link rel="preload" href="/vars.js" as="script">
+    {% for script in scripts %}
+        {% if not script.startswith("/") %}{% set script = "/static/js/" + script + ".js" %}{% endif %}
+        <link rel="preload" href="{{ script }}" as="script">
+    {% endfor %}
+
+    <link rel="stylesheet" href="/static/css/base.css">
+    {% for style in styles %}
+        <link rel="stylesheet" href="/static/css/{{ style }}.css">
+    {% endfor %}
+
+    {% if user %}
+        <link rel="stylesheet" href="/static/css/theme/{{ user.theme }}.css">
+    {% else %}
+        <link rel="stylesheet" href="/static/css/theme/default.css">
+    {% endif %}
+</head>
+
+<body>
+    {% block body %}{% endblock body %}
+
+    <script src="/vars.js"></script>
+    <script src="/static/js/base.js"></script>
+    {% for script in scripts %}
+        {% if not script.startswith("/") %}{% set script = "/static/js/" + script + ".js" %}{% endif %}
+        <script src="{{ script }}"></script>
+    {% endfor %}
+</body>
+
+</html>
