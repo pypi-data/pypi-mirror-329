@@ -1,0 +1,22 @@
+default_model: sonnet
+
+# on windows, adjust the mount point to be the full path e.g. x:/temp/data-analysis/mount-point:/mnt/data/
+
+mcp:
+  servers:
+    interpreter:
+      command: "docker"
+      args:
+        [
+          "run",
+          "-i",
+          "--rm",
+          "--pull=always",
+          "-v",
+          "./mount-point:/mnt/data/",
+          "ghcr.io/evalstate/mcp-py-repl:latest",
+        ]
+      roots:
+        - uri: "file://./mount-point/"
+          name: "test_data"
+          server_uri_alias: "file:///mnt/data/"
