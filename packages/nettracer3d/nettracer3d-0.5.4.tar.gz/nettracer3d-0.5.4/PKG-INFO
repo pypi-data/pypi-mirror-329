@@ -1,0 +1,53 @@
+Metadata-Version: 2.2
+Name: nettracer3d
+Version: 0.5.4
+Summary: Scripts for intializing and analyzing networks from segmentations of three dimensional images.
+Author-email: Liam McLaughlin <mclaughlinliam99@gmail.com>
+Project-URL: User_Tutorial, https://www.youtube.com/watch?v=cRatn5VTWDY
+Project-URL: Reference_Citation_For_Use, https://doi.org/10.1101/2024.07.29.605633
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: Other/Proprietary License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy==1.26.4
+Requires-Dist: scipy==1.14.1
+Requires-Dist: scikit-image==0.25.0
+Requires-Dist: Pillow==11.1.0
+Requires-Dist: matplotlib==3.9.2
+Requires-Dist: networkx==3.2.1
+Requires-Dist: opencv-python-headless==4.10.0.84
+Requires-Dist: openpyxl==3.1.2
+Requires-Dist: pandas==2.2.0
+Requires-Dist: napari==0.5.5
+Requires-Dist: python-louvain==0.16
+Requires-Dist: tifffile==2023.7.18
+Requires-Dist: qtrangeslider==0.1.5
+Requires-Dist: PyQt6==6.8.0
+Requires-Dist: scikit-learn==1.6.1
+Requires-Dist: nibabel==5.2.0
+Provides-Extra: cuda11
+Requires-Dist: cupy-cuda11x; extra == "cuda11"
+Provides-Extra: cuda12
+Requires-Dist: cupy-cuda12x; extra == "cuda12"
+Provides-Extra: cupy
+Requires-Dist: cupy; extra == "cupy"
+
+NetTracer3D is a python package developed for both 2D and 3D analysis of microscopic images in the .tif file format. It supports generation of 3D networks showing the relationships between objects (or nodes) in three dimensional space, either based on their own proximity or connectivity via connecting objects such as nerves or blood vessels. In addition to these functionalities are several advanced 3D data processing algorithms, such as labeling of branched structures or abstraction of branched structures into networks. Note that nettracer3d uses segmented data, which can be segmented from other softwares such as ImageJ and imported into NetTracer3D, although it does offer its own segmentation via intensity and volumetric thresholding, or random forest machine learning segmentation. NetTracer3D currently has a fully functional GUI. To use the GUI, after installing the nettracer3d package via pip, enter the command 'nettracer3d' in your command prompt:
+
+
+This gui is built from the PyQt6 package and therefore may not function on dockers or virtual envs that are unable to support PyQt6 displays. More advanced documentation is coming down the line, but for now please see: https://www.youtube.com/watch?v=cRatn5VTWDY
+for a video tutorial on using the GUI.
+
+NetTracer3D is free to use/fork for academic/nonprofit use so long as citation is provided, and is available for commercial use at a fee (see license file for information).
+
+NetTracer3D was developed by Liam McLaughlin while working under Dr. Sanjay Jain at Washington University School of Medicine.
+
+-- Version 0.5.4 updates --
+
+1. Added new function to GUI in image -> overlays -> color nodes/edges. Generates a rgb array corresponding to the nodes/edge labels where each node/edge (depending which array is selected) is randomly assigned a unique rgb color in an overlay channel. This can be used, for example, to color code labeled branches for easy identification of which branch is which.
+
+2. Improved highlight overlay general functionality (for selecting nodes/edges). Previously selecting a node/edge had the program attempting to create an equal sized array as an overlay, find all objects corresponding to the selected ones, fill those into the new highlight overlay, then overlay that image. This was understandably quite slow in big arrays where the system was wasting a lot of time searching the entire array every time something was selected. New version retains this functionality for arrays below 125 million voxels, since search time is rather manageable at that size. For larger arrays, it instead draws the highlight for the selected objects only into the current slice, rendering a new slice whenever the user scrolls in the stack (although the entire highlight overlay is still initialized as a placeholder). Functions that require the use of the entire highlight overlay (such as masking) are correspondingly updated to draw the entirety of the highlight overlay before executing (when the system has up until that point been drawing slices one at a time). This will likely be the retained behavior moving forward, although to eliminate this behavior, one can open nettracer_gui.py and set self.mini_thresh to some comically large value. The new highlight overlay seems to work effectively the same but faster in my testing although it is possible a bug slipped through, which I will fix if informed about (or if I find it myself).
+
+3. For the machine learning segmenter, changed the system to attempt to segment the image by chunking the array into the largest possible chunks that can be divided across all CPU cores. Previously the system split the array into 64^3 voxel sized chunks and passed those to the CPU cores until everything was processed. I am not sure which version is more efficient/faster so this is somewhat of a test. In theory the new behavior could be faster because it asking Python to interpret less stuff. 
