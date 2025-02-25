@@ -1,0 +1,1 @@
+from .scpfetch import get_info, get_all_info
