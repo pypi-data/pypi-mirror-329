@@ -1,0 +1,1981 @@
+#!python
+# -*- coding: utf-8 -*-
+# Copyright (c) 2020-2025 Salvador E. Tropea
+# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2019 Jesse Vincent (@obra)
+# Copyright (c) 2018-2019 Seppe Stas (@seppestas) (Productize SPRL)
+# Based on ideas by: Scott Bezek (@scottbez1)
+# License: Apache 2.0
+# Project: KiAuto (formerly kicad-automation-scripts)
+# Adapted from: https://github.com/obra/kicad-automation-scripts
+"""
+Various pcbnew operations
+
+This program runs pcbnew and can:
+1) Print PCB layers
+2) Run the DRC
+The process is graphical and very delicated.
+"""
+
+import argparse
+import atexit
+import gettext
+import json
+import os
+import psutil
+import re
+import shutil
+import subprocess
+import sys
+from tempfile import TemporaryDirectory
+from time import (asctime, localtime, sleep)
+import time
+
+# Look for the 'kiauto' module from where the script is running
+script_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.dirname(script_dir))
+# Utils import
+# Log functionality first
+from kiauto import log
+log.set_domain(os.path.splitext(os.path.basename(__file__))[0])
+logger = None
+
+from kiauto.file_util import (load_filters, wait_for_file_created_by_process, apply_filters, list_errors, list_warnings,
+                              check_kicad_config_dir, restore_config, backup_config, check_lib_table, create_user_hotkeys,
+                              check_input_file, memorize_project, restore_project, get_log_files, create_kicad_config,
+                              set_time_out_scale as set_time_out_scale_f, run_command)
+from kiauto.misc import (REC_W, REC_H, __version__, NO_PCB, PCBNEW_CFG_PRESENT, WAIT_START, WRONG_LAYER_NAME,
+                         WRONG_PCB_NAME, PCBNEW_ERROR, WRONG_ARGUMENTS, Config, USER_HOTKEYS_PRESENT, RULES_KEY,
+                         CORRUPTED_PCB, __copyright__, __license__, TIME_OUT_MULT, get_en_locale, KICAD_CFG_PRESENT,
+                         MISSING_TOOL, KICAD_VERSION_6_99)
+from kiauto.interposer import (check_interposer, dump_interposer_dialog, start_queue, setup_interposer_filename,
+                               create_interposer_print_options_file, wait_queue, wait_start_by_msg, wait_and_show_progress,
+                               set_kicad_process, open_dialog_i, wait_kicad_ready_i, paste_bogus_filename, paste_text_i,
+                               paste_output_file_i, exit_kicad_i, send_keys, wait_create_i, save_interposer_print_data)
+from kiauto.ui_automation import (PopenContext, xdotool, wait_not_focused, wait_for_window, recorded_xvfb,
+                                  wait_point, text_replace, set_time_out_scale, open_dialog_with_retry, ShowInfoAction)
+
+TITLE_CONFIRMATION = '^Confirmation$'
+TITLE_ERROR = '^Error$'
+TITLE_WARNING = '^Warning$'
+TITLE_FILE_OPEN_ERROR = '^File Open (Error|Warning)$'
+# This is very Debian specific, you need to install `gdb` and the kicad-nightly-dbg package
+DEBUG_KICAD_NG = False
+DEBUG_KICAD = False
+VRML_UNITS = ['millimeters', 'meters', 'deciinches', 'inches']
+VRML_UNITS_2_KCLI = ['mm', 'm', 'tenths', 'in']
+
+
+def parse_drc_ki5(lines):
+    drc_errors = None
+    unconnected_pads = None
+    in_errs = False
+    in_wrns = False
+    err_regex = re.compile(r'^ErrType\((\d+)\): (.*)')
+    for line in lines:
+        m = re.search(r'^\*\* Found ([0-9]+) DRC (errors|violations) \*\*$', line)
+        if m:
+            drc_errors = m.group(1)
+            in_errs = True
+            continue
+        m = re.search(r'^\*\* Found ([0-9]+) unconnected pads \*\*$', line)
+        if m:
+            unconnected_pads = m.group(1)
+            in_errs = False
+            in_wrns = True
+            continue
+        m = re.search(r'^\*\* End of Report \*\*$', line)
+        if m:
+            break
+        # TODO: Add support for this category
+        m = re.search(r'^\*\* Found ([0-9]+) Footprint', line)
+        if m:
+            break
+        if in_errs:
+            m = err_regex.search(line)
+            if m:
+                cfg.errs.append('({}) {}'.format(m.group(1), m.group(2)))
+                continue
+            if len(line) > 4 and len(cfg.errs) > 0:
+                cfg.errs.append(cfg.errs.pop()+'\n'+line)
+                continue
+        if in_wrns:
+            m = err_regex.search(line)
+            if m:
+                cfg.wrns.append('({}) {}'.format(m.group(1), m.group(2)))
+                continue
+            if len(line) > 4 and len(cfg.wrns) > 0:
+                cfg.wrns.append(cfg.wrns.pop()+'\n'+line)
+                continue
+
+    return int(drc_errors), int(unconnected_pads)
+
+
+def parse_drc_ki6(cfg, lines):
+    # A violation entry looks something like:
+    #
+    # [courtyards_overlap]: Courtyards overlap
+    #     Local override; Severity: error (excluded)
+    #     @(107.9891 mm, 114.3683 mm): Footprint SW104
+    #     @(100.0000 mm, 119.3700 mm): Footprint J201
+    #
+    # Some violations may have fewer lines (eg missing courtyard will have only one location)
+    # We are only interested in the first two lines of each violation.
+    #
+    # Unconnected traces are presented similarly:
+    #
+    # [unconnected_items]: Missing connection between items
+    #     Local override; Severity: error
+    #     @(99.4000 mm, 112.8900 mm): Pad 1 [Net-(J201-PadB5)] of R201 on B.Cu
+    #     @(99.4000 mm, 114.5700 mm): Pad B5 [Net-(J201-PadB5)] of J201 on B.Cu
+    err_regex = re.compile(r'^\[(\S+)\]: (.*)')
+    if cfg.ki8:
+        sev_regex = re.compile(r'^    (.*); (.*)')
+    else:
+        sev_regex = re.compile(r'^    (.*); Severity: (.*)')
+    # Collect all violations
+    violations = []
+    for offset in range(len(lines)-2):
+        m = err_regex.search(lines[offset])
+        s = sev_regex.search(lines[offset+1])
+        if m and s:
+            # Found a violation in this pair of lines
+            violation = {'type': m.group(1), 'message': m.group(2), 'rule': s.group(1), 'severity': s.group(2)}
+            assert violation['severity'] in ["error (excluded)", "error", "warning (excluded)", "warning"]
+            violations.append(violation)
+            context = []
+            while offset+len(context) < len(lines):
+                ln = lines[offset+2+len(context)]
+                if not ln.startswith("    "):
+                    break
+                context.append(ln.rstrip())  # Strip out ending \n
+            violation['context'] = "\n".join(context)
+    # Classify the violations
+    unconnected = [v for v in violations if v['type'] == "unconnected_items"]
+    drc_errors = [v for v in violations if v['severity'] == "error" and v not in unconnected]
+    drc_warns = [v for v in violations if v['severity'] == "warning" or v['type'] == "unconnected_items"]
+    # Add the errors and warnings
+    cfg.errs = ['({}) {}; Severity: error\n{}'.format(e['type'], e['message'], e['context']) for e in drc_errors]
+    cfg.wrns = ['({}) {}; Severity: warning\n{}'.format(w['type'], w['message'], w['context']) for w in drc_warns]
+
+    return len(drc_errors), len(drc_warns)
+
+
+def parse_item(v, units):
+    severity = v['severity']
+    type = v['type']
+    desc = v['description']
+    txt = ''
+    for ln in v['items']:
+        x = ln['pos']['x']
+        y = ln['pos']['y']
+        dsc = ln['description']
+        txt += f'    @({x} {units}, {y} {units}): {dsc}\n'
+    return severity, type, desc, txt
+
+
+def render_items(items, units):
+    rpt = ''
+    for v in items:
+        excluded = ' (excluded)' if v.get('excluded') else ''
+        severity, type, desc, context = parse_item(v, units)
+        rpt += f'[{type}]: {desc}\n'
+        rpt += f'    ; {severity}{excluded}\n'
+        rpt += context
+    rpt += '\n'
+    return rpt
+
+
+def parse_drc_json(cfg, lines):
+    js_txt = '\n'.join(lines)
+    if log.get_level() > 2:
+        logger.debug(js_txt)
+    data = json.loads(js_txt)
+    if data['$schema'] != 'https://schemas.kicad.org/drc.v1.json':
+        logger.warning('Unknown JSON schema, DRC might fail')
+    units = data['coordinate_units']
+
+    # Reconstruct the report
+    rpt = f'** Drc report for {os.path.basename(cfg.input_file)} **\n'
+    rpt += f"** Created on {data['date']} **\n\n"
+
+    violations = data['violations']
+    rpt += f'** Found {len(violations)} DRC violations **\n'
+    rpt += render_items(violations, units)
+
+    unconnected_items = data['unconnected_items']
+    rpt += f'** Found {len(unconnected_items)} unconnected pads **\n'
+    rpt += render_items(unconnected_items, units)
+
+    schematic_parity = data['schematic_parity']
+    rpt += f'** Found {len(schematic_parity)} Footprint errors **\n'
+    rpt += render_items(schematic_parity, units)
+
+    rpt += '** End of Report **\n'
+
+    with open(cfg.output_file, 'wt') as f:
+        f.write(rpt)
+    # Adapt the data
+    cfg.errs = []
+    cfg.wrns = []
+    for v in violations+schematic_parity:
+        if v.get('excluded'):
+            continue
+        severity, type, desc, context = parse_item(v, units)
+        txt = f'({type}) {desc}; Severity: {severity}\n{context}'
+        if severity == 'error':
+            cfg.errs.append(txt)
+        else:
+            cfg.wrns.append(txt)
+    for v in unconnected_items:
+        if v.get('excluded'):
+            continue
+        severity, type, desc, context = parse_item(v, units)
+        cfg.wrns.append(f'({type}) {desc}; Severity: warning\n{context}')
+
+    return len(cfg.errs), len(cfg.wrns)
+
+
+def parse_drc(cfg):
+    with open(cfg.output_file, 'rt') as f:
+        lines = f.read().splitlines()
+    if cfg.ki5:
+        return parse_drc_ki5(lines)
+    elif cfg.ki8:
+        return parse_drc_json(cfg, lines)
+    else:
+        return parse_drc_ki6(cfg, lines)
+
+
+def dismiss_already_running():
+    # The "Confirmation" modal pops up if pcbnew is already running
+    nf_title = TITLE_CONFIRMATION
+    wait_for_window(nf_title, nf_title, 1)
+
+    logger.info('Dismiss pcbnew already running')
+    xdotool(['search', '--onlyvisible', '--name', nf_title, 'windowfocus'])
+    logger.debug('Found, sending Return')
+    xdotool(['key', 'Return'])
+    logger.debug('Wait a little, this dialog is slow')
+    sleep(5)
+
+
+def dismiss_warning():  # pragma: no cover
+    nf_title = TITLE_WARNING
+    wait_for_window(nf_title, nf_title, 1)
+
+    logger.error('Dismiss pcbnew warning, will fail')
+    xdotool(['search', '--onlyvisible', '--name', nf_title, 'windowfocus'])
+    xdotool(['key', 'Return'])
+
+
+def dismiss_file_open_error():
+    nf_title = TITLE_FILE_OPEN_ERROR
+    wait_for_window(nf_title, nf_title, 1)
+
+    logger.warning('This file is already opened ({})'.format(cfg.input_file))
+    xdotool(['search', '--onlyvisible', '--name', nf_title, 'windowfocus'])
+    xdotool(['key', 'Left', 'Return'])
+
+
+def dismiss_error():
+    nf_title = TITLE_ERROR
+    wait_for_window(nf_title, nf_title, 1)
+
+    logger.debug('Dismiss pcbnew error')
+    xdotool(['search', '--onlyvisible', '--name', nf_title, 'windowfocus'])
+    logger.debug('Found, sending Return')
+    xdotool(['key', 'Return'])
+
+
+def wait_pcbnew(time=10, others=None):
+    return wait_for_window('Main pcbnew window', cfg.pn_window_title, time, others=others, popen_obj=cfg.popen_obj)
+
+
+def wait_pcbew_start(cfg):
+    failed_focuse = False
+    other = None
+    try:
+        id = wait_pcbnew(cfg.wait_start, [TITLE_CONFIRMATION, TITLE_WARNING, TITLE_ERROR, TITLE_FILE_OPEN_ERROR])
+    except RuntimeError:  # pragma: no cover
+        logger.debug('Time-out waiting for pcbnew, will retry')
+        failed_focuse = True
+    except ValueError as err:
+        other = str(err)
+        logger.debug('Found "'+other+'" window instead of pcbnew')
+        failed_focuse = True
+    except subprocess.CalledProcessError:
+        logger.debug('Pcbnew is no longer running (returned {})'.format(cfg.popen_obj.poll()))
+        id = [0]
+    if failed_focuse:
+        wait_point(cfg)
+        if other == TITLE_ERROR:
+            dismiss_error()
+            logger.error('pcbnew reported an error')
+            exit(PCBNEW_ERROR)
+        elif other == TITLE_CONFIRMATION:
+            dismiss_already_running()
+        elif other == TITLE_WARNING:  # pragma: no cover
+            dismiss_warning()
+        elif other == TITLE_FILE_OPEN_ERROR:
+            dismiss_file_open_error()
+        try:
+            id = wait_pcbnew(5)
+        except RuntimeError:  # pragma: no cover
+            logger.error('Time-out waiting for pcbnew, giving up')
+            exit(PCBNEW_ERROR)
+    if len(id) > 1:
+        logger.error('More than one PCBNew windows detected, one could be a misnamed error dialog')
+        exit(PCBNEW_ERROR)
+    return id[0]
+
+
+def exit_pcbnew(cfg):
+    # Wait until the dialog is closed, useful when more than one file are created
+    id = wait_pcbnew(10)
+
+    send_keys(cfg, 'Exiting pcbnew', 'ctrl+q')
+    try:
+        wait_not_focused(id[0], 5)
+    except RuntimeError:  # pragma: no cover
+        logger.debug('PCBnew not exiting, will retry')
+        pass
+    # Dismiss any dialog. I.e. failed to write the project
+    # Note: if we modified the PCB KiCad will ask for save using a broken dialog.
+    #       It doesn't have a name and only gets focus with a WM.
+    logger.info('Retry pcbnew exit')
+    wait_point(cfg)
+    xdotool(['key', 'Return', 'ctrl+q'])
+    try:
+        wait_not_focused(id[0], 5)
+    except RuntimeError:  # pragma: no cover
+        logger.debug('PCBnew not exiting, will kill')
+        pass
+    # If we failed to exit we will kill it anyways
+    wait_point(cfg)
+
+
+def open_print_dialog(cfg, print_dialog_keys, id_pcbnew):
+    # Open the KiCad Print dialog
+    logger.info('Open File->Print')
+    wait_point(cfg)
+    xdotool(['key']+print_dialog_keys)
+    retry = False
+    try:
+        # Do a first try with small time-out, perhaps we sent the keys before the window was available
+        id = wait_for_window('Print dialog', '^Print', skip_id=id_pcbnew, timeout=2)
+    except RuntimeError:  # pragma: no cover
+        # Perhaps the fill took too much try again
+        retry = True
+    # Retry the open dialog
+    if retry:  # pragma: no cover
+        # Excluded from coverage, only happends under conditions hard to reproduce
+        logger.info('Open File->Print (retrying)')
+        wait_point(cfg)
+        xdotool(['key']+print_dialog_keys)
+        id = wait_for_window('Print dialog', '^Print', skip_id=id_pcbnew)
+    if len(id) == 1:
+        # Only 1 window matched, the print dialog
+        return id[0]
+    if len(id) > 2:
+        logger.error('Too much windows with similar names')
+        exit(PCBNEW_ERROR)
+    return id[1] if id[0] == id_pcbnew else id[0]
+
+
+def print_layers(cfg, id_pcbnew):
+    if not cfg.ki5:
+        print_dialog_keys = ['ctrl+p']
+    else:
+        # We should be able to use Ctrl+P, unless the user configured it
+        # otherwise. We aren't configuring hotkeys for 5.1 so is better
+        # to just use the menu accelerators (removed on KiCad 6)
+        print_dialog_keys = ['alt+f', 'p']
+    if cfg.use_interposer:
+        return print_layers_i(cfg, id_pcbnew, print_dialog_keys)
+    return print_layers_n(cfg, id_pcbnew, print_dialog_keys)
+
+
+def fill_zones_i(cfg):
+    # Wait for KiCad to be sleeping
+    wait_kicad_ready_i(cfg)
+    # Now we fill the zones
+    send_keys(cfg, 'Filling zones ...', 'b')
+    # Wait fill end and inform the elapsed time (for slow fills)
+    wait_and_show_progress(cfg, 'GTK:Window Destroy:Fill All Zones', r'(\d:\d\d:\d\d)', '0', 'Elapsed time',
+                           skip_match='0:00:00', with_windows=True)
+
+
+def print_layers_i(cfg, id_pcbnew, print_dialog_keys):
+    # Create a temporal dir for the output file
+    # GTK is limited to the names we can choose, so we let it create the name and move to the arbitrary one
+    # Note: we can't control the extension
+    with TemporaryDirectory() as tmpdir:
+        # Pass the target dir, file name and format to the interposer
+        fname = save_interposer_print_data(cfg, tmpdir, 'interposer', 'pdf' if not cfg.svg else 'svg')
+        # Fill zones if the user asked for it
+        if cfg.fill_zones:
+            fill_zones_i(cfg)
+        # Open the KiCad print dialog
+        open_dialog_i(cfg, 'Print', ['key']+print_dialog_keys, extra_msg='KiCad')
+        # Open the gtk print dialog
+        # Big magic 1: we add an accelerator to the Print button, so Alt+P is enough
+        open_dialog_i(cfg, 'Print', 'alt+p', extra_msg='GTK', no_main=True, no_show=True)
+        # Confirm the options
+        # Big magic 2: the interposer selected the printer, output file name and format, just confirm them
+        send_keys(cfg, 'Print', 'Return', closes='Print', delay_io=True)
+        # Wait until the file is created
+        wait_create_i(cfg, 'print', fname)
+        # Close KiCad Print dialog
+        send_keys(cfg, 'Close Print dialog', 'Escape', closes='Print')
+        # Move the file to the user selected name
+        shutil.move(fname, cfg.output_file)
+    # Exit
+    exit_kicad_i(cfg)
+
+
+def print_layers_n(cfg, id_pcbnew, print_dialog_keys):
+    # Fill zones if the user asked for it
+    if cfg.fill_zones:
+        logger.info('Fill zones')
+        wait_point(cfg)
+        # Make sure KiCad is responding
+        # We open the dialog and then we close it
+        id_print_dialog = open_print_dialog(cfg, print_dialog_keys, id_pcbnew)
+        xdotool(['key', 'Escape'])
+        wait_not_focused(id_print_dialog)
+        wait_pcbnew()
+        # Now we fill the zones
+        xdotool(['key', 'b'])
+        # Wait for complation
+        sleep(1)
+        id_pcbnew = wait_pcbnew()[0]
+    id_print_dialog = open_print_dialog(cfg, print_dialog_keys, id_pcbnew)
+    # Open the gtk print dialog
+    wait_point(cfg)
+    # KiCad 5: Two possible options here:
+    # 1) With WM we usually get "Exclude PCB edge ..." selected
+    # 2) Without WM we usually get "Color" selected
+    # In both cases sending 4 Shit+Tab moves us to one of the layer columns.
+    # From there Return prints and Escape closes the window.
+    # KiCad 6/7 on Debian 12: we get a button, going right selects the Print button
+    keys = ['key', 'shift+Tab', 'shift+Tab', 'shift+Tab', 'shift+Tab', 'Right', 'Right', 'Return']
+    xdotool(keys)
+    # Check it is open
+    id2 = wait_for_window('Printer dialog', '^(Print|%s)$' % cfg.print_dlg_name, skip_id=id_print_dialog)
+    id_printer_dialog = id2[1] if id2[0] == id_print_dialog else id2[0]
+    wait_point(cfg)
+    # List of printers
+    xdotool(['key', 'Tab',
+             # Go up to the top
+             'Home',
+             # Output file name
+             'Tab',
+             # Open dialog
+             'Return'])
+    id_sel_f = wait_for_window('Select a filename', '(Select a filename|%s)' % cfg.select_a_filename, 2)
+    logger.info('Pasting output dir')
+    wait_point(cfg)
+    text_replace(cfg.output_file)
+    xdotool(['key',
+             # Select this name
+             'Return'])
+    # Back to print
+    retry = False
+    try:
+        wait_not_focused(id_sel_f[0])
+    except RuntimeError:
+        retry = True
+    if retry:
+        logger.debug('Retrying the Return to select the filename')
+        xdotool(['key', 'Return'])
+        wait_not_focused(id_sel_f[0])
+    wait_for_window('Printer dialog', '^(Print|%s)$' % cfg.print_dlg_name, skip_id=id_print_dialog)
+    wait_point(cfg)
+    format = 3*['Left'] if not cfg.svg else 3*['Right']
+    xdotool(['key',
+             # Format options
+             'Tab'] +
+            # Be sure we are at left/right (PDF/SVG)
+            format +
+            # Print it
+            ['Return'])
+    # Wait until the file is created
+    wait_for_file_created_by_process(cfg.pcbnew_pid, cfg.output_file)
+    wait_not_focused(id_printer_dialog)
+    # Now we should be in the KiCad Print dialog again
+    wait_for_window('Print dialog', 'Print')
+    wait_point(cfg)
+    # Close the dialog
+    # We are in one of the layer columns, here Escape works
+    xdotool(['key', 'Escape'])
+    wait_not_focused(id_print_dialog)
+    # Exit
+    exit_pcbnew(cfg)
+
+
+def run_drc_5_1(cfg):
+    logger.info('Open Inspect->DRC')
+    wait_point(cfg)
+    xdotool(['key', 'alt+i', 'd'])
+
+    wait_for_window('DRC modal window', cfg.drc_dialog_name)
+    # Note: Refill zones on DRC gets saved in ~/.config/kicad/pcbnew as RefillZonesBeforeDrc
+    # The space here is to enable the report of all errors for tracks
+    logger.info('Enable reporting all errors for tracks')
+    wait_point(cfg)
+    xdotool(['key', 'Tab', 'Tab', 'Tab', 'Tab', 'space', 'Tab', 'Tab', 'Tab', 'Tab'])
+    logger.info('Pasting output dir')
+    wait_point(cfg)
+    text_replace(cfg.output_file)
+    xdotool(['key', 'Return'])
+
+    wait_for_window('Report completed dialog', 'Disk File Report Completed')
+    wait_point(cfg)
+    xdotool(['key', 'Return'])
+    wait_for_window('DRC modal window', cfg.drc_dialog_name)
+
+    logger.info('Closing the DRC dialog')
+    wait_point(cfg)
+    xdotool(['key', 'shift+Tab', 'Return'])
+    wait_pcbnew()
+
+
+def run_drc_6_0(cfg):
+    logger.info('Open Inspect->DRC')
+    wait_point(cfg)
+    xdotool(['key', RULES_KEY.lower()])
+    # Wait dialog
+    wait_for_window('DRC modal window', cfg.drc_dialog_name)
+    # Run the DRC
+    logger.info('Run DRC')
+    wait_point(cfg)
+    xdotool(['key', 'Return'])
+    #
+    # To know when KiCad finished we try this:
+    # - Currently I can see a way, just wait some time
+    #
+    sleep(12*cfg.time_out_scale)
+    # Save the DRC
+    logger.info('Open the save dialog')
+    wait_point(cfg)
+    logger.info('Save DRC')
+    wait_point(cfg)
+    xdotool(['key', 'shift+Tab', 'shift+Tab', 'shift+Tab', 'shift+Tab',
+             'Right', 'Right', 'Right', 'Right', 'Up', 'Return'])
+    # Wait for the save dialog
+    wait_for_window('DRC File save dialog', 'Save Report to File')
+    # Paste the name
+    logger.info('Pasting output file')
+    wait_point(cfg)
+    text_replace(cfg.output_file)
+    # Wait for report created
+    logger.info('Wait for DRC file creation')
+    wait_point(cfg)
+    xdotool(['key', 'Return'])
+    wait_for_file_created_by_process(cfg.pcbnew_pid, cfg.output_file)
+    # Close the dialog
+    logger.info('Closing the DRC dialog')
+    wait_point(cfg)
+    xdotool(['key', 'Escape'])
+    wait_pcbnew()
+
+
+def run_drc_python(cfg):
+    logger.debug("Using Python interface instead of running KiCad")
+    import pcbnew
+    logger.debug("Re-filling zones")
+    filler = pcbnew.ZONE_FILLER(cfg.board)
+    filler.Fill(cfg.board.Zones())
+    if cfg.kicad_version > KICAD_VERSION_6_99 and os.environ.get('KICAD7_FOOTPRINT_DIR') is None:
+        # This is most probably a bug in the Python DRC code
+        os.environ['KICAD7_FOOTPRINT_DIR'] = '/usr/share/kicad/footprints/'
+    logger.debug("Running DRC")
+    pcbnew.WriteDRCReport(cfg.board, cfg.output_file, pcbnew.EDA_UNITS_MILLIMETRES, True)
+    if cfg.save:
+        logger.info('Saving PCB')
+        os.rename(cfg.input_file, cfg.input_file + '-bak')
+        cfg.board.Save(cfg.input_file)
+
+
+def run_drc_cli(cfg, schematic_parity, all_track_errors, units):
+    logger.debug("Using kicad-cli instead of running KiCad")
+    # Currently not available in the CLI
+    import pcbnew
+    logger.debug("Re-filling zones")
+    filler = pcbnew.ZONE_FILLER(cfg.board)
+    filler.Fill(cfg.board.Zones())
+    cfg.board.Save(cfg.input_file)
+    # The save removes the exclusions ...
+    restore_project(cfg)
+    # Run the DRC from CLI
+    cmd = [cfg.kicad_cli, 'pcb', 'drc', '-o', cfg.output_file, '--format', 'json', '--severity-all', '--units', units]
+    if schematic_parity:
+        cmd.append('--schematic-parity')
+    if all_track_errors:
+        cmd.append('--all-track-errors')
+    cmd.append(cfg.input_file)
+    run_command(cmd)
+
+
+def run_drc_n(cfg):
+    if not cfg.ki5:
+        run_drc_6_0(cfg)
+    else:
+        run_drc_5_1(cfg)
+    # Save the PCB
+    if cfg.save:
+        logger.info('Saving PCB')
+        wait_point(cfg)
+        os.rename(cfg.input_file, cfg.input_file + '-bak')
+        xdotool(['key', 'ctrl+s'])
+        logger.info('Wait for PCB file creation')
+        wait_point(cfg)
+        wait_for_file_created_by_process(cfg.pcbnew_pid, os.path.realpath(cfg.input_file))
+    # Exit
+    exit_pcbnew(cfg)
+
+
+def run_drc_5_1_i(cfg):
+    control_dlg, _ = open_dialog_i(cfg, cfg.drc_dialog_name, ['key', 'alt+i', 'd'], no_main=True)
+    # Enable report all errors for tracks and go to the file name
+    # Here we added a shortcut for "Report all errors for tracks (slower)"
+    send_keys(cfg, 'Enable reporting all errors for tracks', ['key', 'alt+r', 'alt+c'])
+    paste_output_file_i(cfg)
+    # The following dialog indicates the report was finished
+    # 'Disk File Report Completed' dialog
+    file_dialog, _ = open_dialog_i(cfg, 'Disk File Report Completed', 'Return', no_show=True, no_main=True)
+    send_keys(cfg, 'Close dialog', 'Return', closes=file_dialog)
+    # Now close the DRC control
+    send_keys(cfg, 'Closing the DRC dialog', 'alt+l', closes=control_dlg)
+
+
+def run_drc_6_0_i(cfg):
+    control_dlg, _ = open_dialog_i(cfg, cfg.drc_dialog_name, RULES_KEY.lower(), no_main=True)
+    # Run the DRC
+    send_keys(cfg, 'Run DRC', 'Return')
+    # Wait for the end of the DRC (at the end KiCad restores the Close button)
+    wait_queue(cfg, 'GTK:Button Label:C_lose')
+    wait_kicad_ready_i(cfg)
+    # Save the DRC
+    # We added a short-cut for Save...
+    file_dialog, _ = open_dialog_i(cfg, 'Save Report to File', 'alt+s')
+    # Paste the name
+    paste_bogus_filename(cfg)
+    # Close the report dialog and also wait for the report creation (both in parallel)
+    send_keys(cfg, 'Create report', 'Return', closes=file_dialog, delay_io=True)
+    wait_create_i(cfg, 'DRC report')
+    # Close the dialog
+    # Note: The following command closes the dialog, but on GTK 3.24.34 it looks like
+    # the dialog isn't destroyed. It seems to be safer to skip the wait.
+    send_keys(cfg, 'Closing the DRC dialog', 'Escape')  # , closes=control_dlg)
+
+
+def run_drc_i(cfg):
+    if not cfg.ki5:
+        run_drc_6_0_i(cfg)
+    else:
+        run_drc_5_1_i(cfg)
+    # Save the PCB
+    if cfg.save:
+        os.rename(cfg.input_file, cfg.input_file+'-bak')
+        wait_kicad_ready_i(cfg)
+        send_keys(cfg, 'Saving PCB', 'ctrl+s')
+        wait_create_i(cfg, 'PCB', fn=os.path.realpath(cfg.input_file))
+    # Exit
+    exit_kicad_i(cfg)
+
+
+def run_drc(cfg):
+    if cfg.use_interposer:
+        return run_drc_i(cfg)
+    return run_drc_n(cfg)
+
+
+def export_gencad(cfg):
+    wait_point(cfg)
+    if cfg.ki5 or cfg.use_interposer:
+        # With the interposer we add the missing accelerators to KiCad 6
+        keys = ['key', 'alt+f', 'x', 'g']
+    else:
+        keys = ['key', 'alt+f', 'Down', 'Down', 'Down', 'Down', 'Down', 'Down', 'Down', 'Down', 'KP_Space', 'Down', 'Return']
+        if cfg.ki7:
+            keys.insert(2, 'Down')
+    if cfg.use_interposer:
+        export_gencad_i(cfg, keys)
+    else:
+        export_gencad_n(cfg, keys)
+
+
+def export_gencad_cli(cfg):
+    logger.debug("Using kicad-cli instead of running KiCad")
+    # Run the export from CLI
+    cmd = [cfg.kicad_cli, 'pcb', 'export', 'gencad', '-o', cfg.output_file]
+    if cfg.flip_bottom_padstacks:
+        cmd.append('--flip-bottom-pads')
+    if cfg.unique_pin_names:
+        cmd.append('--unique-pins')
+    if cfg.no_reuse_shapes:
+        cmd.append('--unique-footprints')
+    if cfg.aux_origin:
+        cmd.append('--use-drill-origin')
+    if cfg.save_origin:
+        cmd.append('--store-origin-coord')
+    cmd.append(cfg.input_file)
+    run_command(cmd)
+
+
+def export_vrml_i(cfg, keys):
+    # Open the "VRML Export Options"
+    dialog, _ = open_dialog_i(cfg, 'VRML Export Options', keys)
+    # Paste the name
+    paste_output_file_i(cfg)
+    if cfg.dir_models:
+        # Paste the 3D path
+        send_keys(cfg, 'Changing to 3D path', 'Down')
+        wait_kicad_ready_i(cfg)
+        paste_text_i(cfg, 'Pasting 3D path', cfg.dir_models)
+    # Do it
+    send_keys(cfg, 'Generating the VRML', ['key', 'Return'], closes=dialog, delay_io=True)
+    wait_create_i(cfg, 'VRML')
+    # Exit
+    exit_kicad_i(cfg)
+
+
+def export_vrml_n(cfg, keys):
+    open_dialog_with_retry("Open VRML export", keys, "VRML options", 'VRML Export Options', cfg)
+    xdotool(['key', 'ctrl+a'])
+    xdotool(['type', cfg.output_file])
+    if cfg.dir_models:
+        xdotool(['key', 'Down'])
+        xdotool(['type', cfg.dir_models])
+    xdotool(['key', 'Return'])
+    wait_for_file_created_by_process(cfg.pcbnew_pid, cfg.output_file)
+
+
+def export_vrml(cfg):
+    wait_point(cfg)
+    if cfg.ki5 or cfg.use_interposer:
+        # With the interposer we add the missing accelerators to KiCad 6
+        keys = ['key', 'alt+f', 'x', 'v']
+    else:
+        keys = ['key', 'alt+f', 'Down', 'Down', 'Down', 'Down', 'Down', 'Down', 'Down', 'Down', 'KP_Space', 'Down', 'Down',
+                'Return']
+        if cfg.ki7:
+            keys.insert(2, 'Down')
+    if cfg.use_interposer:
+        export_vrml_i(cfg, keys)
+    else:
+        export_vrml_n(cfg, keys)
+
+
+def export_vrml_cli(cfg):
+    logger.debug("Using kicad-cli instead of running KiCad")
+    # Run the export from CLI
+    cmd = [cfg.kicad_cli, 'pcb', 'export', 'vrml', '-o', cfg.output_file, '-f', '--units', VRML_UNITS_2_KCLI[cfg.units]]
+    if cfg.copy_3d_models:
+        # Don't embed the 3D models
+        cmd.extend(['--models-relative', '--models-dir', cfg.dir_models if cfg.dir_models else 'shapes3D'])
+    if cfg.origin_mode == 0:
+        # User origin
+        units = VRML_UNITS_2_KCLI[VRML_UNITS.index(cfg.ref_units_ori)]
+        cmd.extend(['--user-origin', f'{cfg.ref_x}x{cfg.ref_y}{units}'])
+    cmd.append(cfg.input_file)
+    run_command(cmd)
+
+
+def convert_pcb_i(cfg):
+    keys = ['key', 'alt+f', 'Down', 'Down', 'Down', 'Down', 'Return']
+    dialog, _ = open_dialog_i(cfg, 'Save Board File As', keys)
+    send_keys(cfg, 'Select all', 'ctrl+a')
+    paste_output_file_i(cfg)
+    send_keys(cfg, 'Converting the file', 'Return', closes=dialog, delay_io=True)
+    wait_create_i(cfg, 'Converted PCB')
+    exit_kicad_i(cfg)
+
+
+def convert_pcb_n(cfg):
+    keys = ['key', 'alt+f', 'Down', 'Down', 'Down', 'Down', 'Return']
+    open_dialog_with_retry("Saving the PCB", keys, "Save As", 'Save Board File As', cfg)
+    xdotool(['key', 'ctrl+a'])
+    xdotool(['type', cfg.output_file])
+    xdotool(['key', 'Return'])
+    wait_for_file_created_by_process(cfg.pcbnew_pid, cfg.output_file)
+    exit_pcbnew(cfg)
+
+
+def convert_pcb(cfg):
+    if cfg.use_interposer:
+        convert_pcb_i(cfg)
+    else:
+        convert_pcb_n(cfg)
+
+
+def export_gencad_select_options(cfg):
+    logger.info('Changing settings')
+    xdotool(['key', 'Down'])
+    if cfg.flip_bottom_padstacks:
+        xdotool(['key', 'KP_Space'])
+    xdotool(['key', 'Down'])
+    if cfg.unique_pin_names:
+        xdotool(['key', 'KP_Space'])
+    xdotool(['key', 'Down'])
+    if cfg.no_reuse_shapes:
+        xdotool(['key', 'KP_Space'])
+    xdotool(['key', 'Down'])
+    if cfg.aux_origin:
+        xdotool(['key', 'KP_Space'])
+    xdotool(['key', 'Down'])
+    if cfg.save_origin:
+        xdotool(['key', 'KP_Space'])
+    xdotool(['key', 'Return'])
+    wait_for_file_created_by_process(cfg.pcbnew_pid, cfg.output_file)
+
+
+def export_gencad_i(cfg, keys):
+    # Open the "Export to GenCAD settings"
+    dialog, _ = open_dialog_i(cfg, 'Export to GenCAD settings', keys)
+    # KiCad dialogs are unreliable, you never know which widget is selected
+    # This goes to the top left corner of the dialog
+    # Note 1: lamentably this widget doesn't have a label
+    # Note 2: KiCad 7.0.7 behavior changed, up goes to the button (when no WM)
+    xdotool(['key', 'alt+f', 'Up', 'Left'])
+    # Paste the name
+    paste_output_file_i(cfg)
+    # Change the settings to what the user wants
+    # To make it easier we add accelerators
+    keys = ['key']
+    if not cfg.flip_bottom_padstacks:
+        # We used Alt+F to go to the file name, so here the logic is inverted
+        keys.append('alt+f')
+    if cfg.unique_pin_names:
+        keys.append('alt+g')
+    if cfg.no_reuse_shapes:
+        keys.append('alt+n')
+    if cfg.aux_origin:
+        keys.append('alt+u')
+    if cfg.save_origin:
+        keys.append('alt+s')
+    keys.append('Return')
+    send_keys(cfg, 'Changing settings', keys, closes=dialog, delay_io=True)
+    wait_create_i(cfg, 'GenCAD')
+    # Exit
+    exit_kicad_i(cfg)
+
+
+def export_gencad_n(cfg, keys):
+    open_dialog_with_retry("Open GenCAD export", keys, "GenCAD settings", 'Export to GenCAD settings', cfg)
+    xdotool(['type', cfg.output_file])
+    export_gencad_select_options(cfg)
+
+
+def ipc_netlist(cfg):
+    wait_point(cfg)
+    if cfg.ki5:
+        if cfg.use_interposer:
+            keys = ['key', 'alt+f', 'f', 'i']
+        else:
+            keys = ['key', 'alt+f', 'f', 'Down', 'Down', 'Down', 'Return']
+    else:
+        keys = ['key', 'shift+alt+e']
+    if cfg.use_interposer:
+        ipc_netlist_i(cfg, keys)
+    else:
+        ipc_netlist_n(cfg, keys)
+
+
+def ipc_netlist_n(cfg, keys):
+    open_dialog_with_retry("Open file save for IPC netlist", keys, "Dialog to save the IPC netlist",
+                           'Export D-356 Test File', cfg)
+    xdotool(['key', 'ctrl+a'])
+    xdotool(['type', cfg.output_file])
+    xdotool(['key', 'Return'])
+    wait_for_file_created_by_process(cfg.pcbnew_pid, cfg.output_file)
+
+
+def ipc_netlist_i(cfg, keys):
+    # Open the "Export D-356 Test File"
+    dialog, _ = open_dialog_i(cfg, 'Export D-356 Test File', keys)
+    # Paste the name (well, something that will be replaced by the real name)
+    paste_bogus_filename(cfg)
+    # Generate the netlist
+    send_keys(cfg, 'Generate the netlist', 'Return', closes=dialog, delay_io=True)
+    # Wait for file creation
+    wait_create_i(cfg, 'IPC D-356')
+    # Exit
+    exit_kicad_i(cfg)
+
+
+def wait_ray_tracer(cfg):
+    # I can't find a mechanism to determine if the render finished.
+    # I think this is a bug in KiCad, you can save unfinished images!!!!
+    logger.info('Waiting for the final render')
+    if cfg.detect_rt:
+        # Try to figure out meassuring the CPU usage
+        end = time.clock_gettime(time.CLOCK_MONOTONIC) + cfg.wait_rt
+        counter = 5
+        children = cfg.kicad_process.children(recursive=True)
+        logger.debug('pcbnew pid {}'.format(cfg.kicad_process.pid))
+        for child in children:
+            logger.debug('- pcbnew child pid {}'.format(child.pid))
+        while (counter > 0) and (time.clock_gettime(time.CLOCK_MONOTONIC) < end):
+            cpu_usage = cfg.kicad_process.cpu_percent(0.3)
+            for child in children:
+                try:
+                    cpu_usage += child.cpu_percent(0.3)
+                except psutil.NoSuchProcess:
+                    pass
+            if cpu_usage > 5:
+                if counter < 5:
+                    counter = counter + 1
+            else:
+                counter = counter - 1
+            logger.debug('CPU {} %, ({}) waiting ...'.format(cpu_usage, counter))
+    else:
+        sleep(cfg.wait_rt)
+
+
+def wait_ray_tracer_i(cfg):
+    # Wait until we see the 100% rendered and the time is reported
+    wait_and_show_progress(cfg, 'PANGO:Rendering time', r'Rendering: (\d+ \%)', 'Rendering:', 'Rendering')
+    # wait_swap(cfg) should be absorved by the wait for sleep at the end of the progress
+
+
+def wait_3d_ready_n(cfg):
+    if not cfg.ki5:
+        # On my system this huge delay is needed only when using docker.
+        # I don't know why and also don't know why the KiCad 5 methode fails.
+        sleep(1*cfg.time_out_scale)
+        return
+    sleep(0.2*cfg.time_out_scale)
+    keys = ['key', 'alt+p', 'Return']
+    dname = '3D Display Options'
+    if not cfg.ki5:
+        keys.insert(2, 'Down')
+        dname = 'Preferences'
+    for retry in range(30):
+        xdotool(keys)
+        found = True
+        try:
+            wait_for_window('Options dialog', dname, 1)
+        except RuntimeError:  # pragma: no cover
+            found = False
+        if found:
+            break
+    if not found:
+        logger.error('Time-out waiting for 3D viewer to be responsive')
+        exit(PCBNEW_ERROR)
+    xdotool(['key', 'Escape'])
+    wait_for_window('3D Viewer', '3D Viewer')
+
+
+def apply_steps(steps, key, neg_key, id, cfg):
+    if steps:
+        k = key
+        if steps < 0:
+            steps = -steps
+            k = neg_key
+        for _ in range(steps):
+            logger.info('Step ({})'.format(k))
+            xdotool(['key', k], id)
+            logger.debug('Step '+key)
+            if cfg.use_interposer:
+                if cfg.wait_after_move:
+                    wait_kicad_ready_i(cfg, swaps=1)
+                    # Arbitrary, this is a problem with KiCad 5, so I won't spend too much time looking for a better solution
+                    sleep(1)
+                    wait_kicad_ready_i(cfg)
+            else:
+                wait_3d_ready_n(cfg)
+
+
+def open_save_image_n(cfg, id):
+    keys = ['key', 'alt+f', 'Return']
+    for retry in range(10):
+        xdotool(keys, id)
+        if (cfg.ray_tracing or cfg.use_rt_wait) and cfg.detect_rt:
+            wait_ray_tracer(cfg)
+        found = True
+        try:
+            wait_for_window('File save dialog', '3D Image File Name', 3)
+        except RuntimeError:  # pragma: no cover
+            found = False
+        if found:
+            break
+    if not found:
+        logger.error('Failed to open the file save dialog')
+        exit(PCBNEW_ERROR)
+
+
+def capture_3d_view(cfg):
+    if not cfg.ki5 and cfg.kicad_version < 6000002:
+        logger.error('Upgrade KiCad, this version has a bug')
+        exit(MISSING_TOOL)
+    # Configure KiCad 5 vs 6 differences
+    if cfg.ki5:
+        cfg.keys_rt = ['alt+p', 'Down']
+        cfg.key_close_3d = 'ctrl+q'
+    else:
+        cfg.keys_rt = ['alt+p']
+        cfg.key_close_3d = 'ctrl+w'
+    if cfg.use_interposer:
+        return capture_3d_view_i(cfg)
+    return capture_3d_view_n(cfg)
+
+
+def capture_3d_view_n(cfg):
+    """ 3D View capture, normal version """
+    # Open the 3D viewer
+    open_keys = ['key', 'alt+3']
+    dialog_name = '3D Viewer'
+    id = open_dialog_with_retry('Open 3D Viewer', open_keys, '3D viewer dialog', dialog_name, cfg)[0]
+    wait_point(cfg)
+
+    wait_3d_ready_n(cfg)
+
+    # Switch to orthographic (KiCad 6 has persistence)
+    if cfg.orthographic and cfg.ki5:
+        # Can easily break, no persistence, no option, no shortcut ... KiCad's way
+        xdotool(['mousemove', '711', '44', 'click', '1', 'mousemove', 'restore'])
+
+    # Apply the view axis
+    if cfg.view != 'z':
+        xdotool(['key', cfg.view], id)
+        wait_3d_ready_n(cfg)
+
+    # Apply the movements
+    apply_steps(cfg.move_x, 'Right', 'Left', id, cfg)
+    apply_steps(cfg.move_y, 'Up', 'Down', id, cfg)
+
+    # Apply the rotations
+    if not cfg.ki5:
+        apply_steps(cfg.rotate_x, 'alt+x', 'shift+alt+x', id, cfg)
+        apply_steps(cfg.rotate_y, 'alt+y', 'shift+alt+y', id, cfg)
+        apply_steps(cfg.rotate_z, 'alt+z', 'shift+alt+z', id, cfg)
+
+    # Apply the zoom steps
+    zoom = cfg.zoom
+    if zoom:
+        zoom_b = '4'
+        if zoom < 0:
+            zoom = -zoom
+            zoom_b = '5'
+        for _ in range(zoom):
+            # Wait some time before sending commands
+            # See discussion on #13 issue at GitHub
+            sleep(0.05)
+            logger.info('Zoom')
+            xdotool(['click', zoom_b], id)
+            logger.debug('Zoom')
+            wait_3d_ready_n(cfg)
+
+    if cfg.ray_tracing:
+        xdotool(['key']+cfg.keys_rt+['Return'], id)
+        logger.debug('Ray tracing')
+
+    if cfg.ray_tracing or cfg.use_rt_wait:
+        wait_ray_tracer(cfg)
+
+    # Save the image as PNG
+    logger.info('Saving the image')
+    open_save_image_n(cfg, id)
+
+    # Paste the name
+    logger.info('Pasting output file')
+    wait_point(cfg)
+    text_replace(cfg.output_file)
+
+    # Wait for the image to be created
+    logger.info('Wait for the image file creation')
+    wait_point(cfg)
+    # Wait before confirming the file name
+    sleep(0.1*cfg.time_out_scale)
+    xdotool(['key', 'Return'])
+    wait_for_file_created_by_process(cfg.pcbnew_pid, cfg.output_file)
+
+    # Close the 3D viewer
+    logger.info('Closing the 3D viewer')
+    wait_point(cfg)
+    xdotool(['key', cfg.key_close_3d])
+
+    wait_pcbnew()
+
+
+def capture_3d_view_i(cfg):
+    """ 3D View capture, interposer version """
+    dialog, id = open_dialog_i(cfg, '3D Viewer', 'alt+3', no_wait=True)
+    logger.debug('3D Viewer is drawing')
+
+    # Detect the 3D models load (On Ki5 we can miss the "loading..." message
+    logger.info('Loading 3D models')
+    reload_time_msg = 'PANGO:Reload time'
+    if not cfg.ki5:
+        # KiCad 6 does a first bogus render without loading the models
+        wait_queue(cfg, reload_time_msg, starts=True)
+        # Then comes the real action
+    wait_and_show_progress(cfg, reload_time_msg, r'Loading (.*)', 'Loading', 'Loading')
+    logger.info('Finished loading 3D models')
+    # Wait until the dialog is ready
+    id = wait_for_window('3D Viewer', '3D Viewer', 1)[0]
+    if cfg.ki5:
+        # KiCad 5 can't handle all commands at once
+        cfg.wait_after_move = True
+
+    # Switch to orthographic (KiCad 6 has persistence)
+    if cfg.orthographic and cfg.ki5:
+        # Can easily break, no persistence, no option, no shortcut ... KiCad's way
+        # Note: This is just for KiCad 5, and can't be patched by the interposer because
+        # this button is handled by the WX AUI (not by the underlying widgets)
+        xdotool(['mousemove', '711', '44', 'click', '1', 'mousemove', 'restore'])
+
+    # Apply the view axis
+    if cfg.view != 'z':
+        logger.info('Changing view')
+        xdotool(['key', cfg.view], id)
+        if cfg.wait_after_move:
+            wait_kicad_ready_i(cfg, swaps=1)
+
+    # Apply the movements
+    apply_steps(cfg.move_x, 'Right', 'Left', id, cfg)
+    apply_steps(cfg.move_y, 'Up', 'Down', id, cfg)
+
+    # Apply the rotations
+    if not cfg.ki5:
+        apply_steps(cfg.rotate_x, 'alt+x', 'shift+alt+x', id, cfg)
+        apply_steps(cfg.rotate_y, 'alt+y', 'shift+alt+y', id, cfg)
+        apply_steps(cfg.rotate_z, 'alt+z', 'shift+alt+z', id, cfg)
+
+    # Apply the zoom steps
+    zoom = cfg.zoom
+    if zoom:
+        zoom_b = '4'
+        if zoom < 0:
+            zoom = -zoom
+            zoom_b = '5'
+        for _ in range(zoom):
+            # Wait some time before sending commands
+            # See discussion on #13 issue at GitHub
+            sleep(0.05)
+            logger.info('Zoom')
+            xdotool(['click', zoom_b], id)
+            logger.debug('Zoom')
+            # An extra swap is done because we used the mouse (mouse "moved")
+            if cfg.wait_after_move:
+                wait_kicad_ready_i(cfg, swaps=1)
+
+    if cfg.ray_tracing:
+        send_keys(cfg, 'Start ray tracing', ['key']+cfg.keys_rt+['Return'])
+        wait_queue(cfg, 'PANGO:Raytracing')
+        wait_ray_tracer_i(cfg)
+
+    # Save the image as PNG
+    # Open the Save dialog
+    file_dlg, _ = open_dialog_i(cfg, '3D Image File Name', ['key', 'alt+f', 'Return'])
+    # Paste the name
+    paste_bogus_filename(cfg)
+    # Wait for the image to be created
+    send_keys(cfg, 'Export the PNG', 'Return', closes=file_dlg, delay_io=True)
+    # Wait until the file is created (why we just see the close?)
+    wait_create_i(cfg, 'PNG')
+    # Close the 3D viewer
+    send_keys(cfg, 'Closing the 3D viewer', cfg.key_close_3d, closes=dialog)
+    exit_kicad_i(cfg)
+
+
+def load_layers(pcb):
+    layer_names = []
+    with open(pcb, "rt") as pcb_file:
+        collect_layers = False
+        for line in pcb_file:
+            if collect_layers:
+                z = re.match(r'\s+\((\d+)\s+"[^"]+"\s+\S+\s+"([^"]+)"', line)
+                if not z:
+                    z = re.match(r'\s+\((\d+)\s+(\S+)', line)
+                if z:
+                    id, name = z.groups()
+                    if name[0] == '"':
+                        name = name[1:-1]
+                    layer_names.append(name)
+                else:
+                    if re.search(r'^\s+\)$', line):
+                        collect_layers = False
+                        break
+            else:
+                if re.search(r'\s+\(layers', line):
+                    collect_layers = True
+    return layer_names
+
+
+class ListLayers(argparse.Action):
+    """A special action class to list the PCB layers and exit"""
+    def __call__(self, parser, namespace, values, option_string):
+        layer_names = load_layers(values[0])
+        for layer in layer_names:
+            print(layer)
+        parser.exit()  # exits the program with no more arg parsing and checking
+
+
+def restore_pcb(cfg):
+    if cfg.input_file and cfg.pcb_size >= 0 and cfg.pcb_date >= 0:
+        cur_date = os.path.getmtime(cfg.input_file)
+        bkp = cfg.input_file+'-bak'
+        if cur_date != cfg.pcb_date:
+            logger.debug('Current pcb date: {} (!={}), trying to restore it'.
+                         format(asctime(localtime(cur_date)), asctime(localtime(cfg.pcb_date))))
+            if os.path.isfile(bkp):
+                bkp_size = os.path.getsize(bkp)
+                if bkp_size == cfg.pcb_size:
+                    os.remove(cfg.input_file)
+                    os.rename(bkp, cfg.input_file)
+                    logger.debug('Moved {} -> {}'.format(bkp, cfg.input_file))
+                else:  # pragma: no cover
+                    logger.error('Corrupted back-up file! (size = {})'.format(bkp_size))
+            else:  # pragma: no cover
+                logger.error('No back-up available!')
+        if not cfg.ki5 and os.path.isfile(bkp):
+            os.remove(bkp)
+
+
+def memorize_pcb(cfg):
+    cfg.pcb_size = os.path.getsize(cfg.input_file)
+    cfg.pcb_date = os.path.getmtime(cfg.input_file)
+    logger.debug('Current pcb ({}) size: {} date: {}'.
+                 format(cfg.input_file, cfg.pcb_size, asctime(localtime(cfg.pcb_date))))
+    if not cfg.ki5:
+        # KiCad 6 no longer creates back-up, we do it
+        try:
+            shutil.copy2(cfg.input_file, cfg.input_file+'-bak')
+        except PermissionError:
+            logger.warning("Unable to create a back-up for the PCB (read-only?)")
+            return
+    atexit.register(restore_pcb, cfg)
+
+
+def write_color(out, name, color, post=''):
+    if color is None:
+        return
+    if post:
+        post = '_'+post
+    name += 'Color_'
+    out.write('%s=%f\n' % (name+'Red'+post, color[0]))
+    out.write('%s=%f\n' % (name+'Green'+post, color[1]))
+    out.write('%s=%f\n' % (name+'Blue'+post, color[2]))
+
+
+def to_rgb(color, bottom=False):
+    index = 4 if bottom and len(color) > 4 else 0
+    alpha = color[index+3]
+    if alpha == 1.0:
+        return "rgb({}, {}, {})".format(round(color[index]*255.0), round(color[index+1]*255.0), round(color[index+2]*255.0))
+    return "rgba({}, {}, {}, {})".format(round(color[index]*255.0), round(color[index+1]*255.0), round(color[index+2]*255.0),
+                                         alpha)
+
+
+def create_pcbnew_config(cfg):
+    # Mark which layers are requested
+    used_layers = set()
+    if cfg.layers:
+        layer_cnt = cfg.board.GetCopperLayerCount()
+    for layer in cfg.layers:
+        # Support for kiplot inner layers
+        if layer.startswith("Inner"):
+            m = re.match(r"^Inner\.([0-9]+)$", layer)
+            if not m:
+                logger.error('Malformed inner layer name: '+layer+', use Inner.N')
+                sys.exit(WRONG_LAYER_NAME)
+            layer_n = int(m.group(1))
+            if layer_n < 1 or layer_n >= layer_cnt - 1:
+                logger.error(layer+" isn't a valid layer")
+                sys.exit(WRONG_LAYER_NAME)
+            used_layers.add((layer_n+1)*2 if cfg.ki9 else layer_n)
+        else:
+            id = cfg.board.GetLayerID(layer)
+            if id < 0:
+                logger.error('Unknown layer '+layer)
+                sys.exit(WRONG_LAYER_NAME)
+            used_layers.add(id)
+    with open(cfg.conf_pcbnew, "wt") as text_file:
+        if cfg.conf_pcbnew_json:
+            conf = {"graphics": {"canvas_type": 2}}
+            conf["drc_dialog"] = {"refill_zones": True,
+                                  "test_track_to_zone": True,
+                                  "test_all_track_errors": True}
+            conf["system"] = {"first_run_shown": True}
+            conf["printing"] = {"monochrome": cfg.monochrome,
+                                "color_theme": cfg.color_theme,
+                                "use_theme": True,
+                                "title_block": not cfg.no_title,
+                                "scale": cfg.scaling,
+                                "layers": sorted(used_layers)}
+            conf["plot"] = {"check_zones_before_plotting": cfg.fill_zones,
+                            "mirror": cfg.mirror,
+                            "all_layers_on_one_page": int(not cfg.separate),
+                            "pads_drill_mode": cfg.pads}
+            conf["window"] = {"size_x": cfg.rec_width,
+                              "size_y": cfg.rec_height}
+            conf["export_vrml"] = {"copy_3d_models": cfg.copy_3d_models,
+                                   "origin_mode": cfg.origin_mode,
+                                   "ref_units": cfg.ref_units,
+                                   "ref_x": cfg.ref_x,
+                                   "ref_y": cfg.ref_y,
+                                   "units": cfg.units,
+                                   "use_relative_paths": cfg.use_relative_paths}
+            json_text = json.dumps(conf)
+            text_file.write(json_text)
+            logger.debug(json_text)
+            # Colors for the 3D Viewer
+            if cfg.bg_color_1 is not None:
+                conf = {}
+                if cfg.ki8 and cfg.use_layer_colors:
+                    # KiCad 8 doesn't have a mode for this, we must emulate
+                    copper = "rgb(77, 127, 196)"  # Top
+                    silk_bottom = "rgb(232, 178, 167)"
+                    silk_top = "rgb(242, 237, 161)"
+                    solder_bottom = "rgba(2, 255, 238, 0.400)"
+                    solder_top = "rgba(216, 100, 255, 0.400)"
+                    solder_paste = "rgba(180, 160, 154, 0.902)"  # Top
+                else:
+                    copper = to_rgb(cfg.copper_color)
+                    silk_bottom = to_rgb(cfg.silk_color, bottom=True)
+                    silk_top = to_rgb(cfg.silk_color)
+                    solder_bottom = to_rgb(cfg.sm_color, bottom=True)
+                    solder_top = to_rgb(cfg.sm_color)
+                    solder_paste = to_rgb(cfg.sp_color)
+                conf["3d_viewer"] = {"background_bottom": to_rgb(cfg.bg_color_1),
+                                     "background_top": to_rgb(cfg.bg_color_2),
+                                     "board": to_rgb(cfg.board_color),
+                                     "copper": copper,
+                                     "silkscreen_bottom": silk_bottom,
+                                     "silkscreen_top": silk_top,
+                                     "soldermask_bottom": solder_bottom,
+                                     "soldermask_top": solder_top,
+                                     "solderpaste": solder_paste,
+                                     "use_board_stackup_colors": cfg.use_stackup_colors}
+                json_text = json.dumps(conf)
+                os.makedirs(os.path.dirname(cfg.conf_colors), exist_ok=True)
+                with open(cfg.conf_colors, "wt") as color_file:
+                    color_file.write(json_text)
+                logger.debug("Colors:")
+                logger.debug(json_text)
+                # 3D Viewer window
+                conf = {}
+                conf["window"] = {"pos_x": 0, "pos_y": 0, "size_x": cfg.rec_width, "size_y": cfg.rec_height}
+                conf["camera"] = {"projection_mode": int(not cfg.orthographic), "animation_enabled": False}
+                conf["aui"] = {"show_layer_manager": False}
+                conf["render"] = {"show_footprints_insert": not cfg.no_smd,
+                                  "show_footprints_normal": not cfg.no_tht,
+                                  "show_footprints_virtual": not cfg.no_virtual,
+                                  "show_axis": False,
+                                  "opengl_AA_mode": 0,
+                                  "show_silkscreen": not cfg.hide_silkscreen,
+                                  "show_soldermask": not cfg.hide_soldermask,
+                                  "show_solderpaste": not cfg.hide_solderpaste,
+                                  "show_zones": not cfg.hide_zones,
+                                  "clip_silk_on_via_annulus": not cfg.dont_clip_silk_on_via_annulus,
+                                  "subtract_mask_from_silk": not cfg.dont_substrack_mask_from_silk,
+                                  "show_board_body": not cfg.hide_board_body,
+                                  "show_comments": cfg.show_comments,
+                                  "show_adhesive": cfg.show_adhesive}
+                render = conf["render"]
+                if cfg.ki8:
+                    render["show_drawings"] = cfg.show_drawings
+                    if cfg.show_eco and not (cfg.show_eco1 or cfg.show_eco2):
+                        # Some compatibility
+                        cfg.show_eco1 = cfg.show_eco2 = True
+                    render["show_eco1"] = cfg.show_eco1
+                    render["show_eco2"] = cfg.show_eco2
+                    conf["use_stackup_colors"] = cfg.use_stackup_colors
+                    conf["current_layer_preset"] = ""
+                elif cfg.ki6:
+                    render["show_eco"] = cfg.show_eco
+                    render["realistic"] = not cfg.use_layer_colors
+                json_text = json.dumps(conf, sort_keys=True)
+                with open(cfg.conf_3dview, "wt") as viewer_file:
+                    viewer_file.write(json_text)
+                logger.debug("3D Viewer:")
+                logger.debug(json_text)
+        else:
+            text_file.write('canvas_type=2\n')
+            text_file.write('RefillZonesBeforeDrc=1\n')
+            text_file.write('DrcTrackToZoneTest=1\n')
+            text_file.write('PcbFrameFirstRunShown=1\n')
+            # Color
+            text_file.write('PrintMonochrome=%d\n' % (cfg.monochrome))
+            # Include frame
+            text_file.write('PrintPageFrame=%d\n' % (not cfg.no_title))
+            # Drill marks
+            text_file.write('PrintPadsDrillOpt=%d\n' % (cfg.pads))
+            # Only one file
+            text_file.write('PrintSinglePage=%d\n' % (not cfg.separate))
+            # Scaling
+            text_file.write('PrintScale=%3.1f\n' % (cfg.scaling))
+            # List all posible layers, indicating which ones are requested
+            for x in range(0, 50):
+                text_file.write('PlotLayer_%d=%d\n' % (x, int(x in used_layers)))
+            # The output image size is the window size!!!
+            text_file.write('Viewer3DFrameNamePos_x=0\n')
+            text_file.write('Viewer3DFrameNamePos_y=0\n')
+            text_file.write('Viewer3DFrameNameSize_x=%d\n' % (cfg.rec_width))
+            text_file.write('Viewer3DFrameNameSize_y=%d\n' % (cfg.rec_height))
+            # We must indicate a window size compatible with the screen.
+            # Otherwise events could fail to reach the main window.
+            text_file.write('PcbFramePos_x=0\n')
+            text_file.write('PcbFramePos_y=0\n')
+            text_file.write('PcbFrameSize_x=%d\n' % (cfg.rec_width))
+            text_file.write('PcbFrameSize_y=%d\n' % (cfg.rec_height))
+            text_file.write('ShowAxis=0\n')
+            text_file.write('ShowFootprints_Normal=%d\n' % (not cfg.no_tht))  # Normal?!
+            # Insert????!!!! please a cup of coffee for this guy ...
+            text_file.write('ShowFootprints_Insert=%d\n' % (not cfg.no_smd))
+            text_file.write('ShowFootprints_Virtual=%d\n' % (not cfg.no_virtual))
+            text_file.write('ShowRealisticMode=%d\n' % (not cfg.use_layer_colors))
+            text_file.write('ShowEcoLayers=%d\n' % (cfg.show_eco))
+            text_file.write('ShowCommentsLayers=%d\n' % (cfg.show_comments))
+            # We enable the raytracer after applying all moves
+            # text_file.write('RenderEngine=%d\n' % (cfg.ray_tracing))
+            write_color(text_file, 'Bg', cfg.bg_color_1)
+            write_color(text_file, 'Bg', cfg.bg_color_2, 'Top')
+            write_color(text_file, 'SMask', cfg.sm_color)
+            write_color(text_file, 'SPaste', cfg.sp_color)
+            write_color(text_file, 'Silk', cfg.silk_color)
+            write_color(text_file, 'Copper', cfg.copper_color)
+            write_color(text_file, 'BoardBody', cfg.board_color)
+            # VRML options
+            text_file.write('VrmlExportUnit=%d\n' % (cfg.units))
+            text_file.write('VrmlExportCopyFiles=%d\n' % (cfg.copy_3d_models))
+            text_file.write('VrmlUseRelativePaths=%d\n' % (cfg.use_relative_paths))
+            text_file.write('VrmlRefUnits=%d\n' % (cfg.ref_units))
+            text_file.write('VrmlRefX=%f\n' % (cfg.ref_x))
+            text_file.write('VrmlRefY=%f\n' % (cfg.ref_y))
+            text_file.write('VrmlUsePlainPCB=0\n')
+    # shutil.copy2(cfg.conf_pcbnew, '/tmp/generated')
+
+
+def load_pcb(fname):
+    import pcbnew
+    logger.info('Loading '+fname)
+    try:
+        board = pcbnew.LoadBoard(fname)
+    except OSError as e:
+        logger.error('Error loading PCB file. Corrupted?')
+        logger.error(e)
+        exit(CORRUPTED_PCB)
+    return board
+
+
+def process_drc_out(cfg):
+    error_level = 0
+    drc_errors, unconnected_pads = parse_drc(cfg)
+    logger.debug('Found {} DRC errors and {} unconnected pads/warnings'.format(drc_errors, unconnected_pads))
+    # Apply filters
+    skip_err, skip_unc = apply_filters(cfg, 'DRC error/s', 'unconnected pad/s or warnings')
+    drc_errors = drc_errors-skip_err
+    unconnected_pads = unconnected_pads-skip_unc
+    if drc_errors == 0 and unconnected_pads == 0:
+        logger.info('No errors')
+    else:
+        logger.error('Found {} DRC errors and {} unconnected pad/s or warnings'.format(drc_errors, unconnected_pads))
+        list_errors(cfg)
+        if args.ignore_unconnected:
+            unconnected_pads = 0
+        else:
+            list_warnings(cfg)
+        error_level = -(drc_errors+unconnected_pads)
+    return error_level
+
+
+def parse_one_color(color):
+    match = re.match(r'#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})?', color)
+    if match is None:
+        logger.error('Malformed color: `{}` please use `#RRGGBBAA` where RR, GG, BB and AA are hexadecimal numbers.')
+        logger.error('AA is the transparency (FF opaque) and is optional. Only supported by KiCad 6.')
+        exit(WRONG_ARGUMENTS)
+    res = match.groups()
+    alpha = 1.0
+    if res[3] is not None:
+        alpha = int(res[3], 16)/255.0
+    return (int(res[0], 16)/255.0, int(res[1], 16)/255.0, int(res[2], 16)/255.0, alpha)
+
+
+def parse_color(color):
+    res = color[0].split(',')
+    if len(res) == 2 and res[0][0] == '#' and res[1][0] == '#':
+        c1 = parse_one_color(res[0])
+        c2 = parse_one_color(res[1])
+        return c1+c2
+    return parse_one_color(color[0])
+
+
+def wait_pcbnew_start_by_msg(cfg):
+    wait_start_by_msg(cfg)
+    # Make sure pcbnew has the focus, I saw problems with WM pop-ups getting the focus
+    return wait_pcbnew()
+
+
+def setup_config_files(cfg):
+    # Back-up the current pcbnew configuration
+    cfg.conf_pcbnew_bkp = backup_config('PCBnew', cfg.conf_pcbnew, PCBNEW_CFG_PRESENT, cfg)
+    if cfg.conf_colors:
+        cfg.conf_colors_bkp = backup_config('Colors', cfg.conf_colors, PCBNEW_CFG_PRESENT, cfg)
+    if cfg.conf_3dview:
+        cfg.conf_3dview_bkp = backup_config('3D Viewer', cfg.conf_3dview, PCBNEW_CFG_PRESENT, cfg)
+    # Create a suitable configuration
+    create_pcbnew_config(cfg)
+    # Hotkeys
+    if not cfg.ki5:
+        # KiCad 6 breaks menu short-cuts, but we can configure user hotkeys
+        # Back-up the current user.hotkeys configuration
+        cfg.conf_hotkeys_bkp = backup_config('User hotkeys', cfg.conf_hotkeys, USER_HOTKEYS_PRESENT, cfg)
+        # Create a suitable configuration
+        create_user_hotkeys(cfg)
+    # Back-up the current kicad_common configuration
+    cfg.conf_kicad_bkp = backup_config('KiCad common', cfg.conf_kicad, KICAD_CFG_PRESENT, cfg)
+    # Create a suitable configuration
+    create_kicad_config(cfg)
+
+
+if __name__ == '__main__':  # noqa: C901
+    parser = argparse.ArgumentParser(description='KiCad PCB automation')
+    subparsers = parser.add_subparsers(help='Command:', dest='command')
+
+    # short commands: iIrmnsSvVw
+    parser.add_argument('--disable_interposer', '-I', help='Avoid using the interposer lib', action='store_true')
+    parser.add_argument('--info', '-n', help='Show information about the installation', action=ShowInfoAction, nargs=0)
+    parser.add_argument('--interposer_sniff', '-i', help="Log interposer info, but don't use it", action='store_true')
+    parser.add_argument('--record', '-r', help='Record the UI automation', action='store_true')
+    parser.add_argument('--rec_width', help='Record width ['+str(REC_W)+']', type=int, default=REC_W)
+    parser.add_argument('--rec_height', help='Record height ['+str(REC_H)+']', type=int, default=REC_H)
+    parser.add_argument('--separate_info', '-S', help='Send info debug level to stdout', action='store_true')
+    parser.add_argument('--start_x11vnc', '-s', help='Start x11vnc (debug)', action='store_true')
+    parser.add_argument('--use_wm', '-m', help='Use a window manager (fluxbox)', action='store_true')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
+    parser.add_argument('--version', '-V', action='version', version='%(prog)s '+__version__+' - ' +
+                        __copyright__+' - License: '+__license__)
+    parser.add_argument('--wait_key', '-w', help='Wait for key to advance (debug)', action='store_true')
+    parser.add_argument('--wait_start', help='Timeout to pcbnew start ['+str(WAIT_START)+']', type=int, default=WAIT_START)
+    parser.add_argument('--time_out_scale', help='Timeout multiplier, affects most timeouts',
+                        type=float, default=TIME_OUT_MULT)
+
+    # short commands: cflmMopsStv
+    export_parser = subparsers.add_parser('export', help='Export PCB layers')
+    export_parser.add_argument('--color_theme', '-c', nargs=1, help='KiCad 6 color theme (i.e. _builtin_default, user)',
+                               default=['_builtin_classic'])
+    export_parser.add_argument('--fill_zones', '-f', help='Fill all zones before printing', action='store_true')
+    export_parser.add_argument('--list', '-l', help='Print a list of layers in LIST PCB and exit', nargs=1, action=ListLayers)
+    export_parser.add_argument('--monochrome', '-m', help='Print in blanck and white', action='store_true')
+    export_parser.add_argument('--mirror', '-M', help='Print mirrored', action='store_true')
+    export_parser.add_argument('--output_name', '-o', nargs=1, help='Name of the output file', default=['printed.pdf'])
+    export_parser.add_argument('--pads', '-p', nargs=1, help='Pads style (0 none, 1 small, 2 full)', default=[2])
+    export_parser.add_argument('--scaling', '-s', nargs=1, help='Scale factor (0 fit page)', default=[1.0])
+    export_parser.add_argument('--separate', '-S', help='Layers in separated sheets', action='store_true')
+    export_parser.add_argument('--no-title', '-t', help='Remove the title-block', action='store_true')
+    export_parser.add_argument('--svg', '-v', help='SVG output instead of PDF', action='store_true')
+    export_parser.add_argument('kicad_pcb_file', help='KiCad PCB file')
+    export_parser.add_argument('output_dir', help='Output directory')
+    export_parser.add_argument('layers', nargs='+', help='Which layers to include')
+
+    # short commands: fFiopstu
+    drc_parser = subparsers.add_parser('run_drc', help='Run Design Rules Checker on a PCB')
+    drc_parser.add_argument('--errors_filter', '-f', nargs=1, help='File with filters to exclude errors')
+    drc_parser.add_argument('--force_gui', '-F', help='Force the use of the GUI (KiCad 6/7 not 8+)', action='store_true')
+    drc_parser.add_argument('--ignore_unconnected', '-i', help='Ignore unconnected paths', action='store_true')
+    drc_parser.add_argument('--output_name', '-o', nargs=1, help='Name of the output file', default=['drc_result.rpt'])
+    drc_parser.add_argument('--save', '-s', help='Save after DRC (updating filled zones)', action='store_true')
+    drc_parser.add_argument('--schematic-parity', '-p', help='Check PCB vs SCH parity (KiCad 8+)', action='store_true')
+    drc_parser.add_argument('--all-track-errors', '-t', help='Report all errors for each track (KiCad 8+)',
+                            action='store_true')
+    drc_parser.add_argument('--units', '-u', help='Report units (KiCad 8+)', default='mm', choices=['in', 'mm', 'mils'],
+                            type=str)
+    drc_parser.add_argument('kicad_pcb_file', help='KiCad PCB file')
+    drc_parser.add_argument('output_dir', help='Output directory')
+
+    # short commands: bcdBoOrSTuvVwWxXyYzZ
+    v3d_parser = subparsers.add_parser('3d_view', help='Capture the 3D view')
+    v3d_parser.add_argument('--bg_color_1', '-b', nargs=1, help='Background color 1', default=['#66667F'])
+    v3d_parser.add_argument('--bg_color_2', '-B', nargs=1, help='Background color 2', default=['#CCCCE5'])
+    v3d_parser.add_argument('--board_color', nargs=1, help='Board body color', default=['#332B16E6'])
+    v3d_parser.add_argument('--copper_color', '-c', nargs=1, help='Copper color', default=['#B29C00'])
+    v3d_parser.add_argument('--detect_rt', '-d', help='Try to detect when the ray tracing render finshes,'
+                            ' wait_rt value is the time-out (experimental)', action='store_true')
+    v3d_parser.add_argument('--dont_clip_silk_on_via_annulus', help="Don't clip silkscreen at via annuli (KiCad 6)",
+                            action='store_true')
+    v3d_parser.add_argument('--dont_substrack_mask_from_silk', help="Don't clip silkscreen at solder mask edges (KiCad 6)",
+                            action='store_true')
+    v3d_parser.add_argument('--hide_board_body', help='Hide the body of the PCB board (KiCad 6)', action='store_true')
+    v3d_parser.add_argument('--hide_silkscreen', help='Hide the silkscreen layers (KiCad 6)', action='store_true')
+    v3d_parser.add_argument('--hide_soldermask', help='Hide the solder mask layers (KiCad 6)', action='store_true')
+    v3d_parser.add_argument('--hide_solderpaste', help='Hide the solder paste layers (KiCad 6)', action='store_true')
+    v3d_parser.add_argument('--hide_zones', help='Hide filled areas in zones (KiCad 6)', action='store_true')
+    v3d_parser.add_argument('--move_x', '-x', nargs=1, help='Steps to move in the X axis (positive is to the right)',
+                            default=[0], type=int)
+    v3d_parser.add_argument('--move_y', '-y', nargs=1, help='Steps to move in the Y axis (positive is up)', default=[0],
+                            type=int)
+    v3d_parser.add_argument('--rotate_x', '-X', nargs=1,
+                            help='Steps to rotate around the X axis (positive is clockwise) KiCad 6', default=[0], type=int)
+    v3d_parser.add_argument('--rotate_y', '-Y', nargs=1,
+                            help='Steps to rotate around the Y axis (positive is clockwise) KiCad 6', default=[0], type=int)
+    v3d_parser.add_argument('--rotate_z', '-Z', nargs=1,
+                            help='Steps to rotate around the Y axis (positive is clockwise) KiCad 6', default=[0], type=int)
+    v3d_parser.add_argument('--no_smd', '-S', help='Do not include surface mount components', action='store_true')
+    v3d_parser.add_argument('--no_tht', '-T', help='Do not include through-hole components', action='store_true')
+    v3d_parser.add_argument('--virtual', '-V', help='Include virtual components', action='store_true')
+    v3d_parser.add_argument('--orthographic', '-O', help='Enable the orthographic projection', action='store_true')
+    v3d_parser.add_argument('--output_name', '-o', nargs=1, help='Name of the output file (PNG)', default=['capture.png'])
+    v3d_parser.add_argument('--ray_tracing', '-r', help='Enable the realistic render', action='store_true')
+    v3d_parser.add_argument('--show_adhesive', help='Show the adhesive layer', action='store_true')
+    v3d_parser.add_argument('--show_comments', help='Show the user comments layer (KiCad 7: also drawings)',
+                            action='store_true')
+    v3d_parser.add_argument('--show_drawings', help='Show the user comments layer (KiCad 8)', action='store_true')
+    v3d_parser.add_argument('--show_eco', help='Show both user eco layers (KiCad 7)', action='store_true')
+    v3d_parser.add_argument('--show_eco1', help='Show the user eco layer 1 (KiCad 8)', action='store_true')
+    v3d_parser.add_argument('--show_eco2', help='Show the user eco layer 2 (KiCad 8)', action='store_true')
+    v3d_parser.add_argument('--silk_color', nargs=1,
+                            help='Silk color (KiCad 6 supports color1,color2 for top/bottom)', default=['#E5E5E5'])
+    v3d_parser.add_argument('--sm_color', nargs=1, help='Solder mask color (KiCad 6 supports color1,color2 for top/bottom)',
+                            default=['#143324D4'])
+    v3d_parser.add_argument('--sp_color', nargs=1, help='Solder paste color', default=['#808080'])
+    group = v3d_parser.add_mutually_exclusive_group()
+    group.add_argument('--use_layer_colors', help='Use the colors of the layers, not realistic colors (KiCad 6+)',
+                       action='store_true')
+    group.add_argument('--use_stackup_colors', help='Use the colors defined in the stackup (KiCad 6+)',
+                       action='store_true')
+    v3d_parser.add_argument('--use_rt_wait', '-u', help='Use the ray tracing end detection even on normal renders',
+                            action='store_true')
+    v3d_parser.add_argument('--view', '-v', nargs=1, help='Axis view, uppercase is reversed (i.e. Z is bottom)',
+                            default=['z'], choices=['x', 'y', 'z', 'X', 'Y', 'Z'],)
+    v3d_parser.add_argument('--wait_after_move', '-W', help='Wait after moving (KiCad 6 and interposer option)',
+                            action='store_true')
+    v3d_parser.add_argument('--wait_rt', '-w', nargs=1, help='Seconds to wait for the ray tracing render [5]', default=[5],
+                            type=int)
+    v3d_parser.add_argument('--zoom', '-z', nargs=1, help='Zoom steps (use negative to reduce)', default=[0], type=int)
+    v3d_parser.add_argument('kicad_pcb_file', help='KiCad PCB file')
+    v3d_parser.add_argument('output_dir', help='Output directory')
+
+    # short commands: afnoOu
+    export_gencad_parser = subparsers.add_parser('export_gencad', help='Export PCB as GenCAD')
+    export_gencad_parser.add_argument('kicad_pcb_file', help='KiCad PCB file')
+    export_gencad_parser.add_argument('output_dir', help='Output directory')
+    export_gencad_parser.add_argument('--output_name', '-o', nargs=1, help='Name of the output file', default=['pcb.cad'])
+    export_gencad_parser.add_argument('--flip_bottom_padstacks', '-f', help='Flip bottom footprint padstacks',
+                                      action='store_true')
+    export_gencad_parser.add_argument('--unique_pin_names', '-u', help='Generate unique pin names', action='store_true')
+    export_gencad_parser.add_argument('--no_reuse_shapes', '-n',
+                                      help='Generate a new shape for each footprint instance (Do not reuse shapes)',
+                                      action='store_true')
+    export_gencad_parser.add_argument('--aux_origin', '-a', help='Use auxiliary axis as origin', action='store_true')
+    export_gencad_parser.add_argument('--save_origin', '-O', help='Save the origin coordinates in the file',
+                                      action='store_true')
+
+    # short commands: afnoOu
+    ipc_netlist_parser = subparsers.add_parser('ipc_netlist', help='Create the IPC-D-356 netlist')
+    ipc_netlist_parser.add_argument('kicad_pcb_file', help='KiCad PCB file')
+    ipc_netlist_parser.add_argument('output_dir', help='Output directory')
+    ipc_netlist_parser.add_argument('--output_name', '-o', nargs=1, help='Name of the output file', default=['pcb.d356'])
+
+    # short commands: douUxy
+    export_vrml_parser = subparsers.add_parser('export_vrml', help='Export 3D model for the PCB in VRML format')
+    export_vrml_parser.add_argument('kicad_pcb_file', help='KiCad PCB file')
+    export_vrml_parser.add_argument('output_dir', help='Output directory')
+    export_vrml_parser.add_argument('--output_name', '-o', nargs=1, help='Name of the output file', default=['pcb.wrl'])
+    export_vrml_parser.add_argument('--dir_models', '-d', help='Name of dir to store the footprint models.'
+                                    ' Models will be embedded if not specified.', type=str)
+    export_vrml_parser.add_argument('--ref_x', '-x', help='X origin, for user defined. KiCad6: Use center otherwise.',
+                                    type=float)
+    export_vrml_parser.add_argument('--ref_y', '-y', help='Y origin, for user defined. KiCad6: Use center otherwise.',
+                                    type=float)
+    export_vrml_parser.add_argument('--ref_units', '-u', help='Origin units', default='millimeters', const='millimeters',
+                                    nargs='?', choices=['millimeters', 'inches'])
+    export_vrml_parser.add_argument('--units', '-U', help='VRML units', default='millimeters', const='millimeters',
+                                    nargs='?', choices=VRML_UNITS)
+
+    # short commands:
+    convert_parser = subparsers.add_parser('convert', help='Convert a PCB (i.e. from Altium)')
+    convert_parser.add_argument('pcb_file', help='Foreign PCB file')
+    convert_parser.add_argument('output_dir', help='Output directory')
+    convert_parser.add_argument('--output_name', '-o', nargs=1, help='Name of the output file', default=['converted.kicad_pcb'])
+
+    args = parser.parse_args()
+    logger = log.init(args.separate_info)
+    # Set the specified verbosity
+    log.set_level(logger, args.verbose)
+
+    if args.command is None:
+        logger.error('No command selected')
+        parser.print_help()
+        exit(WRONG_ARGUMENTS)
+
+    input_file = args.pcb_file if args.command == 'convert' else args.kicad_pcb_file
+    cfg = Config(logger, input_file, args, is_pcbnew=True)
+    cfg.wait_start = args.wait_start
+    cfg.verbose = args.verbose
+    set_time_out_scale(cfg.time_out_scale)
+    set_time_out_scale_f(cfg.time_out_scale)
+    # Empty values by default, we'll fill them for export
+    cfg.fill_zones = False
+    cfg.layers = []
+    cfg.save = args.command == 'run_drc' and args.save
+    cfg.input_file = input_file
+
+    # Get local versions for the GTK window names
+    gettext.textdomain('gtk30')
+    cfg.select_a_filename = gettext.gettext('Select a filename')
+    cfg.print_dlg_name = gettext.gettext('Print')
+    logger.debug('Select a filename -> '+cfg.select_a_filename)
+    logger.debug('Print -> '+cfg.print_dlg_name)
+
+    # Force english + UTF-8
+    # Note: KiCad 6 needs a valid locale, C uses english
+    #       KiCad 7 doesn't need a valid locale 'en' is fine, C uses what LANG says
+    os.environ['LC_ALL'] = 'en' if cfg.ki7 else get_en_locale(logger)
+    # Force english for GTK dialogs
+    os.environ['LANGUAGE'] = 'en'
+    # Force Mesa software rendering (otherwise, the 3D viewer may crash)
+    os.environ['LIBGL_ALWAYS_SOFTWARE'] = "1"
+    if DEBUG_KICAD:
+        os.environ['MESA_DEBUG'] = "1"
+        os.environ['MESA_LOG_FILE'] = "/tmp/mesa.log"
+        os.environ['MESA_NO_ERROR'] = "1"
+    # Make sure the input file exists and has an extension
+    check_input_file(cfg, NO_PCB, WRONG_PCB_NAME)
+    if args.command in ['run_drc', 'export']:
+        cfg.board = load_pcb(cfg.input_file)
+        if not cfg.save:
+            memorize_pcb(cfg)
+    else:
+        cfg.board = None
+
+    if args.command == 'export':
+        # Read the layer names from the PCB
+        cfg.fill_zones = args.fill_zones
+        cfg.layers = args.layers
+        try:
+            cfg.scaling = float(args.scaling[0])
+        except ValueError:
+            logger.error('Scaling must be a floating point value')
+            exit(WRONG_ARGUMENTS)
+        try:
+            cfg.pads = int(args.pads[0])
+        except ValueError:
+            logger.error('Pads style must be an integer value')
+            exit(WRONG_ARGUMENTS)
+        if cfg.pads < 0 or cfg.pads > 2:
+            logger.error('Pad style must be 0, 1 or 2')
+            exit(WRONG_ARGUMENTS)
+        cfg.no_title = args.no_title
+        cfg.monochrome = args.monochrome
+        cfg.separate = args.separate
+        cfg.svg = args.svg
+        cfg.color_theme = args.color_theme[0]
+        cfg.mirror = args.mirror
+        if args.mirror and cfg.ki5:
+            logger.warning("KiCad 5 doesn't support setting mirror print from the configuration file")
+    else:
+        cfg.scaling = 1.0
+        cfg.pads = 2
+        cfg.no_title = False
+        cfg.monochrome = False
+        cfg.separate = False
+        cfg.mirror = False
+        cfg.color_theme = '_builtin_classic'
+
+    if args.command == 'export_gencad':
+        cfg.flip_bottom_padstacks = args.flip_bottom_padstacks
+        cfg.unique_pin_names = args.unique_pin_names
+        cfg.no_reuse_shapes = args.no_reuse_shapes
+        cfg.aux_origin = args.aux_origin
+        cfg.save_origin = args.save_origin
+
+    if args.command == '3d_view':
+        cfg.zoom = int(args.zoom[0])
+        cfg.view = args.view[0]
+        cfg.no_tht = args.no_tht
+        cfg.no_smd = args.no_smd
+        cfg.no_virtual = not args.virtual
+        cfg.move_x = args.move_x[0]
+        cfg.move_y = args.move_y[0]
+        cfg.rotate_x = args.rotate_x[0]
+        cfg.rotate_y = args.rotate_y[0]
+        cfg.rotate_z = args.rotate_z[0]
+        cfg.ray_tracing = args.ray_tracing
+        cfg.wait_rt = args.wait_rt[0]
+        cfg.detect_rt = args.detect_rt
+        cfg.bg_color_1 = parse_color(args.bg_color_1)
+        cfg.bg_color_2 = parse_color(args.bg_color_2)
+        cfg.board_color = parse_color(args.board_color)
+        cfg.copper_color = parse_color(args.copper_color)
+        cfg.silk_color = parse_color(args.silk_color)
+        cfg.sm_color = parse_color(args.sm_color)
+        cfg.sp_color = parse_color(args.sp_color)
+        cfg.orthographic = args.orthographic
+        cfg.use_rt_wait = args.use_rt_wait
+        cfg.wait_after_move = args.wait_after_move
+        cfg.hide_silkscreen = args.hide_silkscreen
+        cfg.hide_soldermask = args.hide_soldermask
+        cfg.hide_solderpaste = args.hide_solderpaste
+        cfg.hide_zones = args.hide_zones
+        cfg.dont_substrack_mask_from_silk = args.dont_substrack_mask_from_silk
+        cfg.dont_clip_silk_on_via_annulus = args.dont_clip_silk_on_via_annulus
+        cfg.use_layer_colors = args.use_layer_colors
+        cfg.use_stackup_colors = args.use_stackup_colors
+        cfg.hide_board_body = args.hide_board_body
+        cfg.show_comments = args.show_comments
+        cfg.show_drawings = args.show_drawings
+        cfg.show_eco = args.show_eco
+        cfg.show_eco1 = args.show_eco1
+        cfg.show_eco2 = args.show_eco2
+        cfg.show_adhesive = args.show_adhesive
+    else:
+        cfg.no_tht = False
+        cfg.no_smd = False
+        cfg.no_virtual = True
+        cfg.ray_tracing = False
+        cfg.bg_color_1 = cfg.bg_color_2 = cfg.board_color = None
+        cfg.copper_color = cfg.silk_color = cfg.sm_color = cfg.sp_color = None
+        cfg.wait_after_move = False
+        cfg.show_adhesive = cfg.show_eco2 = cfg.show_eco1 = cfg.show_eco = cfg.show_drawings = cfg.show_comments = False
+        cfg.use_layer_colors = False
+        cfg.use_stackup_colors = True
+
+    if args.command == 'export_vrml':
+        cfg.copy_3d_models = args.dir_models is not None
+        cfg.origin_mode = 1 if args.ref_x is None and args.ref_y is None else 0
+        cfg.ref_units = 1 if args.ref_units == 'inches' else 0
+        cfg.ref_units_ori = args.ref_units
+        cfg.ref_x = 0.0 if args.ref_x is None else args.ref_x
+        cfg.ref_y = 0.0 if args.ref_y is None else args.ref_y
+        cfg.units = VRML_UNITS.index(args.units)
+        cfg.use_relative_paths = True
+        cfg.dir_models = '' if args.dir_models is None else args.dir_models
+    else:
+        cfg.use_relative_paths = cfg.copy_3d_models = False
+        cfg.units = cfg.origin_mode = cfg.ref_units = 0
+        cfg.ref_x = cfg.ref_y = 0.0
+        cfg.dir_models = ''
+
+    if args.command == 'run_drc' and args.errors_filter:
+        load_filters(cfg, args.errors_filter[0])
+
+    memorize_project(cfg)
+    # Ensure we have a config dir
+    check_kicad_config_dir(cfg)
+    # Make sure the user has fp-lib-table
+    check_lib_table(cfg.user_fp_lib_table, cfg.sys_fp_lib_table)
+    # Create output dir, compute full name for output file and remove it
+    output_dir = os.path.abspath(args.output_dir)
+    cfg.video_dir = cfg.output_dir = output_dir
+    os.makedirs(output_dir, exist_ok=True)
+    # Remove the output file
+    output_file = os.path.join(output_dir, args.output_name[0])
+    if os.path.exists(output_file):
+        os.remove(output_file)
+    cfg.output_file = output_file
+    # Name for the video
+    cfg.video_name = 'pcbnew_'+args.command+'_screencast.ogv'
+    #
+    # Do all the work
+    #
+    error_level = 0
+    do_retry = False
+    if args.command == 'export_vrml' and cfg.ki9:
+        export_vrml_cli(cfg)
+        cfg.use_interposer = cfg.enable_interposer = False
+    elif args.command == 'export_gencad' and cfg.ki9:
+        export_gencad_cli(cfg)
+        cfg.use_interposer = cfg.enable_interposer = False
+    elif args.command == 'run_drc' and not cfg.ki5 and (not args.force_gui or cfg.ki8):
+        if cfg.ki8:
+            # CLI implementation
+            run_drc_cli(cfg, args.schematic_parity, args.all_track_errors, args.units)
+        else:
+            # First command to migrate to Python!
+            run_drc_python(cfg)
+        error_level = process_drc_out(cfg)
+        cfg.use_interposer = cfg.enable_interposer = False
+    else:
+        setup_config_files(cfg)
+        # Interposer settings
+        check_interposer(args, logger, cfg)
+        # When using the interposer inform the output file name using the environment
+        setup_interposer_filename(cfg)
+        flog_out, flog_err, cfg.flog_int = get_log_files(output_dir, 'pcbnew', also_interposer=cfg.enable_interposer)
+        if cfg.enable_interposer:
+            flog_out = subprocess.PIPE
+            atexit.register(dump_interposer_dialog, cfg)
+        for retry in range(3):
+            do_retry = False
+            with recorded_xvfb(cfg, retry):
+                logger.debug('Starting '+cfg.pcbnew)
+                if DEBUG_KICAD_NG:
+                    os.environ['LD_LIBRARY_PATH'] = '/usr/lib/kicad-nightly/lib/x86_64-linux-gnu/:/usr/lib/kicad-nightly/lib/'
+                    os.environ['KICAD_PATH'] = '/usr/share/kicad-nightly'
+                    cmd = ['gdb', '-batch', '-n', '-ex', 'set pagination off', '-ex', 'run', '-ex', 'bt',
+                           '-ex', 'bt full', '-ex', 'thread apply all bt full', '--args', '/usr/lib/kicad-nightly/bin/pcbnew',
+                           cfg.input_file]
+                elif DEBUG_KICAD:
+                    cmd = ['gdb', '-batch', '-n', '-ex', 'set pagination off', '-ex', 'run', '-ex', 'bt', '-ex',
+                           'set new-console on', '-ex', 'bt full', '-ex', 'thread apply all bt full', '--args',
+                           '/usr/bin/pcbnew', cfg.input_file]
+                else:
+                    cmd = [cfg.pcbnew, cfg.input_file]
+                use_low_level_io = False
+                if args.command == 'export' and cfg.use_interposer:
+                    # We need a file to save the print options, make it unique to avoid collisions
+                    create_interposer_print_options_file(cfg)
+                    use_low_level_io = True
+                os.environ['KIAUTO_INTERPOSER_LOWLEVEL_IO'] = '1' if use_low_level_io else ''
+                logger.info('Starting pcbnew ...')
+                # bufsize=1 is line buffered
+                with PopenContext(cmd, stderr=flog_err, close_fds=True, bufsize=1, text=True,
+                                  stdout=flog_out, start_new_session=True) as pcbnew_proc:
+                    # Avoid patching our childs
+                    os.environ['LD_PRELOAD'] = ''
+                    cfg.pcbnew_pid = pcbnew_proc.pid
+                    set_kicad_process(cfg, pcbnew_proc.pid)
+                    cfg.popen_obj = pcbnew_proc
+                    start_queue(cfg)
+                    id_pcbnew = wait_pcbnew_start_by_msg(cfg) if cfg.use_interposer else wait_pcbew_start(cfg)
+                    if pcbnew_proc.poll() is not None:
+                        do_retry = True
+                    else:
+                        if args.command == 'export':
+                            # TODO: Implement KiCad 7 cli version.
+                            # Currently useless since PDF is always B/W and KiBot has a much faster and better print
+                            # KiCad 7 bug: https://gitlab.com/kicad/code/kicad/-/issues/13805
+                            print_layers(cfg, id_pcbnew)
+                        elif args.command == '3d_view':
+                            capture_3d_view(cfg)
+                        elif args.command == 'export_gencad':
+                            export_gencad(cfg)
+                        elif args.command == 'ipc_netlist':
+                            ipc_netlist(cfg)
+                        elif args.command == 'export_vrml':
+                            export_vrml(cfg)
+                        elif args.command == 'convert':
+                            convert_pcb(cfg)
+                        else:  # run_drc
+                            run_drc(cfg)
+                            error_level = process_drc_out(cfg)
+            if not do_retry:
+                break
+            logger.warning("Pcbnew failed to start retrying ...")
+    if do_retry:
+        logger.error("Pcbnew failed to start try with --time_out_scale")
+        error_level = PCBNEW_ERROR
+    #
+    # Exit clean-up
+    #
+    # The following code is here only to make coverage tool properly meassure atexit code.
+    if not cfg.save and args.command in ['run_drc', 'export']:
+        atexit.unregister(restore_pcb)
+        restore_pcb(cfg)
+    atexit.unregister(restore_config)
+    restore_config(cfg)
+    atexit.unregister(restore_project)
+    restore_project(cfg)
+    # We dump the dialog only on abnormal situations
+    if cfg.use_interposer:
+        logger.debug('Removing interposer dialog ({})'.format(cfg.flog_int.name))
+        atexit.unregister(dump_interposer_dialog)
+        cfg.flog_int.close()
+        os.remove(cfg.flog_int.name)
+    exit(error_level)
