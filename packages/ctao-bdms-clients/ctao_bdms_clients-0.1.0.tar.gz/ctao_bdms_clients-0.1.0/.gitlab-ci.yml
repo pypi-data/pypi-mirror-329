@@ -1,0 +1,38 @@
+include:
+  - project: 'cta-computing/dpps/aiv/dpps-aiv-toolkit'
+    ref: 34ef394f4f707dacea789778c718300fa521b10d
+    file: 'ci-functions.yml'
+  - "aiv-config.yml"
+
+
+variables:
+  CHART_LOCATION: chart
+  CHART_NAME: bdms
+  CHART_EXTRA_VALUES: "--set dev.client_image_tag=${DOCKER_TAG}"
+  DPPS_AIV_TOOLKIT_DIR: dpps-aiv-toolkit
+  DOCKER_IMAGE_CONTEXT: '${CI_PROJECT_DIR}'
+  RUCIO_VERSION: "35.4.1"
+  RUCIO_TAG: "release-${RUCIO_VERSION}"
+
+stages:
+  - prepare
+  - lint
+  - build
+  - sign
+  - tests
+  - sonarqube
+  - publish
+  - report
+
+build:
+  variables:
+    CI_HARBOR_REGISTRY_IMAGE: '${HARBOR_HOST}/dpps/bdms-client:${DOCKER_TAG}'
+    KANIKO_EXTRA_ARGS: --build-arg RUCIO_TAG=${RUCIO_TAG}
+
+hadolint:
+  rules:
+    - when: never
+
+sign:
+  rules:
+    - when: never

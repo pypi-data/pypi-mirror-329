@@ -1,0 +1,171 @@
+{{ if .Values.safe_to_bootstrap_rucio | default false }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "bdms.fullname" . }}-bootstrap-rucio
+spec:
+  template:
+    spec:
+      volumes:
+      - name: rucio-config
+        configMap:
+          name: {{ template "bdms.fullname" . }}-rucio-config
+      - name: cafile
+        secret:
+          defaultMode: 420
+          secretName: {{ template "certprefix" . }}-server-cafile
+
+      initContainers:
+      - name: test-connection
+        image: postgres:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -x
+
+          while true; do
+            pg_isready --dbname=rucio --host={{ .Release.Name }}-postgresql --port=5432 --username=rucio && break
+            sleep 3
+          done
+
+        volumeMounts:
+        - name: rucio-config
+          mountPath: /opt/rucio/etc
+        - name: cafile
+          subPath: ca.pem
+          mountPath: /etc/grid-security/ca.pem
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-postgresql
+              key: postgres-password
+
+
+      containers:
+      - name: bootstrap-rucio
+        image: {{ .Values.bootstrap.image.repository }}:{{ .Values.bootstrap.image.tag }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -x
+
+          hash=$(openssl x509 -noout -hash -in /etc/grid-security/ca.pem)
+          mkdir -pv /etc/grid-security/certificates
+          ln -sf /etc/grid-security/ca.pem /etc/grid-security/certificates/$hash.0
+          ln -sf /etc/grid-security/ca.pem /etc/ssl/certs/rucio-ca.pem
+          ln -sf /etc/grid-security/ca.pem /etc/ssl/certs/$hash.0
+
+          echo "Running reset database script..."
+
+          python3 /usr/local/rucio/tools/reset_database.py
+          # rucio-admin account list
+
+        volumeMounts:
+        - name: rucio-config
+          mountPath: /opt/rucio/etc
+        - name: cafile
+          subPath: ca.pem
+          mountPath: /etc/grid-security/ca.pem
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-postgresql
+              key: postgres-password
+      restartPolicy: OnFailure
+{{ end }}
+{{ if .Values.configure_test_setup | default false }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "bdms.fullname" . }}-configure-test-rucio
+spec:
+  template:
+    spec:
+      volumes:
+      - name: rucio-config
+        configMap:
+          name: {{ template "bdms.fullname" . }}-rucio-config
+      - name: cafile
+        secret:
+          defaultMode: 420
+          secretName: {{ template "certprefix" . }}-server-cafile
+      - name: dppsuser-certkey-600
+        secret:
+          defaultMode: 0600
+          secretName: {{ template "certprefix" . }}-dppsuser-certkey
+      - name: dppsuser-certkey-400
+        secret:
+          defaultMode: 0400
+          secretName: {{ template "certprefix" . }}-dppsuser-certkey
+      resources:
+        requests:
+          memory: "2Gi"
+          cpu: "500m"
+        limits:
+          memory: "8Gi"
+          cpu: "2000m"
+      containers:
+      - name: configure-test-rucio
+        image: {{ .Values.bootstrap.image.repository }}:{{ .Values.bootstrap.image.tag }}
+        securityContext:
+          runAsUser: 0
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -ex
+          echo "Configuring test rucio setup ..."
+
+
+          # TODO: add to the image?
+          dnf install -y yum-utils \
+          && dnf config-manager --set-enabled crb \
+          && dnf install -y epel-release
+
+
+          # Install FTS
+          curl -sSfL -o /etc/yum.repos.d/fts3.repo https://fts-repo.web.cern.ch/fts-repo/fts3-el9.repo \
+            && curl -sSfL -o /etc/yum.repos.d/fts3-depend.repo https://fts-repo.web.cern.ch/fts-repo/fts3-depend.repo
+
+          dnf install -y fts-rest-client fts-msg
+          dnf install voms-clients -y
+
+          export HELM_RELEASE_NAME={{ .Release.Name }}
+
+          {{ .Files.Get "scripts/certificates/install_ca.sh" | indent 10 }}
+
+          while true; do
+            rucio ping && break
+            sleep 3
+          done
+
+          ls -l /opt/rucio/etc/
+
+          {{ .Files.Get "scripts/bootstrap_rucio/setup_rucio.sh" | indent 10 }}
+
+        volumeMounts:
+        - name: rucio-config
+          mountPath: /opt/rucio/etc/rucio.cfg
+          subPath: rucio.cfg
+
+        - name: cafile
+          subPath: ca.pem
+          mountPath: /etc/grid-security/ca.pem
+
+        - name: dppsuser-certkey-400
+          mountPath: /opt/rucio/etc/userkey.pem
+          subPath: dppsuser.key.pem
+
+        - name: dppsuser-certkey-600
+          mountPath: /opt/rucio/etc/usercert.pem
+          subPath: dppsuser.pem
+
+      restartPolicy: Never
+
+{{ end }}

@@ -1,0 +1,24 @@
+{{ if .Values.prepuller_enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ .Release.Name }}-prepuller
+  namespace: {{ .Release.Namespace }}
+  labels:
+    name: {{ .Release.Name }}-prepuller
+spec:
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}-prepuller
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}-prepuller
+    spec:
+      containers:
+      - name: demons
+        image: harbor.cta-observatory.org/dpps/bdms-rucio-daemons:35.4.1-v0.1.0
+        command:
+        - sleep
+        - infinity
+{{- end }}
