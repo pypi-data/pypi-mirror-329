@@ -1,0 +1,42 @@
+{% load static %}
+{% load i18n %}
+
+
+<div class="field select" x-data="{open: false, shouldClose(event) {return event.relatedTarget == $refs.dropdownContent || $refs.dropdownContent.contains(event.relatedTarget);} }" 
+     @click.outside="open = false" hx-disinherit="*"
+>
+    <input id="id_{{ widget.name }}_value" hidden="hidden" type="{{ widget.type }}" name="{{ widget.name }}" x-ref="inputValue" aria-label="inputValue"
+           value="{{ widget.value }}"
+    >
+    <input id="id_{{ widget.name }}_display" class="input" type="text" readonly x-ref="inputDisplay" value="{{ widget.value_display }}" aria-label="inputDisplay"
+           style="padding-right: 30px"
+           x-on:focus="open = !open;"
+           x-on:keydown="if ($event.keyCode == 27) {document.activeElement.blur()} else if ($event.keyCode != 9) {$refs.searchInput.focus();}"
+           x-on:focusout="open = shouldClose($event)"
+    >
+    <div style="position: relative; z-index: 90;">
+        <div x-show="open" x-cloak="" class="box pt-1 mb-2" x-ref="dropdownContent" tabindex="-1" x-transition style="position: absolute; width: 100%">
+            <input id="id_{{ widget.name }}_search" type="search" autocomplete="off" class="input" x-ref="searchInput" aria-label="search"
+                   name="{{ widget.search_parameter }}"
+                   placeholder="{% translate 'Type to search' %}"
+                   x-on:keydown="if ($event.keyCode == 27) {document.activeElement.blur()}"
+                   x-on:focusout="open = shouldClose($event)"
+                   hx-get="{{ widget.search_url }}"
+                   hx-trigger="input changed delay:500ms, search"
+                   hx-target="#{{ widget.name }}_dropdown_items"
+            >
+            <div x-on:click="$refs.inputValue.setAttribute('value', $event.target.value); $refs.inputDisplay.value = $event.target.innerText; htmx.trigger($refs.inputValue, 'submit'); open = false; {% if widget.hx_trigger_on_change %}htmx.trigger('#id_{{ widget.name }}_value', 'change');{% endif %}"
+                 x-on:keydown="if ($event.keyCode == 27) {document.activeElement.blur()} else if ($event.keyCode != 9 && $event.keyCode != 13) {$refs.searchInput.focus();}"
+            >
+                {% if not widget.required %}
+                    <div class="hoverable" style="max-height: 200px; width: 100%; overflow-y: auto;">
+                        <button type="button" class="dropdown-item px-1" value="" style="word-wrap: break-word; width: 100%; white-space: normal">---------</button>    
+                    </div>
+                {% endif %}
+                <div id="{{ widget.name }}_dropdown_items" class="hoverable" style="max-height: 200px; width: 100%; overflow-y: auto;">
+                    {% include 'ui/widgets/model_search_select_options.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
