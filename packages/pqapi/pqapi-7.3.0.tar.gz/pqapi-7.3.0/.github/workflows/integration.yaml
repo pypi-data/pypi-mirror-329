@@ -1,0 +1,24 @@
+name: integration
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache datasets # For LitQA2
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface/datasets
+          key: ${{ runner.os }}-datasets-
+          restore-keys: ${{ runner.os }}-datasets-
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync
+      - run: uv run pytest --capture=no --integration
+        env:
+          PQA_API_KEY: ${{ secrets.PQA_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
