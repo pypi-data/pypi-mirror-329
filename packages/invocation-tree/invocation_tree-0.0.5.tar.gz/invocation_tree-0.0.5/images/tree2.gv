@@ -1,0 +1,22 @@
+digraph invocation_tree {
+	node [shape=plaintext]
+	0 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ccffcc">
+  <TR><TD ALIGN="left">➤&lt;module&gt;</TD></TR>
+  <TR><TD ALIGN="left">   tree: Invocation_Tree(filename=&#x27;tree.png&#x27;, show=False, block=False, each_line=False, outcount=1)</TD></TR>
+</TABLE>>]
+	1 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ccffcc">
+  <TR><TD ALIGN="left">➤main</TD></TR>
+  <TR><TD ALIGN="left">   <B>students</B>: <B>{&#x27;Ann&#x27;: [7.5, 8.0], &#x27;Bob&#x27;: [4.5, 6.0], &#x27;Coy&#x27;: [6.0, 7.5]}</B></TD></TR>
+  <TR><TD ALIGN="left">   <B>student</B>: <B>&#x27;Ann&#x27;</B></TD></TR>
+  <TR><TD ALIGN="left">   <B>grades</B>: <B>[7.5, 8.0]</B></TD></TR>
+</TABLE>>]
+	2 [label=<
+<TABLE BORDER="3" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ffffff">
+  <TR><TD ALIGN="left">➤<B>compute_average</B></TD></TR>
+  <TR><TD ALIGN="left">   <B>grades</B>: <B>[7.5, 8.0]</B></TD></TR>
+</TABLE>>]
+	0 -> 1
+	1 -> 2
+}

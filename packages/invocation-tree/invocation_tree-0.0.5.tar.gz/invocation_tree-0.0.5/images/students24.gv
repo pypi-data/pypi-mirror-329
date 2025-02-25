@@ -1,0 +1,66 @@
+digraph invocation_tree {
+	node [shape=plaintext]
+	0 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ccffcc">
+  <TR><TD ALIGN="left">➤main</TD></TR>
+  <TR><TD ALIGN="left">   students: {&#x27;Ann&#x27;: [7.5, 8.0], &#x27;Bob&#x27;: [4.5, 6.0], &#x27;Coy&#x27;: [7.5, 6.0]}</TD></TR>
+  <TR><TD ALIGN="left">   averages: {&#x27;Ann&#x27;: 7.8, &#x27;Bob&#x27;: 5.3, &#x27;Coy&#x27;: 6.8}</TD></TR>
+</TABLE>>]
+	1 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ffcccc">
+  <TR><TD ALIGN="left">➤compute_average</TD></TR>
+  <TR><TD ALIGN="left">   grades: [7.5, 8.0]</TD></TR>
+  <TR><TD ALIGN="left">   average: 7.75</TD></TR>
+  <TR><TD ALIGN="left">return 7.8</TD></TR>
+</TABLE>>]
+	2 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ffcccc">
+  <TR><TD ALIGN="left">➤my_round</TD></TR>
+  <TR><TD ALIGN="left">   value: 7.75</TD></TR>
+  <TR><TD ALIGN="left">   digits: 1</TD></TR>
+  <TR><TD ALIGN="left">   shift: 10</TD></TR>
+  <TR><TD ALIGN="left">return 7.8</TD></TR>
+</TABLE>>]
+	3 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ffcccc">
+  <TR><TD ALIGN="left">➤compute_average</TD></TR>
+  <TR><TD ALIGN="left">   grades: [4.5, 6.0]</TD></TR>
+  <TR><TD ALIGN="left">   average: 5.25</TD></TR>
+  <TR><TD ALIGN="left">return 5.3</TD></TR>
+</TABLE>>]
+	4 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ffcccc">
+  <TR><TD ALIGN="left">➤my_round</TD></TR>
+  <TR><TD ALIGN="left">   value: 5.25</TD></TR>
+  <TR><TD ALIGN="left">   digits: 1</TD></TR>
+  <TR><TD ALIGN="left">   shift: 10</TD></TR>
+  <TR><TD ALIGN="left">return 5.3</TD></TR>
+</TABLE>>]
+	5 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ffcccc">
+  <TR><TD ALIGN="left">➤compute_average</TD></TR>
+  <TR><TD ALIGN="left">   grades: [7.5, 6.0]</TD></TR>
+  <TR><TD ALIGN="left">   average: 6.75</TD></TR>
+  <TR><TD ALIGN="left">return 6.8</TD></TR>
+</TABLE>>]
+	6 [label=<
+<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ffcccc">
+  <TR><TD ALIGN="left">➤my_round</TD></TR>
+  <TR><TD ALIGN="left">   value: 6.75</TD></TR>
+  <TR><TD ALIGN="left">   digits: 1</TD></TR>
+  <TR><TD ALIGN="left">   shift: 10</TD></TR>
+  <TR><TD ALIGN="left">return 6.8</TD></TR>
+</TABLE>>]
+	7 [label=<
+<TABLE BORDER="3" CELLBORDER="0" CELLSPACING="0" BGCOLOR="#ffffff">
+  <TR><TD ALIGN="left">➤<B>passing_students</B></TD></TR>
+  <TR><TD ALIGN="left">   <B>avg</B>: <B>{&#x27;Ann&#x27;: 7.8, &#x27;Bob&#x27;: 5.3, &#x27;Coy&#x27;: 6.8}</B></TD></TR>
+</TABLE>>]
+	0 -> 1
+	1 -> 2
+	0 -> 3
+	3 -> 4
+	0 -> 5
+	5 -> 6
+	0 -> 7
+}
