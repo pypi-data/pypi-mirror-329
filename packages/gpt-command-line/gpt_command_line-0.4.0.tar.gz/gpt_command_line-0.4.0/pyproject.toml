@@ -1,0 +1,48 @@
+[project]
+name = "gpt-command-line"
+version = "0.4.0"
+description = "Command-line interface for ChatGPT and Claude"
+authors = [{name = "Val Kharitonov", email = "val@kharvd.com"}]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.9,<3.13"
+keywords = ["cli", "command-line", "assistant", "openai", "claude", "cohere", "gpt-3", "gpt-4", "llm", "chatgpt", "gpt-cli", "anthropic", "gpt-client", "anthropic-claude"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "anthropic~=0.47.1",
+    "attrs~=25.1.0",
+    "black~=25.1.0",
+    "cohere~=5.13.12",
+    "google-generativeai~=0.8.4",
+    "openai~=1.64.0",
+    "prompt-toolkit~=3.0.50",
+    "pytest~=8.3.4",
+    "PyYAML~=6.0.2",
+    "rich~=13.9.4",
+    "typing_extensions~=4.12.2",
+    "pydantic<2",
+]
+
+[project.optional-dependencies]
+llama = [
+    "llama-cpp-python==0.2.74",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/kharvd/gpt-cli"
+
+[project.scripts]
+gpt = "gptcli.gpt:main"
+
+[build-system]
+requires = ["pip>=23.0.0", "setuptools>=58.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
