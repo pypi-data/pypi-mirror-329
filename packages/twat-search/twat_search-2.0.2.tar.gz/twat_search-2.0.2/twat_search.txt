@@ -1,0 +1,2244 @@
+This file is a merged representation of a subset of the codebase, containing files not matching ignore patterns, combined into a single document by Repomix. The content has been processed where empty lines have been removed.
+
+================================================================
+File Summary
+================================================================
+
+Purpose:
+--------
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+
+File Format:
+------------
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Multiple file entries, each consisting of:
+  a. A separator line (================)
+  b. The file path (File: path/to/file)
+  c. Another separator line
+  d. The full contents of the file
+  e. A blank line
+
+Usage Guidelines:
+-----------------
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+
+Notes:
+------
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching these patterns are excluded: .specstory/**/*.md, .venv/**, _private/**, CLEANUP.txt, **/*.json, *.lock
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Empty lines have been removed from all files
+
+Additional Info:
+----------------
+
+================================================================
+Directory Structure
+================================================================
+.cursor/
+  rules/
+    0project.mdc
+    cleanup.mdc
+    filetree.mdc
+.github/
+  workflows/
+    push.yml
+    release.yml
+src/
+  twat_search/
+    web/
+      engines/
+        __init__.py
+        base.py
+        brave.py
+        critique.py
+        pplx.py
+        serpapi.py
+        tavily.py
+        you.py
+      __init__.py
+      api.py
+      cli.py
+      config.py
+      exceptions.py
+      models.py
+      utils.py
+    __init__.py
+    __main__.py
+tests/
+  unit/
+    web/
+      engines/
+        __init__.py
+        test_base.py
+      __init__.py
+      test_api.py
+      test_config.py
+      test_exceptions.py
+      test_models.py
+      test_utils.py
+    __init__.py
+    mock_engine.py
+  conftest.py
+  test_twat_search.py
+.gitignore
+.pre-commit-config.yaml
+cleanup.py
+LICENSE
+PROGRESS.md
+pyproject.toml
+README.md
+TODO.md
+VERSION.txt
+
+================================================================
+Files
+================================================================
+
+================
+File: .cursor/rules/0project.mdc
+================
+---
+description: About this project
+globs: 
+alwaysApply: false
+---
+# About this project
+
+`twat-search` is a multi-provider search 
+
+## Development Notes
+- Uses `uv` for Python package management
+- Quality tools: ruff, mypy, pytest
+- Clear provider protocol for adding new search backends
+- Strong typing and runtime checks throughout
+
+================
+File: .cursor/rules/cleanup.mdc
+================
+---
+description: Run `cleanup.py` script before and after changes
+globs: 
+alwaysApply: false
+---
+Before you do any changes or if I say "cleanup", run the `cleanup.py update` script in the main folder. Analyze the results, describe recent changes in [PROGRESS.md](mdc:PROGRESS.md) and edit @TODO.md to update priorities and plan next changes. PERFORM THE CHANGES, then run the `cleanup.py status` script and react to the results.
+
+When you edit @TODO.md, lead in lines with empty GFM checkboxes if things aren't done (`- [ ] `) vs. filled (`- [x] `) if done.
+
+================
+File: .cursor/rules/filetree.mdc
+================
+---
+description: File tree of the project
+globs: 
+---
+[ 928]  .
+├── [  64]  .benchmarks
+├── [  96]  .cursor
+│   └── [ 192]  rules
+│       ├── [ 334]  0project.mdc
+│       ├── [ 558]  cleanup.mdc
+│       └── [3.4K]  filetree.mdc
+├── [  96]  .github
+│   └── [ 128]  workflows
+│       ├── [2.7K]  push.yml
+│       └── [1.4K]  release.yml
+├── [3.5K]  .gitignore
+├── [ 532]  .pre-commit-config.yaml
+├── [  96]  .specstory
+│   └── [ 480]  history
+│       ├── [2.0K]  .what-is-this.md
+│       ├── [ 52K]  2025-02-25_01-58-creating-and-tracking-project-tasks.md
+│       ├── [7.4K]  2025-02-25_02-17-project-task-continuation-and-progress-update.md
+│       ├── [ 11K]  2025-02-25_02-24-planning-tests-for-twat-search-web-package.md
+│       ├── [196K]  2025-02-25_02-27-implementing-tests-for-twat-search-package.md
+│       ├── [ 46K]  2025-02-25_02-58-transforming-python-script-into-cli-tool.md
+│       ├── [ 93K]  2025-02-25_03-09-generating-a-name-for-the-chat.md
+│       ├── [5.5K]  2025-02-25_03-33-untitled.md
+│       ├── [ 57K]  2025-02-25_03-54-integrating-search-engines-into-twat-search.md
+│       ├── [ 72K]  2025-02-25_04-05-consolidating-you-py-and-youcom-py.md
+│       ├── [6.1K]  2025-02-25_04-13-missing-env-api-key-names-in-pplx-py.md
+│       ├── [118K]  2025-02-25_04-16-implementing-functions-for-brave-search-engines.md
+│       └── [111K]  2025-02-25_04-48-unifying-search-engine-parameters-in-twat-search.md
+├── [ 499]  CLEANUP.txt
+├── [1.0K]  LICENSE
+├── [1.3K]  PROGRESS.md
+├── [2.3K]  README.md
+├── [6.3K]  TODO.md
+├── [   7]  VERSION.txt
+├── [ 12K]  cleanup.py
+├── [ 160]  dist
+├── [9.0K]  pyproject.toml
+├── [ 128]  src
+│   └── [ 256]  twat_search
+│       ├── [ 232]  __init__.py
+│       ├── [2.0K]  __main__.py
+│       └── [ 352]  web
+│           ├── [ 526]  __init__.py
+│           ├── [4.9K]  api.py
+│           ├── [ 19K]  cli.py
+│           ├── [4.3K]  config.py
+│           ├── [ 320]  engines
+│           │   ├── [ 983]  __init__.py
+│           │   ├── [3.7K]  base.py
+│           │   ├── [ 15K]  brave.py
+│           │   ├── [7.6K]  pplx.py
+│           │   ├── [7.4K]  serpapi.py
+│           │   ├── [8.7K]  tavily.py
+│           │   └── [ 13K]  you.py
+│           ├── [1.0K]  exceptions.py
+│           ├── [1.3K]  models.py
+│           └── [1.5K]  utils.py
+├── [ 192]  tests
+│   ├── [2.0K]  conftest.py
+│   ├── [ 157]  test_twat_search.py
+│   └── [ 192]  unit
+│       ├── [  42]  __init__.py
+│       ├── [1.5K]  mock_engine.py
+│       └── [ 320]  web
+│           ├── [  46]  __init__.py
+│           ├── [ 160]  engines
+│           │   ├── [  37]  __init__.py
+│           │   └── [4.3K]  test_base.py
+│           ├── [5.1K]  test_api.py
+│           ├── [2.7K]  test_config.py
+│           ├── [2.0K]  test_exceptions.py
+│           ├── [4.5K]  test_models.py
+│           └── [3.5K]  test_utils.py
+├── [ 69K]  twat_search.txt
+└── [ 96K]  uv.lock
+
+17 directories, 58 files
+
+================
+File: .github/workflows/push.yml
+================
+name: Build & Test
+on:
+  push:
+    branches: [main]
+    tags-ignore: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+  id-token: write
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Ruff lint
+        uses: astral-sh/ruff-action@v3
+        with:
+          version: "latest"
+          args: "check --output-format=github"
+      - name: Run Ruff Format
+        uses: astral-sh/ruff-action@v3
+        with:
+          version: "latest"
+          args: "format --check --respect-gitignore"
+  test:
+    name: Run Tests
+    needs: quality
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+        os: [ubuntu-latest]
+      fail-fast: true
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+          cache-suffix: ${{ matrix.os }}-${{ matrix.python-version }}
+      - name: Install test dependencies
+        run: |
+          uv pip install --system --upgrade pip
+          uv pip install --system ".[test]"
+      - name: Run tests with Pytest
+        run: uv run pytest -n auto --maxfail=1 --disable-warnings --cov-report=xml --cov-config=pyproject.toml --cov=src/twat_search --cov=tests tests/
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.python-version }}-${{ matrix.os }}
+          path: coverage.xml
+  build:
+    name: Build Distribution
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: "3.12"
+          enable-cache: true
+      - name: Install build tools
+        run: uv pip install build hatchling hatch-vcs
+      - name: Build distributions
+        run: uv run python -m build --outdir dist
+      - name: Upload distribution artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: dist/
+          retention-days: 5
+
+================
+File: .github/workflows/release.yml
+================
+name: Release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+  id-token: write
+jobs:
+  release:
+    name: Release to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/twat-search
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: "3.12"
+          enable-cache: true
+      - name: Install build tools
+        run: uv pip install build hatchling hatch-vcs
+      - name: Build distributions
+        run: uv run python -m build --outdir dist
+      - name: Verify distribution files
+        run: |
+          ls -la dist/
+          test -n "$(find dist -name '*.whl')" || (echo "Wheel file missing" && exit 1)
+          test -n "$(find dist -name '*.tar.gz')" || (echo "Source distribution missing" && exit 1)
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+================
+File: src/twat_search/web/engines/__init__.py
+================
+
+
+================
+File: src/twat_search/web/engines/base.py
+================
+class SearchEngine(abc.ABC):
+    def __init__(self, config: EngineConfig, **kwargs: Any) -> None:
+        self.num_results = kwargs.get("num_results", 5)
+        self.country = kwargs.get("country", None)
+        self.language = kwargs.get("language", None)
+        self.safe_search = kwargs.get("safe_search", True)
+        self.time_frame = kwargs.get("time_frame", None)
+            raise SearchError(msg)
+    async def search(self, query: str) -> list[SearchResult]:
+def register_engine(engine_class: type[SearchEngine]) -> type[SearchEngine]:
+    if not hasattr(engine_class, "env_api_key_names"):
+        engine_class.env_api_key_names = [f"{engine_class.name.upper()}_API_KEY"]
+    if not hasattr(engine_class, "env_enabled_names"):
+        engine_class.env_enabled_names = [f"{engine_class.name.upper()}_ENABLED"]
+    if not hasattr(engine_class, "env_params_names"):
+        engine_class.env_params_names = [f"{engine_class.name.upper()}_DEFAULT_PARAMS"]
+def get_engine(engine_name: str, config: EngineConfig, **kwargs: Any) -> SearchEngine:
+    engine_class = _engine_registry.get(engine_name)
+    return engine_class(config, **kwargs)
+def get_registered_engines() -> dict[str, type[SearchEngine]]:
+    return _engine_registry.copy()
+
+================
+File: src/twat_search/web/engines/brave.py
+================
+class BraveResult(BaseModel):
+class BraveResponse(BaseModel):
+class BraveSearchEngine(SearchEngine):
+    def __init__(
+        super().__init__(config)
+        count = kwargs.get("count", num_results)
+        self.count = count or self.config.default_params.get("count", 10)
+            or kwargs.get("country")
+            or self.config.default_params.get("country", None)
+        search_lang = kwargs.get("search_lang", language)
+        self.search_lang = search_lang or self.config.default_params.get(
+        ui_lang = kwargs.get("ui_lang", language)
+        self.ui_lang = ui_lang or self.config.default_params.get("ui_lang", None)
+        safe = kwargs.get("safe_search", safe_search)
+        if isinstance(safe, bool) and safe is True:
+        elif isinstance(safe, bool) and safe is False:
+        self.safe_search = safe or self.config.default_params.get("safe_search", None)
+        freshness = kwargs.get("freshness", time_frame)
+        self.freshness = freshness or self.config.default_params.get("freshness", None)
+            raise EngineError(
+                f"Brave API key is required. Set it via one of these env vars: {', '.join(self.env_api_key_names)}",
+    async def search(self, query: str) -> list[SearchResult]:
+        async with httpx.AsyncClient() as client:
+                response = await client.get(
+                response.raise_for_status()  # Raise HTTPError for bad responses
+                data = response.json()
+                brave_response = BraveResponse(**data)
+                if brave_response.web and brave_response.web.get("results"):
+                            brave_result = BraveResult(**result)
+                            results.append(
+                                SearchResult(
+                raise EngineError(self.name, f"HTTP Request failed: {exc}") from exc
+                raise EngineError(self.name, f"Response parsing error: {exc}") from exc
+class BraveNewsResult(BaseModel):
+class BraveNewsResponse(BaseModel):
+class BraveNewsSearchEngine(SearchEngine):
+                brave_response = BraveNewsResponse(**data)
+                if brave_response.news and brave_response.news.get("results"):
+                            brave_result = BraveNewsResult(**result)
+async def brave(
+    config = EngineConfig(
+    engine = BraveSearchEngine(
+    return await engine.search(query)
+async def brave_news(
+    engine = BraveNewsSearchEngine(
+
+================
+File: src/twat_search/web/engines/critique.py
+================
+class CritiqueResult(BaseModel):
+    url: str = Field(default="")  # URL of the result source
+    title: str = Field(default="")  # Title of the result
+    summary: str = Field(default="")  # Summary or snippet from the result
+    source: str = Field(default="")  # Source of the result
+class CritiqueResponse(BaseModel):
+    results: List[CritiqueResult] = Field(default_factory=list)  # List of results
+class CritiqueSearchEngine(SearchEngine):
+    def __init__(
+        super().__init__(config)
+        self.image_url = image_url or kwargs.get("image_url")
+        self.image_base64 = image_base64 or kwargs.get("image_base64")
+        self.source_whitelist = source_whitelist or kwargs.get("source_whitelist")
+        self.source_blacklist = source_blacklist or kwargs.get("source_blacklist")
+        self.output_format = output_format or kwargs.get("output_format")
+            raise EngineError(
+                f"Critique Labs API key is required. Set it via one of these env vars: {', '.join(self.env_api_key_names)}",
+    async def _convert_image_url_to_base64(self, image_url: str) -> str:
+            async with httpx.AsyncClient() as client:
+                response = await client.get(image_url, timeout=30)
+                response.raise_for_status()
+                base64_encoded_image = base64.b64encode(response.content).decode(
+            raise EngineError(self.name, f"Failed to fetch image from URL: {e}")
+            raise EngineError(self.name, f"Error processing image: {e}")
+    async def search(self, query: str) -> list[SearchResult]:
+            payload["image"] = await self._convert_image_url_to_base64(self.image_url)
+                response = await client.post(
+                data = response.json()
+                critique_data = CritiqueResponse(
+                    results=data.get("results", []),
+                    response=data.get("response"),
+                    structured_output=data.get("structured_output"),
+                    results.append(
+                        SearchResult(
+                            url=HttpUrl("https://critique-labs.ai"),
+                for idx, item in enumerate(critique_data.results, 1):
+                            HttpUrl(item.url)
+                            else HttpUrl("https://critique-labs.ai")
+                                raw=item.dict(),
+                raise EngineError(self.name, f"HTTP Request failed: {exc}") from exc
+                raise EngineError(self.name, f"Response parsing error: {exc}") from exc
+                raise EngineError(self.name, f"Search failed: {exc}") from exc
+async def critique(
+    config = EngineConfig(
+    engine = CritiqueSearchEngine(
+    return await engine.search(query)
+
+================
+File: src/twat_search/web/engines/pplx.py
+================
+class PerplexityResult(BaseModel):
+    answer: str = Field(default="")  # Perplexity may sometimes not include all details
+    url: str = Field(default="https://perplexity.ai")  # Default URL if none provided
+    title: str = Field(default="Perplexity AI Response")  # Default title
+class PerplexityResponse(BaseModel):
+class PerplexitySearchEngine(SearchEngine):
+    def __init__(
+        super().__init__(config)
+            or kwargs.get("model")
+            or self.config.default_params.get("model", "pplx-70b-online")
+            raise EngineError(
+                f"Perplexity API key is required. Set it via one of these env vars: {', '.join(self.env_api_key_names)}.",
+    async def search(self, query: str) -> list[SearchResult]:
+        async with httpx.AsyncClient() as client:
+                response = await client.post(
+                response.raise_for_status()
+                data = response.json()
+                for choice in data.get("choices", []):
+                    answers_list.append(
+                        PerplexityResult(answer=answer, url=url, title=title)
+                perplexity_response = PerplexityResponse(answers=answers_list)
+                        url_obj = HttpUrl(result.url)
+                        results.append(
+                            SearchResult(
+                raise EngineError(self.name, f"HTTP Request failed: {exc}") from exc
+                raise EngineError(self.name, f"Response parsing error: {exc}") from exc
+async def pplx(
+    config = EngineConfig(
+    engine = PerplexitySearchEngine(
+    return await engine.search(query)
+
+================
+File: src/twat_search/web/engines/serpapi.py
+================
+class SerpApiResult(BaseModel):
+class SerpApiResponse(BaseModel):
+class SerpApiSearchEngine(SearchEngine):
+    def __init__(
+        super().__init__(config)
+        num = kwargs.get("num", num_results)
+        self.num = num or self.config.default_params.get("num", 10)
+        google_domain = kwargs.get("google_domain")
+        self.google_domain = google_domain or self.config.default_params.get(
+        gl = kwargs.get("gl", country)
+        self.gl = gl or self.config.default_params.get("gl", None)
+        hl = kwargs.get("hl", language)
+        self.hl = hl or self.config.default_params.get("hl", None)
+        safe = kwargs.get("safe", safe_search)
+        if isinstance(safe, bool):
+        self.safe = safe or self.config.default_params.get("safe", None)
+        time_period = kwargs.get("time_period", time_frame)
+        self.time_period = time_period or self.config.default_params.get(
+            raise EngineError(
+                f"SerpApi API key is required. Set it via one of these env vars: {', '.join(self.env_api_key_names)}",
+    async def search(self, query: str) -> list[SearchResult]:
+        async with httpx.AsyncClient() as client:
+                response = await client.get(
+                response.raise_for_status()
+                data = response.json()
+                serpapi_response = SerpApiResponse(**data)
+                        results.append(
+                            SearchResult(
+                                raw=result.model_dump(),  # Include raw result for debugging
+                raise EngineError(self.name, f"HTTP Request failed: {exc}") from exc
+                raise EngineError(self.name, f"Response parsing error: {exc}") from exc
+async def serpapi(
+    config = EngineConfig(
+    engine = SerpApiSearchEngine(
+    return await engine.search(query)
+
+================
+File: src/twat_search/web/engines/tavily.py
+================
+class TavilySearchResult(BaseModel):
+class TavilySearchResponse(BaseModel):
+class TavilySearchEngine(SearchEngine):
+    def __init__(
+        super().__init__(config)
+        max_results = kwargs.get("max_results", num_results)
+        self.max_results = max_results or self.config.default_params.get(
+        self.search_depth = search_depth or self.config.default_params.get(
+        self.include_domains = include_domains or self.config.default_params.get(
+        self.exclude_domains = exclude_domains or self.config.default_params.get(
+        self.include_answer = include_answer or self.config.default_params.get(
+        self.max_tokens = max_tokens or self.config.default_params.get(
+        self.search_type = search_type or self.config.default_params.get(
+            raise EngineError(
+                f"Tavily API key is required. Set it via one of these env vars: {', '.join(self.env_api_key_names)}",
+    async def search(self, query: str) -> list[SearchResult]:
+        async with httpx.AsyncClient() as client:
+                response = await client.post(
+                response.raise_for_status()
+                result = response.json()
+                raise EngineError(self.name, f"HTTP error: {e}")
+                raise EngineError(self.name, f"Request error: {e}")
+                raise EngineError(self.name, f"Error: {e!s}")
+        for idx, item in enumerate(result.get("results", []), 1):
+            url_str = item.get("url", "")
+                url = HttpUrl(url_str)
+                results.append(
+                    SearchResult(
+                        title=item.get("title", ""),
+                        snippet=textwrap.shorten(
+                            item.get("content", "").strip(),
+async def tavily(
+    config = EngineConfig(
+    engine = TavilySearchEngine(
+    return await engine.search(query)
+
+================
+File: src/twat_search/web/engines/you.py
+================
+class YouSearchHit(BaseModel):
+    snippet: str = Field(alias="description")
+class YouSearchResponse(BaseModel):
+    search_id: str | None = Field(None, alias="searchId")
+class YouSearchEngine(SearchEngine):
+    def __init__(
+        super().__init__(config)
+        num_web_results = kwargs.get("num_web_results", num_results)
+        self.num_web_results = num_web_results or self.config.default_params.get(
+        country_code = kwargs.get("country_code", country)
+        self.country_code = country_code or self.config.default_params.get(
+            or kwargs.get("safe_search")
+            or self.config.default_params.get("safe_search", True)
+            raise EngineError(
+                f"You.com API key is required. Set it via one of these env vars: {', '.join(self.env_api_key_names)}",
+    async def search(self, query: str) -> list[SearchResult]:
+            params["safe_search"] = str(self.safe_search).lower()
+        async with httpx.AsyncClient() as client:
+                response = await client.get(
+                response.raise_for_status()  # Raise HTTPError for bad responses
+                data = response.json()
+                you_response = YouSearchResponse(**data)
+                        results.append(
+                            SearchResult(
+                                raw=hit.model_dump(
+                raise EngineError(self.name, f"HTTP Request failed: {exc}") from exc
+                raise EngineError(self.name, f"Response parsing error: {exc}") from exc
+class YouNewsArticle(BaseModel):
+class YouNewsResponse(BaseModel):
+class YouNewsSearchEngine(SearchEngine):
+        num_news_results = kwargs.get("num_news_results", num_results)
+        self.num_news_results = num_news_results or self.config.default_params.get(
+                you_response = YouNewsResponse(**data)
+                                raw=article.model_dump(
+async def you(
+    config = EngineConfig(
+    engine = YouSearchEngine(
+    return await engine.search(query)
+async def you_news(
+    engine = YouNewsSearchEngine(
+
+================
+File: src/twat_search/web/__init__.py
+================
+
+
+================
+File: src/twat_search/web/api.py
+================
+logger = logging.getLogger(__name__)
+async def search(
+            config = Config()
+            engines = list(config.engines.keys())
+            raise SearchError(msg)
+        common_params = {k: v for k, v in common_params.items() if v is not None}
+                engine_config = config.engines.get(engine_name)
+                    logger.warning(f"Engine '{engine_name}' not configured.")
+                    k[len(engine_name) + 1 :]: v
+                    for k, v in kwargs.items()
+                    if k.startswith(engine_name + "_")
+                engine_params.update(
+                        if not any(k.startswith(e + "_") for e in engines)
+                engine_instance: SearchEngine = get_engine(
+                logger.info(f"🔍 Querying engine: {engine_name}")
+                engine_names.append(engine_name)
+                search_tasks.append((engine_name, engine_instance.search(query)))
+                logger.error(f"Error initializing engine '{engine_name}': {e}")
+        results = await asyncio.gather(*search_coroutines, return_exceptions=True)
+        for engine_name, result in zip(engine_names, results, strict=False):
+            if isinstance(result, Exception):
+                logger.error(f"Search with engine '{engine_name}' failed: {result}")
+            elif isinstance(result, list):  # Check if results exist and is a list
+                logger.info(f"✅ Engine '{engine_name}' returned {len(result)} results")
+                flattened_results.extend(result)
+                logger.info(
+                    f"⚠️ Engine '{engine_name}' returned no results or unexpected type: {type(result)}"
+        logger.error(f"Search failed: {e}")
+
+================
+File: src/twat_search/web/cli.py
+================
+class CustomJSONEncoder(json_lib.JSONEncoder):
+    def default(self, o: Any) -> Any:
+            return json_lib.JSONEncoder.default(self, o)
+            return str(o)
+console = Console()
+class SearchCLI:
+    def __init__(self) -> None:
+        self.log_handler = RichHandler(rich_tracebacks=True)
+        logging.basicConfig(
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.CRITICAL)  # Explicitly set logger level
+            load_dotenv()
+            self.logger.debug("Loaded environment variables from .env file")
+            self.logger.debug("python-dotenv not installed, skipping .env loading")
+    def _configure_logging(self, verbose: bool = False) -> None:
+        logging.getLogger().setLevel(log_level)
+        self.logger.setLevel(log_level)
+    def _parse_engines(self, engines_arg: Any) -> list[str] | None:
+        if isinstance(engines_arg, str):
+            return [e.strip() for e in engines_arg.split(",") if e.strip()]
+        if isinstance(engines_arg, list | tuple):
+            return [str(e).strip() for e in engines_arg if str(e).strip()]
+        self.logger.warning(
+            f"Unexpected engines type: {type(engines_arg)}. Using all available engines."
+    async def _run_search(
+        self.logger.info(f"🔍 Searching for: {query}")
+            results = await search(query, engines=engines, **kwargs)
+            return self._process_results(results)
+            self.logger.error(f"❌ Search failed: {e}")
+    def _process_results(self, results: list) -> list[dict[str, Any]]:
+            engine_name = getattr(result, "source", None) or "unknown"
+            engine_results[engine_name].append(result)
+        for engine, engine_results_list in engine_results.items():
+                processed.append(
+            url = str(top_result.url)
+                    if len(top_result.snippet) > 100
+                    "raw_result": getattr(
+    def _display_results(
+            console.print("[bold red]No results found![/bold red]")
+            table = Table(title="🌐 Web Search Results")
+            table.add_column("Engine", style="cyan", no_wrap=True)
+            table.add_column("Status", style="magenta")
+            table.add_column("Title", style="green")
+            table.add_column("URL", style="blue")
+                table.add_row(
+            table.add_column("Result", style="green")
+                table.add_row(result["engine"], result["title"])
+        console.print(table)
+    def _display_json_results(self, processed_results: list[dict[str, Any]]) -> None:
+                if result.get("snippet") != "N/A"
+                "result": result.get("raw_result"),  # Include raw result data
+        print(json_lib.dumps(results_by_engine, indent=2, cls=CustomJSONEncoder))
+    def _display_errors(self, error_messages: list[str]) -> None:
+        table = Table(title="❌ Search Errors")
+        table.add_column("Error", style="red")
+            table.add_row(error)
+    def q(
+        self._configure_logging(verbose)
+        engine_list = self._parse_engines(engines)
+        common_params = {k: v for k, v in common_params.items() if v is not None}
+            results = asyncio.run(
+                self._run_search(query, engine_list, **common_params, **kwargs)
+            with console.status(f"[bold green]Searching for '{query}'...[/bold green]"):
+            self._display_json_results(results)
+            self._display_results(results, verbose)
+    def info(self, engine: str | None = None, json: bool = False) -> None:
+            config = Config()
+                self._display_engines_json(engine, config)
+                self._list_all_engines(config)
+                self._show_engine_details(engine, config)
+                self.logger.error(f"❌ Failed to display engine information: {e}")
+                print(json_lib.dumps({"error": str(e)}, indent=2))
+    def _list_all_engines(self, config: "Config") -> None:
+        table = Table(title="🔎 Available Search Engines")
+        table.add_column("Enabled", style="magenta")
+        table.add_column("API Key Required", style="yellow")
+            registered_engines = get_registered_engines()
+        for engine, engine_config in config.engines.items():
+                hasattr(engine_config, "api_key") and engine_config.api_key is not None
+                engine_class = registered_engines.get(engine)
+                if engine_class and hasattr(engine_class, "env_api_key_names"):
+                    api_key_required = bool(engine_class.env_api_key_names)
+        console.print(
+    def _show_engine_details(self, engine_name: str, config: "Config") -> None:
+            console.print(f"[bold red]Engine '{engine_name}' not found![/bold red]")
+            console.print("\nAvailable engines:")
+                console.print(f"- {name}")
+            engine_class = registered_engines.get(engine_name)
+                and hasattr(engine_class, "env_api_key_names")
+            console.print(f"\n[bold cyan]🔍 Engine: {engine_name}[/bold cyan]")
+                console.print("\n[bold]API Key Environment Variables:[/bold]")
+                    value_status = "✅" if os.environ.get(env_name) else "❌"
+                    console.print(f"  {env_name}: {value_status}")
+            console.print("\n[bold]Default Parameters:[/bold]")
+                for param, value in engine_config.default_params.items():
+                    console.print(f"  {param}: {value}")
+                console.print("  No default parameters specified")
+                base_engine = engine_name.split("-")[0]
+                engine_module = importlib.import_module(module_name)
+                function_name = engine_name.replace("-", "_")
+                if hasattr(engine_module, function_name):
+                    func = getattr(engine_module, function_name)
+                    console.print("\n[bold]Function Interface:[/bold]")
+                        f"  [green]{function_name}()[/green] - {func.__doc__.strip().split('\\n')[0]}"
+                    console.print("\n[bold]Example Usage:[/bold]")
+            console.print("\n[bold]Basic Configuration:[/bold]")
+            console.print(f"Enabled: {'✅' if engine_config.enabled else '❌'}")
+            console.print(f"Has API Key: {'✅' if engine_config.api_key else '❌'}")
+            console.print(f"Default Parameters: {engine_config.default_params}")
+    def _display_engines_json(self, engine: str | None, config: "Config") -> None:
+                print(json_lib.dumps({"error": f"Engine {engine} not found"}, indent=2))
+            result[engine] = self._get_engine_info(
+            for engine_name, engine_config in config.engines.items():
+                result[engine_name] = self._get_engine_info(
+        print(json_lib.dumps(result, indent=2, cls=CustomJSONEncoder))
+    def _get_engine_info(
+        if hasattr(engine_config, "api_key") and engine_config.api_key is not None:
+                    {"name": env_name, "set": bool(os.environ.get(env_name))}
+        if hasattr(engine_config, "default_params") and engine_config.default_params:
+            if hasattr(engine_config, "enabled")
+    async def critique(
+            console.print(f"[bold]Searching Critique Labs AI[/bold]: {query}")
+            source_whitelist_list = [s.strip() for s in source_whitelist.split(",")]
+            source_blacklist_list = [s.strip() for s in source_blacklist.split(",")]
+        results = await critique(
+        processed_results = self._process_results(results)
+            self._display_json_results(processed_results)
+            self._display_results(processed_results, verbose)
+def main() -> None:
+    fire.Fire(SearchCLI())
+    main()
+
+================
+File: src/twat_search/web/config.py
+================
+    load_dotenv()  # Load variables from .env file into environment
+class EngineConfig(BaseModel):
+    default_params: dict[str, Any] = Field(default_factory=dict)
+class Config:
+    def __init__(self, **kwargs: Any) -> None:
+        self.engines: dict[str, EngineConfig] = kwargs.get("engines", {})
+            self._load_engine_configs()
+    def _load_engine_configs(self) -> None:
+            registered_engines = get_registered_engines()
+        for engine_name, engine_class in registered_engines.items():
+                api_key = os.environ.get(env_name)
+                enabled = os.environ.get(env_name)
+                    engine_settings[engine_name]["enabled"] = enabled.lower() in (
+                params = os.environ.get(env_name)
+                        engine_settings[engine_name]["default_params"] = json.loads(
+        for engine_name, settings in engine_settings.items():
+                for key, value in settings.items():
+                    setattr(existing_config, key, value)
+                self.engines[engine_name] = EngineConfig(**settings)
+
+================
+File: src/twat_search/web/exceptions.py
+================
+class SearchError(Exception):
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+class EngineError(SearchError):
+    def __init__(self, engine_name: str, message: str) -> None:
+        super().__init__(f"Engine '{engine_name}': {message}")
+
+================
+File: src/twat_search/web/models.py
+================
+class SearchResult(BaseModel):
+    @field_validator("title", "snippet", "source")
+    def validate_non_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError(msg)
+        return v.strip()
+
+================
+File: src/twat_search/web/utils.py
+================
+logger = logging.getLogger(__name__)
+class RateLimiter:
+    def __init__(self, calls_per_second: int = 10):
+    def wait_if_needed(self) -> None:
+        now = time.time()
+        if len(self.call_timestamps) >= self.calls_per_second:
+                    logger.debug(f"Rate limiting: sleeping for {sleep_time:.2f}s")
+                time.sleep(sleep_time)
+        self.call_timestamps.append(time.time())
+
+================
+File: src/twat_search/__init__.py
+================
+
+
+================
+File: src/twat_search/__main__.py
+================
+logging.basicConfig(
+    handlers=[RichHandler(rich_tracebacks=True)],
+logger = logging.getLogger(__name__)
+console = Console()
+SearchCLIType = TypeVar("SearchCLIType")
+class TwatSearchCLI:
+    def __init__(self) -> None:
+            self.web: Any = web_cli.SearchCLI()
+            logger.error(f"Web CLI not available: {e!s}")
+            logger.error("Make sure twat_search.web.cli is properly installed.")
+    def _cli_error(self, *args: Any, **kwargs: Any) -> int:  # noqa: ARG002
+        console.print(
+    def version(self) -> str:
+def main() -> None:
+    fire.Fire(TwatSearchCLI(), name="twat-search")
+    main()
+
+================
+File: tests/unit/web/engines/__init__.py
+================
+
+
+================
+File: tests/unit/web/engines/test_base.py
+================
+class TestSearchEngine(SearchEngine):
+    async def search(self, query: str) -> list[SearchResult]:
+            SearchResult(
+                url=HttpUrl("https://example.com/test"),
+register_engine(TestSearchEngine)
+class DisabledTestSearchEngine(SearchEngine):
+        raise NotImplementedError(msg)
+register_engine(DisabledTestSearchEngine)
+def test_search_engine_is_abstract() -> None:
+    assert hasattr(SearchEngine, "__abstractmethods__")
+    with pytest.raises(TypeError):
+        SearchEngine(EngineConfig())  # type: ignore
+def test_search_engine_name_class_var() -> None:
+    assert hasattr(SearchEngine, "name")
+def test_engine_registration() -> None:
+    class NewEngine(SearchEngine):
+    returned_class = register_engine(NewEngine)
+    engine_instance = get_engine("new_engine", EngineConfig())
+    assert isinstance(engine_instance, NewEngine)
+def test_get_engine_with_invalid_name() -> None:
+    with pytest.raises(SearchError, match="Unknown search engine"):
+        get_engine("nonexistent_engine", EngineConfig())
+def test_get_engine_with_disabled_engine() -> None:
+    config = EngineConfig(enabled=False)
+    with pytest.raises(SearchError, match="is disabled"):
+        get_engine("disabled_engine", config)
+def test_get_engine_with_config() -> None:
+    config = EngineConfig(
+    engine = get_engine("test_engine", config)
+def test_get_engine_with_kwargs() -> None:
+    engine = get_engine("test_engine", EngineConfig(), **kwargs)
+
+================
+File: tests/unit/web/__init__.py
+================
+
+
+================
+File: tests/unit/web/test_api.py
+================
+logging.basicConfig(level=logging.DEBUG)
+T = TypeVar("T")
+class MockSearchEngine(SearchEngine):
+    def __init__(self, config: EngineConfig, **kwargs: Any) -> None:
+        super().__init__(config, **kwargs)
+        self.should_fail = kwargs.get("should_fail", False)
+    async def search(self, query: str) -> list[SearchResult]:
+            raise Exception(msg)
+        result_count = self.kwargs.get("result_count", 1)
+            SearchResult(
+                url=HttpUrl(f"https://example.com/{i + 1}"),
+            for i in range(result_count)
+register_engine(MockSearchEngine)
+def mock_config() -> Config:
+    config = Config()
+        "mock": EngineConfig(
+async def setup_teardown() -> AsyncGenerator[None, None]:
+    tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
+    with contextlib.suppress(asyncio.CancelledError):
+        await asyncio.gather(*tasks)
+async def test_search_with_mock_engine(
+    results = await search("test query", engines=["mock"], config=mock_config)
+    assert len(results) == 2
+    assert all(isinstance(result, SearchResult) for result in results)
+    assert all(result.source == "mock" for result in results)
+async def test_search_with_additional_params(
+    results = await search(
+    assert len(results) == 3
+async def test_search_with_engine_specific_params(
+    assert len(results) == 4
+async def test_search_with_no_engines(setup_teardown: None) -> None:
+    with pytest.raises(SearchError, match="No search engines configured"):
+        await search("test query", engines=[])
+async def test_search_with_failing_engine(
+    assert len(results) == 0
+async def test_search_with_nonexistent_engine(
+    with pytest.raises(SearchError, match="No search engines could be initialized"):
+        await search("test query", engines=["nonexistent"], config=mock_config)
+async def test_search_with_disabled_engine(
+        await search("test query", engines=["mock"], config=mock_config)
+
+================
+File: tests/unit/web/test_config.py
+================
+def test_engine_config_defaults() -> None:
+    config = EngineConfig()
+def test_engine_config_values() -> None:
+    config = EngineConfig(
+def test_config_defaults(isolate_env_vars: None) -> None:
+    config = Config()
+    assert isinstance(config.engines, dict)
+    assert len(config.engines) == 0
+def test_config_with_env_vars(
+def test_config_with_direct_initialization() -> None:
+    custom_config = Config(
+            "test_engine": EngineConfig(
+def test_config_env_vars_override_direct_config(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.setenv("BRAVE_API_KEY", "env_key")
+            "brave": EngineConfig(
+
+================
+File: tests/unit/web/test_exceptions.py
+================
+def test_search_error() -> None:
+    exception = SearchError(error_message)
+    assert str(exception) == error_message
+    assert isinstance(exception, Exception)
+def test_engine_error() -> None:
+    exception = EngineError(engine_name, error_message)
+    assert str(exception) == f"Engine '{engine_name}': {error_message}"
+    assert isinstance(exception, SearchError)
+def test_engine_error_inheritance() -> None:
+        raise EngineError(msg, "Test error")
+        if isinstance(e, EngineError):
+def test_search_error_as_base_class() -> None:
+        raise SearchError(msg)
+        exceptions.append(e)
+        raise EngineError(msg, "API key missing")
+    assert len(exceptions) == 2
+    assert isinstance(exceptions[0], SearchError)
+    assert isinstance(exceptions[1], EngineError)
+    assert "General search error" in str(exceptions[0])
+    assert "Engine 'brave': API key missing" in str(exceptions[1])
+
+================
+File: tests/unit/web/test_models.py
+================
+def test_search_result_valid_data() -> None:
+    url = HttpUrl("https://example.com")
+    result = SearchResult(
+    assert str(result.url) == "https://example.com/"
+def test_search_result_with_optional_fields() -> None:
+def test_search_result_invalid_url() -> None:
+    with pytest.raises(ValidationError):
+        SearchResult.model_validate(
+def test_search_result_empty_fields() -> None:
+                "url": str(url),
+def test_search_result_serialization() -> None:
+    result_dict = result.model_dump()
+    assert str(result_dict["url"]) == "https://example.com/"
+    result_json = result.model_dump_json()
+    assert isinstance(result_json, str)
+def test_search_result_deserialization() -> None:
+    result = SearchResult.model_validate(data)
+
+================
+File: tests/unit/web/test_utils.py
+================
+def rate_limiter() -> RateLimiter:
+    return RateLimiter(calls_per_second=5)
+def test_rate_limiter_init() -> None:
+    limiter = RateLimiter(calls_per_second=10)
+def test_rate_limiter_wait_when_not_needed(rate_limiter: RateLimiter) -> None:
+    with patch("time.sleep") as mock_sleep:
+        rate_limiter.wait_if_needed()
+        mock_sleep.assert_not_called()
+        for _ in range(3):  # 4 total calls including the one above
+def test_rate_limiter_wait_when_needed(rate_limiter: RateLimiter) -> None:
+    now = time.time()
+        now - 0.01 * i for i in range(rate_limiter.calls_per_second)
+    with patch("time.sleep") as mock_sleep, patch("time.time", return_value=now):
+        mock_sleep.assert_called_once()
+def test_rate_limiter_cleans_old_timestamps(rate_limiter: RateLimiter) -> None:
+    with patch("time.time", return_value=now):
+        len(rate_limiter.call_timestamps) == len(recent_stamps) + 1
+@pytest.mark.parametrize("calls_per_second", [1, 5, 10, 100])
+def test_rate_limiter_with_different_rates(calls_per_second: int) -> None:
+    limiter = RateLimiter(calls_per_second=calls_per_second)
+        for _ in range(calls_per_second):
+            limiter.wait_if_needed()
+        patch("time.sleep") as mock_sleep,
+        patch("time.time", return_value=time.time()),
+
+================
+File: tests/unit/__init__.py
+================
+
+
+================
+File: tests/unit/mock_engine.py
+================
+class MockSearchEngine(SearchEngine):
+    def __init__(self, config: EngineConfig, **kwargs: Any) -> None:
+        super().__init__(config, **kwargs)
+        self.should_fail = kwargs.get("should_fail", False)
+    async def search(self, query: str) -> list[SearchResult]:
+            raise Exception(msg)
+        result_count = self.kwargs.get("result_count", 1)
+            SearchResult(
+                url=HttpUrl(f"https://example.com/{i + 1}"),
+            for i in range(result_count)
+register_engine(MockSearchEngine)
+
+================
+File: tests/conftest.py
+================
+@pytest.fixture(autouse=True)
+def isolate_env_vars(monkeypatch: MonkeyPatch) -> None:
+    for env_var in list(os.environ.keys()):
+        if any(
+            env_var.endswith(suffix)
+            monkeypatch.delenv(env_var, raising=False)
+    monkeypatch.setenv("_TEST_ENGINE", "true")
+def env_vars_for_brave(monkeypatch: MonkeyPatch) -> None:
+        sys.path.insert(0, str(Path(__file__).parent.parent))
+        class MockBraveEngine(SearchEngine):
+        register_engine(MockBraveEngine)
+    monkeypatch.setenv("BRAVE_API_KEY", "test_brave_key")
+    monkeypatch.setenv("BRAVE_ENABLED", "true")
+    monkeypatch.setenv("BRAVE_DEFAULT_PARAMS", '{"count": 10}')
+    monkeypatch.delenv("_TEST_ENGINE", raising=False)
+
+================
+File: tests/test_twat_search.py
+================
+def test_version():
+
+================
+File: .gitignore
+================
+*_autogen/
+.DS_Store
+__version__.py
+__pycache__/
+_Chutzpah*
+_deps
+_NCrunch_*
+_pkginfo.txt
+_Pvt_Extensions
+_ReSharper*/
+_TeamCity*
+_UpgradeReport_Files/
+!?*.[Cc]ache/
+!.axoCover/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!**/[Pp]ackages/build/
+!Directory.Build.rsp
+.*crunch*.local.xml
+.axoCover/*
+.builds
+.cr/personal
+.fake/
+.history/
+.ionide/
+.localhistory/
+.mfractor/
+.ntvs_analysis.dat
+.paket/paket.exe
+.sass-cache/
+.vs/
+.vscode
+.vscode/*
+.vshistory/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Bb]in/
+[Bb]uild[Ll]og.*
+[Dd]ebug/
+[Dd]ebugPS/
+[Dd]ebugPublic/
+[Ee]xpress/
+[Ll]og/
+[Ll]ogs/
+[Oo]bj/
+[Rr]elease/
+[Rr]eleasePS/
+[Rr]eleases/
+[Tt]est[Rr]esult*/
+[Ww][Ii][Nn]32/
+*_h.h
+*_i.c
+*_p.c
+*_wpftmp.csproj
+*- [Bb]ackup ([0-9]).rdl
+*- [Bb]ackup ([0-9][0-9]).rdl
+*- [Bb]ackup.rdl
+*.[Cc]ache
+*.[Pp]ublish.xml
+*.[Rr]e[Ss]harper
+*.a
+*.app
+*.appx
+*.appxbundle
+*.appxupload
+*.aps
+*.azurePubxml
+*.bim_*.settings
+*.bim.layout
+*.binlog
+*.btm.cs
+*.btp.cs
+*.build.csdef
+*.cab
+*.cachefile
+*.code-workspace
+*.coverage
+*.coveragexml
+*.d
+*.dbmdl
+*.dbproj.schemaview
+*.dll
+*.dotCover
+*.DotSettings.user
+*.dsp
+*.dsw
+*.dylib
+*.e2e
+*.exe
+*.gch
+*.GhostDoc.xml
+*.gpState
+*.ilk
+*.iobj
+*.ipdb
+*.jfm
+*.jmconfig
+*.la
+*.lai
+*.ldf
+*.lib
+*.lo
+*.log
+*.mdf
+*.meta
+*.mm.*
+*.mod
+*.msi
+*.msix
+*.msm
+*.msp
+*.ncb
+*.ndf
+*.nuget.props
+*.nuget.targets
+*.nupkg
+*.nvuser
+*.o
+*.obj
+*.odx.cs
+*.opendb
+*.opensdf
+*.opt
+*.out
+*.pch
+*.pdb
+*.pfx
+*.pgc
+*.pgd
+*.pidb
+*.plg
+*.psess
+*.publishproj
+*.publishsettings
+*.pubxml
+*.pyc
+*.rdl.data
+*.rptproj.bak
+*.rptproj.rsuser
+*.rsp
+*.rsuser
+*.sap
+*.sbr
+*.scc
+*.sdf
+*.sln.docstates
+*.sln.iml
+*.slo
+*.smod
+*.snupkg
+*.so
+*.suo
+*.svclog
+*.tlb
+*.tlh
+*.tli
+*.tlog
+*.tmp
+*.tmp_proj
+*.tss
+*.user
+*.userosscache
+*.userprefs
+*.vbp
+*.vbw
+*.VC.db
+*.VC.VC.opendb
+*.VisualState.xml
+*.vsp
+*.vspscc
+*.vspx
+*.vssscc
+*.xsd.cs
+**/[Pp]ackages/*
+**/*.DesktopClient/GeneratedArtifacts
+**/*.DesktopClient/ModelManifest.xml
+**/*.HTMLClient/GeneratedArtifacts
+**/*.Server/GeneratedArtifacts
+**/*.Server/ModelManifest.xml
+*~
+~$*
+$tf/
+AppPackages/
+artifacts/
+ASALocalRun/
+AutoTest.Net/
+Backup*/
+BenchmarkDotNet.Artifacts/
+bld/
+BundleArtifacts/
+ClientBin/
+cmake_install.cmake
+CMakeCache.txt
+CMakeFiles
+CMakeLists.txt.user
+CMakeScripts
+CMakeUserPresets.json
+compile_commands.json
+coverage*.info
+coverage*.json
+coverage*.xml
+csx/
+CTestTestfile.cmake
+dlldata.c
+DocProject/buildhelp/
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/Help/*.HxC
+DocProject/Help/*.HxT
+DocProject/Help/html
+DocProject/Help/Html2
+ecf/
+FakesAssemblies/
+FodyWeavers.xsd
+Generated_Code/
+Generated\ Files/
+healthchecksdb
+install_manifest.txt
+ipch/
+Makefile
+MigrationBackup/
+mono_crash.*
+nCrunchTemp_*
+node_modules/
+nunit-*.xml
+OpenCover/
+orleans.codegen.cs
+Package.StoreAssociation.xml
+paket-files/
+project.fragment.lock.json
+project.lock.json
+publish/
+PublishScripts/
+rcf/
+ScaffoldingReadMe.txt
+ServiceFabricBackup/
+StyleCopReport.xml
+Testing
+TestResult.xml
+UpgradeLog*.htm
+UpgradeLog*.XML
+x64/
+x86/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Distribution / packaging
+!dist/.gitkeep
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+.ruff_cache/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+__version__.py
+_private
+
+================
+File: .pre-commit-config.yaml
+================
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+        args: [--respect-gitignore]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-added-large-files
+      - id: debug-statements
+      - id: check-case-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+================
+File: cleanup.py
+================
+LOG_FILE = Path("CLEANUP.txt")
+os.chdir(Path(__file__).parent)
+def new() -> None:
+    if LOG_FILE.exists():
+        LOG_FILE.unlink()
+def prefix() -> None:
+    readme = Path(".cursor/rules/0project.mdc")
+    if readme.exists():
+        log_message("\n=== PROJECT STATEMENT ===")
+        content = readme.read_text()
+        log_message(content)
+def suffix() -> None:
+    todo = Path("TODO.md")
+    if todo.exists():
+        log_message("\n=== TODO.md ===")
+        content = todo.read_text()
+def log_message(message: str) -> None:
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with LOG_FILE.open("a") as f:
+        f.write(log_line)
+def run_command(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess:
+        result = subprocess.run(cmd, check=check, capture_output=True, text=True)
+            log_message(result.stdout)
+        log_message(f"Command failed: {' '.join(cmd)}")
+        log_message(f"Error: {e.stderr}")
+        return subprocess.CompletedProcess(cmd, 1, "", str(e))
+def check_command_exists(cmd: str) -> bool:
+        subprocess.run(["which", cmd], check=True, capture_output=True)
+class Cleanup:
+    def __init__(self) -> None:
+        self.workspace = Path.cwd()
+    def _print_header(self, message: str) -> None:
+        log_message(f"\n=== {message} ===")
+    def _check_required_files(self) -> bool:
+            if not (self.workspace / file).exists():
+                log_message(f"Error: {file} is missing")
+    def _generate_tree(self) -> None:
+        if not check_command_exists("tree"):
+            log_message("Warning: 'tree' command not found. Skipping tree generation.")
+            rules_dir = Path(".cursor/rules")
+            rules_dir.mkdir(parents=True, exist_ok=True)
+            tree_result = run_command(
+            with open(rules_dir / "filetree.mdc", "w") as f:
+                f.write("---\ndescription: File tree of the project\nglobs: \n---\n")
+                f.write(tree_text)
+            log_message("\nProject structure:")
+            log_message(tree_text)
+            log_message(f"Failed to generate tree: {e}")
+    def _git_status(self) -> bool:
+        result = run_command(["git", "status", "--porcelain"], check=False)
+        return bool(result.stdout.strip())
+    def _venv(self) -> None:
+        log_message("Setting up virtual environment")
+            run_command(["uv", "venv"])
+            if venv_path.exists():
+                os.environ["VIRTUAL_ENV"] = str(self.workspace / ".venv")
+                log_message("Virtual environment created and activated")
+                log_message("Virtual environment created but activation failed")
+            log_message(f"Failed to create virtual environment: {e}")
+    def _install(self) -> None:
+        log_message("Installing package with all extras")
+            self._venv()
+            run_command(["uv", "pip", "install", "-e", ".[test,dev]"])
+            log_message("Package installed successfully")
+            log_message(f"Failed to install package: {e}")
+    def _run_checks(self) -> None:
+        log_message("Running code quality checks")
+            log_message(">>> Running code fixes...")
+            run_command(
+            log_message(">>>Running type checks...")
+            run_command(["python", "-m", "mypy", "src", "tests"], check=False)
+            log_message(">>> Running tests...")
+            run_command(["python", "-m", "pytest", "tests"], check=False)
+            log_message("All checks completed")
+            log_message(f"Failed during checks: {e}")
+    def status(self) -> None:
+        prefix()  # Add README.md content at start
+        self._print_header("Current Status")
+        self._check_required_files()
+        self._generate_tree()
+        result = run_command(["git", "status"], check=False)
+        self._print_header("Environment Status")
+        self._install()
+        self._run_checks()
+        suffix()  # Add TODO.md content at end
+    def venv(self) -> None:
+        self._print_header("Virtual Environment Setup")
+    def install(self) -> None:
+        self._print_header("Package Installation")
+    def update(self) -> None:
+        self.status()
+        if self._git_status():
+            log_message("Changes detected in repository")
+                run_command(["git", "add", "."])
+                run_command(["git", "commit", "-m", commit_msg])
+                log_message("Changes committed successfully")
+                log_message(f"Failed to commit changes: {e}")
+            log_message("No changes to commit")
+    def push(self) -> None:
+        self._print_header("Pushing Changes")
+            run_command(["git", "push"])
+            log_message("Changes pushed successfully")
+            log_message(f"Failed to push changes: {e}")
+def repomix(
+            cmd.append("--compress")
+            cmd.append("--remove-empty-lines")
+            cmd.append("-i")
+            cmd.append(ignore_patterns)
+        cmd.extend(["-o", output_file])
+        run_command(cmd)
+        log_message(f"Repository content mixed into {output_file}")
+        log_message(f"Failed to mix repository: {e}")
+def print_usage() -> None:
+    log_message("Usage:")
+    log_message("  cleanup.py status   # Show current status and run all checks")
+    log_message("  cleanup.py venv     # Create virtual environment")
+    log_message("  cleanup.py install  # Install package with all extras")
+    log_message("  cleanup.py update   # Update and commit changes")
+    log_message("  cleanup.py push     # Push changes to remote")
+def main() -> NoReturn:
+    new()  # Clear log file
+    if len(sys.argv) < 2:
+        print_usage()
+        sys.exit(1)
+    cleanup = Cleanup()
+            cleanup.status()
+            cleanup.venv()
+            cleanup.install()
+            cleanup.update()
+            cleanup.push()
+        log_message(f"Error: {e}")
+    repomix()
+    print(Path(LOG_FILE).read_text())
+    main()
+
+================
+File: LICENSE
+================
+MIT License
+
+Copyright (c) 2025 Adam Twardoch
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================
+File: PROGRESS.md
+================
+---
+this_file: PROGRESS.md
+---
+
+- [ ] See [TODO.md](TODO.md) for the list of upcoming features planned for future development.
+- [x] Test planning completed (see detailed plan in [TODO.md](TODO.md))
+- [ ] Tests implementation
+- [ ] CLI tool for terminal-based searching
+
+## Unified Parameter Implementation
+
+### Completed:
+- [x] Defined common parameters in base `SearchEngine` class:
+  - `num_results`: Number of results to return
+  - `country`: Country code for results
+  - `language`: Language code for results
+  - `safe_search`: Boolean flag for safe search
+  - `time_frame`: Time frame for filtering results
+- [x] Updated search engines to use unified parameters:
+  - [x] BraveSearchEngine and BraveNewsSearchEngine
+  - [x] YouSearchEngine and YouNewsSearchEngine
+  - [x] SerpApiSearchEngine
+  - [x] TavilySearchEngine
+  - [x] PerplexitySearchEngine
+  - [x] CritiqueSearchEngine (new implementation)
+- [x] Updated convenience functions for all engines to expose unified parameters
+- [x] Fixed type conversion issues with URL handling
+- [x] Ensured proper validation and error handling for parameters
+- [x] Added CLI support for all engines including the new Critique engine
+
+### Next steps:
+- [ ] Write unit tests to verify unified parameter handling works correctly
+- [ ] Update documentation to reflect the unified parameters
+- [ ] Add docstrings explaining the mapping between unified parameters and engine-specific ones
+
+================
+File: pyproject.toml
+================
+# this_file: twat_search/pyproject.toml
+
+# Build System Configuration
+# -------------------------
+# Specifies the build system and its requirements for packaging the project
+# - hatchling: Modern, extensible build backend for Python projects
+# - hatch-vcs: Automatically determines package version from version control system
+[build-system]
+requires = [
+    "hatchling>=1.27.0",     # Core build backend for Hatch, providing modern packaging capabilities
+    "hatch-vcs>=0.4.0",      # Plugin to dynamically generate version from Git tags/commits
+]
+build-backend = "hatchling.build"  # Use Hatchling as the build backend for consistent and flexible builds
+
+# Wheel Distribution Configuration
+# --------------------------------
+# Controls how the package is built and distributed as a wheel
+# Ensures only specific packages are included in the distribution
+[tool.hatch.build.targets.wheel]
+packages = ["src/twat_search"]  # Only include the src/twat_search directory in the wheel
+
+# Project Metadata Configuration
+# ------------------------------
+# Comprehensive project description, requirements, and compatibility information
+[project]
+name = "twat-search"  # Unique package name for PyPI and installation
+dynamic = ["version"]  # Version is dynamically determined from version control system
+description = "Advanced search utilities and tools for the twat ecosystem"  # Short, descriptive package summary
+readme = "README.md"  # Path to the project's README file for package description
+requires-python = ">=3.10"  # Minimum Python version required, leveraging modern Python features
+license = "MIT"  # Open-source license type
+keywords = ["twat", "search", "utilities", "text-search", "indexing"]  # Keywords for package discovery
+classifiers = [  # Metadata for package indexes and compatibility
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+
+# Runtime Dependencies
+# -------------------
+# External packages required for the project to function
+dependencies = [
+    "twat>=1.8.1", # Core twat package, providing essential functionality
+    "pydantic>=2.10.6", # Data validation and settings management
+    "pydantic-settings>=2.8.0", # Settings management for Pydantic v2
+    "httpx>=0.28.1", # HTTP client for API requests
+    "python-dotenv>=1.0.1", # Environment variable management
+    "fire>=0.5.0", # Command line interface generator
+    "rich>=13.6.0", # Rich text and formatting for terminal output
+]
+
+# Project Authors
+# ---------------
+[[project.authors]]
+name = "Adam Twardoch"  # Primary author's name
+email = "adam+github@twardoch.com"  # Contact email for the author
+
+# Project URLs
+# ------------
+# Links to project resources for documentation, issues, and source code
+[project.urls]
+Documentation = "https://github.com/twardoch/twat-search#readme"
+Issues = "https://github.com/twardoch/twat-search/issues"
+Source = "https://github.com/twardoch/twat-search"
+
+# Twat Plugin Registration
+# -----------------------
+# Registers this package as a plugin for the twat ecosystem
+[project.entry-points."twat.plugins"]
+search = "twat_search"  # Plugin name and module for search utilities
+
+# Version Management
+# -----------------
+# Configures automatic version generation from version control system
+[tool.hatch.version]
+source = "vcs"  # Use version control system (Git) to determine version
+
+# Version Scheme
+# --------------
+# Defines how versions are generated and incremented
+[tool.hatch.version.raw-options]
+version_scheme = "post-release"  # Generates version numbers based on Git tags
+
+# Version File Generation
+# ----------------------
+# Automatically creates a version file in the package
+[tool.hatch.build.hooks.vcs]
+version-file = "src/twat_search/__version__.py"
+
+# Default development environment configuration
+[tool.hatch.envs.default]
+dependencies = [
+    "pytest",                # Testing framework
+    "pytest-cov",           # Coverage reporting
+    "mypy>=1.15.0",         # Static type checker
+    "ruff>=0.9.6",          # Fast Python linter
+]
+
+# Scripts available in the default environment
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_search --cov=tests {args:tests}"
+type-check = "mypy src/twat_search tests"
+lint = ["ruff check src/twat_search tests", "ruff format src/twat_search tests"]
+
+# Python version matrix for testing
+[[tool.hatch.envs.all.matrix]]
+python = ["3.10", "3.11", "3.12"]
+
+# Linting environment configuration
+[tool.hatch.envs.lint]
+detached = true  # Run in isolated environment
+dependencies = [
+    "mypy>=1.15.0",         # Static type checker
+    "ruff>=0.9.6",          # Fast Python linter
+]
+
+# Linting environment scripts
+[tool.hatch.envs.lint.scripts]
+typing = "mypy --install-types --non-interactive {args:src/twat_search tests}"
+style = ["ruff check {args:.}", "ruff format {args:.}"]
+fmt = ["ruff format {args:.}", "ruff check --fix {args:.}"]
+all = ["style", "typing"]
+
+# Ruff (linter) configuration
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+# Ruff lint rules configuration
+[tool.ruff.lint]
+extend-select = [
+    "A",     # flake8-builtins
+    "ARG",   # flake8-unused-arguments
+    "B",     # flake8-bugbear
+    "C",     # flake8-comprehensions
+    "DTZ",   # flake8-datetimez
+    "E",     # pycodestyle errors
+    "EM",    # flake8-errmsg
+    "F",     # pyflakes
+    "FBT",   # flake8-boolean-trap
+    "I",     # isort
+    "ICN",   # flake8-import-conventions
+    "ISC",   # flake8-implicit-str-concat
+    "N",     # pep8-naming
+    "PLC",   # pylint convention
+    "PLE",   # pylint error
+    "PLR",   # pylint refactor
+    "PLW",   # pylint warning
+    "Q",     # flake8-quotes
+    "RUF",   # Ruff-specific rules
+    "S",     # flake8-bandit
+    "T",     # flake8-debugger
+    "TID",   # flake8-tidy-imports
+    "UP",    # pyupgrade
+    "W",     # pycodestyle warnings
+    "YTT",   # flake8-2020
+]
+ignore = [
+    "ARG001", # Unused function argument
+    "E501",   # Line too long
+    "I001",   # Import block formatting
+]
+
+# File-specific Ruff configurations
+[tool.ruff.per-file-ignores]
+"tests/*" = ["S101"]  # Allow assert in tests
+
+# MyPy (type checker) configuration
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+# Coverage.py configuration for test coverage
+[tool.coverage.run]
+source_pkgs = ["twat_search", "tests"]
+branch = true
+parallel = true
+omit = [
+    "src/twat_search/__about__.py",
+]
+
+# Coverage path mappings
+[tool.coverage.paths]
+twat_search = ["src/twat_search", "*/twat-search/src/twat_search"]
+tests = ["tests", "*/twat-search/tests"]
+
+# Coverage report configuration
+[tool.coverage.report]
+exclude_lines = [
+    "no cov",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+# Optional dependencies
+[project.optional-dependencies]
+test = [
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "pytest-xdist>=3.6.1",                # For parallel test execution
+    "pytest-benchmark[histogram]>=5.1.0",  # For performance testing
+]
+
+dev = [
+    "pre-commit>=4.1.0",     # Git pre-commit hooks
+    "ruff>=0.9.6",           # Fast Python linter
+    "mypy>=1.15.0",          # Static type checker
+]
+
+all = [
+    "twat>=1.8.1",           # Main twat package
+]
+
+# Test environment configuration
+[tool.hatch.envs.test]
+dependencies = [".[test]"]
+
+# Test environment scripts
+[tool.hatch.envs.test.scripts]
+test = "python -m pytest -n auto {args:tests}"
+test-cov = "python -m pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_search --cov=tests {args:tests}"
+bench = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only"
+bench-save = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only --benchmark-json=benchmark/results.json"
+
+# Pytest configuration
+[tool.pytest.ini_options]
+markers = ["benchmark: marks tests as benchmarks (select with '-m benchmark')"]
+addopts = "-v -p no:briefcase"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
+asyncio_mode = "auto"
+
+# Pytest-benchmark configuration
+[tool.pytest-benchmark]
+min_rounds = 100
+min_time = 0.1
+histogram = true
+storage = "file"
+save-data = true
+compare = [
+    "min",    # Minimum time
+    "max",    # Maximum time
+    "mean",   # Mean time
+    "stddev", # Standard deviation
+    "median", # Median time
+    "iqr",    # Inter-quartile range
+    "ops",    # Operations per second
+    "rounds", # Number of rounds
+]
+
+# Console Scripts
+# --------------
+# Command line interfaces exposed by this package
+[project.scripts]
+twat-search = "twat_search.__main__:main"
+twat-search-web = "twat_search.web.cli:main"
+
+================
+File: README.md
+================
+# twat-search
+
+A powerful Python web search aggregator that combines results from multiple search engines.
+
+## Features
+
+- **Multi-Engine Search**: Unified interface for searching across multiple providers:
+  - Brave Search
+  - Google Search 
+  - Tavily Research
+  - Perplexity
+  - You.com
+- **Async Support**: Concurrent searches across engines
+- **Rate Limiting**: Built-in rate limiting per search engine
+- **Type Safety**: Full type annotations and runtime validation
+- **Error Handling**: Robust error handling and fallbacks
+- **Configuration**: Flexible configuration via environment variables or code
+
+## Installation
+
+```bash
+pip install twat-search
+```
+
+## Quick Start
+
+```python
+from twat_search.web import WebSearch
+
+# Initialize with default configuration
+search = WebSearch()
+
+# Search across all configured engines
+results = await search.q("Python async programming")
+
+# Print results
+for result in results:
+  print(f"{result.title} ({result.source})")
+  print(f"URL: {result.url}")
+  print(f"Snippet: {result.snippet}\n")
+```
+
+## Configuration
+
+Configure search engines via environment variables:
+
+```bash
+# API Keys
+BRAVE_API_KEY=...
+GOOGLE_API_KEY=...
+TAVILY_API_KEY=...
+PERPLEXITY_API_KEY=...
+YOU_API_KEY=...
+
+# Engine-specific settings
+BRAVE_ENABLED=true
+GOOGLE_ENABLED=true
+TAVILY_ENABLED=true
+PERPLEXITY_ENABLED=true
+YOU_ENABLED=true
+```
+
+Or programmatically:
+
+```python
+from twat_search.web import WebSearch, Config
+
+config = Config(
+    brave_api_key="...",
+    google_enabled=True,
+    tavily_enabled=False
+)
+
+search = WebSearch(config)
+```
+
+## Response Format
+
+Search results are returned as `SearchResult` objects:
+
+```python
+@dataclass
+class SearchResult:
+    title: str           # Result title
+    url: HttpUrl        # Validated URL
+    snippet: str        # Text snippet/description  
+    source: str         # Source search engine
+```
+
+## Error Handling
+
+The package provides custom exception classes:
+
+- `SearchError`: Base exception class
+- `EngineError`: Engine-specific errors
+- `ConfigError`: Configuration errors
+
+## Development Status
+
+Version: 1.8.1
+
+See [TODO.md](TODO.md) for planned improvements and feature roadmap.
+
+## Contributing
+
+Contributions welcome! Please check [TODO.md](TODO.md) for areas that need work.
+
+## License
+
+MIT License - See LICENSE file for details.
+
+================
+File: TODO.md
+================
+# twat-search Web Package - Future Tasks
+
+The basic implementation of the `twat-search` web package is complete. 
+
+Tip: Periodically run `./cleanup.py status` to see results of lints and tests. 
+
+## 1. TODO
+
+### 1.1. Parameter Unification - Completed
+
+The unification of common parameters across all search engines has been completed:
+- Common parameters (`num_results`, `country`, `language`, `safe_search`, `time_frame`) added to the base `SearchEngine` class
+- All existing search engines updated to use unified parameters
+- Convenience functions updated to expose these parameters
+- Type conversion and validation issues fixed
+- Added new CritiqueSearchEngine with unified parameter support
+
+Next steps for parameter unification:
+- Write tests to verify unified parameter handling
+- Update documentation to explain parameter mapping across engines
+- Apply unified parameter pattern to any future engines
+
+### 1.2. NEW ENGINE: `critique` - Completed
+
+The Critique Labs search engine has been implemented with the following features:
+- Unified parameter pattern support
+- Image search support (via URL or base64)
+- Source filtering with whitelist/blacklist
+- Structured output format support
+- CLI integration
+
+The implementation includes:
+- CritiqueSearchEngine class in src/twat_search/web/engines/critique.py
+- Convenience function `critique()` for direct API access
+- CLI support via the `critique` subcommand
+
+### 1.3. Testing Plan
+
+The following tests should be implemented to ensure the robustness and reliability of the package:
+
+#### 1.3.1. Unit Tests
+
+##### Core API
+- Test `search` function
+  - Test with single engine
+  - Test with multiple engines
+  - Test with custom configuration
+  - Test with engine-specific parameters
+  - Test error handling (no engines, all engines fail)
+  - Test empty result handling
+
+##### Models
+- Test `SearchResult` model
+  - Test validation of URLs (valid and invalid)
+  - Test serialization/deserialization
+
+##### Configuration
+- Test `Config` class
+  - Test loading from environment variables
+  - Test loading from .env file
+  - Test default configuration
+- Test `EngineConfig` class
+  - Test enabled/disabled functionality
+  - Test default parameters
+
+##### Utilities
+- Test `RateLimiter` class
+  - Test it properly limits requests to specified rate
+  - Test with different rate limits
+  - Test behavior under high load
+
+##### Exceptions
+- Test `SearchError` and `EngineError` classes
+  - Test proper error message formatting
+  - Test exception hierarchy
+
+#### 1.3.2. Engine-specific Tests
+
+For each search engine implementation (Brave, Google, Tavily, Perplexity, You.com):
+
+- Test initialization
+  - Test with valid configuration
+  - Test with missing API key
+  - Test with custom parameters
+- Test search method
+  - Test with mock responses (happy path)
+  - Test error handling
+    - Connection errors
+    - API errors (rate limits, invalid requests)
+    - Authentication errors
+    - Timeout errors
+  - Test response parsing
+    - Valid responses
+    - Malformed responses
+    - Empty responses
+- Test parameter unification
+  - Test mapping of common parameters to engine-specific ones
+  - Test default values
+  - Test type conversions (especially for safe_search parameter)
+
+#### 1.3.3. Integration Tests
+
+- Test the entire search flow
+  - Test search across multiple engines
+  - Test fallback behavior when some engines fail
+  - Test rate limiting in real-world scenarios
+
+#### 1.3.4. Type Checking Tests
+
+- Add tests to verify type hints are correct
+- Fix existing mypy type errors identified in CLEANUP.txt
+  - Fix HttpUrl validation issues
+  - Fix BaseSettings issues in config.py
+  - Fix missing return type annotations
+
+#### 1.3.5. Performance Tests
+
+- Benchmark search performance
+  - Measure latency across different engines
+  - Test with concurrent searches
+  - Test with rate limiting
+
+#### 1.3.6. Mock Implementation
+
+Create mock implementations for testing that don't require actual API calls:
+
+```python
+# Example mock implementation
+@register_engine
+class MockSearchEngine(SearchEngine):
+    name = "mock"
+    
+    async def search(self, query: str) -> list[SearchResult]:
+        # Return predictable test results
+        return [
+            SearchResult(
+                title="Mock Result 1",
+                url="https://example.com/1",
+                snippet="This is a mock result for testing",
+                source=self.name
+            )
+        ]
+```
+
+#### 1.3.7. Test Utilities
+
+- Create helper functions for testing
+  - Mock response generators
+  - Configuration helpers
+  - Test data generators
+
+#### 1.3.8. Continuous Integration
+
+- Add GitHub workflow for running tests
+- Add coverage reporting
+- Add type checking to CI pipeline
+
+Tests!!! FIXME Describe here in detail the planned tests before implementing them
+
+================
+File: VERSION.txt
+================
+v1.8.1
+
+
+
+================================================================
+End of Codebase
+================================================================
