@@ -1,0 +1,60 @@
+{
+  "$defs": {
+    "WikiEventsEventType": {
+      "properties": {
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "template": {
+          "title": "Template",
+          "type": "string"
+        },
+        "i-label": {
+          "exclusiveMinimum": 0,
+          "title": "I-Label",
+          "type": "integer"
+        },
+        "keywords": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Keywords",
+          "type": "array"
+        },
+        "roles": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Roles",
+          "type": "array"
+        },
+        "role_types": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Role Types",
+          "type": "array"
+        }
+      },
+      "required": [
+        "event_id",
+        "template",
+        "i-label",
+        "keywords",
+        "roles",
+        "role_types"
+      ],
+      "title": "WikiEventsEventType",
+      "type": "object"
+    }
+  },
+  "additionalProperties": {
+    "$ref": "#/$defs/WikiEventsEventType"
+  },
+  "title": "WikiEventsOntologyModel",
+  "type": "object"
+}

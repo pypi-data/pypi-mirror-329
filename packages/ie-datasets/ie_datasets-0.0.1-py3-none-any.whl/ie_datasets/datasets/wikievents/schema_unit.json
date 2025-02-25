@@ -1,0 +1,250 @@
+{
+  "$defs": {
+    "WikiEventsCoreferences": {
+      "properties": {
+        "doc_key": {
+          "title": "Doc Key",
+          "type": "string"
+        },
+        "clusters": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Clusters",
+          "type": "array"
+        },
+        "informative_mentions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Informative Mentions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "doc_key",
+        "clusters",
+        "informative_mentions"
+      ],
+      "title": "WikiEventsCoreferences",
+      "type": "object"
+    },
+    "WikiEventsEntityMention": {
+      "properties": {
+        "start": {
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "minimum": 0,
+          "title": "End",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "sent_idx": {
+          "minimum": 0,
+          "title": "Sent Idx",
+          "type": "integer"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "entity_type": {
+          "title": "Entity Type",
+          "type": "string"
+        },
+        "mention_type": {
+          "title": "Mention Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end",
+        "text",
+        "sent_idx",
+        "id",
+        "entity_type",
+        "mention_type"
+      ],
+      "title": "WikiEventsEntityMention",
+      "type": "object"
+    },
+    "WikiEventsEventArgument": {
+      "properties": {
+        "entity_id": {
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "entity_id",
+        "role",
+        "text"
+      ],
+      "title": "WikiEventsEventArgument",
+      "type": "object"
+    },
+    "WikiEventsEventMention": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "event_type": {
+          "title": "Event Type",
+          "type": "string"
+        },
+        "trigger": {
+          "$ref": "#/$defs/WikiEventsEventTrigger"
+        },
+        "arguments": {
+          "items": {
+            "$ref": "#/$defs/WikiEventsEventArgument"
+          },
+          "title": "Arguments",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "event_type",
+        "trigger",
+        "arguments"
+      ],
+      "title": "WikiEventsEventMention",
+      "type": "object"
+    },
+    "WikiEventsEventTrigger": {
+      "properties": {
+        "start": {
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "minimum": 0,
+          "title": "End",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "sent_idx": {
+          "minimum": 0,
+          "title": "Sent Idx",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start",
+        "end",
+        "text",
+        "sent_idx"
+      ],
+      "title": "WikiEventsEventTrigger",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "doc_id": {
+      "title": "Doc Id",
+      "type": "string"
+    },
+    "tokens": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tokens",
+      "type": "array"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "sentences": {
+      "items": {
+        "maxItems": 2,
+        "minItems": 2,
+        "prefixItems": [
+          {
+            "items": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            "type": "array"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "type": "array"
+      },
+      "title": "Sentences",
+      "type": "array"
+    },
+    "entity_mentions": {
+      "items": {
+        "$ref": "#/$defs/WikiEventsEntityMention"
+      },
+      "title": "Entity Mentions",
+      "type": "array"
+    },
+    "relation_mentions": {
+      "items": {},
+      "title": "Relation Mentions",
+      "type": "array"
+    },
+    "event_mentions": {
+      "items": {
+        "$ref": "#/$defs/WikiEventsEventMention"
+      },
+      "title": "Event Mentions",
+      "type": "array"
+    },
+    "coreferences": {
+      "$ref": "#/$defs/WikiEventsCoreferences"
+    }
+  },
+  "required": [
+    "doc_id",
+    "tokens",
+    "text",
+    "sentences",
+    "entity_mentions",
+    "relation_mentions",
+    "event_mentions",
+    "coreferences"
+  ],
+  "title": "WikiEventsUnit",
+  "type": "object"
+}
