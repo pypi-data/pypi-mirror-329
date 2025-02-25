@@ -1,0 +1,126 @@
+[project]
+name = "pycoffer"
+version = "0.1.4"
+requires-python = ">= 3.9"
+readme = "README.md"
+description = "A python xxxFile like ( ie GzipFile, BZ2File, ...) for manipulating coffer encrypted files."
+authors = [
+  {name = "bibi21000", email = "bibi21000@gmail.com"},
+]
+maintainers = [
+  {name = "bibi21000", email = "bibi21000@gmail.com"}
+]
+packages = ["pycoffer"]
+dependencies = [
+  "pyzstd",
+  "filelock",
+]
+classifiers = [
+  # How mature is this project? Common values are
+  #   3 - Alpha
+  #   4 - Beta
+  #   5 - Production/Stable
+  "Development Status :: 4 - Beta",
+
+  # Indicate who your project is intended for
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+
+  # Pick your license as you wish (see also "license" above)
+  "License :: OSI Approved :: MIT License",
+
+  # Specify the Python versions you support here.
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+
+  "Operating System :: OS Independent",
+]
+
+[project.scripts]
+pycoffer = "pycoffer.main:cli"
+pycoffer_static = "pycoffer.main_static:cli"
+
+[project.entry-points."cofferfile.coffer"]
+bank = "pycoffer.coffers.bank:CofferBank"
+store = "pycoffer.coffers.store:CofferStore"
+market = "pycoffer.coffers.market:CofferMarket"
+null = "pycoffer.coffers.null:CofferNull"
+
+[project.entry-points."cofferfile.plugin"]
+password = "pycoffer.plugins.password:Password"
+crypt = "pycoffer.plugins.crypt:Crypt"
+rsync = "pycoffer.plugins.rsync:Rsync"
+
+[project.optional-dependencies]
+test = ["pytest", "coverage[toml]", "pytest-cov", "pytest-mock", "pytest-xdist", "pytest-random-order", "ruff", "bandit"]
+build = ["build", 'twine']
+cli = ["click", 'pyperclip', "naclfile", "aesfile"]
+doc = ["sphinx", "sphinxcontrib-programoutput", 'sphinx-pyproject', 'myst-parser']
+benchmark = ["pytest-ordering"]
+binaries = ["nuitka"]
+fernet = ["fernetfile"]
+nacl = ["naclfile"]
+aes = ["aesfile"]
+# apt install libpcsclite-dev python3-dev
+fido = ["fido2[pcsc]"]
+
+[project.urls]
+HomePage = "https://github.com/bibi21000/PyCoffer"
+Issues = "https://github.com/bibi21000/PyCoffer/issues"
+Changelog = "https://github.com/bibi21000/PyCoffer/blob/master/CHANGELOG.md"
+Documentation = "https://bibi21000.github.io/PyCoffer/"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = [
+  "/pycoffer",
+]
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.pytest.ini_options]
+# addopts = "--cov=pycoffer --cov-report xml --junitxml=junit.xml"
+addopts = "--cov=pycoffer --durations=0 --cov-report html --junitxml=junit.xml"
+
+[tool.coverage.run]
+source = ['pycoffer']
+omit = ['tests']
+[tool.coverage.paths]
+source = ['pycoffer']
+
+[tool.bandit]
+exclude_dirs = ["tests", "venv"]
+
+[tool.sphinx-pyproject]
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinxcontrib.programoutput',
+    'myst_parser',
+]
+autodoc_exclude_members = [
+    "__dict__",
+    "__class__",
+    "__dir__",
+    "__weakref__",
+    "__module__",
+    "__annotations__",
+    "__orig_bases__",
+    "__parameters__",
+    "__subclasshook__",
+    "__init_subclass__",
+    "__attrs_attrs__",
+    "__init__",
+    "__new__",
+    "__getnewargs__",
+    "__abstractmethods__",
+    "__hash__",
+]
+
+[tool.ruff]
+exclude = ['pycoffer/main_static.py']
