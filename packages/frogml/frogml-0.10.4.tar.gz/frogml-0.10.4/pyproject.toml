@@ -1,0 +1,79 @@
+[tool.poetry]
+name = "frogml"
+version = "0.10.4"
+description = "FrogML is a powerful and flexible Python library designed to provide advanced ML model and dataset management capabilities by seamlessly integrating JFrog Artifactory as the primary model store and leveraging the JFrog ML Platform."
+readme = "README.md"
+authors = ["JFrog"]
+keywords = ["mlops"]
+packages = [
+    { include = "frogml" },
+]
+include = ["./frogml/**/*"]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+license = "Apache-2.0"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.12"
+frogml-storage = "^0.10.0"
+cloudpickle = "^3.1.1"
+joblib = "1.4.2"
+requests = "^2.32.3"
+frogml-core = "^0.0.13"
+catboost = {version = "*", optional = true, extras = ["scikit-learn"]}
+scikit-learn = {version = "*", optional = true}
+onnx = {version = "*", optional = true, extras = ["scikit-learn"]}
+transformers = {version = "*", optional = true, extras = ["scikit-learn"]}
+torch = {version = "*", optional = true, extras = ["scikit-learn"]}
+
+[tool.poetry.group.dev.dependencies]
+changelog-cli = "^0.7.1"
+bump2version = "1.0.1"
+pre-commit = "<4"
+black = "24.3.0"
+flake8 = "5.0.0"
+Sphinx = "7.4.7"
+bandit = { version = "^1.7.4", extras = ["toml"] }
+pytest-mock = "^3.14.0"
+coverage = "^7.6.2"
+catboost = "*"
+scikit-learn = "*"
+onnx = "*"
+transformers = "*"
+torch = "*"
+docker = "7.1.0"
+
+[tool.poetry.extras]
+catboost = ["catboost", "scikit-learn"]
+scikit-learn = ["scikit-learn"]
+onnx = ["onnx", "scikit-learn"]
+transformers = ["transformers", "scikit-learn"]
+torch = ["torch", "scikit-learn"]
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+
+[tool.poe.tasks]
+validate = { cmd = "pre-commit run  --all-files", help = "Check lint on all files" }
+test = { cmd = "pytest --disable-warnings tests", help = "Run tests" }
+clean = { cmd = "rm -rf dist ./**/__pycache__", help = "Clean build artifacts" }
+
+
+[tool.pytest.ini_options]
+addopts = [
+    "--strict-markers"
+]
+markers = [
+    "integration: marks tests as slow (deselect with '-m \"not integration\"')",
+]
