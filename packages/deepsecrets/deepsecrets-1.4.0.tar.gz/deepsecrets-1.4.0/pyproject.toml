@@ -1,0 +1,93 @@
+[project]
+name = "deepsecrets"
+version = "1.4.0"
+description = "A better tool for secrets search"
+license = { text = "MIT" }
+readme = "README.md"
+authors = [
+    { name = "Nikolai Khechumov", email = "khechumov@gmail.com" },
+    { name = "Nikolai Khechumov", email = "nikolai.khechumov@owasp.com" },
+]
+maintainers = [
+    { name = "Nikolai Khechumov", email = "khechumov@gmail.com" },
+    { name = "Nikolai Khechumov", email = "nikolai.khechumov@owasp.com" },
+]
+
+keywords = ["security", "secrets", "credentials", "scanning", "appsec", "code", "search"]
+packages = [{include = "deepsecrets"}]
+requires-python = ">=3.9,<4.0.0"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+    "Topic :: Security"
+    
+]
+
+dependencies = [
+  "pydantic == 2.10.6",
+  "pyyaml == 6.0.2",
+  "pygments == 2.19.1",
+  "ordered-set == 4.1.0",
+  "dotwiz == 0.4.0",
+  "mmh3 == 5.1.0",
+  "regex == 2024.11.6",
+  "jsx-lexer == 2.0.1",
+  "aenum == 3.1.15",
+  "puppetparser == 0.2.14",
+  "textual == 1.0.0",
+  "sarif-om == 1.0.4",
+  "jschema-to-python == 1.2.3",
+]
+
+[project.urls]
+homepage = "https://owasp.org/www-project-deepsecrets/"
+repository = "https://github.com/ntoskernel/deepsecrets"
+"Bug Tracker" = "https://github.com/ntoskernel/deepsecrets/issues"
+
+[project.scripts]
+deepsecrets = "deepsecrets:__main__.runnable_entrypoint"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.4"
+coverage = "^7.6.12"
+pytest-cov = "^6.0.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+packages=["deepsecrets"]
+disallow_untyped_defs = false
+disallow_any_unimported = true
+disallow-any-unimported = false
+no_implicit_optional = true
+check_untyped_defs = true
+warn_return_any = true
+show_error_codes = true
+
+exclude = [
+  '^tests/*',  # TOML literal string (single-quotes, no escaping necessary)
+]
+plugins = [
+  "pydantic.mypy"
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
+
+[tool.black]
+line-length = 120
+skip-string-normalization = 1
+
+[tool.coverage]
+run.omit = ["deepsecrets/__main__.py"]
