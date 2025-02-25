@@ -1,0 +1,27 @@
+when:
+  branch: main
+  event: push
+
+steps:
+  build:
+    image: ghcr.io/astral-sh/uv:python3.11-alpine
+    commands:
+      - mkdir -p docs/assets/schemas
+      - uv sync --frozen
+      - uv run python -mcattle_grid.auth new-config http://localhost/cattle_grid_actor
+      - uv run python -mcattle_grid openapi --filename docs/assets/schemas/openapi.json
+      - uv run python -mcattle_grid openapi --filename docs/assets/schemas/openapi_ap.json --component ap
+      - uv run python -mcattle_grid openapi --filename docs/assets/schemas/openapi_autn.json --component auth
+      - uv run python -mcattle_grid async-api --filename docs/assets/schemas/asyncapi_ap.json --component ap
+      - uv run python -mcattle_grid async-api --filename docs/assets/schemas/asyncapi_exchange.json
+      - uv run python -mcattle_grid openapi --component account --filename docs/assets/schemas/openapi_account.json
+      - uv run python -mcattle_grid openapi --component account --filename docs/assets/schemas/openapi_account_ap.json --component ap
+      - uv run python -mcattle_grid async-api --component account --filename docs/assets/schemas/asyncapi_account.json
+      - uv run python -mcattle_grid openapi --component rabbit --filename docs/assets/schemas/openapi_rabbit.json
+      - uv run mkdocs build
+  deploy:
+    image: codeberg.org/xfix/plugin-codeberg-pages-deploy:1
+    settings:
+      folder: site
+      ssh_key:
+        from_secret: deploy_ssh_key

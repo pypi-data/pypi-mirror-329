@@ -1,0 +1,4 @@
+ARG python_tag=3.13
+FROM helgekr/bovine:python${python_tag}
+ARG tag=0.2.1
+RUN pip install cattle_grid==${tag}
