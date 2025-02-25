@@ -1,0 +1,1528 @@
+from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Mapping, Optional as _Optional, Union as _Union
+
+DESCRIPTOR: _descriptor.FileDescriptor
+
+class MaterialMaterialType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_MATERIAL_TYPE_BASIC: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_ALUMINUM: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_CONCRETE: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_FABRIC: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_FIBER_CONCRETE: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_FOIL: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_GAS: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_GLASS: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_MASONRY: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_METAL: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_PRESTRESSING_STEEL: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_REINFORCING_STEEL: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_SOIL: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_STEEL: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_TIMBER: _ClassVar[MaterialMaterialType]
+    MATERIAL_MATERIAL_TYPE_VIRTUAL_JOIST_GIRDER: _ClassVar[MaterialMaterialType]
+
+class MaterialMaterialModel(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_LINEAR_ELASTIC: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_E_MATERIAL_MODEL_ISOTROPIC_SOIL_PLASTIC_MODIFIED_HARDENING_SOIL_3D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ANISOTROPIC_DAMAGE: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_DAMAGE_2D_3D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_MASONRY_PLASTIC_2D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_NONLINEAR_ELASTIC_1D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_NONLINEAR_ELASTIC_2D_3D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_PLASTIC_1D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_PLASTIC_2D_3D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_ROCK_PLASTIC_HOEK_BROWN_3D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_SOIL_NONLINEAR_ELASTIC_3D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_SOIL_PLASTIC_3D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_TIMBER_LINEAR_ELASTIC_1D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_2D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_3D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_FABRIC_NONLINEAR_ELASTIC_2D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_MASONRY_PLASTIC_2D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_PLASTIC_2D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_PLASTIC_3D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_TIMBER_LINEAR_ELASTIC_2D: _ClassVar[MaterialMaterialModel]
+    MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_WELD_PLASTIC_2D: _ClassVar[MaterialMaterialModel]
+
+class MaterialApplicationContext(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_APPLICATION_CONTEXT_INVALID: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_ALUMINUM_DESIGN: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_COMBINATION_WIZARD: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_CONCRETE_DESIGN: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_CONCRETE_FOUNDATION_DESIGN: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_CRANEWAY_DESIGN: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_DYNAMIC_ANALYSIS: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_GEOTECHNICAL_ANALYSIS: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_GLASS_DESIGN: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_LOAD_WIZARD: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_MASONRY_DESIGN: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_PIPING_DESIGN: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_STEEL_DESIGN: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_STEEL_DESIGN_COLD_FORMED: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_STEEL_JOINT_DESIGN: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_TIMBER_DESIGN: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_TIMBER_JOINT_DESIGN: _ClassVar[MaterialApplicationContext]
+    MATERIAL_APPLICATION_CONTEXT_TOWER_DESIGN: _ClassVar[MaterialApplicationContext]
+
+class MaterialDiagramType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_DIAGRAM_TYPE_BASIC: _ClassVar[MaterialDiagramType]
+    MATERIAL_DIAGRAM_TYPE_BILINEAR: _ClassVar[MaterialDiagramType]
+    MATERIAL_DIAGRAM_TYPE_STRESS_STRAIN_DIAGRAM: _ClassVar[MaterialDiagramType]
+
+class MaterialDefinitionType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_DEFINITION_TYPE_DERIVED_NU: _ClassVar[MaterialDefinitionType]
+    MATERIAL_DEFINITION_TYPE_DERIVED_G: _ClassVar[MaterialDefinitionType]
+    MATERIAL_DEFINITION_TYPE_E_G_NO_NU: _ClassVar[MaterialDefinitionType]
+    MATERIAL_DEFINITION_TYPE_E_G_NU: _ClassVar[MaterialDefinitionType]
+    MATERIAL_DEFINITION_TYPE_NONE: _ClassVar[MaterialDefinitionType]
+
+class MaterialStressFailureHypothesis(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_STRESS_FAILURE_HYPOTHESIS_VON_MISES: _ClassVar[MaterialStressFailureHypothesis]
+    MATERIAL_STRESS_FAILURE_HYPOTHESIS_DRUCKER_PRAGER: _ClassVar[MaterialStressFailureHypothesis]
+    MATERIAL_STRESS_FAILURE_HYPOTHESIS_MOHR_COULOMB: _ClassVar[MaterialStressFailureHypothesis]
+    MATERIAL_STRESS_FAILURE_HYPOTHESIS_OEDOMETRIC_CONDITIONS: _ClassVar[MaterialStressFailureHypothesis]
+    MATERIAL_STRESS_FAILURE_HYPOTHESIS_OEDOMETRIC_CONDITIONS_WITH_SMALL_STRAIN_STIFFNESS: _ClassVar[MaterialStressFailureHypothesis]
+    MATERIAL_STRESS_FAILURE_HYPOTHESIS_TRESCA: _ClassVar[MaterialStressFailureHypothesis]
+
+class MaterialTemperaturePoissonRatioEditableGroupType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_TYPE_MAJOR_2D: _ClassVar[MaterialTemperaturePoissonRatioEditableGroupType]
+    MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_TYPE_MAJOR_3D: _ClassVar[MaterialTemperaturePoissonRatioEditableGroupType]
+    MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_TYPE_MINOR_2D: _ClassVar[MaterialTemperaturePoissonRatioEditableGroupType]
+    MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_TYPE_MINOR_3D: _ClassVar[MaterialTemperaturePoissonRatioEditableGroupType]
+
+class MaterialTemperaturePoissonRatioEditableGroupWallType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_WALL_TYPE_XY: _ClassVar[MaterialTemperaturePoissonRatioEditableGroupWallType]
+    MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_WALL_TYPE_YX: _ClassVar[MaterialTemperaturePoissonRatioEditableGroupWallType]
+
+class MaterialTemperaturePoissonRatioEditableGroupPlatteType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_PLATTE_TYPE_XY: _ClassVar[MaterialTemperaturePoissonRatioEditableGroupPlatteType]
+    MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_PLATTE_TYPE_YX: _ClassVar[MaterialTemperaturePoissonRatioEditableGroupPlatteType]
+
+class MaterialTemperatureStressStrainDiagramTypeStartType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_START_TYPE_FAILURE: _ClassVar[MaterialTemperatureStressStrainDiagramTypeStartType]
+    MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_START_TYPE_CONTINUOUS: _ClassVar[MaterialTemperatureStressStrainDiagramTypeStartType]
+    MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_START_TYPE_YIELDING: _ClassVar[MaterialTemperatureStressStrainDiagramTypeStartType]
+
+class MaterialTemperatureStressStrainDiagramTypeEndType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_END_TYPE_FAILURE: _ClassVar[MaterialTemperatureStressStrainDiagramTypeEndType]
+    MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_END_TYPE_CONTINUOUS: _ClassVar[MaterialTemperatureStressStrainDiagramTypeEndType]
+    MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_END_TYPE_YIELDING: _ClassVar[MaterialTemperatureStressStrainDiagramTypeEndType]
+
+class MaterialTemperatureMasonryBrickworkUnitType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_CLAY: _ClassVar[MaterialTemperatureMasonryBrickworkUnitType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_AGGREGATE_CONCRETE: _ClassVar[MaterialTemperatureMasonryBrickworkUnitType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_AUTOCLAVED_AERATED_CONCRETE: _ClassVar[MaterialTemperatureMasonryBrickworkUnitType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_CALCIUM_SILICATE: _ClassVar[MaterialTemperatureMasonryBrickworkUnitType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_DIMENSIONED_NATURAL_STONE: _ClassVar[MaterialTemperatureMasonryBrickworkUnitType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_MANUFACTURED_STONE: _ClassVar[MaterialTemperatureMasonryBrickworkUnitType]
+
+class MaterialTemperatureMasonryBrickworkConfigurationType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_CONFIGURATION_TYPE_HOLLOW_BLOCK: _ClassVar[MaterialTemperatureMasonryBrickworkConfigurationType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_CONFIGURATION_TYPE_AUTOCLAVED_AERATED_CONCRETE: _ClassVar[MaterialTemperatureMasonryBrickworkConfigurationType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_CONFIGURATION_TYPE_HOLLOW_CLAY_BLOCK_WITH_GRIPHOLES: _ClassVar[MaterialTemperatureMasonryBrickworkConfigurationType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_CONFIGURATION_TYPE_SOLID_BLOCK: _ClassVar[MaterialTemperatureMasonryBrickworkConfigurationType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_CONFIGURATION_TYPE_UNIT_FOR_CONCRETE_OR_MORTAR_INFILL: _ClassVar[MaterialTemperatureMasonryBrickworkConfigurationType]
+
+class MaterialTemperatureMasonryBrickworkGroupingType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_1: _ClassVar[MaterialTemperatureMasonryBrickworkGroupingType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_1S: _ClassVar[MaterialTemperatureMasonryBrickworkGroupingType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_2: _ClassVar[MaterialTemperatureMasonryBrickworkGroupingType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_3: _ClassVar[MaterialTemperatureMasonryBrickworkGroupingType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_4: _ClassVar[MaterialTemperatureMasonryBrickworkGroupingType]
+    MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_NONE: _ClassVar[MaterialTemperatureMasonryBrickworkGroupingType]
+
+class MaterialTemperatureMasonryMortarClassType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_GENERAL_PURPOSE_MORTAR_M2_5: _ClassVar[MaterialTemperatureMasonryMortarClassType]
+    MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_GENERAL_PURPOSE_MORTAR_M10: _ClassVar[MaterialTemperatureMasonryMortarClassType]
+    MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_GENERAL_PURPOSE_MORTAR_M20: _ClassVar[MaterialTemperatureMasonryMortarClassType]
+    MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_GENERAL_PURPOSE_MORTAR_M5: _ClassVar[MaterialTemperatureMasonryMortarClassType]
+    MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_LIGHTWEIGHT_MORTAR_600: _ClassVar[MaterialTemperatureMasonryMortarClassType]
+    MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_LIGHTWEIGHT_MORTAR_800: _ClassVar[MaterialTemperatureMasonryMortarClassType]
+    MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_MASONRY_GLUE: _ClassVar[MaterialTemperatureMasonryMortarClassType]
+    MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_THIN_LAYER_MORTAR: _ClassVar[MaterialTemperatureMasonryMortarClassType]
+
+class MaterialTemperatureModifiedHardeningSoilShearHardeningDefinitionType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_MODIFIED_HARDENING_SOIL_SHEAR_HARDENING_DEFINITION_TYPE_SHEAR_HARDENING_PARAMETER: _ClassVar[MaterialTemperatureModifiedHardeningSoilShearHardeningDefinitionType]
+
+class MaterialTemperatureModifiedHardeningSoilPreconsolidationDefinitionType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_MODIFIED_HARDENING_SOIL_PRECONSOLIDATION_DEFINITION_TYPE_PRE_OVERBURDEN_PRESURE: _ClassVar[MaterialTemperatureModifiedHardeningSoilPreconsolidationDefinitionType]
+    MATERIAL_TEMPERATURE_MODIFIED_HARDENING_SOIL_PRECONSOLIDATION_DEFINITION_TYPE_OVERCONSOLIDATION_RATIO: _ClassVar[MaterialTemperatureModifiedHardeningSoilPreconsolidationDefinitionType]
+
+class MaterialTemperatureInternalMaterialStructureType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_INTERNAL_MATERIAL_STRUCTURE_TYPE_PLAIN_WEAVE: _ClassVar[MaterialTemperatureInternalMaterialStructureType]
+    MATERIAL_TEMPERATURE_INTERNAL_MATERIAL_STRUCTURE_TYPE_BASKET_WEAVE: _ClassVar[MaterialTemperatureInternalMaterialStructureType]
+
+class MaterialTemperatureHoekBrownSoilDefinitionType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_HOEK_BROWN_SOIL_DEFINITION_TYPE_E_HOEK_BROWN_SOIL_DEFINITION_TYPE_ROCK_MASS_PARAMETERS: _ClassVar[MaterialTemperatureHoekBrownSoilDefinitionType]
+    MATERIAL_TEMPERATURE_HOEK_BROWN_SOIL_DEFINITION_TYPE_E_HOEK_BROWN_SOIL_DEFINITION_TYPE_GSI_CLASSIFICATION: _ClassVar[MaterialTemperatureHoekBrownSoilDefinitionType]
+
+class MaterialTemperatureNonlinearConcreteDiagramDefinitionType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_PARAMETRIC: _ClassVar[MaterialTemperatureNonlinearConcreteDiagramDefinitionType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_SLS_24_1: _ClassVar[MaterialTemperatureNonlinearConcreteDiagramDefinitionType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_SLS_3_14: _ClassVar[MaterialTemperatureNonlinearConcreteDiagramDefinitionType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_SLS_9_8: _ClassVar[MaterialTemperatureNonlinearConcreteDiagramDefinitionType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_STRESS_STRAIN_DIAGRAM: _ClassVar[MaterialTemperatureNonlinearConcreteDiagramDefinitionType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_ULS_ACC: _ClassVar[MaterialTemperatureNonlinearConcreteDiagramDefinitionType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_ULS_P_T: _ClassVar[MaterialTemperatureNonlinearConcreteDiagramDefinitionType]
+
+class MaterialTemperatureNonlinearConcreteTensionStiffeningMethodType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_TENSION_STIFFENING_METHOD_TYPE_QUAST: _ClassVar[MaterialTemperatureNonlinearConcreteTensionStiffeningMethodType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_TENSION_STIFFENING_METHOD_TYPE_HSU_AND_MO: _ClassVar[MaterialTemperatureNonlinearConcreteTensionStiffeningMethodType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_TENSION_STIFFENING_METHOD_TYPE_MODIFIED_QUAST: _ClassVar[MaterialTemperatureNonlinearConcreteTensionStiffeningMethodType]
+
+class MaterialTemperatureNonlinearConcreteDesignSituationType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DESIGN_SITUATION_TYPE_NONE: _ClassVar[MaterialTemperatureNonlinearConcreteDesignSituationType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DESIGN_SITUATION_TYPE_ULS_ACCIDENTAL: _ClassVar[MaterialTemperatureNonlinearConcreteDesignSituationType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DESIGN_SITUATION_TYPE_ULS_PERMANENT_TRANSIENT: _ClassVar[MaterialTemperatureNonlinearConcreteDesignSituationType]
+
+class MaterialTemperatureNonlinearConcreteCompressiveStrengthType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_NONE: _ClassVar[MaterialTemperatureNonlinearConcreteCompressiveStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_085_F_C_ACI_CSA: _ClassVar[MaterialTemperatureNonlinearConcreteCompressiveStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_09_F_C_ACI_CSA: _ClassVar[MaterialTemperatureNonlinearConcreteCompressiveStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_ALPHA1_F_C_ACI_CSA: _ClassVar[MaterialTemperatureNonlinearConcreteCompressiveStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_CHARACTERISTIC_STRENGTH: _ClassVar[MaterialTemperatureNonlinearConcreteCompressiveStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_F_C_ACI_CSA: _ClassVar[MaterialTemperatureNonlinearConcreteCompressiveStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_MEAN_STRENGTH: _ClassVar[MaterialTemperatureNonlinearConcreteCompressiveStrengthType]
+
+class MaterialTemperatureNonlinearConcreteCompressionDiagramType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSION_DIAGRAM_TYPE_PARABOLA: _ClassVar[MaterialTemperatureNonlinearConcreteCompressionDiagramType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSION_DIAGRAM_TYPE_PARABOLA_RECTANGLE: _ClassVar[MaterialTemperatureNonlinearConcreteCompressionDiagramType]
+
+class MaterialTemperatureNonlinearConcreteAxialTensileStrengthType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_NONE: _ClassVar[MaterialTemperatureNonlinearConcreteAxialTensileStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_5_PERC_FRACTILE_STRENGTH: _ClassVar[MaterialTemperatureNonlinearConcreteAxialTensileStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_95_PERC_FRACTILE_STRENGTH: _ClassVar[MaterialTemperatureNonlinearConcreteAxialTensileStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_MEAN_STRENGTH: _ClassVar[MaterialTemperatureNonlinearConcreteAxialTensileStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_REDUCED_STRENGTH_05_FR: _ClassVar[MaterialTemperatureNonlinearConcreteAxialTensileStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_REDUCED_STRENGTH_2_3_FR: _ClassVar[MaterialTemperatureNonlinearConcreteAxialTensileStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_STRENGTH_FR: _ClassVar[MaterialTemperatureNonlinearConcreteAxialTensileStrengthType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_WITHOUT_TENSILE_STRENGTH: _ClassVar[MaterialTemperatureNonlinearConcreteAxialTensileStrengthType]
+
+class MaterialTemperatureNonlinearConcreteTensionDiagramType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_TENSION_DIAGRAM_TYPE_LINEAR: _ClassVar[MaterialTemperatureNonlinearConcreteTensionDiagramType]
+    MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_TENSION_DIAGRAM_TYPE_BILINEAR: _ClassVar[MaterialTemperatureNonlinearConcreteTensionDiagramType]
+
+class MaterialStiffnessModificationType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_STIFFNESS_MODIFICATION_TYPE_DIVISION: _ClassVar[MaterialStiffnessModificationType]
+    MATERIAL_STIFFNESS_MODIFICATION_TYPE_MULTIPLICATION: _ClassVar[MaterialStiffnessModificationType]
+
+class MaterialMembersWeightUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_MEMBERS_WEIGHT_UNIT_UNKNOWN: _ClassVar[MaterialMembersWeightUnit]
+    MATERIAL_MEMBERS_WEIGHT_UNIT_GRAM: _ClassVar[MaterialMembersWeightUnit]
+    MATERIAL_MEMBERS_WEIGHT_UNIT_HUNDREDWEIGHT: _ClassVar[MaterialMembersWeightUnit]
+    MATERIAL_MEMBERS_WEIGHT_UNIT_KILOGRAM: _ClassVar[MaterialMembersWeightUnit]
+    MATERIAL_MEMBERS_WEIGHT_UNIT_METRIC_TON: _ClassVar[MaterialMembersWeightUnit]
+    MATERIAL_MEMBERS_WEIGHT_UNIT_OUNCE: _ClassVar[MaterialMembersWeightUnit]
+    MATERIAL_MEMBERS_WEIGHT_UNIT_POUND: _ClassVar[MaterialMembersWeightUnit]
+    MATERIAL_MEMBERS_WEIGHT_UNIT_SHORT_TON: _ClassVar[MaterialMembersWeightUnit]
+    MATERIAL_MEMBERS_WEIGHT_UNIT_SLUG: _ClassVar[MaterialMembersWeightUnit]
+
+class MaterialMembersVolumeUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_MEMBERS_VOLUME_UNIT_UNKNOWN: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_CENTIMETER: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_FOOT: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_INCH: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_METER: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_MILIMETER: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_YARD: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_FLUID_OUNCE: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_IMPERIAL_GALLON: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_LITER: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_PINT: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_QUART: _ClassVar[MaterialMembersVolumeUnit]
+    MATERIAL_MEMBERS_VOLUME_UNIT_US_LIQUID_GALLON: _ClassVar[MaterialMembersVolumeUnit]
+
+class MaterialMembersSurfaceUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_MEMBERS_SURFACE_UNIT_UNKNOWN: _ClassVar[MaterialMembersSurfaceUnit]
+    MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_CENTIMETER: _ClassVar[MaterialMembersSurfaceUnit]
+    MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_FOOT: _ClassVar[MaterialMembersSurfaceUnit]
+    MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_INCH: _ClassVar[MaterialMembersSurfaceUnit]
+    MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_METER: _ClassVar[MaterialMembersSurfaceUnit]
+    MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_MILIMETER: _ClassVar[MaterialMembersSurfaceUnit]
+    MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_YARD: _ClassVar[MaterialMembersSurfaceUnit]
+
+class MaterialSurfacesWeightUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_SURFACES_WEIGHT_UNIT_UNKNOWN: _ClassVar[MaterialSurfacesWeightUnit]
+    MATERIAL_SURFACES_WEIGHT_UNIT_GRAM: _ClassVar[MaterialSurfacesWeightUnit]
+    MATERIAL_SURFACES_WEIGHT_UNIT_HUNDREDWEIGHT: _ClassVar[MaterialSurfacesWeightUnit]
+    MATERIAL_SURFACES_WEIGHT_UNIT_KILOGRAM: _ClassVar[MaterialSurfacesWeightUnit]
+    MATERIAL_SURFACES_WEIGHT_UNIT_METRIC_TON: _ClassVar[MaterialSurfacesWeightUnit]
+    MATERIAL_SURFACES_WEIGHT_UNIT_OUNCE: _ClassVar[MaterialSurfacesWeightUnit]
+    MATERIAL_SURFACES_WEIGHT_UNIT_POUND: _ClassVar[MaterialSurfacesWeightUnit]
+    MATERIAL_SURFACES_WEIGHT_UNIT_SHORT_TON: _ClassVar[MaterialSurfacesWeightUnit]
+    MATERIAL_SURFACES_WEIGHT_UNIT_SLUG: _ClassVar[MaterialSurfacesWeightUnit]
+
+class MaterialSurfacesVolumeUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_SURFACES_VOLUME_UNIT_UNKNOWN: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_CENTIMETER: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_FOOT: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_INCH: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_METER: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_MILIMETER: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_YARD: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_FLUID_OUNCE: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_IMPERIAL_GALLON: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_LITER: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_PINT: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_QUART: _ClassVar[MaterialSurfacesVolumeUnit]
+    MATERIAL_SURFACES_VOLUME_UNIT_US_LIQUID_GALLON: _ClassVar[MaterialSurfacesVolumeUnit]
+
+class MaterialSurfacesTopFaceUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_SURFACES_TOP_FACE_UNIT_UNKNOWN: _ClassVar[MaterialSurfacesTopFaceUnit]
+    MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_CENTIMETER: _ClassVar[MaterialSurfacesTopFaceUnit]
+    MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_FOOT: _ClassVar[MaterialSurfacesTopFaceUnit]
+    MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_INCH: _ClassVar[MaterialSurfacesTopFaceUnit]
+    MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_METER: _ClassVar[MaterialSurfacesTopFaceUnit]
+    MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_MILIMETER: _ClassVar[MaterialSurfacesTopFaceUnit]
+    MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_YARD: _ClassVar[MaterialSurfacesTopFaceUnit]
+
+class MaterialSurfacesAreaUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_SURFACES_AREA_UNIT_UNKNOWN: _ClassVar[MaterialSurfacesAreaUnit]
+    MATERIAL_SURFACES_AREA_UNIT_SQUARED_CENTIMETER: _ClassVar[MaterialSurfacesAreaUnit]
+    MATERIAL_SURFACES_AREA_UNIT_SQUARED_FOOT: _ClassVar[MaterialSurfacesAreaUnit]
+    MATERIAL_SURFACES_AREA_UNIT_SQUARED_INCH: _ClassVar[MaterialSurfacesAreaUnit]
+    MATERIAL_SURFACES_AREA_UNIT_SQUARED_METER: _ClassVar[MaterialSurfacesAreaUnit]
+    MATERIAL_SURFACES_AREA_UNIT_SQUARED_MILIMETER: _ClassVar[MaterialSurfacesAreaUnit]
+    MATERIAL_SURFACES_AREA_UNIT_SQUARED_YARD: _ClassVar[MaterialSurfacesAreaUnit]
+
+class MaterialSurfacesBottomFaceUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_SURFACES_BOTTOM_FACE_UNIT_UNKNOWN: _ClassVar[MaterialSurfacesBottomFaceUnit]
+    MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_CENTIMETER: _ClassVar[MaterialSurfacesBottomFaceUnit]
+    MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_FOOT: _ClassVar[MaterialSurfacesBottomFaceUnit]
+    MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_INCH: _ClassVar[MaterialSurfacesBottomFaceUnit]
+    MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_METER: _ClassVar[MaterialSurfacesBottomFaceUnit]
+    MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_MILIMETER: _ClassVar[MaterialSurfacesBottomFaceUnit]
+    MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_YARD: _ClassVar[MaterialSurfacesBottomFaceUnit]
+
+class MaterialSolidsWeightUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_SOLIDS_WEIGHT_UNIT_UNKNOWN: _ClassVar[MaterialSolidsWeightUnit]
+    MATERIAL_SOLIDS_WEIGHT_UNIT_GRAM: _ClassVar[MaterialSolidsWeightUnit]
+    MATERIAL_SOLIDS_WEIGHT_UNIT_HUNDREDWEIGHT: _ClassVar[MaterialSolidsWeightUnit]
+    MATERIAL_SOLIDS_WEIGHT_UNIT_KILOGRAM: _ClassVar[MaterialSolidsWeightUnit]
+    MATERIAL_SOLIDS_WEIGHT_UNIT_METRIC_TON: _ClassVar[MaterialSolidsWeightUnit]
+    MATERIAL_SOLIDS_WEIGHT_UNIT_OUNCE: _ClassVar[MaterialSolidsWeightUnit]
+    MATERIAL_SOLIDS_WEIGHT_UNIT_POUND: _ClassVar[MaterialSolidsWeightUnit]
+    MATERIAL_SOLIDS_WEIGHT_UNIT_SHORT_TON: _ClassVar[MaterialSolidsWeightUnit]
+    MATERIAL_SOLIDS_WEIGHT_UNIT_SLUG: _ClassVar[MaterialSolidsWeightUnit]
+
+class MaterialSolidsVolumeUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_SOLIDS_VOLUME_UNIT_UNKNOWN: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_CENTIMETER: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_FOOT: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_INCH: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_METER: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_MILIMETER: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_YARD: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_FLUID_OUNCE: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_IMPERIAL_GALLON: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_LITER: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_PINT: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_QUART: _ClassVar[MaterialSolidsVolumeUnit]
+    MATERIAL_SOLIDS_VOLUME_UNIT_US_LIQUID_GALLON: _ClassVar[MaterialSolidsVolumeUnit]
+
+class MaterialSolidsAreaUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_SOLIDS_AREA_UNIT_UNKNOWN: _ClassVar[MaterialSolidsAreaUnit]
+    MATERIAL_SOLIDS_AREA_UNIT_SQUARED_CENTIMETER: _ClassVar[MaterialSolidsAreaUnit]
+    MATERIAL_SOLIDS_AREA_UNIT_SQUARED_FOOT: _ClassVar[MaterialSolidsAreaUnit]
+    MATERIAL_SOLIDS_AREA_UNIT_SQUARED_INCH: _ClassVar[MaterialSolidsAreaUnit]
+    MATERIAL_SOLIDS_AREA_UNIT_SQUARED_METER: _ClassVar[MaterialSolidsAreaUnit]
+    MATERIAL_SOLIDS_AREA_UNIT_SQUARED_MILIMETER: _ClassVar[MaterialSolidsAreaUnit]
+    MATERIAL_SOLIDS_AREA_UNIT_SQUARED_YARD: _ClassVar[MaterialSolidsAreaUnit]
+
+class MaterialEmissionsMembersWeightUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_UNKNOWN: _ClassVar[MaterialEmissionsMembersWeightUnit]
+    MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_GRAM: _ClassVar[MaterialEmissionsMembersWeightUnit]
+    MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_HUNDREDWEIGHT: _ClassVar[MaterialEmissionsMembersWeightUnit]
+    MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_KILOGRAM: _ClassVar[MaterialEmissionsMembersWeightUnit]
+    MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_METRIC_TON: _ClassVar[MaterialEmissionsMembersWeightUnit]
+    MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_OUNCE: _ClassVar[MaterialEmissionsMembersWeightUnit]
+    MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_POUND: _ClassVar[MaterialEmissionsMembersWeightUnit]
+    MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_SHORT_TON: _ClassVar[MaterialEmissionsMembersWeightUnit]
+    MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_SLUG: _ClassVar[MaterialEmissionsMembersWeightUnit]
+
+class MaterialEmissionsMembersVolumeUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_UNKNOWN: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_CENTIMETER: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_FOOT: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_INCH: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_METER: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_MILIMETER: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_YARD: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_FLUID_OUNCE: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_IMPERIAL_GALLON: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_LITER: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_PINT: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_QUART: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+    MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_US_LIQUID_GALLON: _ClassVar[MaterialEmissionsMembersVolumeUnit]
+
+class MaterialEmissionsMembersSurfaceUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_UNKNOWN: _ClassVar[MaterialEmissionsMembersSurfaceUnit]
+    MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_CENTIMETER: _ClassVar[MaterialEmissionsMembersSurfaceUnit]
+    MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_FOOT: _ClassVar[MaterialEmissionsMembersSurfaceUnit]
+    MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_INCH: _ClassVar[MaterialEmissionsMembersSurfaceUnit]
+    MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_METER: _ClassVar[MaterialEmissionsMembersSurfaceUnit]
+    MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_MILIMETER: _ClassVar[MaterialEmissionsMembersSurfaceUnit]
+    MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_YARD: _ClassVar[MaterialEmissionsMembersSurfaceUnit]
+
+class MaterialEmissionsSurfacesWeightUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_UNKNOWN: _ClassVar[MaterialEmissionsSurfacesWeightUnit]
+    MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_GRAM: _ClassVar[MaterialEmissionsSurfacesWeightUnit]
+    MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_HUNDREDWEIGHT: _ClassVar[MaterialEmissionsSurfacesWeightUnit]
+    MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_KILOGRAM: _ClassVar[MaterialEmissionsSurfacesWeightUnit]
+    MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_METRIC_TON: _ClassVar[MaterialEmissionsSurfacesWeightUnit]
+    MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_OUNCE: _ClassVar[MaterialEmissionsSurfacesWeightUnit]
+    MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_POUND: _ClassVar[MaterialEmissionsSurfacesWeightUnit]
+    MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_SHORT_TON: _ClassVar[MaterialEmissionsSurfacesWeightUnit]
+    MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_SLUG: _ClassVar[MaterialEmissionsSurfacesWeightUnit]
+
+class MaterialEmissionsSurfacesVolumeUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_UNKNOWN: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_CENTIMETER: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_FOOT: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_INCH: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_METER: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_MILIMETER: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_YARD: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_FLUID_OUNCE: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_IMPERIAL_GALLON: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_LITER: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_PINT: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_QUART: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+    MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_US_LIQUID_GALLON: _ClassVar[MaterialEmissionsSurfacesVolumeUnit]
+
+class MaterialEmissionsSurfacesTopFaceUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_UNKNOWN: _ClassVar[MaterialEmissionsSurfacesTopFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_CENTIMETER: _ClassVar[MaterialEmissionsSurfacesTopFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_FOOT: _ClassVar[MaterialEmissionsSurfacesTopFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_INCH: _ClassVar[MaterialEmissionsSurfacesTopFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_METER: _ClassVar[MaterialEmissionsSurfacesTopFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_MILIMETER: _ClassVar[MaterialEmissionsSurfacesTopFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_YARD: _ClassVar[MaterialEmissionsSurfacesTopFaceUnit]
+
+class MaterialEmissionsSurfacesAreaUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_UNKNOWN: _ClassVar[MaterialEmissionsSurfacesAreaUnit]
+    MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_CENTIMETER: _ClassVar[MaterialEmissionsSurfacesAreaUnit]
+    MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_FOOT: _ClassVar[MaterialEmissionsSurfacesAreaUnit]
+    MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_INCH: _ClassVar[MaterialEmissionsSurfacesAreaUnit]
+    MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_METER: _ClassVar[MaterialEmissionsSurfacesAreaUnit]
+    MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_MILIMETER: _ClassVar[MaterialEmissionsSurfacesAreaUnit]
+    MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_YARD: _ClassVar[MaterialEmissionsSurfacesAreaUnit]
+
+class MaterialEmissionsSurfacesBottomFaceUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_UNKNOWN: _ClassVar[MaterialEmissionsSurfacesBottomFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_CENTIMETER: _ClassVar[MaterialEmissionsSurfacesBottomFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_FOOT: _ClassVar[MaterialEmissionsSurfacesBottomFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_INCH: _ClassVar[MaterialEmissionsSurfacesBottomFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_METER: _ClassVar[MaterialEmissionsSurfacesBottomFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_MILIMETER: _ClassVar[MaterialEmissionsSurfacesBottomFaceUnit]
+    MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_YARD: _ClassVar[MaterialEmissionsSurfacesBottomFaceUnit]
+
+class MaterialEmissionsSolidsWeightUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_UNKNOWN: _ClassVar[MaterialEmissionsSolidsWeightUnit]
+    MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_GRAM: _ClassVar[MaterialEmissionsSolidsWeightUnit]
+    MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_HUNDREDWEIGHT: _ClassVar[MaterialEmissionsSolidsWeightUnit]
+    MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_KILOGRAM: _ClassVar[MaterialEmissionsSolidsWeightUnit]
+    MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_METRIC_TON: _ClassVar[MaterialEmissionsSolidsWeightUnit]
+    MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_OUNCE: _ClassVar[MaterialEmissionsSolidsWeightUnit]
+    MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_POUND: _ClassVar[MaterialEmissionsSolidsWeightUnit]
+    MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_SHORT_TON: _ClassVar[MaterialEmissionsSolidsWeightUnit]
+    MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_SLUG: _ClassVar[MaterialEmissionsSolidsWeightUnit]
+
+class MaterialEmissionsSolidsVolumeUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_UNKNOWN: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_CENTIMETER: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_FOOT: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_INCH: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_METER: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_MILIMETER: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_YARD: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_FLUID_OUNCE: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_IMPERIAL_GALLON: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_LITER: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_PINT: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_QUART: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+    MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_US_LIQUID_GALLON: _ClassVar[MaterialEmissionsSolidsVolumeUnit]
+
+class MaterialEmissionsSolidsAreaUnit(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_UNKNOWN: _ClassVar[MaterialEmissionsSolidsAreaUnit]
+    MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_CENTIMETER: _ClassVar[MaterialEmissionsSolidsAreaUnit]
+    MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_FOOT: _ClassVar[MaterialEmissionsSolidsAreaUnit]
+    MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_INCH: _ClassVar[MaterialEmissionsSolidsAreaUnit]
+    MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_METER: _ClassVar[MaterialEmissionsSolidsAreaUnit]
+    MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_MILIMETER: _ClassVar[MaterialEmissionsSolidsAreaUnit]
+    MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_YARD: _ClassVar[MaterialEmissionsSolidsAreaUnit]
+
+class MaterialUseOfMaterialModelOrientation(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_USE_OF_MATERIAL_MODEL_ORIENTATION_PARALLEL: _ClassVar[MaterialUseOfMaterialModelOrientation]
+    MATERIAL_USE_OF_MATERIAL_MODEL_ORIENTATION_PERPENDICULAR: _ClassVar[MaterialUseOfMaterialModelOrientation]
+
+class MaterialUseOfMaterialModelAlignment(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MATERIAL_USE_OF_MATERIAL_MODEL_ALIGNMENT_EDGEWISE: _ClassVar[MaterialUseOfMaterialModelAlignment]
+    MATERIAL_USE_OF_MATERIAL_MODEL_ALIGNMENT_FLATWISE: _ClassVar[MaterialUseOfMaterialModelAlignment]
+MATERIAL_MATERIAL_TYPE_BASIC: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_ALUMINUM: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_CONCRETE: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_FABRIC: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_FIBER_CONCRETE: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_FOIL: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_GAS: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_GLASS: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_MASONRY: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_METAL: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_PRESTRESSING_STEEL: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_REINFORCING_STEEL: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_SOIL: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_STEEL: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_TIMBER: MaterialMaterialType
+MATERIAL_MATERIAL_TYPE_VIRTUAL_JOIST_GIRDER: MaterialMaterialType
+MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_LINEAR_ELASTIC: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_E_MATERIAL_MODEL_ISOTROPIC_SOIL_PLASTIC_MODIFIED_HARDENING_SOIL_3D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ANISOTROPIC_DAMAGE: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_DAMAGE_2D_3D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_MASONRY_PLASTIC_2D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_NONLINEAR_ELASTIC_1D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_NONLINEAR_ELASTIC_2D_3D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_PLASTIC_1D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_PLASTIC_2D_3D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_ROCK_PLASTIC_HOEK_BROWN_3D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_SOIL_NONLINEAR_ELASTIC_3D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_SOIL_PLASTIC_3D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ISOTROPIC_TIMBER_LINEAR_ELASTIC_1D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_2D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_3D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_FABRIC_NONLINEAR_ELASTIC_2D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_MASONRY_PLASTIC_2D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_PLASTIC_2D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_PLASTIC_3D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_TIMBER_LINEAR_ELASTIC_2D: MaterialMaterialModel
+MATERIAL_MATERIAL_MODEL_MODEL_ORTHOTROPIC_WELD_PLASTIC_2D: MaterialMaterialModel
+MATERIAL_APPLICATION_CONTEXT_INVALID: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_ALUMINUM_DESIGN: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_COMBINATION_WIZARD: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_CONCRETE_DESIGN: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_CONCRETE_FOUNDATION_DESIGN: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_CRANEWAY_DESIGN: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_DYNAMIC_ANALYSIS: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_GEOTECHNICAL_ANALYSIS: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_GLASS_DESIGN: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_LOAD_WIZARD: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_MASONRY_DESIGN: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_PIPING_DESIGN: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_STEEL_DESIGN: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_STEEL_DESIGN_COLD_FORMED: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_STEEL_JOINT_DESIGN: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_TIMBER_DESIGN: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_TIMBER_JOINT_DESIGN: MaterialApplicationContext
+MATERIAL_APPLICATION_CONTEXT_TOWER_DESIGN: MaterialApplicationContext
+MATERIAL_DIAGRAM_TYPE_BASIC: MaterialDiagramType
+MATERIAL_DIAGRAM_TYPE_BILINEAR: MaterialDiagramType
+MATERIAL_DIAGRAM_TYPE_STRESS_STRAIN_DIAGRAM: MaterialDiagramType
+MATERIAL_DEFINITION_TYPE_DERIVED_NU: MaterialDefinitionType
+MATERIAL_DEFINITION_TYPE_DERIVED_G: MaterialDefinitionType
+MATERIAL_DEFINITION_TYPE_E_G_NO_NU: MaterialDefinitionType
+MATERIAL_DEFINITION_TYPE_E_G_NU: MaterialDefinitionType
+MATERIAL_DEFINITION_TYPE_NONE: MaterialDefinitionType
+MATERIAL_STRESS_FAILURE_HYPOTHESIS_VON_MISES: MaterialStressFailureHypothesis
+MATERIAL_STRESS_FAILURE_HYPOTHESIS_DRUCKER_PRAGER: MaterialStressFailureHypothesis
+MATERIAL_STRESS_FAILURE_HYPOTHESIS_MOHR_COULOMB: MaterialStressFailureHypothesis
+MATERIAL_STRESS_FAILURE_HYPOTHESIS_OEDOMETRIC_CONDITIONS: MaterialStressFailureHypothesis
+MATERIAL_STRESS_FAILURE_HYPOTHESIS_OEDOMETRIC_CONDITIONS_WITH_SMALL_STRAIN_STIFFNESS: MaterialStressFailureHypothesis
+MATERIAL_STRESS_FAILURE_HYPOTHESIS_TRESCA: MaterialStressFailureHypothesis
+MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_TYPE_MAJOR_2D: MaterialTemperaturePoissonRatioEditableGroupType
+MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_TYPE_MAJOR_3D: MaterialTemperaturePoissonRatioEditableGroupType
+MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_TYPE_MINOR_2D: MaterialTemperaturePoissonRatioEditableGroupType
+MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_TYPE_MINOR_3D: MaterialTemperaturePoissonRatioEditableGroupType
+MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_WALL_TYPE_XY: MaterialTemperaturePoissonRatioEditableGroupWallType
+MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_WALL_TYPE_YX: MaterialTemperaturePoissonRatioEditableGroupWallType
+MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_PLATTE_TYPE_XY: MaterialTemperaturePoissonRatioEditableGroupPlatteType
+MATERIAL_TEMPERATURE_POISSON_RATIO_EDITABLE_GROUP_PLATTE_TYPE_YX: MaterialTemperaturePoissonRatioEditableGroupPlatteType
+MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_START_TYPE_FAILURE: MaterialTemperatureStressStrainDiagramTypeStartType
+MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_START_TYPE_CONTINUOUS: MaterialTemperatureStressStrainDiagramTypeStartType
+MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_START_TYPE_YIELDING: MaterialTemperatureStressStrainDiagramTypeStartType
+MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_END_TYPE_FAILURE: MaterialTemperatureStressStrainDiagramTypeEndType
+MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_END_TYPE_CONTINUOUS: MaterialTemperatureStressStrainDiagramTypeEndType
+MATERIAL_TEMPERATURE_STRESS_STRAIN_DIAGRAM_TYPE_END_TYPE_YIELDING: MaterialTemperatureStressStrainDiagramTypeEndType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_CLAY: MaterialTemperatureMasonryBrickworkUnitType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_AGGREGATE_CONCRETE: MaterialTemperatureMasonryBrickworkUnitType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_AUTOCLAVED_AERATED_CONCRETE: MaterialTemperatureMasonryBrickworkUnitType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_CALCIUM_SILICATE: MaterialTemperatureMasonryBrickworkUnitType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_DIMENSIONED_NATURAL_STONE: MaterialTemperatureMasonryBrickworkUnitType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_UNIT_TYPE_MANUFACTURED_STONE: MaterialTemperatureMasonryBrickworkUnitType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_CONFIGURATION_TYPE_HOLLOW_BLOCK: MaterialTemperatureMasonryBrickworkConfigurationType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_CONFIGURATION_TYPE_AUTOCLAVED_AERATED_CONCRETE: MaterialTemperatureMasonryBrickworkConfigurationType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_CONFIGURATION_TYPE_HOLLOW_CLAY_BLOCK_WITH_GRIPHOLES: MaterialTemperatureMasonryBrickworkConfigurationType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_CONFIGURATION_TYPE_SOLID_BLOCK: MaterialTemperatureMasonryBrickworkConfigurationType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_CONFIGURATION_TYPE_UNIT_FOR_CONCRETE_OR_MORTAR_INFILL: MaterialTemperatureMasonryBrickworkConfigurationType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_1: MaterialTemperatureMasonryBrickworkGroupingType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_1S: MaterialTemperatureMasonryBrickworkGroupingType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_2: MaterialTemperatureMasonryBrickworkGroupingType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_3: MaterialTemperatureMasonryBrickworkGroupingType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_4: MaterialTemperatureMasonryBrickworkGroupingType
+MATERIAL_TEMPERATURE_MASONRY_BRICKWORK_GROUPING_TYPE_GROUP_NONE: MaterialTemperatureMasonryBrickworkGroupingType
+MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_GENERAL_PURPOSE_MORTAR_M2_5: MaterialTemperatureMasonryMortarClassType
+MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_GENERAL_PURPOSE_MORTAR_M10: MaterialTemperatureMasonryMortarClassType
+MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_GENERAL_PURPOSE_MORTAR_M20: MaterialTemperatureMasonryMortarClassType
+MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_GENERAL_PURPOSE_MORTAR_M5: MaterialTemperatureMasonryMortarClassType
+MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_LIGHTWEIGHT_MORTAR_600: MaterialTemperatureMasonryMortarClassType
+MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_LIGHTWEIGHT_MORTAR_800: MaterialTemperatureMasonryMortarClassType
+MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_MASONRY_GLUE: MaterialTemperatureMasonryMortarClassType
+MATERIAL_TEMPERATURE_MASONRY_MORTAR_CLASS_TYPE_THIN_LAYER_MORTAR: MaterialTemperatureMasonryMortarClassType
+MATERIAL_TEMPERATURE_MODIFIED_HARDENING_SOIL_SHEAR_HARDENING_DEFINITION_TYPE_SHEAR_HARDENING_PARAMETER: MaterialTemperatureModifiedHardeningSoilShearHardeningDefinitionType
+MATERIAL_TEMPERATURE_MODIFIED_HARDENING_SOIL_PRECONSOLIDATION_DEFINITION_TYPE_PRE_OVERBURDEN_PRESURE: MaterialTemperatureModifiedHardeningSoilPreconsolidationDefinitionType
+MATERIAL_TEMPERATURE_MODIFIED_HARDENING_SOIL_PRECONSOLIDATION_DEFINITION_TYPE_OVERCONSOLIDATION_RATIO: MaterialTemperatureModifiedHardeningSoilPreconsolidationDefinitionType
+MATERIAL_TEMPERATURE_INTERNAL_MATERIAL_STRUCTURE_TYPE_PLAIN_WEAVE: MaterialTemperatureInternalMaterialStructureType
+MATERIAL_TEMPERATURE_INTERNAL_MATERIAL_STRUCTURE_TYPE_BASKET_WEAVE: MaterialTemperatureInternalMaterialStructureType
+MATERIAL_TEMPERATURE_HOEK_BROWN_SOIL_DEFINITION_TYPE_E_HOEK_BROWN_SOIL_DEFINITION_TYPE_ROCK_MASS_PARAMETERS: MaterialTemperatureHoekBrownSoilDefinitionType
+MATERIAL_TEMPERATURE_HOEK_BROWN_SOIL_DEFINITION_TYPE_E_HOEK_BROWN_SOIL_DEFINITION_TYPE_GSI_CLASSIFICATION: MaterialTemperatureHoekBrownSoilDefinitionType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_PARAMETRIC: MaterialTemperatureNonlinearConcreteDiagramDefinitionType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_SLS_24_1: MaterialTemperatureNonlinearConcreteDiagramDefinitionType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_SLS_3_14: MaterialTemperatureNonlinearConcreteDiagramDefinitionType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_SLS_9_8: MaterialTemperatureNonlinearConcreteDiagramDefinitionType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_STRESS_STRAIN_DIAGRAM: MaterialTemperatureNonlinearConcreteDiagramDefinitionType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_ULS_ACC: MaterialTemperatureNonlinearConcreteDiagramDefinitionType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_ULS_P_T: MaterialTemperatureNonlinearConcreteDiagramDefinitionType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_TENSION_STIFFENING_METHOD_TYPE_QUAST: MaterialTemperatureNonlinearConcreteTensionStiffeningMethodType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_TENSION_STIFFENING_METHOD_TYPE_HSU_AND_MO: MaterialTemperatureNonlinearConcreteTensionStiffeningMethodType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_TENSION_STIFFENING_METHOD_TYPE_MODIFIED_QUAST: MaterialTemperatureNonlinearConcreteTensionStiffeningMethodType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DESIGN_SITUATION_TYPE_NONE: MaterialTemperatureNonlinearConcreteDesignSituationType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DESIGN_SITUATION_TYPE_ULS_ACCIDENTAL: MaterialTemperatureNonlinearConcreteDesignSituationType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_DESIGN_SITUATION_TYPE_ULS_PERMANENT_TRANSIENT: MaterialTemperatureNonlinearConcreteDesignSituationType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_NONE: MaterialTemperatureNonlinearConcreteCompressiveStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_085_F_C_ACI_CSA: MaterialTemperatureNonlinearConcreteCompressiveStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_09_F_C_ACI_CSA: MaterialTemperatureNonlinearConcreteCompressiveStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_ALPHA1_F_C_ACI_CSA: MaterialTemperatureNonlinearConcreteCompressiveStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_CHARACTERISTIC_STRENGTH: MaterialTemperatureNonlinearConcreteCompressiveStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_F_C_ACI_CSA: MaterialTemperatureNonlinearConcreteCompressiveStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_MEAN_STRENGTH: MaterialTemperatureNonlinearConcreteCompressiveStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSION_DIAGRAM_TYPE_PARABOLA: MaterialTemperatureNonlinearConcreteCompressionDiagramType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_COMPRESSION_DIAGRAM_TYPE_PARABOLA_RECTANGLE: MaterialTemperatureNonlinearConcreteCompressionDiagramType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_NONE: MaterialTemperatureNonlinearConcreteAxialTensileStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_5_PERC_FRACTILE_STRENGTH: MaterialTemperatureNonlinearConcreteAxialTensileStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_95_PERC_FRACTILE_STRENGTH: MaterialTemperatureNonlinearConcreteAxialTensileStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_MEAN_STRENGTH: MaterialTemperatureNonlinearConcreteAxialTensileStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_REDUCED_STRENGTH_05_FR: MaterialTemperatureNonlinearConcreteAxialTensileStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_REDUCED_STRENGTH_2_3_FR: MaterialTemperatureNonlinearConcreteAxialTensileStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_STRENGTH_FR: MaterialTemperatureNonlinearConcreteAxialTensileStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_WITHOUT_TENSILE_STRENGTH: MaterialTemperatureNonlinearConcreteAxialTensileStrengthType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_TENSION_DIAGRAM_TYPE_LINEAR: MaterialTemperatureNonlinearConcreteTensionDiagramType
+MATERIAL_TEMPERATURE_NONLINEAR_CONCRETE_TENSION_DIAGRAM_TYPE_BILINEAR: MaterialTemperatureNonlinearConcreteTensionDiagramType
+MATERIAL_STIFFNESS_MODIFICATION_TYPE_DIVISION: MaterialStiffnessModificationType
+MATERIAL_STIFFNESS_MODIFICATION_TYPE_MULTIPLICATION: MaterialStiffnessModificationType
+MATERIAL_MEMBERS_WEIGHT_UNIT_UNKNOWN: MaterialMembersWeightUnit
+MATERIAL_MEMBERS_WEIGHT_UNIT_GRAM: MaterialMembersWeightUnit
+MATERIAL_MEMBERS_WEIGHT_UNIT_HUNDREDWEIGHT: MaterialMembersWeightUnit
+MATERIAL_MEMBERS_WEIGHT_UNIT_KILOGRAM: MaterialMembersWeightUnit
+MATERIAL_MEMBERS_WEIGHT_UNIT_METRIC_TON: MaterialMembersWeightUnit
+MATERIAL_MEMBERS_WEIGHT_UNIT_OUNCE: MaterialMembersWeightUnit
+MATERIAL_MEMBERS_WEIGHT_UNIT_POUND: MaterialMembersWeightUnit
+MATERIAL_MEMBERS_WEIGHT_UNIT_SHORT_TON: MaterialMembersWeightUnit
+MATERIAL_MEMBERS_WEIGHT_UNIT_SLUG: MaterialMembersWeightUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_UNKNOWN: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_CENTIMETER: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_FOOT: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_INCH: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_METER: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_MILIMETER: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_CUBIC_YARD: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_FLUID_OUNCE: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_IMPERIAL_GALLON: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_LITER: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_PINT: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_QUART: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_VOLUME_UNIT_US_LIQUID_GALLON: MaterialMembersVolumeUnit
+MATERIAL_MEMBERS_SURFACE_UNIT_UNKNOWN: MaterialMembersSurfaceUnit
+MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_CENTIMETER: MaterialMembersSurfaceUnit
+MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_FOOT: MaterialMembersSurfaceUnit
+MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_INCH: MaterialMembersSurfaceUnit
+MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_METER: MaterialMembersSurfaceUnit
+MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_MILIMETER: MaterialMembersSurfaceUnit
+MATERIAL_MEMBERS_SURFACE_UNIT_SQUARED_YARD: MaterialMembersSurfaceUnit
+MATERIAL_SURFACES_WEIGHT_UNIT_UNKNOWN: MaterialSurfacesWeightUnit
+MATERIAL_SURFACES_WEIGHT_UNIT_GRAM: MaterialSurfacesWeightUnit
+MATERIAL_SURFACES_WEIGHT_UNIT_HUNDREDWEIGHT: MaterialSurfacesWeightUnit
+MATERIAL_SURFACES_WEIGHT_UNIT_KILOGRAM: MaterialSurfacesWeightUnit
+MATERIAL_SURFACES_WEIGHT_UNIT_METRIC_TON: MaterialSurfacesWeightUnit
+MATERIAL_SURFACES_WEIGHT_UNIT_OUNCE: MaterialSurfacesWeightUnit
+MATERIAL_SURFACES_WEIGHT_UNIT_POUND: MaterialSurfacesWeightUnit
+MATERIAL_SURFACES_WEIGHT_UNIT_SHORT_TON: MaterialSurfacesWeightUnit
+MATERIAL_SURFACES_WEIGHT_UNIT_SLUG: MaterialSurfacesWeightUnit
+MATERIAL_SURFACES_VOLUME_UNIT_UNKNOWN: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_CENTIMETER: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_FOOT: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_INCH: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_METER: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_MILIMETER: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_CUBIC_YARD: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_FLUID_OUNCE: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_IMPERIAL_GALLON: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_LITER: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_PINT: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_QUART: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_VOLUME_UNIT_US_LIQUID_GALLON: MaterialSurfacesVolumeUnit
+MATERIAL_SURFACES_TOP_FACE_UNIT_UNKNOWN: MaterialSurfacesTopFaceUnit
+MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_CENTIMETER: MaterialSurfacesTopFaceUnit
+MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_FOOT: MaterialSurfacesTopFaceUnit
+MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_INCH: MaterialSurfacesTopFaceUnit
+MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_METER: MaterialSurfacesTopFaceUnit
+MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_MILIMETER: MaterialSurfacesTopFaceUnit
+MATERIAL_SURFACES_TOP_FACE_UNIT_SQUARED_YARD: MaterialSurfacesTopFaceUnit
+MATERIAL_SURFACES_AREA_UNIT_UNKNOWN: MaterialSurfacesAreaUnit
+MATERIAL_SURFACES_AREA_UNIT_SQUARED_CENTIMETER: MaterialSurfacesAreaUnit
+MATERIAL_SURFACES_AREA_UNIT_SQUARED_FOOT: MaterialSurfacesAreaUnit
+MATERIAL_SURFACES_AREA_UNIT_SQUARED_INCH: MaterialSurfacesAreaUnit
+MATERIAL_SURFACES_AREA_UNIT_SQUARED_METER: MaterialSurfacesAreaUnit
+MATERIAL_SURFACES_AREA_UNIT_SQUARED_MILIMETER: MaterialSurfacesAreaUnit
+MATERIAL_SURFACES_AREA_UNIT_SQUARED_YARD: MaterialSurfacesAreaUnit
+MATERIAL_SURFACES_BOTTOM_FACE_UNIT_UNKNOWN: MaterialSurfacesBottomFaceUnit
+MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_CENTIMETER: MaterialSurfacesBottomFaceUnit
+MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_FOOT: MaterialSurfacesBottomFaceUnit
+MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_INCH: MaterialSurfacesBottomFaceUnit
+MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_METER: MaterialSurfacesBottomFaceUnit
+MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_MILIMETER: MaterialSurfacesBottomFaceUnit
+MATERIAL_SURFACES_BOTTOM_FACE_UNIT_SQUARED_YARD: MaterialSurfacesBottomFaceUnit
+MATERIAL_SOLIDS_WEIGHT_UNIT_UNKNOWN: MaterialSolidsWeightUnit
+MATERIAL_SOLIDS_WEIGHT_UNIT_GRAM: MaterialSolidsWeightUnit
+MATERIAL_SOLIDS_WEIGHT_UNIT_HUNDREDWEIGHT: MaterialSolidsWeightUnit
+MATERIAL_SOLIDS_WEIGHT_UNIT_KILOGRAM: MaterialSolidsWeightUnit
+MATERIAL_SOLIDS_WEIGHT_UNIT_METRIC_TON: MaterialSolidsWeightUnit
+MATERIAL_SOLIDS_WEIGHT_UNIT_OUNCE: MaterialSolidsWeightUnit
+MATERIAL_SOLIDS_WEIGHT_UNIT_POUND: MaterialSolidsWeightUnit
+MATERIAL_SOLIDS_WEIGHT_UNIT_SHORT_TON: MaterialSolidsWeightUnit
+MATERIAL_SOLIDS_WEIGHT_UNIT_SLUG: MaterialSolidsWeightUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_UNKNOWN: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_CENTIMETER: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_FOOT: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_INCH: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_METER: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_MILIMETER: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_CUBIC_YARD: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_FLUID_OUNCE: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_IMPERIAL_GALLON: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_LITER: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_PINT: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_QUART: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_VOLUME_UNIT_US_LIQUID_GALLON: MaterialSolidsVolumeUnit
+MATERIAL_SOLIDS_AREA_UNIT_UNKNOWN: MaterialSolidsAreaUnit
+MATERIAL_SOLIDS_AREA_UNIT_SQUARED_CENTIMETER: MaterialSolidsAreaUnit
+MATERIAL_SOLIDS_AREA_UNIT_SQUARED_FOOT: MaterialSolidsAreaUnit
+MATERIAL_SOLIDS_AREA_UNIT_SQUARED_INCH: MaterialSolidsAreaUnit
+MATERIAL_SOLIDS_AREA_UNIT_SQUARED_METER: MaterialSolidsAreaUnit
+MATERIAL_SOLIDS_AREA_UNIT_SQUARED_MILIMETER: MaterialSolidsAreaUnit
+MATERIAL_SOLIDS_AREA_UNIT_SQUARED_YARD: MaterialSolidsAreaUnit
+MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_UNKNOWN: MaterialEmissionsMembersWeightUnit
+MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_GRAM: MaterialEmissionsMembersWeightUnit
+MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_HUNDREDWEIGHT: MaterialEmissionsMembersWeightUnit
+MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_KILOGRAM: MaterialEmissionsMembersWeightUnit
+MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_METRIC_TON: MaterialEmissionsMembersWeightUnit
+MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_OUNCE: MaterialEmissionsMembersWeightUnit
+MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_POUND: MaterialEmissionsMembersWeightUnit
+MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_SHORT_TON: MaterialEmissionsMembersWeightUnit
+MATERIAL_EMISSIONS_MEMBERS_WEIGHT_UNIT_SLUG: MaterialEmissionsMembersWeightUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_UNKNOWN: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_CENTIMETER: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_FOOT: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_INCH: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_METER: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_MILIMETER: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_CUBIC_YARD: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_FLUID_OUNCE: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_IMPERIAL_GALLON: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_LITER: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_PINT: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_QUART: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_VOLUME_UNIT_US_LIQUID_GALLON: MaterialEmissionsMembersVolumeUnit
+MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_UNKNOWN: MaterialEmissionsMembersSurfaceUnit
+MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_CENTIMETER: MaterialEmissionsMembersSurfaceUnit
+MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_FOOT: MaterialEmissionsMembersSurfaceUnit
+MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_INCH: MaterialEmissionsMembersSurfaceUnit
+MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_METER: MaterialEmissionsMembersSurfaceUnit
+MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_MILIMETER: MaterialEmissionsMembersSurfaceUnit
+MATERIAL_EMISSIONS_MEMBERS_SURFACE_UNIT_SQUARED_YARD: MaterialEmissionsMembersSurfaceUnit
+MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_UNKNOWN: MaterialEmissionsSurfacesWeightUnit
+MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_GRAM: MaterialEmissionsSurfacesWeightUnit
+MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_HUNDREDWEIGHT: MaterialEmissionsSurfacesWeightUnit
+MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_KILOGRAM: MaterialEmissionsSurfacesWeightUnit
+MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_METRIC_TON: MaterialEmissionsSurfacesWeightUnit
+MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_OUNCE: MaterialEmissionsSurfacesWeightUnit
+MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_POUND: MaterialEmissionsSurfacesWeightUnit
+MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_SHORT_TON: MaterialEmissionsSurfacesWeightUnit
+MATERIAL_EMISSIONS_SURFACES_WEIGHT_UNIT_SLUG: MaterialEmissionsSurfacesWeightUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_UNKNOWN: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_CENTIMETER: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_FOOT: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_INCH: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_METER: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_MILIMETER: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_CUBIC_YARD: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_FLUID_OUNCE: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_IMPERIAL_GALLON: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_LITER: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_PINT: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_QUART: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_VOLUME_UNIT_US_LIQUID_GALLON: MaterialEmissionsSurfacesVolumeUnit
+MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_UNKNOWN: MaterialEmissionsSurfacesTopFaceUnit
+MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_CENTIMETER: MaterialEmissionsSurfacesTopFaceUnit
+MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_FOOT: MaterialEmissionsSurfacesTopFaceUnit
+MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_INCH: MaterialEmissionsSurfacesTopFaceUnit
+MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_METER: MaterialEmissionsSurfacesTopFaceUnit
+MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_MILIMETER: MaterialEmissionsSurfacesTopFaceUnit
+MATERIAL_EMISSIONS_SURFACES_TOP_FACE_UNIT_SQUARED_YARD: MaterialEmissionsSurfacesTopFaceUnit
+MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_UNKNOWN: MaterialEmissionsSurfacesAreaUnit
+MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_CENTIMETER: MaterialEmissionsSurfacesAreaUnit
+MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_FOOT: MaterialEmissionsSurfacesAreaUnit
+MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_INCH: MaterialEmissionsSurfacesAreaUnit
+MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_METER: MaterialEmissionsSurfacesAreaUnit
+MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_MILIMETER: MaterialEmissionsSurfacesAreaUnit
+MATERIAL_EMISSIONS_SURFACES_AREA_UNIT_SQUARED_YARD: MaterialEmissionsSurfacesAreaUnit
+MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_UNKNOWN: MaterialEmissionsSurfacesBottomFaceUnit
+MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_CENTIMETER: MaterialEmissionsSurfacesBottomFaceUnit
+MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_FOOT: MaterialEmissionsSurfacesBottomFaceUnit
+MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_INCH: MaterialEmissionsSurfacesBottomFaceUnit
+MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_METER: MaterialEmissionsSurfacesBottomFaceUnit
+MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_MILIMETER: MaterialEmissionsSurfacesBottomFaceUnit
+MATERIAL_EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_SQUARED_YARD: MaterialEmissionsSurfacesBottomFaceUnit
+MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_UNKNOWN: MaterialEmissionsSolidsWeightUnit
+MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_GRAM: MaterialEmissionsSolidsWeightUnit
+MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_HUNDREDWEIGHT: MaterialEmissionsSolidsWeightUnit
+MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_KILOGRAM: MaterialEmissionsSolidsWeightUnit
+MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_METRIC_TON: MaterialEmissionsSolidsWeightUnit
+MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_OUNCE: MaterialEmissionsSolidsWeightUnit
+MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_POUND: MaterialEmissionsSolidsWeightUnit
+MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_SHORT_TON: MaterialEmissionsSolidsWeightUnit
+MATERIAL_EMISSIONS_SOLIDS_WEIGHT_UNIT_SLUG: MaterialEmissionsSolidsWeightUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_UNKNOWN: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_CENTIMETER: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_FOOT: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_INCH: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_METER: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_MILIMETER: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_CUBIC_YARD: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_FLUID_OUNCE: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_IMPERIAL_GALLON: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_LITER: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_PINT: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_QUART: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_VOLUME_UNIT_US_LIQUID_GALLON: MaterialEmissionsSolidsVolumeUnit
+MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_UNKNOWN: MaterialEmissionsSolidsAreaUnit
+MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_CENTIMETER: MaterialEmissionsSolidsAreaUnit
+MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_FOOT: MaterialEmissionsSolidsAreaUnit
+MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_INCH: MaterialEmissionsSolidsAreaUnit
+MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_METER: MaterialEmissionsSolidsAreaUnit
+MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_MILIMETER: MaterialEmissionsSolidsAreaUnit
+MATERIAL_EMISSIONS_SOLIDS_AREA_UNIT_SQUARED_YARD: MaterialEmissionsSolidsAreaUnit
+MATERIAL_USE_OF_MATERIAL_MODEL_ORIENTATION_PARALLEL: MaterialUseOfMaterialModelOrientation
+MATERIAL_USE_OF_MATERIAL_MODEL_ORIENTATION_PERPENDICULAR: MaterialUseOfMaterialModelOrientation
+MATERIAL_USE_OF_MATERIAL_MODEL_ALIGNMENT_EDGEWISE: MaterialUseOfMaterialModelAlignment
+MATERIAL_USE_OF_MATERIAL_MODEL_ALIGNMENT_FLATWISE: MaterialUseOfMaterialModelAlignment
+
+class Material(_message.Message):
+    __slots__ = ("no", "material_type", "material_model", "application_context", "diagram_type", "user_defined_name_enabled", "name", "user_defined", "definition_type", "stress_failure_hypothesis", "is_temperature_dependent", "is_dynamic_increase_factor", "has_cost_estimation", "optimization", "has_emissions_estimation", "reference_temperature", "temperature_properties_sorted", "temperature", "stiffness_matrix_editable", "stiffness_modification", "stiffness_modification_type", "has_linear_elastic_with_nonlinear_criteria", "comment", "is_generated", "generating_object_info", "members_weight_active", "members_weight_unit_cost", "members_weight_unit", "members_weight_quantity", "members_weight_cost", "members_volume_active", "members_volume_unit_cost", "members_volume_unit", "members_volume_quantity", "members_volume_cost", "members_surface_active", "members_surface_unit_cost", "members_surface_unit", "members_surface_quantity", "members_surface_cost", "surfaces_weight_active", "surfaces_weight_unit_cost", "surfaces_weight_unit", "surfaces_weight_quantity", "surfaces_weight_cost", "surfaces_volume_active", "surfaces_volume_unit_cost", "surfaces_volume_unit", "surfaces_volume_quantity", "surfaces_volume_cost", "surfaces_top_face_active", "surfaces_top_face_unit_cost", "surfaces_top_face_unit", "surfaces_top_face_quantity", "surfaces_top_face_cost", "surfaces_area_active", "surfaces_area_unit_cost", "surfaces_area_unit", "surfaces_area_quantity", "surfaces_area_cost", "surfaces_bottom_face_active", "surfaces_bottom_face_unit_cost", "surfaces_bottom_face_unit", "surfaces_bottom_face_quantity", "surfaces_bottom_face_cost", "solids_weight_active", "solids_weight_unit_cost", "solids_weight_unit", "solids_weight_quantity", "solids_weight_cost", "solids_volume_active", "solids_volume_unit_cost", "solids_volume_unit", "solids_volume_quantity", "solids_volume_cost", "solids_area_active", "solids_area_unit_cost", "solids_area_unit", "solids_area_quantity", "solids_area_cost", "sum_weight", "weight_percentage", "cost_percentage", "sum_cost", "total_cost", "emissions_members_weight_active", "emissions_members_weight_unit_emission", "emissions_members_weight_unit", "emissions_members_weight_quantity", "emissions_members_weight_emission", "emissions_members_volume_active", "emissions_members_volume_unit_emission", "emissions_members_volume_unit", "emissions_members_volume_quantity", "emissions_members_volume_emission", "emissions_members_surface_active", "emissions_members_surface_unit_emission", "emissions_members_surface_unit", "emissions_members_surface_quantity", "emissions_members_surface_emission", "emissions_surfaces_weight_active", "emissions_surfaces_weight_unit_emission", "emissions_surfaces_weight_unit", "emissions_surfaces_weight_quantity", "emissions_surfaces_weight_emission", "emissions_surfaces_volume_active", "emissions_surfaces_volume_unit_emission", "emissions_surfaces_volume_unit", "emissions_surfaces_volume_quantity", "emissions_surfaces_volume_emission", "emissions_surfaces_top_face_active", "emissions_surfaces_top_face_unit_emission", "emissions_surfaces_top_face_unit", "emissions_surfaces_top_face_quantity", "emissions_surfaces_top_face_emission", "emissions_surfaces_area_active", "emissions_surfaces_area_unit_emission", "emissions_surfaces_area_unit", "emissions_surfaces_area_quantity", "emissions_surfaces_area_emission", "emissions_surfaces_bottom_face_active", "emissions_surfaces_bottom_face_unit_emission", "emissions_surfaces_bottom_face_unit", "emissions_surfaces_bottom_face_quantity", "emissions_surfaces_bottom_face_emission", "emissions_solids_weight_active", "emissions_solids_weight_unit_emission", "emissions_solids_weight_unit", "emissions_solids_weight_quantity", "emissions_solids_weight_emission", "emissions_solids_volume_active", "emissions_solids_volume_unit_emission", "emissions_solids_volume_unit", "emissions_solids_volume_quantity", "emissions_solids_volume_emission", "emissions_solids_area_active", "emissions_solids_area_unit_emission", "emissions_solids_area_unit", "emissions_solids_area_quantity", "emissions_solids_area_emission", "emissions_percentage", "emissions_sum", "emissions_total", "use_of_material_model_orientation", "use_of_material_model_alignment", "id_for_export_import", "metadata_for_export_import")
+    NO_FIELD_NUMBER: _ClassVar[int]
+    MATERIAL_TYPE_FIELD_NUMBER: _ClassVar[int]
+    MATERIAL_MODEL_FIELD_NUMBER: _ClassVar[int]
+    APPLICATION_CONTEXT_FIELD_NUMBER: _ClassVar[int]
+    DIAGRAM_TYPE_FIELD_NUMBER: _ClassVar[int]
+    USER_DEFINED_NAME_ENABLED_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    USER_DEFINED_FIELD_NUMBER: _ClassVar[int]
+    DEFINITION_TYPE_FIELD_NUMBER: _ClassVar[int]
+    STRESS_FAILURE_HYPOTHESIS_FIELD_NUMBER: _ClassVar[int]
+    IS_TEMPERATURE_DEPENDENT_FIELD_NUMBER: _ClassVar[int]
+    IS_DYNAMIC_INCREASE_FACTOR_FIELD_NUMBER: _ClassVar[int]
+    HAS_COST_ESTIMATION_FIELD_NUMBER: _ClassVar[int]
+    OPTIMIZATION_FIELD_NUMBER: _ClassVar[int]
+    HAS_EMISSIONS_ESTIMATION_FIELD_NUMBER: _ClassVar[int]
+    REFERENCE_TEMPERATURE_FIELD_NUMBER: _ClassVar[int]
+    TEMPERATURE_PROPERTIES_SORTED_FIELD_NUMBER: _ClassVar[int]
+    TEMPERATURE_FIELD_NUMBER: _ClassVar[int]
+    STIFFNESS_MATRIX_EDITABLE_FIELD_NUMBER: _ClassVar[int]
+    STIFFNESS_MODIFICATION_FIELD_NUMBER: _ClassVar[int]
+    STIFFNESS_MODIFICATION_TYPE_FIELD_NUMBER: _ClassVar[int]
+    HAS_LINEAR_ELASTIC_WITH_NONLINEAR_CRITERIA_FIELD_NUMBER: _ClassVar[int]
+    COMMENT_FIELD_NUMBER: _ClassVar[int]
+    IS_GENERATED_FIELD_NUMBER: _ClassVar[int]
+    GENERATING_OBJECT_INFO_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_WEIGHT_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_WEIGHT_UNIT_COST_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_WEIGHT_UNIT_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_WEIGHT_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_WEIGHT_COST_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_VOLUME_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_VOLUME_UNIT_COST_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_VOLUME_UNIT_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_VOLUME_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_VOLUME_COST_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_SURFACE_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_SURFACE_UNIT_COST_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_SURFACE_UNIT_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_SURFACE_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_SURFACE_COST_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_WEIGHT_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_WEIGHT_UNIT_COST_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_WEIGHT_UNIT_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_WEIGHT_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_WEIGHT_COST_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_VOLUME_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_VOLUME_UNIT_COST_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_VOLUME_UNIT_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_VOLUME_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_VOLUME_COST_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_TOP_FACE_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_TOP_FACE_UNIT_COST_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_TOP_FACE_UNIT_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_TOP_FACE_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_TOP_FACE_COST_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_AREA_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_AREA_UNIT_COST_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_AREA_UNIT_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_AREA_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_AREA_COST_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_BOTTOM_FACE_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_BOTTOM_FACE_UNIT_COST_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_BOTTOM_FACE_UNIT_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_BOTTOM_FACE_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SURFACES_BOTTOM_FACE_COST_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_WEIGHT_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_WEIGHT_UNIT_COST_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_WEIGHT_UNIT_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_WEIGHT_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_WEIGHT_COST_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_VOLUME_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_VOLUME_UNIT_COST_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_VOLUME_UNIT_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_VOLUME_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_VOLUME_COST_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_AREA_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_AREA_UNIT_COST_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_AREA_UNIT_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_AREA_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SOLIDS_AREA_COST_FIELD_NUMBER: _ClassVar[int]
+    SUM_WEIGHT_FIELD_NUMBER: _ClassVar[int]
+    WEIGHT_PERCENTAGE_FIELD_NUMBER: _ClassVar[int]
+    COST_PERCENTAGE_FIELD_NUMBER: _ClassVar[int]
+    SUM_COST_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_COST_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_WEIGHT_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_WEIGHT_UNIT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_WEIGHT_UNIT_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_WEIGHT_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_WEIGHT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_VOLUME_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_VOLUME_UNIT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_VOLUME_UNIT_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_VOLUME_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_VOLUME_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_SURFACE_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_SURFACE_UNIT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_SURFACE_UNIT_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_SURFACE_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_MEMBERS_SURFACE_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_WEIGHT_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_WEIGHT_UNIT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_WEIGHT_UNIT_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_WEIGHT_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_WEIGHT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_VOLUME_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_VOLUME_UNIT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_VOLUME_UNIT_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_VOLUME_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_VOLUME_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_TOP_FACE_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_TOP_FACE_UNIT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_TOP_FACE_UNIT_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_TOP_FACE_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_TOP_FACE_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_AREA_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_AREA_UNIT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_AREA_UNIT_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_AREA_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_AREA_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_BOTTOM_FACE_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_BOTTOM_FACE_UNIT_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_BOTTOM_FACE_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SURFACES_BOTTOM_FACE_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_WEIGHT_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_WEIGHT_UNIT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_WEIGHT_UNIT_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_WEIGHT_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_WEIGHT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_VOLUME_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_VOLUME_UNIT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_VOLUME_UNIT_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_VOLUME_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_VOLUME_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_AREA_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_AREA_UNIT_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_AREA_UNIT_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_AREA_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SOLIDS_AREA_EMISSION_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_PERCENTAGE_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_SUM_FIELD_NUMBER: _ClassVar[int]
+    EMISSIONS_TOTAL_FIELD_NUMBER: _ClassVar[int]
+    USE_OF_MATERIAL_MODEL_ORIENTATION_FIELD_NUMBER: _ClassVar[int]
+    USE_OF_MATERIAL_MODEL_ALIGNMENT_FIELD_NUMBER: _ClassVar[int]
+    ID_FOR_EXPORT_IMPORT_FIELD_NUMBER: _ClassVar[int]
+    METADATA_FOR_EXPORT_IMPORT_FIELD_NUMBER: _ClassVar[int]
+    no: int
+    material_type: MaterialMaterialType
+    material_model: MaterialMaterialModel
+    application_context: MaterialApplicationContext
+    diagram_type: MaterialDiagramType
+    user_defined_name_enabled: bool
+    name: str
+    user_defined: bool
+    definition_type: MaterialDefinitionType
+    stress_failure_hypothesis: MaterialStressFailureHypothesis
+    is_temperature_dependent: bool
+    is_dynamic_increase_factor: bool
+    has_cost_estimation: bool
+    optimization: bool
+    has_emissions_estimation: bool
+    reference_temperature: float
+    temperature_properties_sorted: bool
+    temperature: MaterialTemperatureTable
+    stiffness_matrix_editable: bool
+    stiffness_modification: bool
+    stiffness_modification_type: MaterialStiffnessModificationType
+    has_linear_elastic_with_nonlinear_criteria: bool
+    comment: str
+    is_generated: bool
+    generating_object_info: str
+    members_weight_active: bool
+    members_weight_unit_cost: float
+    members_weight_unit: MaterialMembersWeightUnit
+    members_weight_quantity: float
+    members_weight_cost: float
+    members_volume_active: bool
+    members_volume_unit_cost: float
+    members_volume_unit: MaterialMembersVolumeUnit
+    members_volume_quantity: float
+    members_volume_cost: float
+    members_surface_active: bool
+    members_surface_unit_cost: float
+    members_surface_unit: MaterialMembersSurfaceUnit
+    members_surface_quantity: float
+    members_surface_cost: float
+    surfaces_weight_active: bool
+    surfaces_weight_unit_cost: float
+    surfaces_weight_unit: MaterialSurfacesWeightUnit
+    surfaces_weight_quantity: float
+    surfaces_weight_cost: float
+    surfaces_volume_active: bool
+    surfaces_volume_unit_cost: float
+    surfaces_volume_unit: MaterialSurfacesVolumeUnit
+    surfaces_volume_quantity: float
+    surfaces_volume_cost: float
+    surfaces_top_face_active: bool
+    surfaces_top_face_unit_cost: float
+    surfaces_top_face_unit: MaterialSurfacesTopFaceUnit
+    surfaces_top_face_quantity: float
+    surfaces_top_face_cost: float
+    surfaces_area_active: bool
+    surfaces_area_unit_cost: float
+    surfaces_area_unit: MaterialSurfacesAreaUnit
+    surfaces_area_quantity: float
+    surfaces_area_cost: float
+    surfaces_bottom_face_active: bool
+    surfaces_bottom_face_unit_cost: float
+    surfaces_bottom_face_unit: MaterialSurfacesBottomFaceUnit
+    surfaces_bottom_face_quantity: float
+    surfaces_bottom_face_cost: float
+    solids_weight_active: bool
+    solids_weight_unit_cost: float
+    solids_weight_unit: MaterialSolidsWeightUnit
+    solids_weight_quantity: float
+    solids_weight_cost: float
+    solids_volume_active: bool
+    solids_volume_unit_cost: float
+    solids_volume_unit: MaterialSolidsVolumeUnit
+    solids_volume_quantity: float
+    solids_volume_cost: float
+    solids_area_active: bool
+    solids_area_unit_cost: float
+    solids_area_unit: MaterialSolidsAreaUnit
+    solids_area_quantity: float
+    solids_area_cost: float
+    sum_weight: float
+    weight_percentage: float
+    cost_percentage: float
+    sum_cost: float
+    total_cost: float
+    emissions_members_weight_active: bool
+    emissions_members_weight_unit_emission: float
+    emissions_members_weight_unit: MaterialEmissionsMembersWeightUnit
+    emissions_members_weight_quantity: float
+    emissions_members_weight_emission: float
+    emissions_members_volume_active: bool
+    emissions_members_volume_unit_emission: float
+    emissions_members_volume_unit: MaterialEmissionsMembersVolumeUnit
+    emissions_members_volume_quantity: float
+    emissions_members_volume_emission: float
+    emissions_members_surface_active: bool
+    emissions_members_surface_unit_emission: float
+    emissions_members_surface_unit: MaterialEmissionsMembersSurfaceUnit
+    emissions_members_surface_quantity: float
+    emissions_members_surface_emission: float
+    emissions_surfaces_weight_active: bool
+    emissions_surfaces_weight_unit_emission: float
+    emissions_surfaces_weight_unit: MaterialEmissionsSurfacesWeightUnit
+    emissions_surfaces_weight_quantity: float
+    emissions_surfaces_weight_emission: float
+    emissions_surfaces_volume_active: bool
+    emissions_surfaces_volume_unit_emission: float
+    emissions_surfaces_volume_unit: MaterialEmissionsSurfacesVolumeUnit
+    emissions_surfaces_volume_quantity: float
+    emissions_surfaces_volume_emission: float
+    emissions_surfaces_top_face_active: bool
+    emissions_surfaces_top_face_unit_emission: float
+    emissions_surfaces_top_face_unit: MaterialEmissionsSurfacesTopFaceUnit
+    emissions_surfaces_top_face_quantity: float
+    emissions_surfaces_top_face_emission: float
+    emissions_surfaces_area_active: bool
+    emissions_surfaces_area_unit_emission: float
+    emissions_surfaces_area_unit: MaterialEmissionsSurfacesAreaUnit
+    emissions_surfaces_area_quantity: float
+    emissions_surfaces_area_emission: float
+    emissions_surfaces_bottom_face_active: bool
+    emissions_surfaces_bottom_face_unit_emission: float
+    emissions_surfaces_bottom_face_unit: MaterialEmissionsSurfacesBottomFaceUnit
+    emissions_surfaces_bottom_face_quantity: float
+    emissions_surfaces_bottom_face_emission: float
+    emissions_solids_weight_active: bool
+    emissions_solids_weight_unit_emission: float
+    emissions_solids_weight_unit: MaterialEmissionsSolidsWeightUnit
+    emissions_solids_weight_quantity: float
+    emissions_solids_weight_emission: float
+    emissions_solids_volume_active: bool
+    emissions_solids_volume_unit_emission: float
+    emissions_solids_volume_unit: MaterialEmissionsSolidsVolumeUnit
+    emissions_solids_volume_quantity: float
+    emissions_solids_volume_emission: float
+    emissions_solids_area_active: bool
+    emissions_solids_area_unit_emission: float
+    emissions_solids_area_unit: MaterialEmissionsSolidsAreaUnit
+    emissions_solids_area_quantity: float
+    emissions_solids_area_emission: float
+    emissions_percentage: float
+    emissions_sum: float
+    emissions_total: float
+    use_of_material_model_orientation: MaterialUseOfMaterialModelOrientation
+    use_of_material_model_alignment: MaterialUseOfMaterialModelAlignment
+    id_for_export_import: str
+    metadata_for_export_import: str
+    def __init__(self, no: _Optional[int] = ..., material_type: _Optional[_Union[MaterialMaterialType, str]] = ..., material_model: _Optional[_Union[MaterialMaterialModel, str]] = ..., application_context: _Optional[_Union[MaterialApplicationContext, str]] = ..., diagram_type: _Optional[_Union[MaterialDiagramType, str]] = ..., user_defined_name_enabled: bool = ..., name: _Optional[str] = ..., user_defined: bool = ..., definition_type: _Optional[_Union[MaterialDefinitionType, str]] = ..., stress_failure_hypothesis: _Optional[_Union[MaterialStressFailureHypothesis, str]] = ..., is_temperature_dependent: bool = ..., is_dynamic_increase_factor: bool = ..., has_cost_estimation: bool = ..., optimization: bool = ..., has_emissions_estimation: bool = ..., reference_temperature: _Optional[float] = ..., temperature_properties_sorted: bool = ..., temperature: _Optional[_Union[MaterialTemperatureTable, _Mapping]] = ..., stiffness_matrix_editable: bool = ..., stiffness_modification: bool = ..., stiffness_modification_type: _Optional[_Union[MaterialStiffnessModificationType, str]] = ..., has_linear_elastic_with_nonlinear_criteria: bool = ..., comment: _Optional[str] = ..., is_generated: bool = ..., generating_object_info: _Optional[str] = ..., members_weight_active: bool = ..., members_weight_unit_cost: _Optional[float] = ..., members_weight_unit: _Optional[_Union[MaterialMembersWeightUnit, str]] = ..., members_weight_quantity: _Optional[float] = ..., members_weight_cost: _Optional[float] = ..., members_volume_active: bool = ..., members_volume_unit_cost: _Optional[float] = ..., members_volume_unit: _Optional[_Union[MaterialMembersVolumeUnit, str]] = ..., members_volume_quantity: _Optional[float] = ..., members_volume_cost: _Optional[float] = ..., members_surface_active: bool = ..., members_surface_unit_cost: _Optional[float] = ..., members_surface_unit: _Optional[_Union[MaterialMembersSurfaceUnit, str]] = ..., members_surface_quantity: _Optional[float] = ..., members_surface_cost: _Optional[float] = ..., surfaces_weight_active: bool = ..., surfaces_weight_unit_cost: _Optional[float] = ..., surfaces_weight_unit: _Optional[_Union[MaterialSurfacesWeightUnit, str]] = ..., surfaces_weight_quantity: _Optional[float] = ..., surfaces_weight_cost: _Optional[float] = ..., surfaces_volume_active: bool = ..., surfaces_volume_unit_cost: _Optional[float] = ..., surfaces_volume_unit: _Optional[_Union[MaterialSurfacesVolumeUnit, str]] = ..., surfaces_volume_quantity: _Optional[float] = ..., surfaces_volume_cost: _Optional[float] = ..., surfaces_top_face_active: bool = ..., surfaces_top_face_unit_cost: _Optional[float] = ..., surfaces_top_face_unit: _Optional[_Union[MaterialSurfacesTopFaceUnit, str]] = ..., surfaces_top_face_quantity: _Optional[float] = ..., surfaces_top_face_cost: _Optional[float] = ..., surfaces_area_active: bool = ..., surfaces_area_unit_cost: _Optional[float] = ..., surfaces_area_unit: _Optional[_Union[MaterialSurfacesAreaUnit, str]] = ..., surfaces_area_quantity: _Optional[float] = ..., surfaces_area_cost: _Optional[float] = ..., surfaces_bottom_face_active: bool = ..., surfaces_bottom_face_unit_cost: _Optional[float] = ..., surfaces_bottom_face_unit: _Optional[_Union[MaterialSurfacesBottomFaceUnit, str]] = ..., surfaces_bottom_face_quantity: _Optional[float] = ..., surfaces_bottom_face_cost: _Optional[float] = ..., solids_weight_active: bool = ..., solids_weight_unit_cost: _Optional[float] = ..., solids_weight_unit: _Optional[_Union[MaterialSolidsWeightUnit, str]] = ..., solids_weight_quantity: _Optional[float] = ..., solids_weight_cost: _Optional[float] = ..., solids_volume_active: bool = ..., solids_volume_unit_cost: _Optional[float] = ..., solids_volume_unit: _Optional[_Union[MaterialSolidsVolumeUnit, str]] = ..., solids_volume_quantity: _Optional[float] = ..., solids_volume_cost: _Optional[float] = ..., solids_area_active: bool = ..., solids_area_unit_cost: _Optional[float] = ..., solids_area_unit: _Optional[_Union[MaterialSolidsAreaUnit, str]] = ..., solids_area_quantity: _Optional[float] = ..., solids_area_cost: _Optional[float] = ..., sum_weight: _Optional[float] = ..., weight_percentage: _Optional[float] = ..., cost_percentage: _Optional[float] = ..., sum_cost: _Optional[float] = ..., total_cost: _Optional[float] = ..., emissions_members_weight_active: bool = ..., emissions_members_weight_unit_emission: _Optional[float] = ..., emissions_members_weight_unit: _Optional[_Union[MaterialEmissionsMembersWeightUnit, str]] = ..., emissions_members_weight_quantity: _Optional[float] = ..., emissions_members_weight_emission: _Optional[float] = ..., emissions_members_volume_active: bool = ..., emissions_members_volume_unit_emission: _Optional[float] = ..., emissions_members_volume_unit: _Optional[_Union[MaterialEmissionsMembersVolumeUnit, str]] = ..., emissions_members_volume_quantity: _Optional[float] = ..., emissions_members_volume_emission: _Optional[float] = ..., emissions_members_surface_active: bool = ..., emissions_members_surface_unit_emission: _Optional[float] = ..., emissions_members_surface_unit: _Optional[_Union[MaterialEmissionsMembersSurfaceUnit, str]] = ..., emissions_members_surface_quantity: _Optional[float] = ..., emissions_members_surface_emission: _Optional[float] = ..., emissions_surfaces_weight_active: bool = ..., emissions_surfaces_weight_unit_emission: _Optional[float] = ..., emissions_surfaces_weight_unit: _Optional[_Union[MaterialEmissionsSurfacesWeightUnit, str]] = ..., emissions_surfaces_weight_quantity: _Optional[float] = ..., emissions_surfaces_weight_emission: _Optional[float] = ..., emissions_surfaces_volume_active: bool = ..., emissions_surfaces_volume_unit_emission: _Optional[float] = ..., emissions_surfaces_volume_unit: _Optional[_Union[MaterialEmissionsSurfacesVolumeUnit, str]] = ..., emissions_surfaces_volume_quantity: _Optional[float] = ..., emissions_surfaces_volume_emission: _Optional[float] = ..., emissions_surfaces_top_face_active: bool = ..., emissions_surfaces_top_face_unit_emission: _Optional[float] = ..., emissions_surfaces_top_face_unit: _Optional[_Union[MaterialEmissionsSurfacesTopFaceUnit, str]] = ..., emissions_surfaces_top_face_quantity: _Optional[float] = ..., emissions_surfaces_top_face_emission: _Optional[float] = ..., emissions_surfaces_area_active: bool = ..., emissions_surfaces_area_unit_emission: _Optional[float] = ..., emissions_surfaces_area_unit: _Optional[_Union[MaterialEmissionsSurfacesAreaUnit, str]] = ..., emissions_surfaces_area_quantity: _Optional[float] = ..., emissions_surfaces_area_emission: _Optional[float] = ..., emissions_surfaces_bottom_face_active: bool = ..., emissions_surfaces_bottom_face_unit_emission: _Optional[float] = ..., emissions_surfaces_bottom_face_unit: _Optional[_Union[MaterialEmissionsSurfacesBottomFaceUnit, str]] = ..., emissions_surfaces_bottom_face_quantity: _Optional[float] = ..., emissions_surfaces_bottom_face_emission: _Optional[float] = ..., emissions_solids_weight_active: bool = ..., emissions_solids_weight_unit_emission: _Optional[float] = ..., emissions_solids_weight_unit: _Optional[_Union[MaterialEmissionsSolidsWeightUnit, str]] = ..., emissions_solids_weight_quantity: _Optional[float] = ..., emissions_solids_weight_emission: _Optional[float] = ..., emissions_solids_volume_active: bool = ..., emissions_solids_volume_unit_emission: _Optional[float] = ..., emissions_solids_volume_unit: _Optional[_Union[MaterialEmissionsSolidsVolumeUnit, str]] = ..., emissions_solids_volume_quantity: _Optional[float] = ..., emissions_solids_volume_emission: _Optional[float] = ..., emissions_solids_area_active: bool = ..., emissions_solids_area_unit_emission: _Optional[float] = ..., emissions_solids_area_unit: _Optional[_Union[MaterialEmissionsSolidsAreaUnit, str]] = ..., emissions_solids_area_quantity: _Optional[float] = ..., emissions_solids_area_emission: _Optional[float] = ..., emissions_percentage: _Optional[float] = ..., emissions_sum: _Optional[float] = ..., emissions_total: _Optional[float] = ..., use_of_material_model_orientation: _Optional[_Union[MaterialUseOfMaterialModelOrientation, str]] = ..., use_of_material_model_alignment: _Optional[_Union[MaterialUseOfMaterialModelAlignment, str]] = ..., id_for_export_import: _Optional[str] = ..., metadata_for_export_import: _Optional[str] = ...) -> None: ...
+
+class MaterialTemperatureTable(_message.Message):
+    __slots__ = ("rows",)
+    ROWS_FIELD_NUMBER: _ClassVar[int]
+    rows: _containers.RepeatedCompositeFieldContainer[MaterialTemperatureRow]
+    def __init__(self, rows: _Optional[_Iterable[_Union[MaterialTemperatureRow, _Mapping]]] = ...) -> None: ...
+
+class MaterialTemperatureRow(_message.Message):
+    __slots__ = ("no", "description", "poisson_ratio_editable_group_type", "poisson_ratio_editable_group_wall_type", "poisson_ratio_editable_group_platte_type", "stress_strain_diagram_symmetric", "stress_strain_diagram_symmetry_factor", "stress_strain_diagram_has_parameters_sorted", "stress_strain_diagram_type_start_type", "stress_strain_diagram_type_end_type", "dynamic_increase_factor_diagram_symmetric", "dynamic_increase_factor_diagram_sort", "temperature", "note", "maximum_thickness", "elasticity_modulus_global", "elasticity_modulus_x", "elasticity_modulus_y", "elasticity_modulus_z", "shear_modulus_global", "shear_modulus_yz", "shear_modulus_xz", "shear_modulus_xy", "poisson_ratio_global", "poisson_ratio_yz", "poisson_ratio_xz", "poisson_ratio_xy", "poisson_ratio_zy", "poisson_ratio_zx", "poisson_ratio_yx", "mass_density", "specific_weight", "thermal_expansion_coefficient_global", "thermal_expansion_coefficient_x", "thermal_expansion_coefficient_y", "thermal_expansion_coefficient_z", "division_multiplication_factor", "yield_strength_for_thickness", "ultimate_strength_for_thickness", "saturated_specific_weight", "masonry_compressive_strength", "masonry_stone_length", "masonry_stone_height", "masonry_stone_thickness", "masonry_brickwork_unit_type", "masonry_brickwork_configuration_type", "masonry_brickwork_grouping_type", "masonry_mortar_class_type", "masonry_head_joints_filled", "masonry_mortar_joint_parallel_to_wall_face", "yield_strength", "yield_strength_for_compression", "yield_strength_for_tension", "hardening_modulus_x", "hardening_modulus_y", "hardening_modulus_z", "ultimate_compressive_strength_x", "ultimate_compressive_strength_y", "ultimate_compressive_strength_z", "ultimate_tensile_strength_x", "ultimate_tensile_strength_y", "ultimate_tensile_strength_z", "ultimate_shear_strength_yz", "ultimate_shear_strength_xz", "ultimate_shear_strength_xy", "thickness_range_size", "timber_elasticity_modulus_x_wall", "timber_elasticity_modulus_y_wall", "timber_elasticity_modulus_x_plate", "timber_elasticity_modulus_y_plate", "timber_poisson_ratio_xy_wall", "timber_poisson_ratio_yx_wall", "timber_poisson_ratio_xy_plate", "timber_poisson_ratio_yx_plate", "timber_shear_modulus_yz", "timber_shear_modulus_xz", "timber_shear_modulus_xy", "soil_cohesive_strength", "soil_angle_of_internal_friction", "soil_angle_of_dilation", "masonry_partial_factor", "soil_reference_tangential_stiffness_for_primary_oedometer_loading", "soil_reference_stress_for_stiffness", "soil_power_for_stress_level_dependency_of_stiffness", "hoek_brown_soil_uniaxial_compressive_strength_of_intact_rock", "hoek_brown_soil_intact_rock_parameter", "hoek_brown_soil_disturbance_factor", "hoek_brown_soil_geological_strength_index", "yield_strength_equivalent", "yield_strength_x", "shear_modulus_x", "shear_modulus_y", "shear_modulus_z", "modified_hardening_soil_shear_hardening_definition_type", "modified_hardening_soil_shear_hardening_parameter", "modified_hardening_soil_stiffness_at_reference_stress", "modified_hardening_soil_poissons_ratio", "modified_hardening_soil_preconsolidation_definition_type", "modified_hardening_soil_pre_overburden_presure", "modified_hardening_soil_overconsolidation_ratio", "representative_volume_element_ratio_of_height_to_length", "internal_material_structure_type", "hoek_brown_soil_definition_type", "hoek_brown_soil_strength_parameter_m_b", "hoek_brown_soil_strength_parameter_s", "hoek_brown_soil_strength_parameter_a", "hoek_brown_soil_strength_parameter_m_g", "hoek_brown_soil_strength_parameter_s_g", "hoek_brown_soil_strength_parameter_a_g", "hoek_brown_soil_elastic_stiffness_matrix", "hoek_brown_soil_user_defined", "nonlinear_concrete_diagram_definition_type", "nonlinear_concrete_mean_secant_modulus_of_elasticity", "nonlinear_concrete_tangent_modulus_of_elasticity_in_origin", "nonlinear_concrete_tension_stiffening", "nonlinear_concrete_tension_stiffening_method_type", "nonlinear_concrete_reduction_factor_for_tensile_strength", "nonlinear_concrete_axial_tensile_strength", "nonlinear_concrete_strain_at_peak_compression_stress", "nonlinear_concrete_tensile_strength_at_first_crack", "nonlinear_concrete_exponent_of_stress_strain_parabola_until_first_crack", "nonlinear_concrete_calculational_crack_strain", "nonlinear_concrete_exponent_of_reduction_factor_parabola_after_first_crack", "nonlinear_concrete_exponent_of_function_after_first_crack", "nonlinear_concrete_tensile_strain", "nonlinear_concrete_consider_safety_factors", "nonlinear_concrete_design_situation_type", "nonlinear_concrete_partial_factors_compressive_strength", "nonlinear_concrete_partial_factors_compressive_strength_uneditable", "nonlinear_concrete_partial_factors_modulus_of_elasticity", "nonlinear_concrete_partial_factors_modulus_of_elasticity_uneditable", "nonlinear_concrete_long_term_actions_compressive_strength", "nonlinear_concrete_long_term_actions_tensile_strength", "nonlinear_concrete_design_secant_modulus_of_elasticity", "nonlinear_concrete_design_tangent_modulus_of_elasticity_in_origin", "nonlinear_concrete_compressive_strength_type", "nonlinear_concrete_compressive_strength", "nonlinear_concrete_compressive_strength_uneditable", "nonlinear_concrete_design_compressive_strength", "nonlinear_concrete_compression_diagram_type", "nonlinear_concrete_parabola_exponent", "nonlinear_concrete_ultimate_strain_for_maximum_compression_c1", "nonlinear_concrete_ultimate_strain_at_failure_cu1", "nonlinear_concrete_ultimate_strain_for_maximum_compression_c2", "nonlinear_concrete_ultimate_strain_at_failure_cu2", "nonlinear_concrete_relative_accuracy_of_generated_diagram", "nonlinear_concrete_axial_tensile_strength_type", "nonlinear_concrete_axial_tensile_strength_uneditable", "nonlinear_concrete_design_value_of_axial_tensile_strength", "nonlinear_concrete_tension_diagram_type", "nonlinear_concrete_coefficient_at_micro_crack_initiation", "nonlinear_concrete_coefficient_at_micro_crack_initiation_uneditable", "nonlinear_concrete_ultimate_tensile_strain_at_failure", "nonlinear_concrete_ultimate_tensile_strain_at_failure_uneditable", "nonlinear_concrete_partial_factors_tensile_strength_uneditable", "nonlinear_concrete_partial_factors_tensile_strength", "strain_hardening_modulus", "hardening_factor", "limit_stresses_for_tension_x", "limit_stresses_for_tension_y", "reference_element_size", "strain_at_peak_compression_stress", "fracture_energy_ft_x", "fracture_energy_ft_y", "fracture_energy_fc_x", "fracture_energy_fc_y", "masonry_alpha", "masonry_beta", "masonry_gamma", "masonry_compressive_strength_horizontal", "masonry_compressive_strength_according_to_approval", "parameter_x", "parameter_xz", "parameter_xy", "parameter_x_xz")
+    NO_FIELD_NUMBER: _ClassVar[int]
+    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    POISSON_RATIO_EDITABLE_GROUP_TYPE_FIELD_NUMBER: _ClassVar[int]
+    POISSON_RATIO_EDITABLE_GROUP_WALL_TYPE_FIELD_NUMBER: _ClassVar[int]
+    POISSON_RATIO_EDITABLE_GROUP_PLATTE_TYPE_FIELD_NUMBER: _ClassVar[int]
+    STRESS_STRAIN_DIAGRAM_SYMMETRIC_FIELD_NUMBER: _ClassVar[int]
+    STRESS_STRAIN_DIAGRAM_SYMMETRY_FACTOR_FIELD_NUMBER: _ClassVar[int]
+    STRESS_STRAIN_DIAGRAM_HAS_PARAMETERS_SORTED_FIELD_NUMBER: _ClassVar[int]
+    STRESS_STRAIN_DIAGRAM_TYPE_START_TYPE_FIELD_NUMBER: _ClassVar[int]
+    STRESS_STRAIN_DIAGRAM_TYPE_END_TYPE_FIELD_NUMBER: _ClassVar[int]
+    DYNAMIC_INCREASE_FACTOR_DIAGRAM_SYMMETRIC_FIELD_NUMBER: _ClassVar[int]
+    DYNAMIC_INCREASE_FACTOR_DIAGRAM_SORT_FIELD_NUMBER: _ClassVar[int]
+    TEMPERATURE_FIELD_NUMBER: _ClassVar[int]
+    NOTE_FIELD_NUMBER: _ClassVar[int]
+    MAXIMUM_THICKNESS_FIELD_NUMBER: _ClassVar[int]
+    ELASTICITY_MODULUS_GLOBAL_FIELD_NUMBER: _ClassVar[int]
+    ELASTICITY_MODULUS_X_FIELD_NUMBER: _ClassVar[int]
+    ELASTICITY_MODULUS_Y_FIELD_NUMBER: _ClassVar[int]
+    ELASTICITY_MODULUS_Z_FIELD_NUMBER: _ClassVar[int]
+    SHEAR_MODULUS_GLOBAL_FIELD_NUMBER: _ClassVar[int]
+    SHEAR_MODULUS_YZ_FIELD_NUMBER: _ClassVar[int]
+    SHEAR_MODULUS_XZ_FIELD_NUMBER: _ClassVar[int]
+    SHEAR_MODULUS_XY_FIELD_NUMBER: _ClassVar[int]
+    POISSON_RATIO_GLOBAL_FIELD_NUMBER: _ClassVar[int]
+    POISSON_RATIO_YZ_FIELD_NUMBER: _ClassVar[int]
+    POISSON_RATIO_XZ_FIELD_NUMBER: _ClassVar[int]
+    POISSON_RATIO_XY_FIELD_NUMBER: _ClassVar[int]
+    POISSON_RATIO_ZY_FIELD_NUMBER: _ClassVar[int]
+    POISSON_RATIO_ZX_FIELD_NUMBER: _ClassVar[int]
+    POISSON_RATIO_YX_FIELD_NUMBER: _ClassVar[int]
+    MASS_DENSITY_FIELD_NUMBER: _ClassVar[int]
+    SPECIFIC_WEIGHT_FIELD_NUMBER: _ClassVar[int]
+    THERMAL_EXPANSION_COEFFICIENT_GLOBAL_FIELD_NUMBER: _ClassVar[int]
+    THERMAL_EXPANSION_COEFFICIENT_X_FIELD_NUMBER: _ClassVar[int]
+    THERMAL_EXPANSION_COEFFICIENT_Y_FIELD_NUMBER: _ClassVar[int]
+    THERMAL_EXPANSION_COEFFICIENT_Z_FIELD_NUMBER: _ClassVar[int]
+    DIVISION_MULTIPLICATION_FACTOR_FIELD_NUMBER: _ClassVar[int]
+    YIELD_STRENGTH_FOR_THICKNESS_FIELD_NUMBER: _ClassVar[int]
+    ULTIMATE_STRENGTH_FOR_THICKNESS_FIELD_NUMBER: _ClassVar[int]
+    SATURATED_SPECIFIC_WEIGHT_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_COMPRESSIVE_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_STONE_LENGTH_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_STONE_HEIGHT_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_STONE_THICKNESS_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_BRICKWORK_UNIT_TYPE_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_BRICKWORK_CONFIGURATION_TYPE_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_BRICKWORK_GROUPING_TYPE_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_MORTAR_CLASS_TYPE_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_HEAD_JOINTS_FILLED_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_MORTAR_JOINT_PARALLEL_TO_WALL_FACE_FIELD_NUMBER: _ClassVar[int]
+    YIELD_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    YIELD_STRENGTH_FOR_COMPRESSION_FIELD_NUMBER: _ClassVar[int]
+    YIELD_STRENGTH_FOR_TENSION_FIELD_NUMBER: _ClassVar[int]
+    HARDENING_MODULUS_X_FIELD_NUMBER: _ClassVar[int]
+    HARDENING_MODULUS_Y_FIELD_NUMBER: _ClassVar[int]
+    HARDENING_MODULUS_Z_FIELD_NUMBER: _ClassVar[int]
+    ULTIMATE_COMPRESSIVE_STRENGTH_X_FIELD_NUMBER: _ClassVar[int]
+    ULTIMATE_COMPRESSIVE_STRENGTH_Y_FIELD_NUMBER: _ClassVar[int]
+    ULTIMATE_COMPRESSIVE_STRENGTH_Z_FIELD_NUMBER: _ClassVar[int]
+    ULTIMATE_TENSILE_STRENGTH_X_FIELD_NUMBER: _ClassVar[int]
+    ULTIMATE_TENSILE_STRENGTH_Y_FIELD_NUMBER: _ClassVar[int]
+    ULTIMATE_TENSILE_STRENGTH_Z_FIELD_NUMBER: _ClassVar[int]
+    ULTIMATE_SHEAR_STRENGTH_YZ_FIELD_NUMBER: _ClassVar[int]
+    ULTIMATE_SHEAR_STRENGTH_XZ_FIELD_NUMBER: _ClassVar[int]
+    ULTIMATE_SHEAR_STRENGTH_XY_FIELD_NUMBER: _ClassVar[int]
+    THICKNESS_RANGE_SIZE_FIELD_NUMBER: _ClassVar[int]
+    TIMBER_ELASTICITY_MODULUS_X_WALL_FIELD_NUMBER: _ClassVar[int]
+    TIMBER_ELASTICITY_MODULUS_Y_WALL_FIELD_NUMBER: _ClassVar[int]
+    TIMBER_ELASTICITY_MODULUS_X_PLATE_FIELD_NUMBER: _ClassVar[int]
+    TIMBER_ELASTICITY_MODULUS_Y_PLATE_FIELD_NUMBER: _ClassVar[int]
+    TIMBER_POISSON_RATIO_XY_WALL_FIELD_NUMBER: _ClassVar[int]
+    TIMBER_POISSON_RATIO_YX_WALL_FIELD_NUMBER: _ClassVar[int]
+    TIMBER_POISSON_RATIO_XY_PLATE_FIELD_NUMBER: _ClassVar[int]
+    TIMBER_POISSON_RATIO_YX_PLATE_FIELD_NUMBER: _ClassVar[int]
+    TIMBER_SHEAR_MODULUS_YZ_FIELD_NUMBER: _ClassVar[int]
+    TIMBER_SHEAR_MODULUS_XZ_FIELD_NUMBER: _ClassVar[int]
+    TIMBER_SHEAR_MODULUS_XY_FIELD_NUMBER: _ClassVar[int]
+    SOIL_COHESIVE_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    SOIL_ANGLE_OF_INTERNAL_FRICTION_FIELD_NUMBER: _ClassVar[int]
+    SOIL_ANGLE_OF_DILATION_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_PARTIAL_FACTOR_FIELD_NUMBER: _ClassVar[int]
+    SOIL_REFERENCE_TANGENTIAL_STIFFNESS_FOR_PRIMARY_OEDOMETER_LOADING_FIELD_NUMBER: _ClassVar[int]
+    SOIL_REFERENCE_STRESS_FOR_STIFFNESS_FIELD_NUMBER: _ClassVar[int]
+    SOIL_POWER_FOR_STRESS_LEVEL_DEPENDENCY_OF_STIFFNESS_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_UNIAXIAL_COMPRESSIVE_STRENGTH_OF_INTACT_ROCK_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_INTACT_ROCK_PARAMETER_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_DISTURBANCE_FACTOR_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_GEOLOGICAL_STRENGTH_INDEX_FIELD_NUMBER: _ClassVar[int]
+    YIELD_STRENGTH_EQUIVALENT_FIELD_NUMBER: _ClassVar[int]
+    YIELD_STRENGTH_X_FIELD_NUMBER: _ClassVar[int]
+    SHEAR_MODULUS_X_FIELD_NUMBER: _ClassVar[int]
+    SHEAR_MODULUS_Y_FIELD_NUMBER: _ClassVar[int]
+    SHEAR_MODULUS_Z_FIELD_NUMBER: _ClassVar[int]
+    MODIFIED_HARDENING_SOIL_SHEAR_HARDENING_DEFINITION_TYPE_FIELD_NUMBER: _ClassVar[int]
+    MODIFIED_HARDENING_SOIL_SHEAR_HARDENING_PARAMETER_FIELD_NUMBER: _ClassVar[int]
+    MODIFIED_HARDENING_SOIL_STIFFNESS_AT_REFERENCE_STRESS_FIELD_NUMBER: _ClassVar[int]
+    MODIFIED_HARDENING_SOIL_POISSONS_RATIO_FIELD_NUMBER: _ClassVar[int]
+    MODIFIED_HARDENING_SOIL_PRECONSOLIDATION_DEFINITION_TYPE_FIELD_NUMBER: _ClassVar[int]
+    MODIFIED_HARDENING_SOIL_PRE_OVERBURDEN_PRESURE_FIELD_NUMBER: _ClassVar[int]
+    MODIFIED_HARDENING_SOIL_OVERCONSOLIDATION_RATIO_FIELD_NUMBER: _ClassVar[int]
+    REPRESENTATIVE_VOLUME_ELEMENT_RATIO_OF_HEIGHT_TO_LENGTH_FIELD_NUMBER: _ClassVar[int]
+    INTERNAL_MATERIAL_STRUCTURE_TYPE_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_DEFINITION_TYPE_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_STRENGTH_PARAMETER_M_B_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_STRENGTH_PARAMETER_S_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_STRENGTH_PARAMETER_A_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_STRENGTH_PARAMETER_M_G_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_STRENGTH_PARAMETER_S_G_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_STRENGTH_PARAMETER_A_G_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_ELASTIC_STIFFNESS_MATRIX_FIELD_NUMBER: _ClassVar[int]
+    HOEK_BROWN_SOIL_USER_DEFINED_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_DIAGRAM_DEFINITION_TYPE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_MEAN_SECANT_MODULUS_OF_ELASTICITY_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_TANGENT_MODULUS_OF_ELASTICITY_IN_ORIGIN_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_TENSION_STIFFENING_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_TENSION_STIFFENING_METHOD_TYPE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_REDUCTION_FACTOR_FOR_TENSILE_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_STRAIN_AT_PEAK_COMPRESSION_STRESS_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_TENSILE_STRENGTH_AT_FIRST_CRACK_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_EXPONENT_OF_STRESS_STRAIN_PARABOLA_UNTIL_FIRST_CRACK_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_CALCULATIONAL_CRACK_STRAIN_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_EXPONENT_OF_REDUCTION_FACTOR_PARABOLA_AFTER_FIRST_CRACK_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_EXPONENT_OF_FUNCTION_AFTER_FIRST_CRACK_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_TENSILE_STRAIN_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_CONSIDER_SAFETY_FACTORS_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_DESIGN_SITUATION_TYPE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_PARTIAL_FACTORS_COMPRESSIVE_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_PARTIAL_FACTORS_COMPRESSIVE_STRENGTH_UNEDITABLE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_PARTIAL_FACTORS_MODULUS_OF_ELASTICITY_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_PARTIAL_FACTORS_MODULUS_OF_ELASTICITY_UNEDITABLE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_LONG_TERM_ACTIONS_COMPRESSIVE_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_LONG_TERM_ACTIONS_TENSILE_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_DESIGN_SECANT_MODULUS_OF_ELASTICITY_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_DESIGN_TANGENT_MODULUS_OF_ELASTICITY_IN_ORIGIN_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_TYPE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_COMPRESSIVE_STRENGTH_UNEDITABLE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_DESIGN_COMPRESSIVE_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_COMPRESSION_DIAGRAM_TYPE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_PARABOLA_EXPONENT_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_ULTIMATE_STRAIN_FOR_MAXIMUM_COMPRESSION_C1_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_ULTIMATE_STRAIN_AT_FAILURE_CU1_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_ULTIMATE_STRAIN_FOR_MAXIMUM_COMPRESSION_C2_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_ULTIMATE_STRAIN_AT_FAILURE_CU2_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_RELATIVE_ACCURACY_OF_GENERATED_DIAGRAM_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_TYPE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_AXIAL_TENSILE_STRENGTH_UNEDITABLE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_DESIGN_VALUE_OF_AXIAL_TENSILE_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_TENSION_DIAGRAM_TYPE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_COEFFICIENT_AT_MICRO_CRACK_INITIATION_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_COEFFICIENT_AT_MICRO_CRACK_INITIATION_UNEDITABLE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_ULTIMATE_TENSILE_STRAIN_AT_FAILURE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_ULTIMATE_TENSILE_STRAIN_AT_FAILURE_UNEDITABLE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_PARTIAL_FACTORS_TENSILE_STRENGTH_UNEDITABLE_FIELD_NUMBER: _ClassVar[int]
+    NONLINEAR_CONCRETE_PARTIAL_FACTORS_TENSILE_STRENGTH_FIELD_NUMBER: _ClassVar[int]
+    STRAIN_HARDENING_MODULUS_FIELD_NUMBER: _ClassVar[int]
+    HARDENING_FACTOR_FIELD_NUMBER: _ClassVar[int]
+    LIMIT_STRESSES_FOR_TENSION_X_FIELD_NUMBER: _ClassVar[int]
+    LIMIT_STRESSES_FOR_TENSION_Y_FIELD_NUMBER: _ClassVar[int]
+    REFERENCE_ELEMENT_SIZE_FIELD_NUMBER: _ClassVar[int]
+    STRAIN_AT_PEAK_COMPRESSION_STRESS_FIELD_NUMBER: _ClassVar[int]
+    FRACTURE_ENERGY_FT_X_FIELD_NUMBER: _ClassVar[int]
+    FRACTURE_ENERGY_FT_Y_FIELD_NUMBER: _ClassVar[int]
+    FRACTURE_ENERGY_FC_X_FIELD_NUMBER: _ClassVar[int]
+    FRACTURE_ENERGY_FC_Y_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_ALPHA_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_BETA_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_GAMMA_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_COMPRESSIVE_STRENGTH_HORIZONTAL_FIELD_NUMBER: _ClassVar[int]
+    MASONRY_COMPRESSIVE_STRENGTH_ACCORDING_TO_APPROVAL_FIELD_NUMBER: _ClassVar[int]
+    PARAMETER_X_FIELD_NUMBER: _ClassVar[int]
+    PARAMETER_XZ_FIELD_NUMBER: _ClassVar[int]
+    PARAMETER_XY_FIELD_NUMBER: _ClassVar[int]
+    PARAMETER_X_XZ_FIELD_NUMBER: _ClassVar[int]
+    no: int
+    description: str
+    poisson_ratio_editable_group_type: MaterialTemperaturePoissonRatioEditableGroupType
+    poisson_ratio_editable_group_wall_type: MaterialTemperaturePoissonRatioEditableGroupWallType
+    poisson_ratio_editable_group_platte_type: MaterialTemperaturePoissonRatioEditableGroupPlatteType
+    stress_strain_diagram_symmetric: bool
+    stress_strain_diagram_symmetry_factor: float
+    stress_strain_diagram_has_parameters_sorted: bool
+    stress_strain_diagram_type_start_type: MaterialTemperatureStressStrainDiagramTypeStartType
+    stress_strain_diagram_type_end_type: MaterialTemperatureStressStrainDiagramTypeEndType
+    dynamic_increase_factor_diagram_symmetric: bool
+    dynamic_increase_factor_diagram_sort: bool
+    temperature: float
+    note: str
+    maximum_thickness: float
+    elasticity_modulus_global: float
+    elasticity_modulus_x: float
+    elasticity_modulus_y: float
+    elasticity_modulus_z: float
+    shear_modulus_global: float
+    shear_modulus_yz: float
+    shear_modulus_xz: float
+    shear_modulus_xy: float
+    poisson_ratio_global: float
+    poisson_ratio_yz: float
+    poisson_ratio_xz: float
+    poisson_ratio_xy: float
+    poisson_ratio_zy: float
+    poisson_ratio_zx: float
+    poisson_ratio_yx: float
+    mass_density: float
+    specific_weight: float
+    thermal_expansion_coefficient_global: float
+    thermal_expansion_coefficient_x: float
+    thermal_expansion_coefficient_y: float
+    thermal_expansion_coefficient_z: float
+    division_multiplication_factor: float
+    yield_strength_for_thickness: float
+    ultimate_strength_for_thickness: float
+    saturated_specific_weight: float
+    masonry_compressive_strength: float
+    masonry_stone_length: float
+    masonry_stone_height: float
+    masonry_stone_thickness: float
+    masonry_brickwork_unit_type: MaterialTemperatureMasonryBrickworkUnitType
+    masonry_brickwork_configuration_type: MaterialTemperatureMasonryBrickworkConfigurationType
+    masonry_brickwork_grouping_type: MaterialTemperatureMasonryBrickworkGroupingType
+    masonry_mortar_class_type: MaterialTemperatureMasonryMortarClassType
+    masonry_head_joints_filled: bool
+    masonry_mortar_joint_parallel_to_wall_face: bool
+    yield_strength: float
+    yield_strength_for_compression: float
+    yield_strength_for_tension: float
+    hardening_modulus_x: float
+    hardening_modulus_y: float
+    hardening_modulus_z: float
+    ultimate_compressive_strength_x: float
+    ultimate_compressive_strength_y: float
+    ultimate_compressive_strength_z: float
+    ultimate_tensile_strength_x: float
+    ultimate_tensile_strength_y: float
+    ultimate_tensile_strength_z: float
+    ultimate_shear_strength_yz: float
+    ultimate_shear_strength_xz: float
+    ultimate_shear_strength_xy: float
+    thickness_range_size: int
+    timber_elasticity_modulus_x_wall: float
+    timber_elasticity_modulus_y_wall: float
+    timber_elasticity_modulus_x_plate: float
+    timber_elasticity_modulus_y_plate: float
+    timber_poisson_ratio_xy_wall: float
+    timber_poisson_ratio_yx_wall: float
+    timber_poisson_ratio_xy_plate: float
+    timber_poisson_ratio_yx_plate: float
+    timber_shear_modulus_yz: float
+    timber_shear_modulus_xz: float
+    timber_shear_modulus_xy: float
+    soil_cohesive_strength: float
+    soil_angle_of_internal_friction: float
+    soil_angle_of_dilation: float
+    masonry_partial_factor: float
+    soil_reference_tangential_stiffness_for_primary_oedometer_loading: float
+    soil_reference_stress_for_stiffness: float
+    soil_power_for_stress_level_dependency_of_stiffness: float
+    hoek_brown_soil_uniaxial_compressive_strength_of_intact_rock: float
+    hoek_brown_soil_intact_rock_parameter: float
+    hoek_brown_soil_disturbance_factor: float
+    hoek_brown_soil_geological_strength_index: float
+    yield_strength_equivalent: float
+    yield_strength_x: float
+    shear_modulus_x: float
+    shear_modulus_y: float
+    shear_modulus_z: float
+    modified_hardening_soil_shear_hardening_definition_type: MaterialTemperatureModifiedHardeningSoilShearHardeningDefinitionType
+    modified_hardening_soil_shear_hardening_parameter: float
+    modified_hardening_soil_stiffness_at_reference_stress: float
+    modified_hardening_soil_poissons_ratio: float
+    modified_hardening_soil_preconsolidation_definition_type: MaterialTemperatureModifiedHardeningSoilPreconsolidationDefinitionType
+    modified_hardening_soil_pre_overburden_presure: float
+    modified_hardening_soil_overconsolidation_ratio: float
+    representative_volume_element_ratio_of_height_to_length: float
+    internal_material_structure_type: MaterialTemperatureInternalMaterialStructureType
+    hoek_brown_soil_definition_type: MaterialTemperatureHoekBrownSoilDefinitionType
+    hoek_brown_soil_strength_parameter_m_b: float
+    hoek_brown_soil_strength_parameter_s: float
+    hoek_brown_soil_strength_parameter_a: float
+    hoek_brown_soil_strength_parameter_m_g: float
+    hoek_brown_soil_strength_parameter_s_g: float
+    hoek_brown_soil_strength_parameter_a_g: float
+    hoek_brown_soil_elastic_stiffness_matrix: bool
+    hoek_brown_soil_user_defined: bool
+    nonlinear_concrete_diagram_definition_type: MaterialTemperatureNonlinearConcreteDiagramDefinitionType
+    nonlinear_concrete_mean_secant_modulus_of_elasticity: float
+    nonlinear_concrete_tangent_modulus_of_elasticity_in_origin: float
+    nonlinear_concrete_tension_stiffening: bool
+    nonlinear_concrete_tension_stiffening_method_type: MaterialTemperatureNonlinearConcreteTensionStiffeningMethodType
+    nonlinear_concrete_reduction_factor_for_tensile_strength: float
+    nonlinear_concrete_axial_tensile_strength: float
+    nonlinear_concrete_strain_at_peak_compression_stress: float
+    nonlinear_concrete_tensile_strength_at_first_crack: float
+    nonlinear_concrete_exponent_of_stress_strain_parabola_until_first_crack: float
+    nonlinear_concrete_calculational_crack_strain: float
+    nonlinear_concrete_exponent_of_reduction_factor_parabola_after_first_crack: float
+    nonlinear_concrete_exponent_of_function_after_first_crack: float
+    nonlinear_concrete_tensile_strain: float
+    nonlinear_concrete_consider_safety_factors: bool
+    nonlinear_concrete_design_situation_type: MaterialTemperatureNonlinearConcreteDesignSituationType
+    nonlinear_concrete_partial_factors_compressive_strength: float
+    nonlinear_concrete_partial_factors_compressive_strength_uneditable: float
+    nonlinear_concrete_partial_factors_modulus_of_elasticity: float
+    nonlinear_concrete_partial_factors_modulus_of_elasticity_uneditable: float
+    nonlinear_concrete_long_term_actions_compressive_strength: float
+    nonlinear_concrete_long_term_actions_tensile_strength: float
+    nonlinear_concrete_design_secant_modulus_of_elasticity: float
+    nonlinear_concrete_design_tangent_modulus_of_elasticity_in_origin: float
+    nonlinear_concrete_compressive_strength_type: MaterialTemperatureNonlinearConcreteCompressiveStrengthType
+    nonlinear_concrete_compressive_strength: float
+    nonlinear_concrete_compressive_strength_uneditable: float
+    nonlinear_concrete_design_compressive_strength: float
+    nonlinear_concrete_compression_diagram_type: MaterialTemperatureNonlinearConcreteCompressionDiagramType
+    nonlinear_concrete_parabola_exponent: float
+    nonlinear_concrete_ultimate_strain_for_maximum_compression_c1: float
+    nonlinear_concrete_ultimate_strain_at_failure_cu1: float
+    nonlinear_concrete_ultimate_strain_for_maximum_compression_c2: float
+    nonlinear_concrete_ultimate_strain_at_failure_cu2: float
+    nonlinear_concrete_relative_accuracy_of_generated_diagram: float
+    nonlinear_concrete_axial_tensile_strength_type: MaterialTemperatureNonlinearConcreteAxialTensileStrengthType
+    nonlinear_concrete_axial_tensile_strength_uneditable: float
+    nonlinear_concrete_design_value_of_axial_tensile_strength: float
+    nonlinear_concrete_tension_diagram_type: MaterialTemperatureNonlinearConcreteTensionDiagramType
+    nonlinear_concrete_coefficient_at_micro_crack_initiation: float
+    nonlinear_concrete_coefficient_at_micro_crack_initiation_uneditable: float
+    nonlinear_concrete_ultimate_tensile_strain_at_failure: float
+    nonlinear_concrete_ultimate_tensile_strain_at_failure_uneditable: float
+    nonlinear_concrete_partial_factors_tensile_strength_uneditable: float
+    nonlinear_concrete_partial_factors_tensile_strength: float
+    strain_hardening_modulus: float
+    hardening_factor: float
+    limit_stresses_for_tension_x: float
+    limit_stresses_for_tension_y: float
+    reference_element_size: float
+    strain_at_peak_compression_stress: float
+    fracture_energy_ft_x: float
+    fracture_energy_ft_y: float
+    fracture_energy_fc_x: float
+    fracture_energy_fc_y: float
+    masonry_alpha: float
+    masonry_beta: float
+    masonry_gamma: float
+    masonry_compressive_strength_horizontal: float
+    masonry_compressive_strength_according_to_approval: float
+    parameter_x: float
+    parameter_xz: float
+    parameter_xy: float
+    parameter_x_xz: float
+    def __init__(self, no: _Optional[int] = ..., description: _Optional[str] = ..., poisson_ratio_editable_group_type: _Optional[_Union[MaterialTemperaturePoissonRatioEditableGroupType, str]] = ..., poisson_ratio_editable_group_wall_type: _Optional[_Union[MaterialTemperaturePoissonRatioEditableGroupWallType, str]] = ..., poisson_ratio_editable_group_platte_type: _Optional[_Union[MaterialTemperaturePoissonRatioEditableGroupPlatteType, str]] = ..., stress_strain_diagram_symmetric: bool = ..., stress_strain_diagram_symmetry_factor: _Optional[float] = ..., stress_strain_diagram_has_parameters_sorted: bool = ..., stress_strain_diagram_type_start_type: _Optional[_Union[MaterialTemperatureStressStrainDiagramTypeStartType, str]] = ..., stress_strain_diagram_type_end_type: _Optional[_Union[MaterialTemperatureStressStrainDiagramTypeEndType, str]] = ..., dynamic_increase_factor_diagram_symmetric: bool = ..., dynamic_increase_factor_diagram_sort: bool = ..., temperature: _Optional[float] = ..., note: _Optional[str] = ..., maximum_thickness: _Optional[float] = ..., elasticity_modulus_global: _Optional[float] = ..., elasticity_modulus_x: _Optional[float] = ..., elasticity_modulus_y: _Optional[float] = ..., elasticity_modulus_z: _Optional[float] = ..., shear_modulus_global: _Optional[float] = ..., shear_modulus_yz: _Optional[float] = ..., shear_modulus_xz: _Optional[float] = ..., shear_modulus_xy: _Optional[float] = ..., poisson_ratio_global: _Optional[float] = ..., poisson_ratio_yz: _Optional[float] = ..., poisson_ratio_xz: _Optional[float] = ..., poisson_ratio_xy: _Optional[float] = ..., poisson_ratio_zy: _Optional[float] = ..., poisson_ratio_zx: _Optional[float] = ..., poisson_ratio_yx: _Optional[float] = ..., mass_density: _Optional[float] = ..., specific_weight: _Optional[float] = ..., thermal_expansion_coefficient_global: _Optional[float] = ..., thermal_expansion_coefficient_x: _Optional[float] = ..., thermal_expansion_coefficient_y: _Optional[float] = ..., thermal_expansion_coefficient_z: _Optional[float] = ..., division_multiplication_factor: _Optional[float] = ..., yield_strength_for_thickness: _Optional[float] = ..., ultimate_strength_for_thickness: _Optional[float] = ..., saturated_specific_weight: _Optional[float] = ..., masonry_compressive_strength: _Optional[float] = ..., masonry_stone_length: _Optional[float] = ..., masonry_stone_height: _Optional[float] = ..., masonry_stone_thickness: _Optional[float] = ..., masonry_brickwork_unit_type: _Optional[_Union[MaterialTemperatureMasonryBrickworkUnitType, str]] = ..., masonry_brickwork_configuration_type: _Optional[_Union[MaterialTemperatureMasonryBrickworkConfigurationType, str]] = ..., masonry_brickwork_grouping_type: _Optional[_Union[MaterialTemperatureMasonryBrickworkGroupingType, str]] = ..., masonry_mortar_class_type: _Optional[_Union[MaterialTemperatureMasonryMortarClassType, str]] = ..., masonry_head_joints_filled: bool = ..., masonry_mortar_joint_parallel_to_wall_face: bool = ..., yield_strength: _Optional[float] = ..., yield_strength_for_compression: _Optional[float] = ..., yield_strength_for_tension: _Optional[float] = ..., hardening_modulus_x: _Optional[float] = ..., hardening_modulus_y: _Optional[float] = ..., hardening_modulus_z: _Optional[float] = ..., ultimate_compressive_strength_x: _Optional[float] = ..., ultimate_compressive_strength_y: _Optional[float] = ..., ultimate_compressive_strength_z: _Optional[float] = ..., ultimate_tensile_strength_x: _Optional[float] = ..., ultimate_tensile_strength_y: _Optional[float] = ..., ultimate_tensile_strength_z: _Optional[float] = ..., ultimate_shear_strength_yz: _Optional[float] = ..., ultimate_shear_strength_xz: _Optional[float] = ..., ultimate_shear_strength_xy: _Optional[float] = ..., thickness_range_size: _Optional[int] = ..., timber_elasticity_modulus_x_wall: _Optional[float] = ..., timber_elasticity_modulus_y_wall: _Optional[float] = ..., timber_elasticity_modulus_x_plate: _Optional[float] = ..., timber_elasticity_modulus_y_plate: _Optional[float] = ..., timber_poisson_ratio_xy_wall: _Optional[float] = ..., timber_poisson_ratio_yx_wall: _Optional[float] = ..., timber_poisson_ratio_xy_plate: _Optional[float] = ..., timber_poisson_ratio_yx_plate: _Optional[float] = ..., timber_shear_modulus_yz: _Optional[float] = ..., timber_shear_modulus_xz: _Optional[float] = ..., timber_shear_modulus_xy: _Optional[float] = ..., soil_cohesive_strength: _Optional[float] = ..., soil_angle_of_internal_friction: _Optional[float] = ..., soil_angle_of_dilation: _Optional[float] = ..., masonry_partial_factor: _Optional[float] = ..., soil_reference_tangential_stiffness_for_primary_oedometer_loading: _Optional[float] = ..., soil_reference_stress_for_stiffness: _Optional[float] = ..., soil_power_for_stress_level_dependency_of_stiffness: _Optional[float] = ..., hoek_brown_soil_uniaxial_compressive_strength_of_intact_rock: _Optional[float] = ..., hoek_brown_soil_intact_rock_parameter: _Optional[float] = ..., hoek_brown_soil_disturbance_factor: _Optional[float] = ..., hoek_brown_soil_geological_strength_index: _Optional[float] = ..., yield_strength_equivalent: _Optional[float] = ..., yield_strength_x: _Optional[float] = ..., shear_modulus_x: _Optional[float] = ..., shear_modulus_y: _Optional[float] = ..., shear_modulus_z: _Optional[float] = ..., modified_hardening_soil_shear_hardening_definition_type: _Optional[_Union[MaterialTemperatureModifiedHardeningSoilShearHardeningDefinitionType, str]] = ..., modified_hardening_soil_shear_hardening_parameter: _Optional[float] = ..., modified_hardening_soil_stiffness_at_reference_stress: _Optional[float] = ..., modified_hardening_soil_poissons_ratio: _Optional[float] = ..., modified_hardening_soil_preconsolidation_definition_type: _Optional[_Union[MaterialTemperatureModifiedHardeningSoilPreconsolidationDefinitionType, str]] = ..., modified_hardening_soil_pre_overburden_presure: _Optional[float] = ..., modified_hardening_soil_overconsolidation_ratio: _Optional[float] = ..., representative_volume_element_ratio_of_height_to_length: _Optional[float] = ..., internal_material_structure_type: _Optional[_Union[MaterialTemperatureInternalMaterialStructureType, str]] = ..., hoek_brown_soil_definition_type: _Optional[_Union[MaterialTemperatureHoekBrownSoilDefinitionType, str]] = ..., hoek_brown_soil_strength_parameter_m_b: _Optional[float] = ..., hoek_brown_soil_strength_parameter_s: _Optional[float] = ..., hoek_brown_soil_strength_parameter_a: _Optional[float] = ..., hoek_brown_soil_strength_parameter_m_g: _Optional[float] = ..., hoek_brown_soil_strength_parameter_s_g: _Optional[float] = ..., hoek_brown_soil_strength_parameter_a_g: _Optional[float] = ..., hoek_brown_soil_elastic_stiffness_matrix: bool = ..., hoek_brown_soil_user_defined: bool = ..., nonlinear_concrete_diagram_definition_type: _Optional[_Union[MaterialTemperatureNonlinearConcreteDiagramDefinitionType, str]] = ..., nonlinear_concrete_mean_secant_modulus_of_elasticity: _Optional[float] = ..., nonlinear_concrete_tangent_modulus_of_elasticity_in_origin: _Optional[float] = ..., nonlinear_concrete_tension_stiffening: bool = ..., nonlinear_concrete_tension_stiffening_method_type: _Optional[_Union[MaterialTemperatureNonlinearConcreteTensionStiffeningMethodType, str]] = ..., nonlinear_concrete_reduction_factor_for_tensile_strength: _Optional[float] = ..., nonlinear_concrete_axial_tensile_strength: _Optional[float] = ..., nonlinear_concrete_strain_at_peak_compression_stress: _Optional[float] = ..., nonlinear_concrete_tensile_strength_at_first_crack: _Optional[float] = ..., nonlinear_concrete_exponent_of_stress_strain_parabola_until_first_crack: _Optional[float] = ..., nonlinear_concrete_calculational_crack_strain: _Optional[float] = ..., nonlinear_concrete_exponent_of_reduction_factor_parabola_after_first_crack: _Optional[float] = ..., nonlinear_concrete_exponent_of_function_after_first_crack: _Optional[float] = ..., nonlinear_concrete_tensile_strain: _Optional[float] = ..., nonlinear_concrete_consider_safety_factors: bool = ..., nonlinear_concrete_design_situation_type: _Optional[_Union[MaterialTemperatureNonlinearConcreteDesignSituationType, str]] = ..., nonlinear_concrete_partial_factors_compressive_strength: _Optional[float] = ..., nonlinear_concrete_partial_factors_compressive_strength_uneditable: _Optional[float] = ..., nonlinear_concrete_partial_factors_modulus_of_elasticity: _Optional[float] = ..., nonlinear_concrete_partial_factors_modulus_of_elasticity_uneditable: _Optional[float] = ..., nonlinear_concrete_long_term_actions_compressive_strength: _Optional[float] = ..., nonlinear_concrete_long_term_actions_tensile_strength: _Optional[float] = ..., nonlinear_concrete_design_secant_modulus_of_elasticity: _Optional[float] = ..., nonlinear_concrete_design_tangent_modulus_of_elasticity_in_origin: _Optional[float] = ..., nonlinear_concrete_compressive_strength_type: _Optional[_Union[MaterialTemperatureNonlinearConcreteCompressiveStrengthType, str]] = ..., nonlinear_concrete_compressive_strength: _Optional[float] = ..., nonlinear_concrete_compressive_strength_uneditable: _Optional[float] = ..., nonlinear_concrete_design_compressive_strength: _Optional[float] = ..., nonlinear_concrete_compression_diagram_type: _Optional[_Union[MaterialTemperatureNonlinearConcreteCompressionDiagramType, str]] = ..., nonlinear_concrete_parabola_exponent: _Optional[float] = ..., nonlinear_concrete_ultimate_strain_for_maximum_compression_c1: _Optional[float] = ..., nonlinear_concrete_ultimate_strain_at_failure_cu1: _Optional[float] = ..., nonlinear_concrete_ultimate_strain_for_maximum_compression_c2: _Optional[float] = ..., nonlinear_concrete_ultimate_strain_at_failure_cu2: _Optional[float] = ..., nonlinear_concrete_relative_accuracy_of_generated_diagram: _Optional[float] = ..., nonlinear_concrete_axial_tensile_strength_type: _Optional[_Union[MaterialTemperatureNonlinearConcreteAxialTensileStrengthType, str]] = ..., nonlinear_concrete_axial_tensile_strength_uneditable: _Optional[float] = ..., nonlinear_concrete_design_value_of_axial_tensile_strength: _Optional[float] = ..., nonlinear_concrete_tension_diagram_type: _Optional[_Union[MaterialTemperatureNonlinearConcreteTensionDiagramType, str]] = ..., nonlinear_concrete_coefficient_at_micro_crack_initiation: _Optional[float] = ..., nonlinear_concrete_coefficient_at_micro_crack_initiation_uneditable: _Optional[float] = ..., nonlinear_concrete_ultimate_tensile_strain_at_failure: _Optional[float] = ..., nonlinear_concrete_ultimate_tensile_strain_at_failure_uneditable: _Optional[float] = ..., nonlinear_concrete_partial_factors_tensile_strength_uneditable: _Optional[float] = ..., nonlinear_concrete_partial_factors_tensile_strength: _Optional[float] = ..., strain_hardening_modulus: _Optional[float] = ..., hardening_factor: _Optional[float] = ..., limit_stresses_for_tension_x: _Optional[float] = ..., limit_stresses_for_tension_y: _Optional[float] = ..., reference_element_size: _Optional[float] = ..., strain_at_peak_compression_stress: _Optional[float] = ..., fracture_energy_ft_x: _Optional[float] = ..., fracture_energy_ft_y: _Optional[float] = ..., fracture_energy_fc_x: _Optional[float] = ..., fracture_energy_fc_y: _Optional[float] = ..., masonry_alpha: _Optional[float] = ..., masonry_beta: _Optional[float] = ..., masonry_gamma: _Optional[float] = ..., masonry_compressive_strength_horizontal: _Optional[float] = ..., masonry_compressive_strength_according_to_approval: _Optional[float] = ..., parameter_x: _Optional[float] = ..., parameter_xz: _Optional[float] = ..., parameter_xy: _Optional[float] = ..., parameter_x_xz: _Optional[float] = ...) -> None: ...

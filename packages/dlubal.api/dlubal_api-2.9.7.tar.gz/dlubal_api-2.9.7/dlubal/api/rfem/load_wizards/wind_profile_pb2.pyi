@@ -1,0 +1,760 @@
+from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Mapping, Optional as _Optional, Union as _Union
+
+DESCRIPTOR: _descriptor.FileDescriptor
+
+class WindProfileType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    WIND_PROFILE_TYPE_UNKNOWN: _ClassVar[WindProfileType]
+    WIND_PROFILE_TYPE_ACCORDING_TO_STANDARD: _ClassVar[WindProfileType]
+    WIND_PROFILE_TYPE_USER_DEFINED: _ClassVar[WindProfileType]
+
+class WindProfileLoadZone(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    WIND_PROFILE_LOAD_ZONE_UNKNOWN: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_NOT_DEFINED: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_18_TO_0_38: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_3: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_39_TO_0_48: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_3_S: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_4: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_49_TO_0_6: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_6: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_61_TO_0_7: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_65: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_7: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_71_TO_0_8: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_75: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_8: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_9: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_9_S: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_0_M: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_10: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_100: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_110: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_120: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_130: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_140: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_15: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_150: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_152: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_155: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_160: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_165: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_166: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_170: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_175: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_180: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_184: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_19: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_190: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_195: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_0_COMMA: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_1_TO_2_7: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_25: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_3: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_4_TO_3_3: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_5_COMMA: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_8: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_A: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_A_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_B: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_TO_2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_1_V: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_20: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_200: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_20_9_LESS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_21: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_210: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_21_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_22: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_220: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_22_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_23: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_230: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_23_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_23_6: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_24: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_240: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_24_2_LESS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_24_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_24_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_25: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_250: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_25_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_26: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_260: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_26_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_26_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_27: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_270: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_27_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_27_5_LESS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_28: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_280: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_28_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_28_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_29: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_290: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_29_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_0_2_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_0_COMMA: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_5_2_75: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_5_3_0: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_5_COMMA: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_75_3_0: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_75_3_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_A: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_ASTERISK_2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_ASTERISK_3: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_B: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_2_V: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_3: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_30: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_300: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_30_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_30_8_LESS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_30_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_31: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_310: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_32: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_320: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_32_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_32_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_33: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_330: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_34: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_340: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_34_1_LESS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_34_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_35: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_36: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_36_0: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_36_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_37_4_LESS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_37_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_38: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_38_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_39: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_3_0_3_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_3_0_COMMA: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_3_5_COMMA: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_3_A: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_3_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_3_A_GREATER: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_4: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_40: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_40_7_LESS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_41_4_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_42: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_42_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_44: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_44_0_LESS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_44_7: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_45: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_46: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_47: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_47_3_LESS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_47_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_48: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_4_5_COMMA: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_4_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_50: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_50_6: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_50_6_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_50_6_LESS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_52: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_54: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_55: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_56: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_56_7: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_57: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_58: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_5_5_COMMA: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_5_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_6: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_60: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_62: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_62_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_64: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_65: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_65_6_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_66: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_67_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_68_1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_68_1_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_7: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_70: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_73_9: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_7_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_8: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_80: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_80_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_9: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_90: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_ABOVE_200_M: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_ABOVE_400_M: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_ABOVE_500_M: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_AC: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_ALPINE_N: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_ALPINE_S: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_AN: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_AS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_AT: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A_0: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A_1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A_2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A_2_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A_3: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A_3_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A_4: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A_4_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A_6: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_A_7: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_B: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_B_1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_B_2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_C: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_CS: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_C_1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_C_2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_D: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_E: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_GAMMA: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_GAMMA_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_GEQ_8: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_GREATER_38_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_GUADELOUPE: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_GUYANE: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_G_10_0: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_H: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_I: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_II: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_III: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_III_A: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_III_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_III_B: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_II_A: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_II_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_II_B: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_IV: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_IV_B: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_IX: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_I_A: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_I_ASTERISK_A: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_I_ASTERISK_M: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_I_M: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_25: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_30: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_35: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_40: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_45: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_50: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_55: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_6: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_60: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_6_CIRSOC: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_7: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_75: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_8: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_9: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_95: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_10: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_100: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_105: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_110: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_12: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_120: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_130: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_140: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_15: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_150: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_160: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_170: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_18: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_180: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_190: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_1_1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_1_2_CIRSOC: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_1_75: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_20: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_200: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_21: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_210: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_220: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_24: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_240: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_265: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_27: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_2_25: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_2_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_2_75: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_30: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_32_1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_3_2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_3_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_40: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_42: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_44: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_46: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_48: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_4_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_50: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_500: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_60: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_6_5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_70: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_80: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_843: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_90: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_95: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_MARTINIQUE: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_MAYOTTE: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_MEQ_0_7: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_M_1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_N1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_N2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_N3: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_N4: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_N5: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_NZ_1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_NZ_2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_NZ_3: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_NZ_4: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_N_A: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_REUNION: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_SR: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_UNDER_200_M: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_V: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_VI: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_VII: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_VIII: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_VI_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_V_ASTERISK: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_V_B: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_W: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_Z1: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_Z2: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_Z3: _ClassVar[WindProfileLoadZone]
+    WIND_PROFILE_LOAD_ZONE_TYPE_ZERO: _ClassVar[WindProfileLoadZone]
+
+class WindProfileDefinitionType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    WIND_PROFILE_DEFINITION_TYPE_UNKNOWN: _ClassVar[WindProfileDefinitionType]
+    WIND_PROFILE_DEFINITION_TYPE_PARAMETERS_FROM_MAP: _ClassVar[WindProfileDefinitionType]
+    WIND_PROFILE_DEFINITION_TYPE_USER_DEFINED: _ClassVar[WindProfileDefinitionType]
+WIND_PROFILE_TYPE_UNKNOWN: WindProfileType
+WIND_PROFILE_TYPE_ACCORDING_TO_STANDARD: WindProfileType
+WIND_PROFILE_TYPE_USER_DEFINED: WindProfileType
+WIND_PROFILE_LOAD_ZONE_UNKNOWN: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_NOT_DEFINED: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_18_TO_0_38: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_3: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_39_TO_0_48: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_3_S: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_4: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_49_TO_0_6: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_6: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_61_TO_0_7: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_65: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_7: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_71_TO_0_8: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_75: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_8: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_9: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_9_S: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_0_M: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_10: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_100: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_110: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_120: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_130: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_140: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_15: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_150: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_152: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_155: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_160: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_165: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_166: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_170: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_175: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_180: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_184: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_19: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_190: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_195: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_0_COMMA: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_1_TO_2_7: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_25: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_3: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_4_TO_3_3: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_5_COMMA: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_8: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_A: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_A_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_B: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_TO_2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_1_V: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_20: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_200: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_20_9_LESS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_21: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_210: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_21_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_22: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_220: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_22_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_23: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_230: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_23_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_23_6: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_24: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_240: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_24_2_LESS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_24_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_24_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_25: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_250: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_25_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_26: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_260: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_26_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_26_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_27: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_270: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_27_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_27_5_LESS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_28: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_280: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_28_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_28_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_29: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_290: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_29_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_0_2_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_0_COMMA: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_5_2_75: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_5_3_0: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_5_COMMA: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_75_3_0: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_75_3_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_A: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_ASTERISK_2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_ASTERISK_3: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_B: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_2_V: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_3: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_30: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_300: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_30_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_30_8_LESS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_30_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_31: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_310: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_32: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_320: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_32_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_32_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_33: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_330: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_34: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_340: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_34_1_LESS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_34_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_35: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_36: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_36_0: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_36_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_37_4_LESS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_37_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_38: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_38_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_39: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_3_0_3_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_3_0_COMMA: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_3_5_COMMA: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_3_A: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_3_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_3_A_GREATER: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_4: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_40: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_40_7_LESS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_41_4_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_42: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_42_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_44: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_44_0_LESS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_44_7: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_45: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_46: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_47: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_47_3_LESS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_47_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_48: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_4_5_COMMA: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_4_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_50: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_50_6: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_50_6_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_50_6_LESS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_52: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_54: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_55: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_56: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_56_7: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_57: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_58: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_5_5_COMMA: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_5_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_6: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_60: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_62: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_62_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_64: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_65: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_65_6_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_66: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_67_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_68_1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_68_1_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_7: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_70: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_73_9: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_7_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_8: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_80: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_80_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_9: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_90: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_ABOVE_200_M: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_ABOVE_400_M: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_ABOVE_500_M: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_AC: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_ALPINE_N: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_ALPINE_S: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_AN: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_AS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_AT: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A_0: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A_1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A_2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A_2_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A_3: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A_3_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A_4: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A_4_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A_6: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_A_7: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_B: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_B_1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_B_2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_C: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_CS: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_C_1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_C_2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_D: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_E: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_GAMMA: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_GAMMA_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_GEQ_8: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_GREATER_38_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_GUADELOUPE: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_GUYANE: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_G_10_0: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_H: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_I: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_II: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_III: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_III_A: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_III_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_III_B: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_II_A: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_II_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_II_B: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_IV: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_IV_B: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_IX: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_I_A: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_I_ASTERISK_A: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_I_ASTERISK_M: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_I_M: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_25: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_30: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_35: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_40: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_45: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_50: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_55: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_6: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_60: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_6_CIRSOC: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_7: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_75: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_8: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_9: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_0_95: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_10: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_100: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_105: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_110: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_12: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_120: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_130: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_140: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_15: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_150: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_160: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_170: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_18: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_180: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_190: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_1_1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_1_2_CIRSOC: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_1_75: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_20: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_200: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_21: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_210: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_220: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_24: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_240: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_265: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_27: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_2_25: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_2_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_2_75: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_30: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_32_1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_3_2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_3_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_40: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_42: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_44: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_46: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_48: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_4_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_50: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_500: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_60: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_6_5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_70: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_80: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_843: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_90: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_LEQ_95: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_MARTINIQUE: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_MAYOTTE: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_MEQ_0_7: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_M_1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_N1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_N2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_N3: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_N4: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_N5: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_NZ_1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_NZ_2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_NZ_3: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_NZ_4: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_N_A: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_REUNION: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_SR: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_UNDER_200_M: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_V: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_VI: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_VII: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_VIII: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_VI_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_V_ASTERISK: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_V_B: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_W: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_Z1: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_Z2: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_Z3: WindProfileLoadZone
+WIND_PROFILE_LOAD_ZONE_TYPE_ZERO: WindProfileLoadZone
+WIND_PROFILE_DEFINITION_TYPE_UNKNOWN: WindProfileDefinitionType
+WIND_PROFILE_DEFINITION_TYPE_PARAMETERS_FROM_MAP: WindProfileDefinitionType
+WIND_PROFILE_DEFINITION_TYPE_USER_DEFINED: WindProfileDefinitionType
+
+class WindProfile(_message.Message):
+    __slots__ = ("no", "user_defined_name_enabled", "name", "type", "user_defined_wind_profile_step_enabled", "user_defined_wind_profile_sorted", "user_defined_wind_profile_uniform_intensity_enabled", "user_defined_wind_profile_uniform_intensity", "user_defined_wind_profile_period_step", "user_defined_wind_profile", "comment", "load_zone", "definition_type", "id_for_export_import", "metadata_for_export_import")
+    NO_FIELD_NUMBER: _ClassVar[int]
+    USER_DEFINED_NAME_ENABLED_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    TYPE_FIELD_NUMBER: _ClassVar[int]
+    USER_DEFINED_WIND_PROFILE_STEP_ENABLED_FIELD_NUMBER: _ClassVar[int]
+    USER_DEFINED_WIND_PROFILE_SORTED_FIELD_NUMBER: _ClassVar[int]
+    USER_DEFINED_WIND_PROFILE_UNIFORM_INTENSITY_ENABLED_FIELD_NUMBER: _ClassVar[int]
+    USER_DEFINED_WIND_PROFILE_UNIFORM_INTENSITY_FIELD_NUMBER: _ClassVar[int]
+    USER_DEFINED_WIND_PROFILE_PERIOD_STEP_FIELD_NUMBER: _ClassVar[int]
+    USER_DEFINED_WIND_PROFILE_FIELD_NUMBER: _ClassVar[int]
+    COMMENT_FIELD_NUMBER: _ClassVar[int]
+    LOAD_ZONE_FIELD_NUMBER: _ClassVar[int]
+    DEFINITION_TYPE_FIELD_NUMBER: _ClassVar[int]
+    ID_FOR_EXPORT_IMPORT_FIELD_NUMBER: _ClassVar[int]
+    METADATA_FOR_EXPORT_IMPORT_FIELD_NUMBER: _ClassVar[int]
+    no: int
+    user_defined_name_enabled: bool
+    name: str
+    type: WindProfileType
+    user_defined_wind_profile_step_enabled: bool
+    user_defined_wind_profile_sorted: bool
+    user_defined_wind_profile_uniform_intensity_enabled: bool
+    user_defined_wind_profile_uniform_intensity: float
+    user_defined_wind_profile_period_step: float
+    user_defined_wind_profile: WindProfileUserDefinedWindProfileTable
+    comment: str
+    load_zone: WindProfileLoadZone
+    definition_type: WindProfileDefinitionType
+    id_for_export_import: str
+    metadata_for_export_import: str
+    def __init__(self, no: _Optional[int] = ..., user_defined_name_enabled: bool = ..., name: _Optional[str] = ..., type: _Optional[_Union[WindProfileType, str]] = ..., user_defined_wind_profile_step_enabled: bool = ..., user_defined_wind_profile_sorted: bool = ..., user_defined_wind_profile_uniform_intensity_enabled: bool = ..., user_defined_wind_profile_uniform_intensity: _Optional[float] = ..., user_defined_wind_profile_period_step: _Optional[float] = ..., user_defined_wind_profile: _Optional[_Union[WindProfileUserDefinedWindProfileTable, _Mapping]] = ..., comment: _Optional[str] = ..., load_zone: _Optional[_Union[WindProfileLoadZone, str]] = ..., definition_type: _Optional[_Union[WindProfileDefinitionType, str]] = ..., id_for_export_import: _Optional[str] = ..., metadata_for_export_import: _Optional[str] = ...) -> None: ...
+
+class WindProfileUserDefinedWindProfileTable(_message.Message):
+    __slots__ = ("rows",)
+    ROWS_FIELD_NUMBER: _ClassVar[int]
+    rows: _containers.RepeatedCompositeFieldContainer[WindProfileUserDefinedWindProfileRow]
+    def __init__(self, rows: _Optional[_Iterable[_Union[WindProfileUserDefinedWindProfileRow, _Mapping]]] = ...) -> None: ...
+
+class WindProfileUserDefinedWindProfileRow(_message.Message):
+    __slots__ = ("no", "description", "height", "velocity", "turbulence_intensity")
+    NO_FIELD_NUMBER: _ClassVar[int]
+    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    HEIGHT_FIELD_NUMBER: _ClassVar[int]
+    VELOCITY_FIELD_NUMBER: _ClassVar[int]
+    TURBULENCE_INTENSITY_FIELD_NUMBER: _ClassVar[int]
+    no: int
+    description: str
+    height: float
+    velocity: float
+    turbulence_intensity: float
+    def __init__(self, no: _Optional[int] = ..., description: _Optional[str] = ..., height: _Optional[float] = ..., velocity: _Optional[float] = ..., turbulence_intensity: _Optional[float] = ...) -> None: ...
