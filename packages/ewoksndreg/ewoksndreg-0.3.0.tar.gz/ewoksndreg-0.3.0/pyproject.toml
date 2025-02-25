@@ -1,0 +1,89 @@
+[build-system]
+requires = ["setuptools>=46.4"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ewoksndreg"
+version = "0.3.0"
+keywords = ["orange3 add-on", "ewoks"]
+authors = [{name = "ESRF", email = "dau-pydev@esrf.fr"}]
+description = "Workflows for data registration (e.g. curve, image and volume registration)."
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {file = "LICENSE.md"}
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy >=1.15",
+    "silx >=1.1.2",
+    "pyopencl",
+    "ewoksdata >=0.1",
+    "ewoksorange >=0.1.2",
+    "packaging",
+    "scipy >=1.5.4",
+    "scikit-image >=0.19",
+]
+
+[project.urls]
+Homepage = "https://gitlab.esrf.fr/workflow/ewoksapps/ewoksndreg"
+Documentation = "https://ewoksndreg.readthedocs.io/"
+Repository = "https://gitlab.esrf.fr/workflow/ewoksapps/ewoksndreg"
+Issues = "https://gitlab.esrf.fr/workflow/ewoksapps/ewoksndreg/issues"
+Changelog = "https://gitlab.esrf.fr/workflow/ewoksapps/ewoksndreg/-/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+all = [
+    "kornia >=0.7.0",
+    "simpleitk >=2.2.1",
+]
+full = [
+    "ewoksndreg[all]",
+    "pyqt6",
+]
+test = [
+    "pytest >=7",
+    "pyqt6",
+    "importlib-resources;python_version<='3.9'",
+]
+dev = [
+    "ewoksndreg[test]",
+    "black >=25",
+    "flake8 >=4",
+]
+doc = [
+    "ewoksndreg[test]",
+    "ewoksndreg[full]",
+    "sphinx >=4.5",
+    "sphinx-autodoc-typehints >=1.16",
+    "pydata-sphinx-theme >= 0.14.4",
+]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*"= ['*.ows', '*.png', '*.svg']
+
+[tool.coverage.run]
+omit = ['*/tests/*']
+
+[project.entry-points."orange3.addon"]
+"ewoksndreg" = "orangecontrib.ewoksndreg"
+
+[project.entry-points."orange.widgets"]
+"Registration" = "orangecontrib.ewoksndreg"
+
+[project.entry-points."orange.widgets.tutorials"]
+"Registration" = "orangecontrib.ewoksndreg.tutorials"
+
+[project.entry-points."orange.canvas.help"]
+"html-index" = "orangecontrib.ewoksndreg:WIDGET_HELP_PATH"
+
+[project.entry-points."ewoks.tasks.class"]
+"ewoksndreg.tasks.*" = "ewoksndreg"

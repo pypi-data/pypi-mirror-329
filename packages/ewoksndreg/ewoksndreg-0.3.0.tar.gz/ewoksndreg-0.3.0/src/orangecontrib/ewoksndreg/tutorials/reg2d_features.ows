@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme version="2.0" title="Feature-Based Image Registration" description="This workflow registers and transforms a stack of 2D images. The registration is done with an feature-based method">
+	<nodes>
+		<node id="0" name="2D Transformation" qualified_name="orangecontrib.ewoksndreg.reg2d_transform.OWReg2DTransform" project_name="ewoksndreg" version="" title="Align (theory)" position="(366.0, 408.0)" />
+		<node id="1" name="2D Feature-Based Registration" qualified_name="orangecontrib.ewoksndreg.reg2d_features.OWReg2DFeatures" project_name="ewoksndreg" version="" title="2D Feature Registration" position="(372.0, 163.0)" />
+		<node id="2" name="2D Transformation" qualified_name="orangecontrib.ewoksndreg.reg2d_transform.OWReg2DTransform" project_name="ewoksndreg" version="" title="Align" position="(556.0, 276.0)" />
+		<node id="3" name="2D Example Stack" qualified_name="orangecontrib.ewoksndreg.example2d_stack.OWExample2DStack" project_name="ewoksndreg" version="" title="2D Example Stack" position="(140.0, 290.0)" />
+	</nodes>
+	<links>
+		<link id="0" source_node_id="3" sink_node_id="1" source_channel="imagestack" sink_channel="imagestack" enabled="true" source_channel_id="imagestack" sink_channel_id="imagestack" />
+		<link id="1" source_node_id="3" sink_node_id="0" source_channel="transformations" sink_channel="transformations" enabled="true" source_channel_id="transformations" sink_channel_id="transformations" />
+		<link id="2" source_node_id="3" sink_node_id="0" source_channel="imagestack" sink_channel="imagestack" enabled="true" source_channel_id="imagestack" sink_channel_id="imagestack" />
+		<link id="3" source_node_id="1" sink_node_id="2" source_channel="transformations" sink_channel="transformations" enabled="true" source_channel_id="transformations" sink_channel_id="transformations" />
+		<link id="4" source_node_id="3" sink_node_id="2" source_channel="imagestack" sink_channel="imagestack" enabled="true" source_channel_id="imagestack" sink_channel_id="imagestack" />
+	</links>
+	<annotations />
+	<thumbnail />
+	<node_properties>
+		<properties node_id="0" format="literal">{'_ewoks_default_inputs': {}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, '__version__': 1}</properties>
+		<properties node_id="1" format="literal">{'_ewoks_default_inputs': {'transformation_type': 'translation', 'detector': 'Sift-SciKitImage', 'matcher': 'Descriptor-Silx', 'mapper': 'LstSq-Numpy'}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, '__version__': 1}</properties>
+		<properties node_id="2" format="literal">{'_ewoks_default_inputs': {}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, '__version__': 1}</properties>
+		<properties node_id="3" format="literal">{'_ewoks_default_inputs': {'name': 'astronaut', 'transformation_type': 'translation'}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, '__version__': 1}</properties>
+	</node_properties>
+	<session_state>
+		<window_groups />
+	</session_state>
+</scheme>

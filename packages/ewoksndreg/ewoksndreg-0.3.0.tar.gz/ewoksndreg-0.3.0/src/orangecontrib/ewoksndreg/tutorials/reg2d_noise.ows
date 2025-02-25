@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme version="2.0" title="Registration with Noise" description="This workflow generates several stacks of images with varying levels of noise, which all require the same alignment. After the registration the best alignment is chosen to use in the transform step">
+	<nodes>
+		<node id="0" name="2D Example Stack" qualified_name="orangecontrib.ewoksndreg.example2d_stack.OWExample2DStack" project_name="ewoksndreg" version="" title="Example Stack" position="(150, 300)" />
+		<node id="1" name="2D Intensity-Based Registration" qualified_name="orangecontrib.ewoksndreg.reg2d_intensities.OWReg2DIntensities" project_name="ewoksndreg" version="" title="Intensity-based Registration" position="(436.0, 122.0)" />
+		<node id="2" name="Post-Registration Evaluation" qualified_name="orangecontrib.ewoksndreg.reg2d_posteval.OWReg2DPostEvaluation" project_name="ewoksndreg" version="" title="Evaluation" position="(750, 150)" />
+		<node id="3" name="2D Transformation" qualified_name="orangecontrib.ewoksndreg.reg2d_transform.OWReg2DTransform" project_name="ewoksndreg" version="" title="2D Transformation" position="(900, 300)" />
+	</nodes>
+	<links>
+		<link id="0" source_node_id="1" sink_node_id="2" source_channel="transformations" sink_channel="transformations" enabled="true" source_channel_id="transformations" sink_channel_id="transformations" />
+		<link id="1" source_node_id="2" sink_node_id="3" source_channel="transformations" sink_channel="transformations" enabled="true" source_channel_id="transformations" sink_channel_id="transformations" />
+		<link id="2" source_node_id="0" sink_node_id="1" source_channel="imagestack" sink_channel="imagestack" enabled="true" source_channel_id="imagestack" sink_channel_id="imagestack" />
+		<link id="3" source_node_id="0" sink_node_id="2" source_channel="imagestack" sink_channel="imagestacks" enabled="true" source_channel_id="imagestack" sink_channel_id="imagestacks" />
+		<link id="4" source_node_id="0" sink_node_id="3" source_channel="imagestack" sink_channel="imagestack" enabled="true" source_channel_id="imagestack" sink_channel_id="imagestack" />
+	</links>
+	<annotations />
+	<thumbnail />
+	<node_properties>
+		<properties node_id="0" format="literal">{'_ewoks_default_inputs': {'name': 'camera', 'transformation_type': 'translation', 'nimages': 10, 'add_noise_dim': True}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x07}\x00\x00\x01%\x00\x00\n\xf3\x00\x00\x039\x00\x00\x07\x80\x00\x00\x01C\x00\x00\n\xf0\x00\x00\x036\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x07\x80\x00\x00\x01C\x00\x00\n\xf0\x00\x00\x036', '__version__': 1}</properties>
+		<properties node_id="1" format="literal">{'_ewoks_default_inputs': {'mapper': 'CrossCorrelation-Numpy', 'method_options': {}, 'transformation_type': 'translation', 'block_size': 1000, 'preprocessing_options': {'filter_parameter': 4.0}}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x07}\x00\x00\x00\xfd\x00\x00\x0e\xb6\x00\x00\x05\x19\x00\x00\x07\x80\x00\x00\x01\x1b\x00\x00\x0bG\x00\x00\x03*\x00\x00\x00\x00\x02\x00\x00\x00\x07\x80\x00\x00\x07\x80\x00\x00\x01\x1b\x00\x00\x0e\xb3\x00\x00\x05\x16', '__version__': 1}</properties>
+		<properties node_id="2" format="literal">{'_ewoks_default_inputs': {'chosen_stack': -1}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x01\xf1\x00\x00\x01E\x00\x00\x05\x99\x00\x00\x03]\x00\x00\x01\xf1\x00\x00\x01j\x00\x00\x05\x99\x00\x00\x03]\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x01\xf1\x00\x00\x01j\x00\x00\x05\x99\x00\x00\x03]', '__version__': 1}</properties>
+		<properties node_id="3" format="literal">{'_ewoks_default_inputs': {'interpolation_order': 0}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x02\x03\x00\x00\x01\x1e\x00\x00\x05\xaf\x00\x00\x036\x00\x00\x02\x03\x00\x00\x01C\x00\x00\x05\xaf\x00\x00\x036\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x02\x03\x00\x00\x01C\x00\x00\x05\xaf\x00\x00\x036', '__version__': 1}</properties>
+	</node_properties>
+	<session_state>
+		<window_groups />
+	</session_state>
+</scheme>

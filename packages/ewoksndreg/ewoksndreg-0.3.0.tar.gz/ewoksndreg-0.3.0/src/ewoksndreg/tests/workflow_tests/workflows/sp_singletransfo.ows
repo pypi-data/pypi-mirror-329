@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme version="2.0" title="" description="">
+	<nodes>
+		<node id="0" name="Python Script" qualified_name="Orange.widgets.data.owpythonscript.OWPythonScript" project_name="Orange3" version="" title="0" position="(372.0, 395.0)" />
+		<node id="1" name="2D Example Stack" qualified_name="orangecontrib.ewoksndreg.example2d_stack.OWExample2DStack" project_name="ewoksndreg" version="" title="1" position="(233.0, 396.0)" />
+		<node id="2" name="2D Intensity-Based Registration" qualified_name="orangecontrib.ewoksndreg.reg2d_intensities.OWReg2DIntensities" project_name="ewoksndreg" version="" title="2" position="(499.0, 206.0)" />
+		<node id="3" name="Post-Registration Evaluation" qualified_name="orangecontrib.ewoksndreg.reg2d_posteval.OWReg2DPostEvaluation" project_name="ewoksndreg" version="" title="3" position="(645.0, 279.0)" />
+		<node id="4" name="2D Transformation" qualified_name="orangecontrib.ewoksndreg.reg2d_transform.OWReg2DTransform" project_name="ewoksndreg" version="" title="4" position="(803.0, 399.0)" />
+	</nodes>
+	<links>
+		<link id="0" source_node_id="1" sink_node_id="0" source_channel="imagestack" sink_channel="Object" enabled="true" source_channel_id="imagestack" sink_channel_id="object" />
+		<link id="1" source_node_id="0" sink_node_id="2" source_channel="Object" sink_channel="imagestack" enabled="true" source_channel_id="object" sink_channel_id="imagestack" />
+		<link id="2" source_node_id="2" sink_node_id="3" source_channel="transformations" sink_channel="transformations" enabled="true" source_channel_id="transformations" sink_channel_id="transformations" />
+		<link id="3" source_node_id="0" sink_node_id="4" source_channel="Object" sink_channel="imagestack" enabled="true" source_channel_id="object" sink_channel_id="imagestack" />
+		<link id="4" source_node_id="3" sink_node_id="4" source_channel="transformations" sink_channel="transformations" enabled="true" source_channel_id="transformations" sink_channel_id="transformations" />
+		<link id="5" source_node_id="0" sink_node_id="3" source_channel="Object" sink_channel="imagestacks" enabled="true" source_channel_id="object" sink_channel_id="imagestacks" />
+	</links>
+	<annotations />
+	<thumbnail />
+	<node_properties>
+		<properties node_id="0" format="literal">{'controlAreaVisible': True, 'currentScriptIndex': 1, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x021\x00\x00\x01\x11\x00\x00\x05\x80\x00\x00\x03h\x00\x00\x021\x00\x00\x01\x11\x00\x00\x05\x80\x00\x00\x03h\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x021\x00\x00\x01\x11\x00\x00\x05\x80\x00\x00\x03h', 'scriptLibrary': [{'name': 'New script', 'script': 'import numpy as np\nfrom ewoksndreg.io.input_stack import InputStackNumpy\nfrom skimage.util import random_noise\n\ndata: np.ndarray = np.array(in_object)\ndata = [random_noise(data, mode="s&amp;p", amount=0.05 * i) for i in range(7)]\nout_object = InputStackNumpy(data, False)\n', 'filename': None}], 'scriptText': 'import numpy as np\nfrom ewoksndreg.io.input_stack import InputStackNumpy\nfrom skimage.util import random_noise\n\ndata: np.ndarray = np.array(in_object)\ndata = [random_noise(data, mode="s&amp;p", amount=0.05 * i) for i in range(7)]\nout_object = InputStackNumpy(data, False)\n', 'splitterState': b'\x00\x00\x00\xff\x00\x00\x00\x01\x00\x00\x00\x02\x00\x00\x00\xac\x00\x00\x00h\x01\xff\xff\xff\xff\x01\x00\x00\x00\x02\x00', 'vimModeEnabled': False, '__version__': 2}</properties>
+		<properties node_id="1" format="literal">{'_ewoks_default_inputs': {'name': 'astronaut', 'transformation_type': 'translation', 'nimages': 10}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x02!\x00\x00\x01\x1e\x00\x00\x05\x91\x00\x00\x036\x00\x00\x02!\x00\x00\x01C\x00\x00\x05\x91\x00\x00\x036\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x02!\x00\x00\x01C\x00\x00\x05\x91\x00\x00\x036', '__version__': 1}</properties>
+		<properties node_id="2" format="literal">{'_ewoks_default_inputs': {'mapper': 'CrossCorrelation-Numpy', 'method_options': {}, 'transformation_type': 'translation', 'block_size': 1000}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00\x8e\x00\x00\x02D\x00\x00\x04U\x00\x00\x04x\x00\x00\x00\x8e\x00\x00\x02i\x00\x00\x04U\x00\x00\x04x\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x00\x8e\x00\x00\x02i\x00\x00\x04U\x00\x00\x04x', '__version__': 1}</properties>
+		<properties node_id="3" format="literal">{'_ewoks_default_inputs': {'chosen_stack': -1}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x01\xf1\x00\x00\x01E\x00\x00\x05\x99\x00\x00\x03]\x00\x00\x01\xf1\x00\x00\x01j\x00\x00\x05\x99\x00\x00\x03]\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x01\xf1\x00\x00\x01j\x00\x00\x05\x99\x00\x00\x03]', '__version__': 1}</properties>
+		<properties node_id="4" format="literal">{'_ewoks_default_inputs': {'interpolation_order': 0}, '_ewoks_execinfo': {}, '_ewoks_varinfo': {}, 'controlAreaVisible': True, 'default_inputs': {}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x02\x03\x00\x00\x01\x1e\x00\x00\x05\xaf\x00\x00\x036\x00\x00\x02\x03\x00\x00\x01C\x00\x00\x05\xaf\x00\x00\x036\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x02\x03\x00\x00\x01C\x00\x00\x05\xaf\x00\x00\x036', '__version__': 1}</properties>
+	</node_properties>
+	<session_state>
+		<window_groups />
+	</session_state>
+</scheme>
