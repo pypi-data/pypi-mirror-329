@@ -1,0 +1,51 @@
+[tool.poetry]
+name = "sudoblark-python-core"
+version = "1.0.0"
+description = 'Core python library for Sudoblark.'
+license = "BSD-3"
+authors = [
+    "Ben Clark <bclark@sudoblark.com>"
+]
+readme = 'README.md'
+repository  = 'https://github.com/sudoblark/sudoblark.python.core'
+classifiers = [
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10.0,<4.0"
+requests = { version = "^2.32.3" }
+
+[tool.poetry.group.test.dependencies]
+pytest = { version = '*' }
+flake8 = { version = "^7.1.1" }
+flake8-pyproject = { version = "^1.2.3" }
+behave = {version = "^1.2.6"}
+
+[tool.poetry.group. documentation.dependencies]
+mkdocstrings-python = { version = "^1.16.1" }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 144
+
+[tool.flake8]
+ignore = ["E203", "E266", "W503"]
+max-line-length = 144
+select = ["B", "C", "E", "F", "W", "T4", "B9"]
+exclude = [
+    ".git", "__pycache__", "old", "build", "dist", "database", "junit", "env", "_venv",
+    ".venv", "custom", "./venv"
+]
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "**/__init__.py",
+    "tests/*",
+     # Sometimes coverage picks up brew installs
+    "**/.linuxbrew/*"
+]
