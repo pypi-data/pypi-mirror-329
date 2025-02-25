@@ -1,0 +1,127 @@
+[project]
+name = "rlic"
+version = "0.1.2" # keep in sync with Cargo.toml
+description = "A minimal Line Integral Convolution extension for NumPy, written in Rust"
+license = "MIT"
+license-files = [
+    "LICENSE/*"
+]
+authors = [
+    { name = "C.M.T. Robert" },
+]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: 3",
+    "Typing :: Typed",
+]
+requires-python = ">=3.9" # keep in sync with pyo3 (Cargo.toml)
+dependencies = [
+    "numpy>=1.21.0",
+]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.urls]
+Homepage = "https://github.com/neutrinoceros/rlic"
+Changelog = "https://github.com/neutrinoceros/rlic/blob/main/CHANGELOG.md"
+
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[dependency-groups]
+covcheck = [
+    {include-group = "test"},
+    "coverage[toml]>=7.6.1 ; python_version < '3.11'",
+    "coverage>=7.6.1 ; python_version >= '3.11'",
+]
+test = [
+    "pytest>=8.1.0",
+]
+typecheck = [
+    "mypy>=1.13.0",
+    "pyright>=1.1.391",
+]
+
+[tool.maturin]
+module-name = "rlic._core"
+python-packages = ["rlic"]
+python-source = "src"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+  "error",
+]
+addopts = "-ra"
+xfail_strict = true
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    # a more strict default pragma
+    "\\# pragma: no cover\\b",
+
+    # allow defensive code
+    "^\\s*raise NotImplementedError\\b",
+
+    # typing-related code
+    "^if TYPE_CHECKING:",
+    ": \\.\\.\\.(\\s*#.*)?$",
+    "^ +\\.\\.\\.$",
+    "-> ['\"]?NoReturn['\"]?:",
+]
+
+[tool.cibuildwheel]
+build = "cp39-* cp310-* cp311-* cp312-* cp313-*"
+build-frontend = "build[uv]"
+build-verbosity = 1
+test-groups = ["test"] #, "concurrency"]
+test-command = [
+    "pytest --color=yes {project}/tests",
+    #"pytest --color=yes --count 500 {project}/tests/test_concurrent.py",
+]
+
+[tool.cibuildwheel.linux]
+archs = "x86_64"
+before-all = "curl -sSf https://sh.rustup.rs | sh -s -- -y"
+environment = { "PATH" = "$HOME/.cargo/bin:$PATH" }
+
+[tool.cibuildwheel.macos]
+archs = "auto64"
+# 10.12 is my minimal requirement on x86_64 at the time of writing,
+# but 11.0 is the absolute minimum on arm64. Luckily, cibuildwheel knows
+# to bump it on amr64, but warnings should be expected.
+environment = { "MACOSX_DEPLOYMENT_TARGET" = "10.12" }
+
+[tool.cibuildwheel.windows]
+archs = "AMD64"
+
+[tool.ruff.lint]
+ignore = ["E501", "D101"]
+select = [
+    "E",
+    "F",
+    "W",
+    #"D",   # pydocstyle
+    "C4",  # flake8-comprehensions
+    "B",   # flake8-bugbear
+    "TCH", # flake8-type-checking
+    "YTT", # flake8-2020
+    "I",   # isort
+    "UP",  # pyupgrade
+    "NPY", # numpy specific rules
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+known-first-party = ["gpgi"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
