@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: ghcr.io/astral-sh/uv:python3.9-bookworm-slim
+
+%files
+    $HOME/.config/antelop/cluster_config.toml /home/.config/antelop/config.toml
+    $HOME/Documents/antelop/pyproject.toml /antelop/pyproject.toml
+    $HOME/Documents/antelop/MANIFEST.in /antelop/MANIFEST.in
+    $HOME/Documents/antelop/src /antelop/src
+    $HOME/Documents/antelop/uv.lock /antelop/uv.lock
+    $HOME/Documents/antelop/LICENSE /antelop/LICENSE
+    $HOME/Documents/antelop/README.md /antelop/README.md
+
+%environment
+    export DJ_SUPPORT_FILEPATH_MANAGEMENT=TRUE
+    export ANTELOP_CONFIG_PATH=/home/.config/antelop/config.toml
+    export PATH=/antelop/.venv/bin:$PATH
+
+%post
+    mkdir -p /antelop
+    cd /antelop
+    rm -rf .venv
+    apt-get update
+    apt-get install -y build-essential curl software-properties-common unzip git
+    rm -rf /var/lib/apt/lists/*
+    uv sync --frozen
+    uv run antelop-python
+
+%runscript
+    antelop-python
+
+%help
+    This container is primarily built so the cluster can access Antelop's database.
+    It can be used as an executable to run antelop-python interactively.
+
+%labels
+    Author="Rory Bedford"
+    Description="Antelop is a data analysis and storage tool for systems neuroscientists"
+    Contact="rbedford@mrc-lmb.cam.ac.uk"
