@@ -1,0 +1,87 @@
+---
+  root: ./
+
+  run_name: 2-phase #update for specific run name
+  path_out:  ModelOutput/ #root + folder 
+  path_in:  predictions/ens/ #root + folder
+
+  prediction:  data/prediction.csv #root + folder
+  targets:  data/targets.csv #root + folder
+  training:  data/training.csv
+
+  predictors: ['temperature', 'no3', 'PAR']
+  verbose: 1
+  seed : 1 # random seed
+  n_threads : 16 # how many cpu threads to use
+  cv : 3
+
+  ensemble_config: 
+    classifier: True
+    regressor: True
+    m1: "rf"
+    m2: "knn"
+    m3: "xgb"
+
+  upsample: False
+  stratify: True
+
+  reg_scoring:
+   R2: r2
+   MAE: neg_mean_absolute_error
+   RMSE: neg_root_mean_squared_error
+
+  clf_scoring:
+   accuracy: balanced_accuracy
+
+
+  param_grid:
+    rf_param_grid:
+      reg_param_grid:
+        n_estimators: [250]
+        max_features:  [0.8]
+        max_depth: [10]
+        min_samples_leaf: [5]
+        max_samples: [0.6]     
+      clf_param_grid:  
+        n_estimators: [250]
+        max_features:  ['sqrt']
+        max_depth: [2]
+        min_samples_leaf: [1]
+        max_samples: [0.6]     
+
+
+    xgb_param_grid:
+      reg_param_grid:  
+        learning_rate: [0.1]
+        n_estimators: [100]
+        max_depth: [2]
+        subsample: [0.6]
+        colsample_bytree: [1]
+        gamma: [0] 
+        reg_alpha: [0.1]
+      clf_param_grid:  
+        learning_rate: [0.01]
+        n_estimators: [100]
+        max_depth: [2]
+        subsample: [0.4]
+        colsample_bytree: [0.5]
+        gamma: [0] 
+        reg_alpha: [0]
+    knn_param_grid:
+      reg_param_grid:  
+        max_samples: [0.9]
+        max_features: [0.81]
+        estimator__leaf_size: [10]
+        estimator__n_neighbors: [10]
+        estimator__p:  [1]        
+        estimator__weights: ["uniform"]
+      clf_param_grid:  
+        max_samples: [0.6]
+        max_features: [0.6]
+        estimator__leaf_size: [10]
+        estimator__n_neighbors: [3]
+        estimator__p:  [1]        
+        estimator__weights: ["uniform"]
+  knn_bagging_estimators: 30
+
+
