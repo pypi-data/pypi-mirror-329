@@ -1,0 +1,126 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "royalflush"
+version = "0.3.5"
+description = "Royal FLush is a Python framework specifically designed to facilitate the development, execution and analysis of multi-agent systems (MAS) federated learning (FL) experiments."
+readme = "README.md"
+keywords = ["royalflush", "artificial intelligence", "multi-agent systems", "intelligent agents", "federated learning", "framework"]
+license = { file = "LICENSE" }
+authors = [
+  { name = "Francisco Enguix", email = "enguix.fco@gmail.com" },
+]
+maintainers = [
+  { name = "Francisco Enguix", email = "enguix.fco@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Environment :: Web Environment",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+requires-python = ">=3.10"
+dependencies = [
+    "spade==3.3.2",
+    "networkx==2.8",
+    "pyvis==0.3.2",
+    "torch==2.6.0",
+    "numpy==1.26.4",
+    "pandas==2.2.3",
+    "plotly==5.24.1",
+    "torchvision==0.21.0",
+    "click==8.1.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black==24.4.2",
+    "pytest==8.3.2",
+    "pytest-cov==5.0.0",
+    "pytest-asyncio==0.23.8",
+    "mypy",
+    "isort",
+    "bump-my-version",
+    "pre-commit",
+    "wheel==0.43.0",
+    "twine==5.1.1",
+    "build==1.2.1",
+    "sphinx==7.1.2",
+    "sphinx-rtd-theme",
+]
+test = ["coverage"]
+
+[project.urls]
+  Homepage = "https://github.com/FranEnguix/royalflush"
+  Documentation = "https://royalflush.readthedocs.io"
+  Source = "https://github.com/FranEnguix/royalflush"
+  Issues = "https://github.com/FranEnguix/royalflush/issues"
+
+[project.scripts]
+royalflush = "royalflush.cli:cli"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["royalflush*"]
+exclude = ["royalflush.tests*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "royalflush.__version__"}
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+
+[tool.isort]
+atomic = true
+profile = "black"
+line_length = 120
+skip_gitignore = true
+
+[tool.coverage.run]
+relative_files = true
+branch = true
+
+[tool.mypy]
+python_version = "3.10"
+mypy_path = "royalflush"
+strict = true
+warn_unreachable = true
+implicit_reexport = true
+show_error_codes = true
+show_column_numbers = true
+
+[tool.bumpversion]
+current_version = "0.3.5"
+parse = """
+    (?P<major>0|[1-9]\\d*)\\.
+    (?P<minor>0|[1-9]\\d*)\\.
+    (?P<patch>0|[1-9]\\d*)
+"""
+serialize = ["{major}.{minor}.{patch}"]
+search = "{current_version}"
+replace = "{new_version}"
+regex = false
+ignore_missing_version = false
+tag = true
+sign_tags = false
+tag_name = "v{new_version}"
+tag_message = "Bump version: {current_version} → {new_version}"
+allow_dirty = false
+commit = true
+message = "Bump version: {current_version} → {new_version}"
+commit_args = ""
