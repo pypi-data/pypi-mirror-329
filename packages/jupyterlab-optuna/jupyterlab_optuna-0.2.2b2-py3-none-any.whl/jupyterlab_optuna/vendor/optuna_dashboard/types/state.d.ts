@@ -1,0 +1,25 @@
+import * as Optuna from "@optuna/types";
+import { Artifact, PlotlyColorTheme, StudyDetail, StudyDetails, StudySummary } from "./types/optuna";
+export declare const studySummariesState: import("recoil").RecoilState<StudySummary[]>;
+export declare const studyDetailsState: import("recoil").RecoilState<StudyDetails>;
+export declare const trialsUpdatingState: import("recoil").RecoilState<{
+    [trialId: string]: boolean;
+}>;
+export declare const reloadIntervalState: import("recoil").RecoilState<number>;
+export declare const drawerOpenState: import("recoil").RecoilState<boolean>;
+export declare const isFileUploading: import("recoil").RecoilState<boolean>;
+export declare const artifactIsAvailable: import("recoil").RecoilState<boolean>;
+export declare const plotlypyIsAvailableState: import("recoil").RecoilState<boolean>;
+export declare const studySummariesLoadingState: import("recoil").RecoilState<boolean>;
+export declare const studyDetailLoadingState: import("recoil").RecoilState<Record<number, boolean>>;
+export declare const usePlotBackendRendering: () => [boolean, import("react").Dispatch<import("react").SetStateAction<boolean>>, () => void];
+export declare const usePlotlyColorThemeState: () => [PlotlyColorTheme, import("react").Dispatch<import("react").SetStateAction<PlotlyColorTheme>>, () => void];
+export declare const useStudyDetailValue: (studyId: number) => StudyDetail | null;
+export declare const useStudySummaryValue: (studyId: number) => StudySummary | null;
+export declare const useTrialUpdatingValue: (trialId: number) => boolean;
+export declare const useStudyDirections: (studyId: number) => Optuna.StudyDirection[] | null;
+export declare const useStudyIsPreferential: (studyId: number) => boolean | null;
+export declare const useStudyName: (studyId: number) => string | null;
+export declare const useArtifacts: (studyId: number, trialId: number) => Artifact[];
+export declare const usePlotlyColorTheme: (mode: string) => Partial<Plotly.Template>;
+export declare const useBackendRender: () => boolean;
