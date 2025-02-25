@@ -1,0 +1,162 @@
+"""Generated protocol buffer code."""
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import descriptor_pool as _descriptor_pool
+from google.protobuf import runtime_version as _runtime_version
+from google.protobuf import symbol_database as _symbol_database
+from google.protobuf.internal import builder as _builder
+_runtime_version.ValidateProtobufRuntimeVersion(_runtime_version.Domain.PUBLIC, 5, 29, 0, '', 'cosmos/group/v1/tx.proto')
+_sym_db = _symbol_database.Default()
+from ....gogoproto import gogo_pb2 as gogoproto_dot_gogo__pb2
+from ....cosmos_proto import cosmos_pb2 as cosmos__proto_dot_cosmos__pb2
+from google.protobuf import any_pb2 as google_dot_protobuf_dot_any__pb2
+from ....cosmos.group.v1 import types_pb2 as cosmos_dot_group_dot_v1_dot_types__pb2
+from ....cosmos.msg.v1 import msg_pb2 as cosmos_dot_msg_dot_v1_dot_msg__pb2
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18cosmos/group/v1/tx.proto\x12\x0fcosmos.group.v1\x1a\x14gogoproto/gogo.proto\x1a\x19cosmos_proto/cosmos.proto\x1a\x19google/protobuf/any.proto\x1a\x1bcosmos/group/v1/types.proto\x1a\x17cosmos/msg/v1/msg.proto"\x8e\x01\n\x0eMsgCreateGroup\x12\'\n\x05admin\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x125\n\x07members\x18\x02 \x03(\x0b2\x1e.cosmos.group.v1.MemberRequestB\x04\xc8\xde\x1f\x00\x12\x10\n\x08metadata\x18\x03 \x01(\t:\n\x82\xe7\xb0*\x05admin"*\n\x16MsgCreateGroupResponse\x12\x10\n\x08group_id\x18\x01 \x01(\x04"\x9c\x01\n\x15MsgUpdateGroupMembers\x12\'\n\x05admin\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x12\x10\n\x08group_id\x18\x02 \x01(\x04\x12<\n\x0emember_updates\x18\x03 \x03(\x0b2\x1e.cosmos.group.v1.MemberRequestB\x04\xc8\xde\x1f\x00:\n\x82\xe7\xb0*\x05admin"\x1f\n\x1dMsgUpdateGroupMembersResponse"\x89\x01\n\x13MsgUpdateGroupAdmin\x12\'\n\x05admin\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x12\x10\n\x08group_id\x18\x02 \x01(\x04\x12+\n\tnew_admin\x18\x03 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString:\n\x82\xe7\xb0*\x05admin"\x1d\n\x1bMsgUpdateGroupAdminResponse"q\n\x16MsgUpdateGroupMetadata\x12\'\n\x05admin\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x12\x10\n\x08group_id\x18\x02 \x01(\x04\x12\x10\n\x08metadata\x18\x03 \x01(\t:\n\x82\xe7\xb0*\x05admin" \n\x1eMsgUpdateGroupMetadataResponse"\xc6\x01\n\x14MsgCreateGroupPolicy\x12\'\n\x05admin\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x12\x10\n\x08group_id\x18\x02 \x01(\x04\x12\x10\n\x08metadata\x18\x03 \x01(\t\x12Q\n\x0fdecision_policy\x18\x04 \x01(\x0b2\x14.google.protobuf.AnyB"\xca\xb4-\x1ecosmos.group.v1.DecisionPolicy:\x0e\x88\xa0\x1f\x00\x82\xe7\xb0*\x05admin"I\n\x1cMsgCreateGroupPolicyResponse\x12)\n\x07address\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString"\xb5\x01\n\x19MsgUpdateGroupPolicyAdmin\x12\'\n\x05admin\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x126\n\x14group_policy_address\x18\x02 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x12+\n\tnew_admin\x18\x03 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString:\n\x82\xe7\xb0*\x05admin"\xb3\x02\n\x18MsgCreateGroupWithPolicy\x12\'\n\x05admin\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x125\n\x07members\x18\x02 \x03(\x0b2\x1e.cosmos.group.v1.MemberRequestB\x04\xc8\xde\x1f\x00\x12\x16\n\x0egroup_metadata\x18\x03 \x01(\t\x12\x1d\n\x15group_policy_metadata\x18\x04 \x01(\t\x12\x1d\n\x15group_policy_as_admin\x18\x05 \x01(\x08\x12Q\n\x0fdecision_policy\x18\x06 \x01(\x0b2\x14.google.protobuf.AnyB"\xca\xb4-\x1ecosmos.group.v1.DecisionPolicy:\x0e\x88\xa0\x1f\x00\x82\xe7\xb0*\x05admin"l\n MsgCreateGroupWithPolicyResponse\x12\x10\n\x08group_id\x18\x01 \x01(\x04\x126\n\x14group_policy_address\x18\x02 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString"#\n!MsgUpdateGroupPolicyAdminResponse"\xe8\x01\n"MsgUpdateGroupPolicyDecisionPolicy\x12\'\n\x05admin\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x126\n\x14group_policy_address\x18\x02 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x12Q\n\x0fdecision_policy\x18\x03 \x01(\x0b2\x14.google.protobuf.AnyB"\xca\xb4-\x1ecosmos.group.v1.DecisionPolicy:\x0e\x88\xa0\x1f\x00\x82\xe7\xb0*\x05admin",\n*MsgUpdateGroupPolicyDecisionPolicyResponse"\x9d\x01\n\x1cMsgUpdateGroupPolicyMetadata\x12\'\n\x05admin\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x126\n\x14group_policy_address\x18\x02 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x12\x10\n\x08metadata\x18\x03 \x01(\t:\n\x82\xe7\xb0*\x05admin"&\n$MsgUpdateGroupPolicyMetadataResponse"\xd1\x01\n\x11MsgSubmitProposal\x126\n\x14group_policy_address\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x12\x11\n\tproposers\x18\x02 \x03(\t\x12\x10\n\x08metadata\x18\x03 \x01(\t\x12&\n\x08messages\x18\x04 \x03(\x0b2\x14.google.protobuf.Any\x12#\n\x04exec\x18\x05 \x01(\x0e2\x15.cosmos.group.v1.Exec:\x12\x88\xa0\x1f\x00\x82\xe7\xb0*\tproposers"0\n\x19MsgSubmitProposalResponse\x12\x13\n\x0bproposal_id\x18\x01 \x01(\x04"c\n\x13MsgWithdrawProposal\x12\x13\n\x0bproposal_id\x18\x01 \x01(\x04\x12)\n\x07address\x18\x02 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString:\x0c\x82\xe7\xb0*\x07address"\x1d\n\x1bMsgWithdrawProposalResponse"\xb7\x01\n\x07MsgVote\x12\x13\n\x0bproposal_id\x18\x01 \x01(\x04\x12\'\n\x05voter\x18\x02 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x12+\n\x06option\x18\x03 \x01(\x0e2\x1b.cosmos.group.v1.VoteOption\x12\x10\n\x08metadata\x18\x04 \x01(\t\x12#\n\x04exec\x18\x05 \x01(\x0e2\x15.cosmos.group.v1.Exec:\n\x82\xe7\xb0*\x05voter"\x11\n\x0fMsgVoteResponse"W\n\x07MsgExec\x12\x13\n\x0bproposal_id\x18\x01 \x01(\x04\x12*\n\x08executor\x18\x02 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString:\x0b\x82\xe7\xb0*\x06signer"J\n\x0fMsgExecResponse\x127\n\x06result\x18\x02 \x01(\x0e2\'.cosmos.group.v1.ProposalExecutorResult"Z\n\rMsgLeaveGroup\x12)\n\x07address\x18\x01 \x01(\tB\x18\xd2\xb4-\x14cosmos.AddressString\x12\x10\n\x08group_id\x18\x02 \x01(\x04:\x0c\x82\xe7\xb0*\x07address"\x17\n\x15MsgLeaveGroupResponse**\n\x04Exec\x12\x14\n\x10EXEC_UNSPECIFIED\x10\x00\x12\x0c\n\x08EXEC_TRY\x10\x012\xc3\x0b\n\x03Msg\x12W\n\x0bCreateGroup\x12\x1f.cosmos.group.v1.MsgCreateGroup\x1a\'.cosmos.group.v1.MsgCreateGroupResponse\x12l\n\x12UpdateGroupMembers\x12&.cosmos.group.v1.MsgUpdateGroupMembers\x1a..cosmos.group.v1.MsgUpdateGroupMembersResponse\x12f\n\x10UpdateGroupAdmin\x12$.cosmos.group.v1.MsgUpdateGroupAdmin\x1a,.cosmos.group.v1.MsgUpdateGroupAdminResponse\x12o\n\x13UpdateGroupMetadata\x12\'.cosmos.group.v1.MsgUpdateGroupMetadata\x1a/.cosmos.group.v1.MsgUpdateGroupMetadataResponse\x12i\n\x11CreateGroupPolicy\x12%.cosmos.group.v1.MsgCreateGroupPolicy\x1a-.cosmos.group.v1.MsgCreateGroupPolicyResponse\x12u\n\x15CreateGroupWithPolicy\x12).cosmos.group.v1.MsgCreateGroupWithPolicy\x1a1.cosmos.group.v1.MsgCreateGroupWithPolicyResponse\x12x\n\x16UpdateGroupPolicyAdmin\x12*.cosmos.group.v1.MsgUpdateGroupPolicyAdmin\x1a2.cosmos.group.v1.MsgUpdateGroupPolicyAdminResponse\x12\x93\x01\n\x1fUpdateGroupPolicyDecisionPolicy\x123.cosmos.group.v1.MsgUpdateGroupPolicyDecisionPolicy\x1a;.cosmos.group.v1.MsgUpdateGroupPolicyDecisionPolicyResponse\x12\x81\x01\n\x19UpdateGroupPolicyMetadata\x12-.cosmos.group.v1.MsgUpdateGroupPolicyMetadata\x1a5.cosmos.group.v1.MsgUpdateGroupPolicyMetadataResponse\x12`\n\x0eSubmitProposal\x12".cosmos.group.v1.MsgSubmitProposal\x1a*.cosmos.group.v1.MsgSubmitProposalResponse\x12f\n\x10WithdrawProposal\x12$.cosmos.group.v1.MsgWithdrawProposal\x1a,.cosmos.group.v1.MsgWithdrawProposalResponse\x12B\n\x04Vote\x12\x18.cosmos.group.v1.MsgVote\x1a .cosmos.group.v1.MsgVoteResponse\x12B\n\x04Exec\x12\x18.cosmos.group.v1.MsgExec\x1a .cosmos.group.v1.MsgExecResponse\x12T\n\nLeaveGroup\x12\x1e.cosmos.group.v1.MsgLeaveGroup\x1a&.cosmos.group.v1.MsgLeaveGroupResponseB&Z$github.com/cosmos/cosmos-sdk/x/groupb\x06proto3')
+_globals = globals()
+_builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'cosmos.group.v1.tx_pb2', _globals)
+if not _descriptor._USE_C_DESCRIPTORS:
+    _globals['DESCRIPTOR']._loaded_options = None
+    _globals['DESCRIPTOR']._serialized_options = b'Z$github.com/cosmos/cosmos-sdk/x/group'
+    _globals['_MSGCREATEGROUP'].fields_by_name['admin']._loaded_options = None
+    _globals['_MSGCREATEGROUP'].fields_by_name['admin']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGCREATEGROUP'].fields_by_name['members']._loaded_options = None
+    _globals['_MSGCREATEGROUP'].fields_by_name['members']._serialized_options = b'\xc8\xde\x1f\x00'
+    _globals['_MSGCREATEGROUP']._loaded_options = None
+    _globals['_MSGCREATEGROUP']._serialized_options = b'\x82\xe7\xb0*\x05admin'
+    _globals['_MSGUPDATEGROUPMEMBERS'].fields_by_name['admin']._loaded_options = None
+    _globals['_MSGUPDATEGROUPMEMBERS'].fields_by_name['admin']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPMEMBERS'].fields_by_name['member_updates']._loaded_options = None
+    _globals['_MSGUPDATEGROUPMEMBERS'].fields_by_name['member_updates']._serialized_options = b'\xc8\xde\x1f\x00'
+    _globals['_MSGUPDATEGROUPMEMBERS']._loaded_options = None
+    _globals['_MSGUPDATEGROUPMEMBERS']._serialized_options = b'\x82\xe7\xb0*\x05admin'
+    _globals['_MSGUPDATEGROUPADMIN'].fields_by_name['admin']._loaded_options = None
+    _globals['_MSGUPDATEGROUPADMIN'].fields_by_name['admin']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPADMIN'].fields_by_name['new_admin']._loaded_options = None
+    _globals['_MSGUPDATEGROUPADMIN'].fields_by_name['new_admin']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPADMIN']._loaded_options = None
+    _globals['_MSGUPDATEGROUPADMIN']._serialized_options = b'\x82\xe7\xb0*\x05admin'
+    _globals['_MSGUPDATEGROUPMETADATA'].fields_by_name['admin']._loaded_options = None
+    _globals['_MSGUPDATEGROUPMETADATA'].fields_by_name['admin']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPMETADATA']._loaded_options = None
+    _globals['_MSGUPDATEGROUPMETADATA']._serialized_options = b'\x82\xe7\xb0*\x05admin'
+    _globals['_MSGCREATEGROUPPOLICY'].fields_by_name['admin']._loaded_options = None
+    _globals['_MSGCREATEGROUPPOLICY'].fields_by_name['admin']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGCREATEGROUPPOLICY'].fields_by_name['decision_policy']._loaded_options = None
+    _globals['_MSGCREATEGROUPPOLICY'].fields_by_name['decision_policy']._serialized_options = b'\xca\xb4-\x1ecosmos.group.v1.DecisionPolicy'
+    _globals['_MSGCREATEGROUPPOLICY']._loaded_options = None
+    _globals['_MSGCREATEGROUPPOLICY']._serialized_options = b'\x88\xa0\x1f\x00\x82\xe7\xb0*\x05admin'
+    _globals['_MSGCREATEGROUPPOLICYRESPONSE'].fields_by_name['address']._loaded_options = None
+    _globals['_MSGCREATEGROUPPOLICYRESPONSE'].fields_by_name['address']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPPOLICYADMIN'].fields_by_name['admin']._loaded_options = None
+    _globals['_MSGUPDATEGROUPPOLICYADMIN'].fields_by_name['admin']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPPOLICYADMIN'].fields_by_name['group_policy_address']._loaded_options = None
+    _globals['_MSGUPDATEGROUPPOLICYADMIN'].fields_by_name['group_policy_address']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPPOLICYADMIN'].fields_by_name['new_admin']._loaded_options = None
+    _globals['_MSGUPDATEGROUPPOLICYADMIN'].fields_by_name['new_admin']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPPOLICYADMIN']._loaded_options = None
+    _globals['_MSGUPDATEGROUPPOLICYADMIN']._serialized_options = b'\x82\xe7\xb0*\x05admin'
+    _globals['_MSGCREATEGROUPWITHPOLICY'].fields_by_name['admin']._loaded_options = None
+    _globals['_MSGCREATEGROUPWITHPOLICY'].fields_by_name['admin']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGCREATEGROUPWITHPOLICY'].fields_by_name['members']._loaded_options = None
+    _globals['_MSGCREATEGROUPWITHPOLICY'].fields_by_name['members']._serialized_options = b'\xc8\xde\x1f\x00'
+    _globals['_MSGCREATEGROUPWITHPOLICY'].fields_by_name['decision_policy']._loaded_options = None
+    _globals['_MSGCREATEGROUPWITHPOLICY'].fields_by_name['decision_policy']._serialized_options = b'\xca\xb4-\x1ecosmos.group.v1.DecisionPolicy'
+    _globals['_MSGCREATEGROUPWITHPOLICY']._loaded_options = None
+    _globals['_MSGCREATEGROUPWITHPOLICY']._serialized_options = b'\x88\xa0\x1f\x00\x82\xe7\xb0*\x05admin'
+    _globals['_MSGCREATEGROUPWITHPOLICYRESPONSE'].fields_by_name['group_policy_address']._loaded_options = None
+    _globals['_MSGCREATEGROUPWITHPOLICYRESPONSE'].fields_by_name['group_policy_address']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICY'].fields_by_name['admin']._loaded_options = None
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICY'].fields_by_name['admin']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICY'].fields_by_name['group_policy_address']._loaded_options = None
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICY'].fields_by_name['group_policy_address']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICY'].fields_by_name['decision_policy']._loaded_options = None
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICY'].fields_by_name['decision_policy']._serialized_options = b'\xca\xb4-\x1ecosmos.group.v1.DecisionPolicy'
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICY']._loaded_options = None
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICY']._serialized_options = b'\x88\xa0\x1f\x00\x82\xe7\xb0*\x05admin'
+    _globals['_MSGUPDATEGROUPPOLICYMETADATA'].fields_by_name['admin']._loaded_options = None
+    _globals['_MSGUPDATEGROUPPOLICYMETADATA'].fields_by_name['admin']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPPOLICYMETADATA'].fields_by_name['group_policy_address']._loaded_options = None
+    _globals['_MSGUPDATEGROUPPOLICYMETADATA'].fields_by_name['group_policy_address']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGUPDATEGROUPPOLICYMETADATA']._loaded_options = None
+    _globals['_MSGUPDATEGROUPPOLICYMETADATA']._serialized_options = b'\x82\xe7\xb0*\x05admin'
+    _globals['_MSGSUBMITPROPOSAL'].fields_by_name['group_policy_address']._loaded_options = None
+    _globals['_MSGSUBMITPROPOSAL'].fields_by_name['group_policy_address']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGSUBMITPROPOSAL']._loaded_options = None
+    _globals['_MSGSUBMITPROPOSAL']._serialized_options = b'\x88\xa0\x1f\x00\x82\xe7\xb0*\tproposers'
+    _globals['_MSGWITHDRAWPROPOSAL'].fields_by_name['address']._loaded_options = None
+    _globals['_MSGWITHDRAWPROPOSAL'].fields_by_name['address']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGWITHDRAWPROPOSAL']._loaded_options = None
+    _globals['_MSGWITHDRAWPROPOSAL']._serialized_options = b'\x82\xe7\xb0*\x07address'
+    _globals['_MSGVOTE'].fields_by_name['voter']._loaded_options = None
+    _globals['_MSGVOTE'].fields_by_name['voter']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGVOTE']._loaded_options = None
+    _globals['_MSGVOTE']._serialized_options = b'\x82\xe7\xb0*\x05voter'
+    _globals['_MSGEXEC'].fields_by_name['executor']._loaded_options = None
+    _globals['_MSGEXEC'].fields_by_name['executor']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGEXEC']._loaded_options = None
+    _globals['_MSGEXEC']._serialized_options = b'\x82\xe7\xb0*\x06signer'
+    _globals['_MSGLEAVEGROUP'].fields_by_name['address']._loaded_options = None
+    _globals['_MSGLEAVEGROUP'].fields_by_name['address']._serialized_options = b'\xd2\xb4-\x14cosmos.AddressString'
+    _globals['_MSGLEAVEGROUP']._loaded_options = None
+    _globals['_MSGLEAVEGROUP']._serialized_options = b'\x82\xe7\xb0*\x07address'
+    _globals['_EXEC']._serialized_start = 3155
+    _globals['_EXEC']._serialized_end = 3197
+    _globals['_MSGCREATEGROUP']._serialized_start = 176
+    _globals['_MSGCREATEGROUP']._serialized_end = 318
+    _globals['_MSGCREATEGROUPRESPONSE']._serialized_start = 320
+    _globals['_MSGCREATEGROUPRESPONSE']._serialized_end = 362
+    _globals['_MSGUPDATEGROUPMEMBERS']._serialized_start = 365
+    _globals['_MSGUPDATEGROUPMEMBERS']._serialized_end = 521
+    _globals['_MSGUPDATEGROUPMEMBERSRESPONSE']._serialized_start = 523
+    _globals['_MSGUPDATEGROUPMEMBERSRESPONSE']._serialized_end = 554
+    _globals['_MSGUPDATEGROUPADMIN']._serialized_start = 557
+    _globals['_MSGUPDATEGROUPADMIN']._serialized_end = 694
+    _globals['_MSGUPDATEGROUPADMINRESPONSE']._serialized_start = 696
+    _globals['_MSGUPDATEGROUPADMINRESPONSE']._serialized_end = 725
+    _globals['_MSGUPDATEGROUPMETADATA']._serialized_start = 727
+    _globals['_MSGUPDATEGROUPMETADATA']._serialized_end = 840
+    _globals['_MSGUPDATEGROUPMETADATARESPONSE']._serialized_start = 842
+    _globals['_MSGUPDATEGROUPMETADATARESPONSE']._serialized_end = 874
+    _globals['_MSGCREATEGROUPPOLICY']._serialized_start = 877
+    _globals['_MSGCREATEGROUPPOLICY']._serialized_end = 1075
+    _globals['_MSGCREATEGROUPPOLICYRESPONSE']._serialized_start = 1077
+    _globals['_MSGCREATEGROUPPOLICYRESPONSE']._serialized_end = 1150
+    _globals['_MSGUPDATEGROUPPOLICYADMIN']._serialized_start = 1153
+    _globals['_MSGUPDATEGROUPPOLICYADMIN']._serialized_end = 1334
+    _globals['_MSGCREATEGROUPWITHPOLICY']._serialized_start = 1337
+    _globals['_MSGCREATEGROUPWITHPOLICY']._serialized_end = 1644
+    _globals['_MSGCREATEGROUPWITHPOLICYRESPONSE']._serialized_start = 1646
+    _globals['_MSGCREATEGROUPWITHPOLICYRESPONSE']._serialized_end = 1754
+    _globals['_MSGUPDATEGROUPPOLICYADMINRESPONSE']._serialized_start = 1756
+    _globals['_MSGUPDATEGROUPPOLICYADMINRESPONSE']._serialized_end = 1791
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICY']._serialized_start = 1794
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICY']._serialized_end = 2026
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICYRESPONSE']._serialized_start = 2028
+    _globals['_MSGUPDATEGROUPPOLICYDECISIONPOLICYRESPONSE']._serialized_end = 2072
+    _globals['_MSGUPDATEGROUPPOLICYMETADATA']._serialized_start = 2075
+    _globals['_MSGUPDATEGROUPPOLICYMETADATA']._serialized_end = 2232
+    _globals['_MSGUPDATEGROUPPOLICYMETADATARESPONSE']._serialized_start = 2234
+    _globals['_MSGUPDATEGROUPPOLICYMETADATARESPONSE']._serialized_end = 2272
+    _globals['_MSGSUBMITPROPOSAL']._serialized_start = 2275
+    _globals['_MSGSUBMITPROPOSAL']._serialized_end = 2484
+    _globals['_MSGSUBMITPROPOSALRESPONSE']._serialized_start = 2486
+    _globals['_MSGSUBMITPROPOSALRESPONSE']._serialized_end = 2534
+    _globals['_MSGWITHDRAWPROPOSAL']._serialized_start = 2536
+    _globals['_MSGWITHDRAWPROPOSAL']._serialized_end = 2635
+    _globals['_MSGWITHDRAWPROPOSALRESPONSE']._serialized_start = 2637
+    _globals['_MSGWITHDRAWPROPOSALRESPONSE']._serialized_end = 2666
+    _globals['_MSGVOTE']._serialized_start = 2669
+    _globals['_MSGVOTE']._serialized_end = 2852
+    _globals['_MSGVOTERESPONSE']._serialized_start = 2854
+    _globals['_MSGVOTERESPONSE']._serialized_end = 2871
+    _globals['_MSGEXEC']._serialized_start = 2873
+    _globals['_MSGEXEC']._serialized_end = 2960
+    _globals['_MSGEXECRESPONSE']._serialized_start = 2962
+    _globals['_MSGEXECRESPONSE']._serialized_end = 3036
+    _globals['_MSGLEAVEGROUP']._serialized_start = 3038
+    _globals['_MSGLEAVEGROUP']._serialized_end = 3128
+    _globals['_MSGLEAVEGROUPRESPONSE']._serialized_start = 3130
+    _globals['_MSGLEAVEGROUPRESPONSE']._serialized_end = 3153
+    _globals['_MSG']._serialized_start = 3200
+    _globals['_MSG']._serialized_end = 4675
