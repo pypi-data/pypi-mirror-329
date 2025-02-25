@@ -1,0 +1,51 @@
+[build-system]
+requires = [
+    "poetry-core>=1.0.0",
+    "Cython>=0.29",
+    "numpy >=1.21.1",
+    "setuptools"
+]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "zigzag-reload"
+version = "0.3.5"
+readme = "README.md"
+homepage = "https://github.com/zillionare/ZigZag"
+repository = "https://github.com/zillionare/ZigZag"
+description = "Package for finding peaks and valleys of time series."
+authors = ["generativist <jbn@abreka.com>"]
+license = "BSD-3-Clause"
+packages = [{ include = "zigzag" }]
+include = [
+    { path = "zigzag/**/*.so", format = "wheel" },
+    { path = "zigzag/**/*.pyx" },
+    { path = "zigzag/**/*.pyd" },
+    "CHANGES.txt"
+]
+
+[[tool.poetry.source]]
+name = "aliyun"
+url = "https://mirrors.aliyun.com/pypi/simple/"
+
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+Cython = ">=0.29"
+numpy = "1.26.0"
+
+[tool.poetry.build]
+generate-setup-file = false
+script = "build.py"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.1.2"
+pandas = ">=0.22,<2.0"
+setuptools = "^75.8.0"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
