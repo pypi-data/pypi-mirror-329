@@ -1,0 +1,62 @@
+[project]
+name = "g3visu"
+version = "0.1.12"
+description = "System G3 Visualization files' parsers and generators"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+  { name = "Elektroline a.s." },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Other Audience",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed"
+]
+keywords = ["Elektroline", "System G3"]
+requires-python = ">=3.11"
+dependencies = [
+    "lxml",
+    "platformdirs>=4.0",
+    "python-gitlab>=4.0",
+    "pyshv==0.6.1",
+    "g3elements==0.2.0"
+]
+
+[project.scripts]
+gen-visu = "g3visu._cli:main"
+
+[project.optional-dependencies]
+test = [ 
+  "pytest",
+  "pytest-asyncio == 0.21.1",
+]
+docs = [
+  "sphinx",
+  "sphinx_rtd_theme",
+]
+
+[project.urls]
+"Homepage" = "https://gitlab.elektroline.cz/plc/systemg3-py/SystemG3Visu.git"
+
+[options]
+package_dir = {"" = "src"}
+
+[build-system]
+requires = ["setuptools>=69.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"g3visu.site" = ["site.svg"]
+
