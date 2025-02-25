@@ -1,0 +1,8 @@
+treturns = list()
+broker_values = list()
+buysells = dict()
+drawdowns = list()
+klines = dict()
+positions = dict()
+orders = dict()
+indcs = dict()
