@@ -1,0 +1,213 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "pyaedt"
+dynamic = ["version"]
+description = "High-level Python API for Ansys Electronics Desktop Framework"
+readme = "README.md"
+requires-python = ">=3.8,<4"
+license = {file = "LICENSE"}
+authors = [{name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"}]
+maintainers = [{name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"}]
+classifiers = [
+    # General classifiers
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Manufacturing",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    # Additional specific classifiers
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "fpdf2",
+    "grpcio>=1.50.0,<1.71",
+    "jsonschema",
+    "psutil",
+    "pyedb>=0.4.0; python_version == '3.7'",
+    "pyedb>=0.24.0; python_version > '3.7'",
+    "pyedb!=0.28.0; python_version > '3.7'",
+    "tomli; python_version < '3.11'",
+    "tomli-w",
+    "rpyc>=6.0.0,<6.1",
+    "pyyaml",
+    "defusedxml>=0.7,<8.0",
+    "attrs<24.3.0",
+    "referencing<0.36.0",
+]
+
+[project.optional-dependencies]
+unit-tests = [
+    "pytest>=7.4.0,<8.4",
+    "pytest-cov>=4.0.0,<6.1",
+    "mock>=5.1.0,<5.2",
+]
+integration-tests = [
+    "matplotlib>=3.5.0,<3.11",
+    "mock>=5.1.0,<5.2",
+    "numpy>=1.20.0,<2.3",
+    "pandas>=1.1.0,<2.3",
+    "pytest>=7.4.0,<8.4",
+    "pytest-cov>=4.0.0,<6.1",
+]
+tests = [
+    "ipython>=7.30.0,<8.33",
+    "joblib>=1.0.0,<1.5",
+    "matplotlib>=3.5.0,<3.11",
+    "mock>=5.1.0,<5.2",
+    "numpy>=1.20.0,<2.3",
+    "openpyxl>=3.1.0,<3.3",
+    "osmnx>=1.1.0,<2.1",
+    "pandas>=1.1.0,<2.3",
+    "pytest>=7.4.0,<8.4",
+    "pytest-cov>=4.0.0,<6.1",
+    "pytest-xdist>=3.5.0,<3.7",
+    "pyvista[io]>=0.38.0,<0.45",
+    "ansys-tools-visualization-interface; python_version >= '3.10'",
+    "tables; python_version >= '3.10'",
+    # Never directly imported but required when loading ML related file see #4713
+    "scikit-learn>=1.0.0,<1.7",
+    "scikit-rf>=0.30.0,<1.6",
+]
+dotnet = [
+    "ansys-pythonnet>=3.1.0rc3",
+    "cffi==1.17.1; platform_system=='Linux' and python_version == '3.7'",
+    "cffi>=1.16.0,<1.18; platform_system=='Linux' and python_version > '3.7'",
+    "dotnetcore2==3.1.23; platform_system=='Linux'",
+    "pywin32>=303; platform_system=='Windows'",
+]
+doc = [
+    "ansys-sphinx-theme>=1.0.0,<1.4",
+    "jupyter",
+    "numpydoc>=1.5.0,<1.9",
+    "recommonmark",
+    "Sphinx>=7.1.0,<8.3",
+    # NOTE: latest compatible version for Python 3.8 is 2021.3.14
+    "sphinx-autobuild==2021.3.14; python_version == '3.8'",
+    "sphinx-autobuild==2024.10.3; python_version > '3.8'",
+    "sphinx-copybutton>=0.5.0,<0.6",
+    "sphinx-gallery>=0.14.0,<0.20",
+    "sphinx_design>=0.4.0,<0.7",
+    "pyvista[io]>=0.38.0,<0.45",
+]
+all = [
+    "matplotlib>=3.5.0,<3.11",
+    "numpy>=1.20.0,<2.3",
+    "openpyxl>=3.1.0,<3.3",
+    "osmnx>=1.1.0,<2.1",
+    "pandas>=1.1.0,<2.3",
+    "pyvista[io]>=0.38.0,<0.45",
+    "fast-simplification>=0.1.7",
+    "ansys-tools-visualization-interface; python_version >= '3.10'",
+    "tables; python_version >= '3.10'",
+    # Never directly imported but required when loading ML related file see #4713
+    "scikit-learn>=1.0.0,<1.7",
+    "scikit-rf>=0.30.0,<1.6",
+]
+installer = [
+    "matplotlib>=3.5.0,<3.11",
+    "numpy>=1.20.0,<2.3",
+    "openpyxl>=3.1.0,<3.3",
+    "osmnx>=1.1.0,<2.1",
+    "pandas>=1.1.0,<2.3",
+    "pyvista[io]>=0.38.0,<0.45",
+    "fast-simplification>=0.1.7",
+    "ansys-tools-visualization-interface; python_version >= '3.10'",
+    # Never directly imported but required when loading ML related file see #4713
+    "scikit-learn>=1.0.0,<1.7",
+    "scikit-rf>=0.30.0,<1.6",
+    "jupyterlab>=3.6.0,<4.4",
+    "ipython>=7.30.0,<8.33",
+    "ipyvtklink>=0.2.0,<0.2.4",
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "ansys.aedt.core.__version__"}
+
+[project.urls]
+Bugs = "https://github.com/ansys/pyaedt/issues"
+Documentation = "https://aedt.docs.pyansys.com"
+Source = "https://github.com/ansys/pyaedt"
+Discussions = "https://github.com/ansys/pyaedt/discussions"
+Releases = "https://github.com/ansys/pyaedt/releases"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+force_sort_within_sections = true
+line_length = 120
+default_section = "THIRDPARTY"
+src_paths = ["doc", "src/ansys/aedt/core", "tests"]
+
+[tool.codespell]
+ignore-words = "ignore_words.txt"
+skip = """
+*.pyc,*.aedt,*.xml,*.txt,*.gif,*.png,*.jpg,*.js,*.html,*.doctree,*.ttf,*.woff,*.woff2,*.eot,*.mp4,*.inv,*.pickle,\
+*.ipynb,flycheck*,./.git/*,./.hypothesis/*,*.yml,./docs/build/*,./docs/images/*,./dist/*,*~,.hypothesis*,\
+./src/ansys/aedt/core/third_party,./docs/source/examples/*,*cover,*.dat,*.mac,PKG-INFO,*.mypy_cache/*,*.xml,*.aedt,*.svg
+"""
+enable-colors = true
+
+[tool.coverage.run]
+source = ["src/ansys/aedt/core"]
+
+[tool.coverage.report]
+show_missing = true
+omit = ["src/ansys/aedt/core/rpc/*.py"]
+
+[tool.pytest.ini_options]
+markers = [
+    "unit",
+    "integration",
+    "system",
+    "solvers",
+    "general",
+]
+filterwarnings = [
+    "ignore::UserWarning:src.ansys.aedt.core.*",
+    "ignore::DeprecationWarning:src.*",
+    "ignore::UserWarning:ansys.aedt.core.*",
+    "ignore::DeprecationWarning:ansys.aedt.core.*"
+]
+
+[tool.numpydoc_validation]
+checks = [
+    "GL06",  # Found unknown section
+    "GL07",  # Sections are in the wrong order.
+    "GL08",  # The object does not have a docstring
+    "GL09",  # Deprecation warning should precede extended summary
+    "GL10",  # reST directives {directives} must be followed by two colons
+    # Return
+    "RT04", # Return value description should start with a capital letter"
+    "RT05", # Return value description should finish with "."
+    # Summary
+    "SS01",  # No summary found
+    "SS02",  # Summary does not start with a capital letter
+    "SS03",  # Summary does not end with a period
+    "SS04",  # Summary contains heading whitespaces
+    "SS05",  # Summary must start with infinitive verb, not third person
+    # Parameters
+    "PR10",  # Parameter "{param_name}" requires a space before the colon
+    # separating the parameter name and type",
+]
+exclude = [
+    '\.AEDTMessageManager.add_message$',  # bad SS05
+    '\.Modeler3D\.create_choke$',  # bad RT05
+    '\.tests',  # missing docstring for tests
+    'HistoryProps.',  # bad RT05 because of the base class named OrderedDict
+]
