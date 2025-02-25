@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3.0-standalone.html). -->
+<odoo>
+
+    <record id="service_type_view_search" model="ir.ui.view">
+        <field name="name">service.type search</field>
+        <field name="model">service.type</field>
+        <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_search"
+        />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <data>
+            </data>
+        </field>
+    </record>
+
+    <record id="service_type_view_tree" model="ir.ui.view">
+        <field name="name">service.type tree</field>
+        <field name="model">service.type</field>
+        <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_tree"
+        />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <data />
+        </field>
+    </record>
+
+    <record id="service_type_view_form" model="ir.ui.view">
+        <field name="name">service.type form</field>
+        <field name="model">service.type</field>
+        <field
+            name="inherit_id"
+            ref="ssi_master_data_mixin.mixin_master_data_view_form"
+        />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//page[1]" position="before">
+                    <page name="product" string="Products">
+                        <group name="product" colspan="4" col="2">
+                            <field
+                                name="allowed_pricelist_ids"
+                                widget="many2many_tags"
+                            />
+                            <field
+                                name="fix_item_allowed_product_categ_ids"
+                                widget="many2many_tags"
+                            />
+                            <field
+                                name="fix_item_allowed_product_ids"
+                                widget="many2many_tags"
+                            />
+                        </group>
+                    </page>
+                    <page name="accounting" string="Accounting">
+                        <group
+                            name="accounting_1"
+                            colspan="4"
+                            col="2"
+                            string="Fix Item"
+                        >
+                            <field
+                                name="fix_item_receivable_journal_id"
+                                string="Receivable Journal"
+                            />
+                            <field
+                                name="fix_item_receivable_account_id"
+                                string="Receivable Account"
+                            />
+                        </group>
+                    </page>
+                    <page name="analytic" string="Analytic &amp; Projects">
+                        <group name="analytic_1" colspan="4" col="2">
+                            <field name="analytic_group_id" />
+                        </group>
+                    </page>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="service_type_action" model="ir.actions.act_window">
+        <field name="name">Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">service.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="service_type_menu"
+        name="Types"
+        parent="menu_service_configuration"
+        groups="service_type_configurator_group"
+        action="service_type_action"
+        sequence="1"
+    />
+
+</odoo>

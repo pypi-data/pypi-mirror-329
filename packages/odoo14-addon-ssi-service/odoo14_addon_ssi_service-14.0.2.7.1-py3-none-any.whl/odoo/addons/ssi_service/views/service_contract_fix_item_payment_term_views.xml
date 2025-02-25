@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 OpenSynergy Indonesia
+     Copyright 2022 PT. Simetri Sinergi Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3.0-standalone.html). -->
+<odoo>
+
+<record id="service_contract_fix_item_payment_term_view_search" model="ir.ui.view">
+    <field name="name">service.contract_fix_item_payment_term search</field>
+    <field name="model">service.contract_fix_item_payment_term</field>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <search>
+        </search>
+    </field>
+</record>
+
+<record id="service_contract_fix_item_payment_term_view_tree" model="ir.ui.view">
+    <field name="name">service.contract_fix_item_payment_term tree</field>
+    <field name="model">service.contract_fix_item_payment_term</field>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <tree create="false" edit="false" delete="false">
+            <field name="sequence" invisible="1" />
+            <field name="service_id" />
+            <field name="partner_id" />
+            <field name="name" />
+            <field name="date_invoice" />
+            <field name="currency_id" invisible="1" />
+            <field name="amount_untaxed" />
+            <field name="amount_tax" />
+            <field name="amount_total" />
+            <field name="invoice_id" />
+            <field name="state" />
+            <button
+                    name="action_create_invoice"
+                    title="Create Invoice"
+                    type="object"
+                    icon="fa-cogs"
+                    states="uninvoiced"
+                />
+            <button
+                    name="action_delete_invoice"
+                    title="Delete Invoice"
+                    type="object"
+                    icon="fa-eraser"
+                    states="invoiced"
+                />
+            <button
+                    name="action_disconnect_invoice"
+                    title="Disconnect Invoice"
+                    type="object"
+                    icon="fa-unlink"
+                    states="invoiced"
+                />
+            <button
+                    name="action_mark_as_manual"
+                    title="Mark as Manual"
+                    type="object"
+                    icon="fa-square-o"
+                    states="uninvoiced"
+                />
+            <button
+                    name="action_unmark_as_manual"
+                    title="Unmark as Manual"
+                    type="object"
+                    icon="fa-check-square-o"
+                    states="manual"
+                />
+        </tree>
+    </field>
+</record>
+
+<record id="service_contract_fix_item_payment_term_view_form" model="ir.ui.view">
+    <field name="name">service.contract_fix_item_payment_term form</field>
+    <field name="model">service.contract_fix_item_payment_term</field>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <form create="false" edit="false" delete="false">
+            <header>
+                <field name="state" widget="statusbar" />
+            </header>
+            <sheet>
+                <group name="header" colspan="4" col="2">
+                    <group name="header_left" colspan="1" col="2">
+                        <field name="service_id" />
+                        <field name="partner_id" />
+                    </group>
+                    <group name="header_left" colspan="1" col="2">
+                        <field name="name" />
+                        <field name="sequence" />
+                        <field name="date_invoice" />
+                        <field name="currency_id" invisible="1" />
+                        <field
+                                name="fix_item_allowed_product_ids"
+                                widget="many2many_tags"
+                                invisible="1"
+                            />
+                        <field
+                                name="fix_item_allowed_product_categ_ids"
+                                widget="many2many_tags"
+                                invisible="1"
+                            />
+                    </group>
+                </group>
+                <notebook>
+                    <page name="detail" string="Detail">
+                        <field name="detail_ids" colspan="2" nolabel="1">
+                            <tree>
+                                <field name="sequence" widget="handle" />
+                                <field name="product_id" invisible="1" />
+                                <field name="name" />
+                                <field name="account_id" />
+                                <field name="currency_id" invisible="1" />
+                                <field name="pricelist_id" invisible="1" />
+                                <field name="price_unit" />
+                                <field name="uom_quantity" string="Quantity" />
+                                <field name="uom_id" />
+                                <field name="quantity" invisible="1" />
+                                <field name="price_subtotal" />
+                                <field name="tax_ids" widget="many2many_tags" />
+                                <field name="price_tax" />
+                                <field name="price_total" />
+                            </tree>
+                            <form>
+                                <header />
+                                <sheet>
+                                    <group name="fix_item_2_1_1" colspan="4" col="2">
+                                        <group
+                                                name="fix_item_2_1_1_1"
+                                                colspan="1"
+                                                col="2"
+                                            >
+                                            <field
+                                                    name="product_id"
+                                                    domain="['|',('id','in',parent.fix_item_allowed_product_ids),('categ_id','in',parent.fix_item_allowed_product_categ_ids)]"
+                                                />
+                                            <field name="name" />
+                                            <field name="usage_id" />
+                                            <field name="account_id" />
+                                        </group>
+                                        <group
+                                                name="fix_item_2_1_2"
+                                                colspan="1"
+                                                col="2"
+                                            >
+                                            <field
+                                                    name="allowed_uom_ids"
+                                                    widget="many2many_tags"
+                                                    invisible="1"
+                                                />
+                                            <label
+                                                    for="uom_quantity"
+                                                    string="Quantity"
+                                                />
+                                            <div>
+                                                <field
+                                                        name="uom_quantity"
+                                                        class="oe_inline"
+                                                    />
+                                                <field
+                                                        name="uom_id"
+                                                        domain="[('id','in',allowed_uom_ids)]"
+                                                        attrs="{'required':[('product_id','!=',False)]}"
+                                                        class="oe_inline"
+                                                    />
+                                            </div>
+                                            <field name="quantity" invisible="1" />
+                                            <field name="currency_id" force_save="1" />
+                                            <field
+                                                    name="allowed_pricelist_ids"
+                                                    widget="many2many_tags"
+                                                    invisible="1"
+                                                />
+                                            <field
+                                                    name="pricelist_id"
+                                                    domain="[('id','in',allowed_pricelist_ids)]"
+                                                    force_save="1"
+                                                />
+                                            <field name="price_unit" />
+                                            <field name="price_subtotal" />
+                                            <field
+                                                    name="tax_ids"
+                                                    widget="many2many_tags"
+                                                />
+                                            <field name="price_tax" />
+                                            <field name="price_total" />
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
+                    </page>
+                </notebook>
+                <group name="footer" colspan="4" col="2">
+                    <group name="footer_left" colspan="1" col="2">
+                        <field name="amount_untaxed" />
+                        <field name="amount_tax" />
+                        <field name="amount_total" />
+                    </group>
+                    <group name="footer_right" colspan="1" col="2">
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+</odoo>
