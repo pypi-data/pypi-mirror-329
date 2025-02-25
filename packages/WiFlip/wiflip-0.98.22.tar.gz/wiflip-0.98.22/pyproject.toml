@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "WiFlip"
+version = "0.98.22"
+authors = [
+  { name="Phil Dubious", email="phil.dubious@free.fr" },
+  { name="Garzol Garzol", email="garzol@free.fr" },
+]
+description = "Communication tool with pps4 wifi clones"
+readme = "README_pypi.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "PyQt5>=5.15.4",
+  "requests",
+  "bs4",
+]
+
+[project.gui-scripts]
+wiflip-zero = "wiflip:mainp"
+
+[project.urls]
+Homepage = "https://github.com/garzol/wiflip"
+Issues = "https://github.com/garzol/wiflip/issues"
+Documentation = "https://www.pps4.fr/wiflip"
+
+[project.optional-dependencies]
+gui = ["PyQt5"]
