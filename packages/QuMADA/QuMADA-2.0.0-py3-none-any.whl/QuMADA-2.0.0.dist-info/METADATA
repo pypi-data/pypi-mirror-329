@@ -1,0 +1,115 @@
+Metadata-Version: 2.2
+Name: QuMADA
+Version: 2.0.0
+Summary: Measurement Abstraction and Database Access layer for QCoDeS
+Author: JARA Institute for Quantum Information
+License: GPLv3+
+Project-URL: Repository, https://github.com/qutech/qumada
+Project-URL: Documentation, https://qumada.readthedocs.io/en/latest/
+Keywords: quantum,physics,abstraction,metadata,data management
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering
+Classifier: Intended Audience :: Science/Research
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: qcodes>=0.46.0
+Requires-Dist: qcodes_contrib_drivers>=0.18.0
+Requires-Dist: matplotlib
+Requires-Dist: jsonschema
+Requires-Dist: zhinst-toolkit>=0.3.3
+Requires-Dist: pyqt5
+Requires-Dist: versioningit~=2.2.0
+Provides-Extra: gui
+Requires-Dist: plottr; extra == "gui"
+Provides-Extra: spyder
+Requires-Dist: spyder; extra == "spyder"
+
+# QuMADA
+Interfaces and measurement scripts for usage with QCoDeS.
+
+## Documentation
+Find the current documentation on [readthedocs](https://qumada.readthedocs.io/en/latest/).
+
+## Installation
+
+### Setup virtual environment
+
+Installation of QuMADA should be done in a virtual environment.
+There are several methods of creating a virtual environment, python's native being *venv*:
+
+On *windows*, run
+
+```
+python -m venv .venv
+.venv\Scripts\activate.bat
+```
+
+On *linux*, run
+
+```
+python -m venv .venv
+source .venv/bin/activate
+```
+
+### Install QuMADA
+
+Install QuMADA directly from PyPI:
+
+```
+python -m pip install qumada
+```
+
+Alternatively, install the latest development version of QuMADA from github:
+
+```
+git clone https://github.com/qutech/qumada.git qumada
+cd qumada
+python -m pip install -e .
+```
+
+You can also install optional dependencies, like *Spyder* or QCoDeS' *plottr-inspectr*:
+
+```
+python -m pip install -e .[spyder,gui]
+```
+
+### Setup for development
+
+For development, first clone the latest development version of QuMADA from github:
+
+```
+git clone https://github.com/qutech/qumada.git qumada
+cd qumada
+```
+
+The requirements are stored in *dev_requirements.txt*.
+
+```
+python -m pip install -r dev_requirements.txt
+```
+
+Set up pre-commit hooks
+
+```
+python -m pre-commit install
+```
+
+### Build documentation
+
+To build the documentation, run:
+
+```
+tox -e docs
+```
+
+or
+
+```
+cd docs
+make html
+```
+
+The built documentation can be found at `_build/html/index.html`.
