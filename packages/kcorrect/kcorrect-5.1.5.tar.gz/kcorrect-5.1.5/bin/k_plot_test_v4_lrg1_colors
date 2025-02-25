@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+
+import os
+import matplotlib.pyplot as plt
+import numpy as np
+import kcorrect
+
+filename = os.path.join(kcorrect.KCORRECT_DIR, 'data', 'templates',
+                        'kcorrect-lrg1-v4.fits')
+s = kcorrect.template.SED(filename=filename)
+
+f = kcorrect.response.ResponseDict()
+responses = ['sdss_u0', 'sdss_g0', 'sdss_r0', 'sdss_i0', 'sdss_z0']
+for response in responses:
+    f.load_response(response)
+
+nz = 1000
+zmin = 0.
+zmax = 0.55
+zs = (zmin + (zmax - zmin) * (np.arange(nz, dtype=np.float32) + 0.5) /
+      np.float32(nz))
+
+maggies = np.zeros((nz, len(responses)), dtype=np.float32)
+for i, z in enumerate(zs):
+    s.set_redshift(redshift=z)
+    for j, response in enumerate(responses):
+        maggies[i, j] = f[response].project(sed=s)
+
+umg = - 2.5 * np.log10(maggies[:, 0] / maggies[:, 1])
+gmr = - 2.5 * np.log10(maggies[:, 1] / maggies[:, 2])
+rmi = - 2.5 * np.log10(maggies[:, 2] / maggies[:, 3])
+imz = - 2.5 * np.log10(maggies[:, 3] / maggies[:, 4])
+
+pngfile = 'kcorrect-lrg1-v4.colors.png'
+
+fig, ax = plt.subplots(2, 2, sharex=True)
+
+ax[0, 0].plot(zs, umg, color='black')
+ax[0, 0].set_ylabel('u - g')
+ax[0, 1].plot(zs, gmr, color='black')
+ax[0, 1].yaxis.set_label_position("right")
+ax[0, 1].yaxis.tick_right()
+ax[0, 1].set_ylabel('g - r')
+ax[1, 0].plot(zs, rmi, color='black')
+ax[1, 0].set_ylabel('r - i')
+ax[1, 0].set_xlabel('redshift')
+ax[1, 1].plot(zs, imz, color='black')
+ax[1, 1].set_ylabel('i - z')
+ax[1, 1].set_xlabel('redshift')
+ax[1, 1].yaxis.set_label_position("right")
+ax[1, 1].yaxis.tick_right()
+
+plt.savefig(pngfile, dpi=150)
