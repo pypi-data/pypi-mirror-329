@@ -1,0 +1,90 @@
+Metadata-Version: 2.2
+Name: aaqnumtowords
+Version: 0.0.4
+Summary: A Python package for converting numbers to text
+Author-email: Ali Ayati Qaffari <ayatiali910@gmail.com>
+License: MIT License
+        
+        Copyright (c) 2025 Ali Ayati Qaffari
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Profile, https://github.com/MrAAQPy
+Project-URL: github, https://github.com/MrAAQPy/aaqnumtowords
+Project-URL: issue, https://github.com/MrAAQPy/aaqnumtowords/issues
+Project-URL: bale, https://ble.ir/aaq1386
+Requires-Python: >=3.1
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# NumberToWords Library Example
+
+This example demonstrates how to use the `aaqnumtowords` library to convert numbers to words in both Persian and English languages.
+---
+## Installation
+
+First, you need to install the `aaqnumtowords` library:
+
+```bash
+pip install aaqnumtowords
+```
+
+---
+
+## Usage
+
+Here is an example of using the library to convert numbers to words in both Persian and English.
+
+```python
+from aaqnumtowords import NumberToWords
+
+try:
+    # Convert number to words in Persian
+    converter_fa = NumberToWords(language='fa')
+    print(converter_fa.number_to_words(123456789123456789123456789))  # Sample number in Persian
+    
+    # Convert number to words in English
+    converter_en = NumberToWords(language='en')
+    print(converter_en.number_to_words(123456789123456789123456789))  # Sample number in English
+except ValueError as e:
+    print(f"Error: {e}")
+```
+
+---
+
+### Explanation:
+
+- This code converts a very large number to words in both Persian and English.
+- If the input number is too large or invalid, a `ValueError` occurs, and an error message is displayed.
+
+---
+
+### Output:
+
+صد و بیست و سه کوادریلیون چهارصد و پنجاه و شش تریلیون هفتصد و هشتاد و نه بیلیون یکصد و بیست و سه میلیون چهارصد و پنجاه و شش هزار هفتصد و هشتاد و نه
+one hundred twenty-three quadrillion four hundred fifty-six trillion seven hundred eighty-nine billion one hundred twenty-three million four hundred fifty-six thousand seven hundred eighty-nine
+
+
+---
+
+## Notes:
+
+- This code allows you to convert numbers into a readable format in different languages.
+- You can change the language of conversion as needed.
+
