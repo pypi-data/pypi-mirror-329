@@ -1,0 +1,51 @@
+version: '3'
+
+x-common-settings: &common-settings
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  restart: always
+
+x-backend-base: &backend-base
+  build:
+    context: .
+    dockerfile: backend/dockerfile
+  <<: *common-settings
+
+services:
+  backend:
+    <<: *backend-base
+    container_name: {{ project }}-backend
+    volumes:
+      - /var/log:/var/log
+    ports:
+      - "{{ port }}:{{ port }}"
+
+  worker:
+    <<: *backend-base
+    container_name: {{ project }}-worker
+    command: >
+      celery -A tasks.app worker --loglevel=INFO --concurrency=6
+
+  beat:
+    <<: *backend-base
+    container_name: {{ project }}-beat
+    command: >
+      celery -A tasks.app beat --loglevel=INFO
+
+  admin:
+    build:
+      context: .
+      dockerfile: frontend/admin/dockerfile
+    container_name: {{ project }}-admin
+    ports:
+      - "83:80"
+    <<: *common-settings
+
+  web:
+    build:
+      context: .
+      dockerfile: frontend/web/dockerfile
+    container_name: {{ project }}-web
+    ports:
+      - "66:80"
+    <<: *common-settings

@@ -1,0 +1,14 @@
+[uwsgi]
+chdir=/{{ project }}
+module=wsgi:app
+http-socket=:{{ port }}
+chmod-socket=664
+master=True
+log-master=true
+processes=5
+enable-threads=true
+max-requests=5000
+die-on-term = true
+limit-post=104857600
+logto=/var/log/{{ project }}.log
+buffer-size=65535
