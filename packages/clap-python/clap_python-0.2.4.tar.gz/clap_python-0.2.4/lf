@@ -1,0 +1,197 @@
+#!/usr/bin/python3
+import difflib
+import os
+import sys
+
+from clap_python import (
+    App,
+    Arg,
+    MutuallyExclusiveGroup,
+    SubCommand,
+    color_text,
+)
+from clap_python.complete import autocomplete
+from clap_python.style import AnsiColor, AnsiStyle, Style, TextStyle
+
+
+
+
+
+
+
+def cli() -> App:
+    """Configure cli.
+
+    Returns:
+        Cli obj.
+
+    """
+    styles = (
+        Style()
+        .usage(TextStyle(AnsiColor.Green, AnsiStyle.Bold))
+        .headers(TextStyle(AnsiColor.Green, AnsiStyle.Bold))
+        .error(TextStyle(AnsiColor.Red))
+        .flags(TextStyle(AnsiColor.Cyan, AnsiStyle.Bold))
+        .value_names(TextStyle(AnsiColor.Cyan))
+        .tip(TextStyle(AnsiColor.Green))
+    )
+    return (
+        App()
+        .about("Development tool to manage local packages.")
+        .style(styles)
+        .arg_required_else_help(True)
+        .arg(
+            MutuallyExclusiveGroup()
+            .arg(
+                SubCommand("--recipe", "-r")
+                .about("Interact with recipe (modify, run, bake, list, del)")
+                .arg(
+                    Arg("recipe-name")
+                    .help("Recipe name.")
+                )
+                .arg(
+                    MutuallyExclusiveGroup()
+                    .required(True)
+                    .help_heading("Packages")
+                    .arg(
+                        Arg("--add")
+                        .help("Add packages to recipe")
+                        .multiple_values(True)
+                    )
+                    .arg(
+                        Arg("--rm")
+                        .help("Remove packages from recipe")
+                        .multiple_values(True)
+                    )
+                    .arg(
+                        Arg("--list", "-l")
+                        .takes_value(False)
+                        .help("List packages in recipe")
+                    )
+                    .arg(
+                        Arg("--print")
+                        .help(
+                            "Print the generated pipeline-config from the recipe."
+                        )
+                        .takes_value(False)
+                    )
+                    .help_heading("")
+                    .arg(
+                        Arg("--del")
+                        .help("delete recipe. Can't be undone.")
+                        .takes_value(False)
+                    )
+                    .arg(
+                        SubCommand("--bake", "-b")
+                        .about(
+                            (
+                                "Build lionfish recipe ( Build static copy "
+                                "of source files to new directory)."
+                            )
+                        )
+                        .arg(
+                            Arg("--prefix")
+                            .help("Specify where to copy source code to.")
+                            .required(True)
+                        )
+                        .arg(
+                            Arg("--push")
+                            .takes_value(False)
+                            .help("Sync baked recipe to all sites.")
+                        )
+                    )
+                    .arg(
+                        SubCommand("--run")
+                        .about("Bake and run recipe with custom EXE.")
+                        .arg(Arg("--command", "-c").default("bash"))
+                        .arg(
+                            Arg("--python-version", "--pv")
+                            # .choices(PYTHON_VERSIONS)
+                            # .default(DEFAULT_VERSION)
+                        )
+                    )
+                    .arg(
+                        SubCommand("--editor", "--ide")
+                        .about("Open recipe code in editor.")
+                        .arg(
+                            Arg("--version")
+                            .help("Python version to run editor env in.")
+                            # .choices(PYTHON_VERSIONS)
+                            # .default(DEFAULT_VERSION)
+                        )
+                        .arg(
+                            Arg("--bin")
+                            .default("")
+                            .help(
+                                "(Optional) Code editor to open recipe with."
+                            )
+                        )
+                    )
+                    .arg(
+                        SubCommand("--git-push", "--gp")
+                        .about("Push package branches to gitlab")
+                        .arg(
+                            Arg("--force", "-f")
+                            .takes_value(False)
+                            .help(
+                                "Don't check for uncommited changes and push."
+                            )
+                        )
+                    )
+                    .arg(
+                        SubCommand("--merge-request", "--mr")
+                        .about("Create merge request in gitlab")
+                        .arg(
+                            Arg("--branch", "-b")
+                            .default("master")
+                            .help("Target branch to create merge request to.")
+                        )
+                        .arg(
+                            Arg("--work-in-progress", "--wip")
+                            .takes_value(False)
+                            .help("Submit merge requests as wip.")
+                        )
+                    )
+                )
+            )
+            .arg(
+                Arg("--list", "-l")
+                .help("List available recipes in lionfish")
+                .takes_value(False)
+            )
+            .help_heading("Create New")
+            .arg(
+                SubCommand("--generate", "-g")
+                .about(
+                    (
+                        "Interactive session to create a new recipe "
+                        "and dev environment. Source code in "
+                        "~/pipeline/lionfish/<recipe name>"
+                    )
+                )
+                .arg(
+                    Arg("--editor", "--ide")
+                    .takes_value(False)
+                    .help("Start Code editor after creating the recipe")
+                )
+            )
+            .arg(
+                SubCommand("--cleanup-jira", "--cj")
+                .about("Delete any recipe that is set to done in jira.")
+                .arg(
+                    Arg("--force", "-f")
+                    .takes_value(False)
+                    .help(
+                        "Force delete all recipes with a jira ticket that is closed."
+                    )
+                )
+            )
+        )
+    )
+
+
+
+app = cli()
+autocomplete(app)
+args = app.parse_known_args()
+print(args)

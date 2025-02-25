@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "clap_python"
+version = "0.2.4"
+requires-python = ">=3.7"
+authors = [{name = "Max Wiklund"},]
+maintainers = [{name = "Max Wiklund"}]
+description = "Rust Clap inspired command line argument parser."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["cli", "Command line argument parser."]
+classifiers = [
+  "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Typing :: Typed",
+]
+
+dependencies = ['importlib-metadata;python_version<"3.8"']
+
+
+[project.urls]
+Homepage = "https://github.com/maxWiklund/clap-python"
+Documentation = "https://clap-python.readthedocs.io/en/latest"
+Repository = "https://github.com/maxWiklund/clap-python.git"
+"Bug Tracker" = "https://github.com/maxWiklund/clap-python/issues"
+
+
+[project.scripts]
+clap-python-register-complete-app = "clap_python.complete._register_app:run"
+
+
+[tool.hatch.build.targets.wheel]
+packages = ["clap_python"]
+
+
+[tool.ruff]
+line-length = 88
+
+[tool.isort]
+line_length = 88
+
+[tool.pytest.ini_options]
+testpaths = [
+    "test.py",
+]
