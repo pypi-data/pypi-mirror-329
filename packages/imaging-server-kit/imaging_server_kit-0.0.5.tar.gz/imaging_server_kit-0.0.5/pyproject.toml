@@ -1,0 +1,62 @@
+[project]
+name = "imaging-server-kit"
+dynamic = ["version"]
+description = "Deploy image processing algorithms in FastAPI servers. "
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "Mallory Wittwer", email = "mallory.wittwer@epfl.ch" }]
+
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
+
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "python-multipart",
+    "tifffile",
+    "numpy",
+    "scikit-image",
+    "opencv-contrib-python-headless",
+    "imantics",
+    "geojson",
+    "jinja2",  # For the /info route
+    "pyyaml",  # For the /info route
+    "dash",  # For the dash app
+    "dash-bootstrap-components",  # For the dash app
+    "a2wsgi",  # For the dash app
+    "pytest",  # For testing
+]
+
+[project.urls]
+homepage = "https://github.com/Imaging-Server-Kit/imaging-server-kit"
+repository = "https://github.com/Imaging-Server-Kit/imaging-server-kit"
+
+[build-system]
+requires = ["setuptools>=42.0.0", "wheel", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.yaml"]
+
+[tool.setuptools_scm]
+write_to = "src/imaging_server_kit/_version.py"
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
