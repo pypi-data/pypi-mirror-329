@@ -1,0 +1,14 @@
+FROM python:3.7 
+
+WORKDIR /xilong
+
+COPY requirements.txt .
+
+
+RUN mkdir ~/.pip && echo '[global]\nindex-url = https://pypi.tuna.tsinghua.edu.cn/simple/' > ~/.pip/pip.conf
+RUN pip install -r requirements.txt 
+RUN pip install uwsgi==2.0.20
+
+COPY . .
+
+CMD uwsgi uwsgi.ini
