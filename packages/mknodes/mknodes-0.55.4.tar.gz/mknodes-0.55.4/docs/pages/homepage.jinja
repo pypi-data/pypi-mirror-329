@@ -1,0 +1,45 @@
+## Setting the Homepage
+
+If you want an [MkPage][mknodes.MkPage] to become your Homepage, set `is_homepage` to True in the [MkPage][mknodes.MkPage] constructor for the page you want to become your homepage.
+
+
+``` py title="setting `is_homepage` via constructor"
+sub_nav = root_nav.add_nav("My child nav")
+# first we create an MkPage with is_homepage set to True
+my_homepage = mk.MkPage("My first Homepage", is_homepage=True)
+# Then we add it to any given MkNav.
+sub_nav += my_homepage
+```
+`my_homepage` is now both the homepage and a child page from `sub_nav`.
+
+
+If decorators are used for routing, `is_homepage` can be passed as decorator keyword argument
+with the same effect.
+
+``` py title="setting `is_homepage` via decorator"
+nav = root_nav.get_nav("My child nav")
+
+@nav.route.page("My first Homepage", is_homepage=True)
+def _(page: mk.MkPage):
+    page += ...
+    ...
+```
+
+## Setting Index pages
+
+**Index pages** is a more general term and can also refer to pages which could be described as a "Sub-Homepages". The homepage itself is also an index page.
+
+For pages with a hierarchical site navigation, you can usually reach the index pages by clicking the section label in the site navigation menu.
+
+!!! info
+    **MkDocs** does not support index pages "out-of-the box". You either need the plugin [mkdocs-section-index](https://github.com/oprypin/mkdocs-section-index) or a theme which
+    supports them natively.
+
+
+To create an index page for a section, you can use the `is_index` keyword argument [MkNav.add_page][mknodes.MkNav.add_page]:
+
+
+``` py title="Setting an index page"
+page = nav.add_page(is_index=True)
+...
+```
