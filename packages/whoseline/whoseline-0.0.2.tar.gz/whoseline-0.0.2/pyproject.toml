@@ -1,0 +1,39 @@
+[build-system]
+requires = [
+  "setuptools>=62.1",
+  "setuptools_scm[toml]>=8.0.0",
+  "wheel",
+]
+
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = "whoseline"
+dynamic = ['version']
+license = { file = "LICENSE" }
+readme = { file = "README.rst", content-type = "text/x-rst" }
+description = "Whose line is it anyway? An interactive tool for identifying atomic spectral lines."
+dependencies = [
+    "matplotlib",
+    "solara",
+    "ipywidgets",
+    "numpy",
+    "astropy",
+    "astroquery",
+    "expecto",
+    "specutils",
+    "pandas",
+]
+
+[project.scripts]
+whoseline = "whoseline.cli:launch_app"
+
+[project.urls]
+repository = "https://github.com/bmorris3/whoseline"
+
+[tool.setuptools.packages.find]
+include = ["whoseline*"]
+
+[tool.setuptools_scm]
+version_file = "whoseline/version.py"
+
