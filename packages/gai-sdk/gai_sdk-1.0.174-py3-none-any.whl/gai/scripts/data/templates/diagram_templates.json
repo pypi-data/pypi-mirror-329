@@ -1,0 +1,20 @@
+{
+    "Conversation Diagram": {
+        "Id": "00000000-0000-0000-0000-000000000000",
+        "Name": "Conversation Diagram",
+        "Desc": "This is a standard diagram for Conversation Flow. Make a copy of this prompt to customize it for your own agent.",
+        "Content": "INIT --> CRAFT_PROMPT(\"TEXT\"): next / action\nCRAFT_PROMPT(\"TEXT\") --> GENERATE: next / action\nGENERATE --> FINAL: next / action",
+        "CreatorId": "00000000-0000-0000-0000-000000000000",
+        "UsageType": "public",
+        "AgentClassTypeId": "00000000-0000-0000-0000-000000000000"
+    },
+    "Tool Use Diagram": {
+        "Id": "00000000-0000-0000-0000-000000000001",
+        "Name": "Tool Use Diagram",
+        "Desc": "This is a standard prompt for Tool Use Flow. Make a copy of this prompt to customize it for your own agent.",
+        "Content": "INIT --> TOOL_CHOICE: next / action\n\nTOOL_CHOICE --> CRAFT_PROMPT(\"TEXT\"): next / action / condition_use_text\n    CRAFT_PROMPT(\"TEXT\") --> GENERATE: next / action\n\nTOOL_CHOICE --> CRAFT_PROMPT(\"TOOL\"): next / action / condition_use_tool\n    CRAFT_PROMPT(\"TOOL\") --> TOOL_CALL: next / action\n    TOOL_CALL --> GOOGLE: next / action\n    GOOGLE --> GENERATE: next / action\n\nGENERATE --> FINAL: next / action",
+        "CreatorId": "00000000-0000-0000-0000-000000000000",
+        "UsageType": "public",
+        "AgentClassTypeId": "00000000-0000-0000-0000-000000000000"
+    }
+}
