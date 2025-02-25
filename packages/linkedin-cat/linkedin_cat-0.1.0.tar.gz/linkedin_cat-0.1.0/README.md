@@ -1,0 +1,417 @@
+
+# Introduction
+## Install package
+```shell
+pip install linkedin_cat
+```
+## Preparation
+
+- create file `linkedin_cookies.json`
+- please use Chrome Extension `EditThisCookie` to export linkedin cookies to `linkedin_cookies.json`
+
+`linkedin_cookies.json`
+
+```json
+[
+{
+    "domain": ".linkedin.com",
+    "expirationDate": 1746423475,
+    "hostOnly": false,
+    "httpOnly": false,
+    "name": "_gcl_au",
+    "path": "/",
+    "sameSite": "unspecified",
+    "secure": false,
+    "session": false,
+    "storeId": "0",
+    "value": "1.1.191481430.1738647475",
+    "id": 1
+},
+{
+    "domain": ".linkedin.com",
+    "expirationDate": 1746089950.085703,
+    ......
+```
+
+
+
+##  Example Usage:
+
+## - Linkedin Send Message
+
+```python
+from linkedin_cat.message import LinkedinMessage
+
+# linkedin cookie file path
+linkedin_cookies_json='./linkedin_cookies.json'
+# headless mode
+headless = False
+# Ininialized LinkedinMessage
+bot = LinkedinMessage(linkedin_cookies_json,headless)
+
+# message to sent, use FIRSTNAME or FULLNAME to customized the message
+message = "Hello FIRSTNAME,hope you are doing well. Glad to e-meet with you on linkedin"
+
+# Send single request by url
+url = "https://www.linkedin.com/in/chandlersong/"
+bot.send_single_request(url,message)
+
+# Send multi request by linkedin url list 
+urls_list = [    
+    	"https://www.linkedin.com/in/chandlersong/",
+    	"https://www.linkedin.com/in/chandlersong/",
+        ]
+
+bot.send_multi_request(urls_list,message)
+    
+```
+
+## - Python Command
+
+`cat_run.py`
+
+```python
+import argparse
+from linkedin_cat.message import LinkedinMessage
+import json
+import time
+
+
+class LocalStorageHelper:
+    def __init__(self, storage_file_path):
+        self.storage_file_path = storage_file_path
+        self.storage = self.load_storage()
+
+    def load_storage(self):
+        try:
+            with open(self.storage_file_path, "r", encoding="utf8") as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return {}
+
+    def save_storage(self):
+        with open(self.storage_file_path, "w", encoding="utf8") as f:
+            json.dump(self.storage, f)
+
+    def set(self, key, value):
+        self.storage[key] = value
+        self.save_storage()
+
+    def get(self, key):
+        return self.storage.get(key)
+
+
+def get_message(message_file_path):
+    with open(message_file_path, "r", encoding="utf8") as f:
+        message = f.read()
+    return message
+
+
+def read_urls_list(urls_file_path):
+    with open(urls_file_path, "r", encoding="utf8") as f:
+        urls_list = f.readlines()
+    urls_list = [url.strip() for url in urls_list]
+    return urls_list
+
+
+def send_messages(urls_list, message, storage_helper, bot):
+    for url in urls_list:
+        if storage_helper.get(url):
+            continue
+        bot.send_single_request(url, message)
+        storage_helper.set(url, time.time())
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Send LinkedIn messages to a list of URLs.')
+    parser.add_argument('cookies', type=str, help='Path to the LinkedIn cookies JSON file (e.g., "cookies.json").')
+    parser.add_argument('message', type=str, help='Path to the message file (e.g., "message.txt").')
+    parser.add_argument('urls', type=str, help='Path to the URLs file (e.g., "urls.txt").')
+    parser.add_argument('button_class', type=str, help="""Message Button Class: ieSHXhFfVTxQfadOJdXYOIDuVKsBXgPtjNxI (eg:<button aria-label="Invite XXXX to connect" id="ember840"
+                                                            class="artdeco-button artdeco-button--2
+                                                            artdeco-button--primary ember-view ieSHXhFfVTxQfadOJdXYOIDuVKsBXgPtjNxI"
+                                                            type="button">)"""
+                        )
+    parser.add_argument('--headless', action='store_true',
+                        help='Run the bot in headless mode (without opening a browser window).')
+    parser.add_argument('--storage', type=str, default='processed_urls.json',
+                        help='Path to the local storage file for processed URLs (e.g., "processed_urls.json"). This file keeps track of URLs that have already been processed to avoid sending duplicate messages.')
+
+    args = parser.parse_args()
+
+    message = get_message(args.message)
+    urls_list = read_urls_list(args.urls)
+
+    bot = LinkedinMessage(args.cookies, args.headless,button_class=args.button_class)
+
+    storage_helper = LocalStorageHelper(args.storage)
+    send_messages(urls_list, message, storage_helper, bot)
+
+
+
+
+if __name__ == "__main__":
+    main()
+```
+
+
+
+运行脚本：
+
+```shell
+python .\cat_run.py linkedin_cookies.json msg.txt urls.txt  gUfuZBuHecrFJGhcTDwkUSEhvpaAQjXWfwDwQ 
+```
+
+`linkedin_cookies.json` (EditThisCookies导出)
+
+`msg.txt`
+
+```html
+Hello FIRSTNAME, Hope you are doing well. Glad to e-meet with you on linkedin.
+```
+
+`urls.txt`
+
+```html
+https://www.linkedin.com/in/xxxx/
+https://www.linkedin.com/in/yyyyy/
+https://www.linkedin.com/in/zzzzz/
+......
+```
+
+
+
+ **Message/Connect Button Class**  (gUfuZBuHecrFJGhcTDwkUSEhvpaAQjXWfwDwQ)
+
+```html
+<button aria-label="Invite xxx to connect" id="ember485" class="artdeco-button artdeco-button--2 artdeco-button--primary ember-view gUfuZBuHecrFJGhcTDwkUSEhvpaAQjXWfwDwQ" type="button">        <svg role="none" aria-hidden="true" class="artdeco-button__icon " xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" data-supported-dps="16x16" data-test-icon="connect-small">
+<!---->    
+    <use href="#connect-small" width="16" height="16"></use>
+</svg>
+
+<span class="artdeco-button__text">
+    Connect
+</span></button>
+```
+
+
+
+无Web界面化运行
+
+```shell	
+python .\cat_run.py linkedin_cookies.json msg.txt urls.txt  gUfuZBuHecrFJGhcTDwkUSEhvpaAQjXWfwDwQ --headless
+```
+
+
+
+## - Linkedin Search
+
+`linkedin_search_keyword.py `  关键词搜索
+
+```python
+from linkedin_cat.search import LinkedinSearch
+
+# li_class
+# <li class="AnzbBoSgWFPvyPjbkRjRKkrJVxiaC"
+# title_div_class
+# <div class="RTuDraFdKmgRAxtLKirgHvzAIXdijkkEQ t-14 t-black t-normal"
+# location_div_class
+# <div class="rnkdymaxWKCNeIKKaOIbrXkZKdCeIOFLMZ"
+# intro_p_class
+# <p class=KtEWEpbEqyHyYWJByRbdgYQzrISPzhXvdIM
+# link_span_class
+# <span class=OORPFqatrHRtkxtjkKqROvaiHZJKsVvncNCM
+
+# 实例化bot
+bot = LinkedinSearch(
+         linkedin_cookies_json='linkedin_cookies.json',
+         headless=False,
+         li_class='AnzbBoSgWFPvyPjbkRjRKkrJVxiaC',
+         title_div_class='RTuDraFdKmgRAxtLKirgHvzAIXdijkkEQ',
+         location_div_class='rnkdymaxWKCNeIKKaOIbrXkZKdCeIOFLMZ',
+         intro_p_class='KtEWEpbEqyHyYWJByRbdgYQzrISPzhXvdIM',
+         link_span_class='OORPFqatrHRtkxtjkKqROvaiHZJKsVvncNCM'
+         )
+
+# 关键词搜索
+results = bot.search_keywords('wang microsoft',wait=False)
+
+# 返回 list 结果
+for result in results:
+    print(result)
+    # {'name': '', 'title': '', 'location': '', 'introduction': '', 'linkedin_url': '', 'image_url': ''}
+```
+
+
+
+`linkedin_search_filters.py` 多条件搜索
+
+```python
+from linkedin_cat.search import LinkedinSearch
+
+# 实例化bot
+bot = LinkedinSearch(
+         linkedin_cookies_json='linkedin_cookies.json',
+         headless=False,
+         li_class='AnzbBoSgWFPvyPjbkRjRKkrJVxiaC',
+         title_div_class='RTuDraFdKmgRAxtLKirgHvzAIXdijkkEQ',
+         location_div_class='rnkdymaxWKCNeIKKaOIbrXkZKdCeIOFLMZ',
+         intro_p_class='KtEWEpbEqyHyYWJByRbdgYQzrISPzhXvdIM',
+         link_span_class='OORPFqatrHRtkxtjkKqROvaiHZJKsVvncNCM'
+         )
+
+# 按照搜索条件搜索, 自定义搜索条件
+# 生成搜索的url
+url = bot.generate_linkedin_search_url(keywords, company=None, title=None,school=None,first_name=None, last_name=None)
+# 获取搜索页面的html
+html = bot.open_linkedin_url(url)
+# 解析html页面
+results = bot.parse_linkedin_results(html)
+
+for result in results:
+    print(result)
+```
+
+`save_profile_by_linkedin_url.py`  保存Linkedin Profile
+
+```python
+from linkedin_cat.search import LinkedinSearch
+# 实例化bot
+bot = LinkedinSearch(
+         linkedin_cookies_json='linkedin_cookies.json',
+         headless=False,
+         )
+# 搜索linkedin profile，并保存为json文件
+save_folder = './linkedin'
+url = "https://www.linkedin.com/in/chandlersong/"
+bot.search_linkedin_profile(url,save_folder)
+```
+
+`save_profile_by_linkedin_url_list.py`
+
+```python
+from linkedin_cat.search import LinkedinSearch
+# 实例化bot
+bot = LinkedinSearch(
+         linkedin_cookies_json='linkedin_cookies.json',
+         headless=False,
+         )
+
+# 批量搜索linkedin profile，并保存为json文件
+save_folder = './linkedin'
+url_list = [
+    "https://www.linkedin.com/in/chandlersong/"
+    "https://www.linkedin.com/in/chandlersong/"
+    "https://www.linkedin.com/in/chandlersong/"
+    ]
+
+bot.search_linkedin_profile_list(url_list,save_folder)
+```
+
+
+
+## - Recruiter LLM
+
+```python
+import os
+from jinja2 import Template
+from cn_detect.detect import ChineseNameDetect
+from linkedin_cat.search import LinkedinSearch # 继承了LinkedinMessage
+from llm_cat.deepseek_api import deepseek_chat
+
+# 添加自定义模块路径
+# import sys
+# sys.path.append(r'C:\Users\xxx\pyfunc')
+# from llm import llm
+
+# LinkedIn cookie文件路径
+linkedin_cookies_json = "cookies.json"
+headless = True
+token = "sk-xxxxxxxxxxxxxxxxxxxxxx"
+
+# 创建LinkedinSearch对象
+search_bot = LinkedinSearch(linkedin_cookies_json,headless=headless)
+detector = ChineseNameDetect()
+
+def judge_skill_prompt(mini_profile):
+    # 构建评估候选人的模板
+    prompt_template = """
+                            Please assess if the candidate in #### is a security engineer. 
+                            If yes, return True; if not, return False. 
+                            Provide the response in JSON format. 
+                            example:
+                            {
+                                "result": True
+                            }
+                            \n\n 
+                            ####{{ short_profile }}####
+                        """
+    template = Template(prompt_template)
+    prompt = template.render(short_profile=mini_profile)
+
+    # 使用LLM评估候选人
+    # reply = llm(prompt)
+    reply = deepseek_chat(prompt, token)
+    print(reply)
+    return reply
+
+
+def search_recruiter(keywords, company=None, title=None, school=None, first_name=None, last_name=None,
+                     chinese_detect=True, send_message=True, save_resume=True,
+                     message=f"Hello FIRSTNAME, hope you are doing well. Glad to e-meet with you on LinkedIn."):
+    page = 1
+    while True:
+        # 生成LinkedIn搜索URL
+        url = search_bot.generate_linkedin_search_url(keywords, company, title, school, first_name, last_name)
+        if page != 1:
+            url += f'&page={page}'
+
+        # 打开LinkedIn URL并解析结果
+        html = search_bot.open_linkedin_url(url)
+        results = search_bot.parse_linkedin_results(html)
+
+        # 如果没有结果，退出循环
+        if not results:
+            print('No results')
+            break
+
+        print('Total Results:', len(results))
+        for result in results:
+            print(result)
+            try:
+                name = result['name']
+                url = result['linkedin_url'].split('?')[0]
+
+                mini_profile = {key: result[key] for key in ['title', 'introduction', 'location']}
+
+                # 判断linkedin是否存在
+                filename = search_bot.extract_username_from_linkedin_url(url) + '.json'
+                if os.path.exists(os.path.join('./linkedin', filename)):
+                    print(f'{filename} already exists, skipping...')
+                    continue
+
+                # 判断是否需要检测中文
+                should_continue = not chinese_detect or detector.detect_chinese_word(name) or detector.detect_family_name(name)
+
+                if should_continue:
+                    reply = judge_skill_prompt(mini_profile)
+                    if 'True' in reply:
+                        # 发送消息
+                        if send_message:
+                            search_bot.send_single_request(url, message)
+                        # 保存简历
+                        if save_resume:
+                            search_bot.search_linkedin_profile(url, thread_pool=True)
+
+            except Exception as e:
+                print(f"Error: {e}")
+
+        # 翻页
+        page += 1
+
+# 使用示例
+search_recruiter('security', company='google',last_name='jiang',send_message=False,save_resume=True)
+```
+
+
+
