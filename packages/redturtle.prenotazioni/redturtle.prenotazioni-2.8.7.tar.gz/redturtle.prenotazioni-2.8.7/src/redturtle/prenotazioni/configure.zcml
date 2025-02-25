@@ -1,0 +1,65 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="redturtle.prenotazioni"
+    >
+
+  <i18n:registerTranslations directory="locales" />
+
+  <include file="permissions.zcml" />
+  <!-- actions is deprecated ? -->
+  <include package=".actions" />
+  <include package=".adapters" />
+  <include package=".behaviors" />
+  <include package=".browser" />
+  <include package=".vocabularies" />
+  <include package=".indexers" />
+  <include package=".events" />
+  <include package=".restapi" />
+  <include package=".monkeypatcher" />
+  <include file="upgrades.zcml" />
+
+  <genericsetup:registerProfile
+      name="default"
+      title="redturtle.prenotazioni"
+      description="Installs the redturtle.prenotazioni add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/default"
+      post_handler=".setuphandlers.post_install"
+      />
+
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="redturtle.prenotazioni (uninstall)"
+      description="Uninstalls the redturtle.prenotazioni add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/uninstall"
+      post_handler=".setuphandlers.uninstall"
+      />
+
+  <genericsetup:registerProfile
+      name="to_1500"
+      title="redturtle.prenotazioni (to_1500)"
+      description="redturtle.prenotazioni to 1500."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/to_1500"
+      />
+
+  <genericsetup:registerProfile
+      name="to_2005"
+      title="redturtle.prenotazioni (to_2005)"
+      description="redturtle.prenotazioni to 2005."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/to_2005"
+      />
+
+  <utility
+      factory=".setuphandlers.HiddenProfiles"
+      name="redturtle.prenotazioni-hiddenprofiles"
+      />
+
+  <include package=".demo" />
+
+</configure>
