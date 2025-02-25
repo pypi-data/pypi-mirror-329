@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pygeai"
+version = "0.1.25"
+description = "Software Development Kit to interact with Globant Enterprise AI."
+authors = [{ name = "Alejandro Trinidad", email = "alejandro.trinidad@globant.com" }]
+license = { file = "LICENSE" }
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.8"
+keywords = ["geai", "pygeai"]
+classifiers = [
+     "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "requests",
+    "pydantic",
+    "packaging"
+]
+
+[project.optional-dependencies]
+docs = ["sphinx", "sphinx-rtd-theme", "sphinx-markdown-builder"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[project.scripts]
+geai = "pygeai.cli.__main__:main"
