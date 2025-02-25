@@ -1,0 +1,99 @@
+
+[project]
+name = "py-earth2"
+dynamic = ["version"]
+description = "A Python implementation of Jerome Friedman's Multivariate Adaptive Regression Splines."
+readme = "README.md"
+license = { file = "LICENSE.txt" }
+authors = [{ name = "Jason Rudy", email = "jcrudy@gmail.com" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Programming Language :: Cython",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development",
+]
+dependencies = ["scikit-learn >= 0.16", "scipy >= 1", "numpy>=1"]
+requires-python = ">=3.10"
+
+[project.optional-dependencies]
+export = ["sympy"]
+
+[dependency-groups]
+test = [
+    "pytest",
+    "pandas",
+    "patsy",
+    "statsmodels",
+    "sympy",
+    "syrupy",
+    "pytest-cov",
+    "pytest-clarity",
+]
+dev = ["build>=1.2.2.post1", "cython>=3"]
+docs = ["sphinx_gallery"]
+export = ["sympy"]
+nb = ["ipykernel>=6.29.5"]
+lint = ["ruff>=0.9.7"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "B", "I"]
+
+[tool.ruff.lint.isort]
+required-imports = ["from __future__ import annotations"]
+
+# build config
+
+[build-system]
+requires = [
+    "hatchling",
+    "hatch-cython",
+    "numpy >= 2.0",  # extensions compiled against numpy 2 work with numpy 1
+    "cython >= 3.0",
+]
+build-backend = "hatchling.build"
+
+
+[tool.hatch.version]
+path = "src/pyearth/__init__.py"
+
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pyearth"]
+
+
+[tool.hatch.build.targets.wheel.hooks.cython]
+dependencies = ["hatch-cython", "numpy>=2", "scipy"]
+
+[tool.hatch.build.targets.wheel.hooks.cython.options]
+include_numpy = true
+compile_py = false
+src = "pyearth"
+
+[tool.cibuildwheel]
+build-frontend = "build[uv]"
+skip = [
+    "pp*",
+    "*-i686",
+    "*_i686",
+    "*-win32",
+    "*-ppc64le",
+    "*-s390x",
+    "*-armv7l",
+    "*-musllinux*",
+] # no pypi, no 32-bit, no musl
+test-groups = ["test"]
+test-command = "pytest {project}/test"
