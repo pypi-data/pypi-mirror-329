@@ -1,0 +1,17 @@
+# This file denotes a default configuration for a sensitivity calculation for HERA
+# All arguments apply to the sensitivity.PowerSpectrum object -- look at the docs
+# for that object, or use `help(PowerSpectrum)` in an interpreter to see available
+# options.
+
+# One option that is extra to the PowerSpectrum options is the "plugins" option below.
+# This should be a list of dot-pathed modules that should be imported in order to have
+# your custom plugins loaded (example, TheoryModel subclasses).
+plugins:
+  - py21cmsense.theory
+#  - my_custom_package.module
+
+# The observation.
+# Either a file containing configuration options for the observation, or a dict
+# of key: value pairs.
+observation: observation_hera.yml
+theory_model: EOS2021

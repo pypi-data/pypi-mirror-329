@@ -1,0 +1,21 @@
+# This file denotes a default configuration for the HERA "observatory"
+# All arguments apply to the observatory.Observatory object -- look at the docs
+# for that object, or use `help(Observatory)` in an interpreter to see available
+# options.
+
+antpos: !hera
+  hex_num: 3
+beam:
+  class: GaussianBeam
+  frequency: !astropy.units.Quantity
+    unit: !astropy.units.Unit {unit: MHz}
+    value: 150
+  dish_size: !astropy.units.Quantity
+    unit: !astropy.units.Unit {unit: m}
+    value: 14.0
+latitude: !astropy.units.Quantity
+  unit: !astropy.units.Unit {unit: rad}
+  value: 0.536189
+Trcv: !astropy.units.Quantity
+  unit: !astropy.units.Unit {unit: K}
+  value: 100
