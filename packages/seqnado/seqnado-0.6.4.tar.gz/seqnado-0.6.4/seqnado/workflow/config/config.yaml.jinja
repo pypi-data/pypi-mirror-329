@@ -1,0 +1,72 @@
+user: "{{username}}"
+project_date: "{{project_date}}"
+project_name: "{{project_name}}"
+seqnado_version: "{{seqnado_version}}"
+design: "design.csv"
+
+###################################
+# Essential configuration options #
+###################################
+
+genome:
+    name: "{{genome}}"
+    index: "{{index}}"
+    chromosome_sizes: "{{chromosome_sizes}}"
+    gtf: "{{gtf}}"
+
+fastq_screen: "{{fastq_screen}}"
+fastq_screen_config: "{{fastq_screen_config}}"
+library_complexity: "{{library_complexity}}"
+remove_blacklist: "{{remove_blacklist}}"
+blacklist: "{{blacklist}}"
+
+remove_pcr_duplicates_method: "{{remove_pcr_duplicates_method}}"
+
+shift_atac_reads: "{{shift_atac_reads}}"
+
+spikein: "{{spikein}}"
+spikein_options:
+    normalisation_method: "{{normalisation_method}}"
+    reference_genome: "{{reference_genome}}"
+    spikein_genome: "{{spikein_genome}}"
+
+make_bigwigs: "{{make_bigwigs}}"  
+scale: "{{scale}}"
+pileup_method: "{{pileup_method}}"
+make_heatmaps: "{{make_heatmaps}}"
+
+call_peaks: "{{call_peaks}}"
+peak_calling_method: "{{peak_calling_method}}"
+
+consensus_counts: "{{consenus_counts}}"
+rna_quantification: "{{rna_quantification}}"
+salmon_index: "{{salmon_index}}"
+
+run_deseq2: "{{run_deseq2}}"
+
+call_snps: "{{call_snps}}"
+snp_calling_method: "{{snp_calling_method}}"
+fasta: "{{fasta}}"
+fasta_index: "{{fasta_index}}"
+snp_database: "{{snp_database}}"
+
+make_ucsc_hub: "{{make_ucsc_hub}}"
+ucsc_hub_details:
+    directory: "{{UCSC_hub_directory}}"
+    name: "{{project_name}}"
+    short: "{{project_name}}"
+    long: "{{project_name}}"
+    email: "{{email}}"
+    color_by: "{{color_by}}"
+
+geo_submission_files: "{{geo_submission_files}}"
+
+perform_plotting: "{{perform_plotting}}"
+plotting_coordinates: "{{plotting_coordinates}}"
+plotting_genes: "{{plotting_genes}}"
+plotting_format: "svg"
+
+#################################
+# Tool specific options         #
+#################################
+{{options}}
