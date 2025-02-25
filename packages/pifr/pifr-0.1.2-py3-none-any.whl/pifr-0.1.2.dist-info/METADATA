@@ -1,0 +1,74 @@
+Metadata-Version: 2.1
+Name: pifr
+Version: 0.1.2
+Summary: Pull docker image from remote host
+Keywords: ssh,docker,image
+Author-Email: ZHOU Cheng <c.zhou@live.com>
+License: MIT
+Classifier: Topic :: Utilities
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Project-URL: Homepage, https://github.com/ldsink/pifr
+Project-URL: Repository, https://github.com/ldsink/pifr
+Requires-Python: >=3.10
+Requires-Dist: click==8.1.8
+Requires-Dist: rich==13.9.4
+Description-Content-Type: text/markdown
+
+```text
+         _    __        
+ _ __   (_)  / _|  _ __ 
+| '_ \  | | | |_  | '__|
+| |_) | | | |  _| | |   
+| .__/  |_| |_|   |_|   
+|_|                     
+```
+
+<p style="text-align: left">
+    <a href="https://pypi.python.org/pypi/pifr">
+        <img src="https://img.shields.io/pypi/v/pifr?style=flat-square" alt="Package" />
+    </a>
+    <a href="https://pypi.python.org/pypi/pifr">
+        <img src="https://img.shields.io/pypi/pyversions/pifr?style=flat-square" />
+    </a>
+    <a href="https://github.com/arcticdata/pifr/blob/master/LICENSE">
+        <img src="https://img.shields.io/pypi/l/pifr?style=flat-square" alt="License" />
+    </a>
+</p>
+
+Pull docker image from remote host
+
+## Install
+
+It is recommended to install using [**pipx**][1]. [_How to install pipx?_][2]
+
+> pipx install pifr
+
+## Usage
+
+Pull an image through a host
+
+> pifr pull <host> <image_name>
+
+> pifr pull remote-host hello-world
+
+To see all of pifr's documentation, run `pifr --help`
+
+```text
+Usage: pifr [OPTIONS] COMMAND [ARGS]...
+
+  Pull docker image from remote host.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  list  列出主机 List hosts
+  pull  在主机上拉取镜像，并导入到本地 Pull image at remote host and save it to local
+```
+
+[1]: https://github.com/pypa/pipx
+[2]: https://github.com/pypa/pipx?tab=readme-ov-file#install-pipx
