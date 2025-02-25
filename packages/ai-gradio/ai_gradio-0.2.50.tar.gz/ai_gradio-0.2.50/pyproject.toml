@@ -1,0 +1,164 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ai-gradio"
+version = "0.2.50"
+description = "A Python package for creating Gradio applications with AI models"
+authors = [
+    { name = "AK", email = "ahsen.khaliq@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "torch>=2.0.0",
+    "numpy",
+    "accelerate>=0.27.0",
+    "bitsandbytes>=0.41.0",
+    "gradio>=5.9.1",
+    "gradio-webrtc",
+    "websockets",
+    "twilio",
+    "Pillow",
+    "opencv-python",
+    "librosa",
+    "pydub",
+    "gradio_webrtc[vad]",
+    "numba==0.60.0",
+    "python-dotenv",
+    "modelscope-studio",
+]
+
+[project.urls]
+homepage = "https://github.com/AK391/ai-gradio"
+repository = "https://github.com/AK391/ai-gradio"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "isort",
+    "flake8"
+]
+transformers = ["transformers>=4.37.0", "torch>=2.0.0", "accelerate>=0.27.0", "bitsandbytes>=0.41.0", "einops>=0.8.0", "Pillow>=10.4.0", "pyvips-binary>=8.16.0", "pyvips>=2.2.3", "torchvision>=0.18.1"]
+openai = ["openai>=1.58.1"]
+gemini = ["google-generativeai>=0.8.3", "google-genai==0.3.0"]
+crewai = [
+    "crewai>=0.1.0",
+    "langchain>=0.1.0",
+    "langchain-openai>=0.0.2",
+    "crewai-tools>=0.0.1"
+]
+anthropic = ["anthropic>=1.0.0"]
+lumaai = ["lumaai>=0.0.3"]
+xai = ["openai>=1.58.1"]
+cohere = ["cohere>=5.0.0"]
+sambanova = ["openai>=1.58.1"]
+hyperbolic = ["openai>=1.58.1"]
+qwen = [
+    "openai>=1.58.1",
+]
+browser = [
+    "browser-use>=0.1.16",
+    "playwright>=1.49.1"
+]
+swarms = [
+    "swarms>=6.8.9,<7.0.0",
+    "swarm-models>=0.3.0,<0.4.0",
+    "swarms-memory>=0.1.2,<0.2.0",
+    "langchain>=0.1.0",
+    "langchain-community>=0.0.10",
+    "pydantic>=2.0.0,<3.0.0"
+]
+kokoro = [
+    "kokoro-onnx>=0.3.3",
+    "soundfile>=0.13.0",
+    "huggingface-hub>=0.27.1"
+]
+all = [
+    "openai>=1.58.1",
+    "google-generativeai",
+    "crewai>=0.1.0",
+    "langchain>=0.1.0",
+    "langchain-openai>=0.0.2",
+    "crewai-tools>=0.0.1",
+    "anthropic>=1.0.0",
+    "lumaai>=0.0.3",
+    "cohere>=5.0.0",
+    "sambanova>=0.0.1",
+    "hyperbolic>=1.58.1",
+    "groq>=0.3.0",
+    "browser-use>=0.1.0",
+    "swarms>=6.8.9,<7.0.0",
+    "swarm-models>=0.3.0,<0.4.0",
+    "swarms-memory>=0.1.2,<0.2.0",
+    "langchain>=0.1.0",
+    "pydantic>=2.0.0,<3.0.0",
+    "langchain-openai>=0.0.2",
+    "langchain-community>=0.0.10",
+    "langchain-core>=0.1.0",
+    "tavily-python>=0.3.0",
+    "requests>=2.31.0",
+    "kokoro-onnx>=0.1.0",
+    "soundfile>=0.12.0",
+    "huggingface-hub>=0.20.0"
+]
+groq = ["openai>=1.58.1"]
+fireworks = ["openai>=1.58.1"]
+together = ["openai>=1.58.1"]
+deepseek = ["openai>=1.58.1"]
+smolagents = ["smolagents>=0.1.3"]
+jupyter = [
+    "nbformat>=5.9.0",
+    "nbconvert>=7.16.0",
+    "e2b-code-interpreter>=0.5.0",
+    "huggingface-hub>=0.20.0",
+]
+
+langchain = [
+    "langchain",
+    "langchain-community",
+    "langchain-core",
+    "tavily-python",
+    "langchain-openai"
+]
+
+mistral = [
+    "mistralai"
+]
+
+nvidia = [
+    "openai>=1.58.1"
+]
+
+minimax = ["requests>=2.31.0"]
+
+perplexity = [
+    "openai>=1.58.1"
+]
+
+replicate = [
+    "replicate>=1.0.4"
+]
+
+ollama = [
+    "ollama>=0.4.7"
+]
+
+openrouter = [
+    "openai>=1.58.1"
+]
+
+huggingface = [
+    "huggingface-hub>=0.29.1"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["ai_gradio"]
+
