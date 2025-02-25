@@ -1,0 +1,27 @@
+from backend.config import APP_CONFIG, REDIS_CONFIG
+from backend.utils.database import db
+from xl_router import App
+from importlib import import_module
+
+
+class {{ project | capitalize }}(App):
+    resources = []
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.REDIS_CONFIG = REDIS_CONFIG
+
+    def register_extensions(self):
+        db.mount(self)
+
+    def register_resources(self):
+        for module_name in self.resources:
+            module = import_module('app.{}.resources'.format(module_name))
+            self.register_blueprint(module.router)
+
+
+def create_app():
+    app = {{ project | capitalize }}(APP_CONFIG)
+    app.register_extensions()
+    app.register_resources()
+    return app
