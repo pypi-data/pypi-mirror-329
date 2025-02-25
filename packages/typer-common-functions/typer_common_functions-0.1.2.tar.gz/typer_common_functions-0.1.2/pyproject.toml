@@ -1,0 +1,169 @@
+# --------------------------------
+# Project Metadata
+# --------------------------------
+[project]
+name = "typer-common-functions"
+dynamic = ["version"]
+description = "Commonly used Functions around the Typer CLI Library"
+authors = [
+    {name = "Joshua Kreuder", email = "joshua_kreuder@outlook.com"}
+]
+keywords=["cli","typer"]
+readme="readme.md"
+license = "LGPL-3.0-or-later"
+requires-python=">=3.8"
+dependencies = [
+    "typer>=0.7.0",
+    "rich>=10.0.0",
+    "shellingham>=1.5.0"
+]
+
+[project.urls]
+homepage="https://pypi.org/project/typer-common-functions/"
+repository="https://github.com/OpenJKSoftware/typer-common-functions"
+
+# --------------------------------
+# Build System
+# --------------------------------
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# --------------------------------
+# Hatch Configuration
+# --------------------------------
+[tool.hatch]
+installer = "uv"
+
+[tool.hatch.version]
+path = "src/typer_common_functions/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+    "/LICENSE",
+    "/readme.md"
+]
+
+# Development Environment
+[tool.hatch.envs.dev]
+dependencies = [
+    # Formatting
+    "black>=22.6.0",
+    "isort>=5.10.1",
+    # Linting
+    "flake8-pyproject>=1.2.3",
+    "flake8>=4.0.1",
+    "flake8-docstrings>=1.6.0",
+    "flake8-black>=0.3.3",
+    "pylint>=2.14.5",
+    "mypy>=0.961",
+    "bandit>=1.7.4",
+    "pydocstyle>=6.1.1",
+    # Testing
+    "pytest>=7.1.2",
+    "coverage[toml]>=6.0",
+    "pytest-cov>=4.1.0",
+    # Development
+    "pre-commit>=2.20.0"
+]
+
+[tool.hatch.envs.dev.scripts]
+test = "pytest {args:tests}"
+cov = "coverage run -m pytest {args:tests}"
+cov-report = ["coverage report"]
+cov-html = ["coverage html"]
+lint = [
+    "flake8 .",
+    "mypy src",
+    "pylint src tests",
+    "bandit -r src"
+]
+format = [
+    "black .",
+    "isort ."
+]
+
+# --------------------------------
+# Testing Configuration
+# --------------------------------
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "--cov=src --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError",
+]
+
+# --------------------------------
+# Code Quality Tools
+# --------------------------------
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+multi_line_output = 3
+
+[tool.flake8]
+docstring_style = "numpy"
+strictness = "short"
+darglint_ignore_regex = "(^test_|_test$)"
+max-line-length = 120
+ignore = ["BLK100", "E203", "W503"]
+exclude = [".git", ".venv", "__pycache__", "docs/source/conf.py", "old", "build", "dist"]
+
+[tool.bandit]
+skips = ["B101"]
+
+# --------------------------------
+# Type Checking
+# --------------------------------
+[tool.mypy]
+follow_imports="silent"
+warn_redundant_casts=true
+warn_unused_ignores=false
+disallow_any_generics=true
+check_untyped_defs=true
+no_implicit_reexport=false
+disallow_untyped_defs=true
+ignore_missing_imports=true
+
+# --------------------------------
+# Linting
+# --------------------------------
+[tool.pylint.main]
+load-plugins="pylint.extensions.docparams,pylint.extensions.docstyle,pylint.extensions.bad_builtin,pylint.extensions.check_elif,pylint.extensions.mccabe"
+
+[tool.pylint.basic]
+no-docstring-rgx="^(?!__init__$)_"
+
+[tool.pylint.master]
+jobs=0
+persistent=true
+init-hook='import sys; sys.path.append("src")'
+
+[tool.pylint.'MESSAGES CONTROL']
+disable="superfluous-parens,too-few-public-methods,too-many-arguments"
+
+[tool.pylint.format]
+max-line-length=120
+ignore-long-lines='^\s*(# )?<?https?://\S+>?$'
+
+[tool.pylint.reports]
+msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"
+output-format="colorized"
+reports="no"
