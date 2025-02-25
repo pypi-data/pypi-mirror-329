@@ -1,0 +1,73 @@
+Metadata-Version: 2.1
+Name: bitpapa-pay
+Version: 0.2.2
+Summary: Bitpapa Pay async python wrapper
+Author: VasilevAlexandr97
+Author-email: vasilev.alex.work@gmail.com
+Requires-Python: >=3.8,<4.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Dist: aiohttp (>=3.8.6,<4.0.0)
+Requires-Dist: loguru (>=0.7.2,<0.8.0)
+Requires-Dist: pydantic (>=2.4.1,<3.0.0)
+Description-Content-Type: text/markdown
+
+# Bitpapa Pay asynchronous api wrapper
+
+**Docs**: https://apidocs.bitpapa.com/docs/apidocs/wvea40l9be95f-integracziya-bitpapa-pay
+
+## Installation
+
+Install bitpapa-pay
+
+```
+pip install bitpapa-pay
+```
+
+## Usage/Examples
+
+```python
+import asyncio
+
+from bitpapa_pay import BitpapaPay
+
+
+async def main():
+    bitpapa_pay = BitpapaPay(api_token="api_token")
+    # Создаем крипто инвойс
+    crypto_invoice = await bitpapa_pay.create_crypto_invoice(
+        amount=1, currency_code="USDT",
+        private_message="test crypto invoice message",
+        paid_button_name="open_bot",
+        paid_button_url="https://google.com"
+    )
+    print(crypto_invoice)
+
+    # Создаем фиат инвойс
+    fiat_invoice = await bitpapa_pay.create_fiat_invoice(
+        accepted_crypto=["USDT"],
+        fiat_amount=10,
+        fiat_currency_code="RUB",
+        expiration_time=29,
+        merchant_invoice_id="test merchant id 123",
+        paid_button_name="callback",
+        paid_button_url="https://google.com",
+        private_message="test fiat invoice message"
+    )
+    print(fiat_invoice)
+
+    # Получаем инвойсы
+    invoices = await bitpapa_pay.get_invoices(page=3)
+    print(invoices)
+
+    await bitpapa_pay.close()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
