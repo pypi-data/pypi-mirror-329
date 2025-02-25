@@ -1,0 +1,106 @@
+Metadata-Version: 2.1
+Name: utdquake
+Version: 0.0.12
+Summary: University of Texas at Dallas Earthquake Dataset
+Home-page: https://github.com/ecastillot/UTDQuake
+Author: ecastillot (Emmanuel Castillo)
+Author-email: <castillo.280997@gmail.com>
+Keywords: python,utdquake,earthquakes,seismology
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: Unix
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: certifi==2024.12.14
+Requires-Dist: charset-normalizer==3.4.1
+Requires-Dist: contourpy==1.3.1
+Requires-Dist: cycler==0.12.1
+Requires-Dist: decorator==5.1.1
+Requires-Dist: fonttools==4.55.3
+Requires-Dist: greenlet==3.1.1
+Requires-Dist: idna==3.10
+Requires-Dist: kiwisolver==1.4.8
+Requires-Dist: lxml==5.3.0
+Requires-Dist: matplotlib==3.10.0
+Requires-Dist: numpy==2.2.1
+Requires-Dist: obspy==1.4.1
+Requires-Dist: packaging==24.2
+Requires-Dist: pandas==2.2.3
+Requires-Dist: pillow==11.1.0
+Requires-Dist: pyparsing==3.2.1
+Requires-Dist: pyproj==3.7.0
+Requires-Dist: python-dateutil==2.9.0.post0
+Requires-Dist: pytz==2024.2
+Requires-Dist: requests==2.32.3
+Requires-Dist: scipy==1.15.1
+Requires-Dist: six==1.17.0
+Requires-Dist: SQLAlchemy==1.4.54
+Requires-Dist: tqdm==4.67.1
+Requires-Dist: tzdata==2024.2
+Requires-Dist: urllib3==2.3.0
+
+![Twitter Follow](https://img.shields.io/twitter/follow/manuavid?style=social)![GitHub followers](https://img.shields.io/github/followers/ecastillot?style=social)![GitHub stars](https://img.shields.io/github/stars/ecastillot/EQviewer?style=social)![GitHub forks](https://img.shields.io/github/forks/ecastillot/EQviewer?style=social)
+# UTDQuake
+University of Texas at Dallas Earthquake Dataset
+
+# Examples
+
+| Examples | Notebook  |
+|---|---|
+| UTDClient| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ecastillot/UTDQuake/blob/main/examples/utd_client.ipynb) |
+
+# Versions
+
+## Development
+- 0.0.11
+    Fixing error: No agency
+- 0.0.8 & 0.0.9:
+    Fixing init bugs
+- 0.0.7:
+    - clients
+        - utd:
+            UTD module is only used to write custom earthquake dataset
+            (stations.db,catalog.csv,pics.db,mag.db)
+        - fdsn:
+            Custom FDSN client now is part of fdsn module
+    - core
+        - database: Load and read dataframes from sql (chunk is included)
+        - event: Different classes to manage different type of dataframes      (events,stations,picks)
+    
+- 0.0.6:
+    - tools:
+        Bug Fixed: missing __init__ file
+- 0.0.5:
+    Requirement: python >= 3.10
+- 0.0.4: 
+    - clients:
+        - utd: (from FDSN): 
+            - get_custom_stations: Retrieve custom station information and optionally save it to a CSV file.
+- 0.0.3: 
+    - clients: 
+        - local: (from SDS) : Allow to upload local data from obspy easily 
+        - utd: (from FDSN): 
+            - get_custom_events: Retrieves custom seismic event data, including origins, picks, and magnitudes.
+            - get_stats:
+            Retrieve waveforms and compute rolling statistics for the specified time interval. 
+                - Availability percentage
+                - Gaps duration
+                - Overlaps duration
+                - Gaps count
+                - Overlaps count
+    - core:
+        - database: Load and read dataframs from sql
+    - scan:
+        - scan: 
+            - scanner:
+                - scan: Scan the waveform data for each provider and save results to the database.
+                - get_stats: Retrieve statistical data from database files based on the provided criteria.
+            - plot_rolling_stats: Plots rolling statistics data as a heatmap with optional color bar and time axis customization.
+    - tools:
+        - stats:
+            - get_stats_by_instrument: Calculate statistics for seismic data from specified channels and time range.
+            - get_stats: Calculate statistics for seismic data grouped by instrument.
+            - get_rolling_stats: Calculate rolling statistics for seismic data over specified time intervals.
