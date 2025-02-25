@@ -1,0 +1,54 @@
+[tool.poetry]
+name = "aws-emd"
+version = "0.7.0"
+description = "Deploy Model Anywhere on AWS"
+authors = [
+    "Yi Yan <yiyanz@amazon.com>",
+    "Jie Tang <tangjiee@amazon.com>",
+    "Xuan Zhou <zhouxss@amazon.com>"
+]
+readme = "README.md"
+packages = [
+    { include = "**/*", from = "src/emd", to = "emd" },
+    { include = "pipeline", from = "src", to = "emd" },
+    { include = "s5cmd", from = "assets", to = "emd/pipeline" }
+]
+exclude = [".venv"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+typer = {extras = ["all"], version = "^0.13.0"}
+rich = "^13.9.4"
+boto3 = "^1.35.0"
+questionary = "^2.0.1"
+requests = "^2.26"
+pydantic = "^2.9.2"
+sagemaker = "^2.237.0"
+langchain = "^0.3.9"
+langchain-aws = "^0.2.13"
+huggingface_hub = "^0.26.1"
+openai = "^1.54.4"
+jinja2 = "^3.1.4"
+modelscope = "^1.21.1"
+
+[tool.poetry.extras]
+# optional dependencies
+#cli = ["typer","rich","questionary","requests"]
+#langchain = ["langchain", "langchain-aws"]  # langchain required
+#all = ["typer","rich","questionary","langchain", "langchain-aws","sagemaker","openai","jinja2","huggingface_hub","hf_transfer","modelscope"] # all
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+
+[tool.poetry.scripts]
+aws-emd = "emd.cli:app"
