@@ -1,0 +1,84 @@
+rabbitmq:
+  host: 10.8.38.21
+  port: 5672
+
+slack:
+  token: null
+  default_channels:
+    - lvm-notifications
+  level_channels:
+    CRITICAL:
+      - lvm-alerts
+
+pubsub:
+  connection_string: amqp://guest:guest@localhost:5672
+  exchange_name: lvmops
+  routing_key: data
+
+notifications:
+  critical:
+    email_template: data/critical_error_email_template.html
+    email_recipients:
+      - lvm-critical@sdss.org
+    email_from: LVM Critical Alerts <lvm-critical@lco.cl>
+    email_reply_to: lvm-critical@sdss.org
+  smtp_server:
+    host: smtp.lco.cl
+    port: 25
+    tls: false
+    username: null
+    password: null
+
+devices:
+  thermistors:
+    host: 10.8.38.180
+    port: 1025
+    channels:
+      supply: 7
+      r1: 8
+      b1: 9
+      z1: 6
+      r3: 10
+      b3: 11
+      z3: 12
+      r2: 13
+      b2: 14
+      z2: 15
+
+  ion:
+    - host: 10.8.38.155
+      port: 502
+      cameras:
+        z1:
+          signal_address: 0
+          on_off_address: 2020
+        b1:
+          signal_address: 4
+          on_off_address: 2021
+        r1:
+          signal_address: 8
+          on_off_address: 2022
+    - host: 10.8.38.156
+      port: 502
+      cameras:
+        z2:
+          signal_address: 0
+          on_off_address: 2020
+        b2:
+          signal_address: 4
+          on_off_address: 2021
+        r2:
+          signal_address: 8
+          on_off_address: 2022
+    - host: 10.8.38.157
+      port: 502
+      cameras:
+        z3:
+          signal_address: 0
+          on_off_address: 2020
+        b3:
+          signal_address: 4
+          on_off_address: 2021
+        r3:
+          signal_address: 8
+          on_off_address: 2022
