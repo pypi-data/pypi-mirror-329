@@ -1,0 +1,47 @@
+# Copyright (C) 2024 Daniel Page <dan@phoo.org>
+#
+# Use of this source code is restricted per the MIT license, a copy of which 
+# can be found via https://opensource.org/license/mit (and which is included 
+# as LICENSE.txt within the associated archive or repository).
+
+# =============================================================================
+
+[build-system]
+requires = [ 'hatchling' ]
+build-backend = 'hatchling.build'
+
+# -----------------------------------------------------------------------------
+
+[tool.hatch.metadata.hooks.custom]
+path = './pyproject.py'
+
+[tool.hatch.build.targets.sdist]
+packages = [ './libfiat' ]
+sources = [ '../../../doc' ]
+
+# -----------------------------------------------------------------------------
+
+[project]
+dynamic = [ 'version', 'license', 'readme' ]
+
+name = 'libfiat'
+description = 'A Python 3 client for interacting with FIAT-based firmware'
+keywords = []
+maintainers = [ { name = 'Daniel Page', email = 'dan@phoo.org' } ]
+
+dependencies = [
+  'pyserial'
+]
+requires-python = '>= 3.8'
+classifiers = [
+  'Operating System :: OS Independent',
+  'Development Status :: 4 - Beta',
+  'License :: OSI Approved :: MIT License',
+  'Programming Language :: Python :: 3'
+]
+
+[project.urls]
+homepage = 'https://github.com/danpage/fiat'
+documentation = 'https://fiat.readthedocs.io'
+
+# =============================================================================
