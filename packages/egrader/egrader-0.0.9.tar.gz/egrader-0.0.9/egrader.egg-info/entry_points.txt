@@ -1,0 +1,18 @@
+[console_scripts]
+egrader = egrader.cli_bin:main
+
+[egrader.assess_inter_repo]
+more_commits_bonus = egrader.plugins.inter_repo:assess_more_commits_bonus
+
+[egrader.assess_repo]
+commit_date_interval = egrader.plugins.repo:assess_commit_date_interval
+commits_email = egrader.plugins.repo:assess_commits_email
+files_exist = egrader.plugins.repo:assess_files_exist
+min_commits = egrader.plugins.repo:assess_min_commits
+repo_exists = egrader.plugins.repo:assess_repo_exists
+run_command = egrader.plugins.repo:assess_run_command
+
+[egrader.report]
+basic = egrader.plugins.report:report_basic
+markdown = egrader.plugins.report:report_markdown
+tsv = egrader.plugins.report:report_tsv
