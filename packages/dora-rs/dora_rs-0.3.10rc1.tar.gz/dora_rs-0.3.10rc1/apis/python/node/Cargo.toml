@@ -1,0 +1,33 @@
+[package]
+version.workspace = true
+name = "dora-node-api-python"
+edition.workspace = true
+documentation.workspace = true
+description.workspace = true
+license.workspace = true
+repository.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = ["tracing", "telemetry"]
+tracing = ["dora-node-api/tracing"]
+telemetry = ["dora-runtime/telemetry"]
+
+[dependencies]
+dora-node-api = { workspace = true }
+dora-operator-api-python = { workspace = true }
+pyo3.workspace = true
+eyre = "0.6"
+serde_yaml = "0.8.23"
+flume = "0.10.14"
+dora-runtime = { workspace = true, features = ["tracing", "metrics", "python"] }
+arrow = { workspace = true, features = ["pyarrow"] }
+pythonize = { workspace = true }
+futures = "0.3.28"
+dora-ros2-bridge-python = { workspace = true }
+pyo3_special_method_derive = "0.4.2"
+
+[lib]
+name = "dora"
+crate-type = ["cdylib"]
