@@ -1,0 +1,45 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+  <div class="container px-4 px-lg-5">
+    {% if section.home_link or section.home_text %}
+      <a class="navbar-brand" href="/index.html">
+        {% if section.logo %}
+          <img src="{% static section.logo %}" alt="{{section.home_text|default:'Home'}}">
+        {% else %}
+          {{section.home_text|default:'Home'}}
+        {% endif %}
+      </a>
+    {% endif %}
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto py-4 py-lg-0">
+        {% for url, lang in object|translations %}
+          <li class="nav-item">
+            <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{url}}">{{lang}}</a>
+          </li>
+        {% endfor %}
+        {% if section.list_anchors %}
+          {% for anchor, title in object.anchors.items %}
+            <li class="nav-link px-lg-3 py-3 py-lg-4" class="nav-item">
+              <a href="#{{anchor}}">{{title}}</a>
+            </li>
+          {% endfor %}
+        {% endif %}
+        {% for page in object.current_root_without_me %}
+          <li class="nav-item">
+            <a class="nav-link px-lg-3 py-3 py-lg-4" href="/{{page.slug}}.html">{{page.metadata.title}}</a>
+          </li>
+        {% endfor %}
+        {% for link in section.extra_links %}
+          <li class="nav-item">
+            <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{link.url}}">{{link.title}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</nav>

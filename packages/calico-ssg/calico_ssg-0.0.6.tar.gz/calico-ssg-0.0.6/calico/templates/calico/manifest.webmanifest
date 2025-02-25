@@ -1,0 +1,18 @@
+{% load static %}
+
+{
+  "icons": [
+    {% for name, icon in icons.items %}
+      {
+        "src": "{% static icon %}",
+        "type": "image/png",
+        {% if not name %}
+          "sizes": "512x512",
+          "purpose": "maskable"
+        {% else %}
+          "sizes": "{{name}}x{{name}}"
+        {%endif%}
+      },
+    {% endfor %}
+  ]
+}

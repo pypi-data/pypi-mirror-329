@@ -1,0 +1,89 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/Article" lang="{{object.meta_lang}}" x-data="{light: (window.matchMedia('(prefers-color-scheme:light)').matches && !JSON.parse(localStorage.getItem('useLight'))== false) || JSON.parse(localStorage.getItem('useLight'))== true}" :data-theme="light ? 'light' : 'dark'" :data-bs-theme="light ? 'light' : 'dark'">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, width=device-width, minimum-scale=1.0" />
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="robots" content="nocache">
+    <meta itemprop="name" content="{{object.metadata.title}}" />
+    <meta name="twitter:title" content="{{object.metadata.title}}" />
+    <meta property="og:title" content="{{object.metadata.title}}" />
+    <meta property="og:site_name" content="{{object.metadata.site_name|default:object.metadata.title}}" />
+    {% if object.metadata.mastodon_verification %}
+      <link rel="me" href="{{object.metadata.mastodon_verification}}">
+    {% endif %}
+    {% if object.metadata.favicon_svg or object.metadata.favicon_img %}
+      {% favicon object.metadata.favicon_svg|default:None object.metadata.favicon_img|default:None object.metadata.favicon_include_manifest|default:False %}
+    {% endif %}
+    
+    {% if object.meta_description %}
+      <meta name="description" content="{{object.meta_description}}"/>
+      <meta itemprop="description" content="{{object.meta_description}}"/>
+      <meta name="twitter:description" content"{{object.meta_description}}"/>
+      <meta property="og:description" content="{{object.meta_description}}" />
+    {% endif %}
+
+    <meta name="twitter:card" content="summary"/>
+    <meta property="og:type" content="article" />
+
+    {% if object.metadata.x_site %}
+      <meta name="twitter:site" content="{{object.metadata.x_site}}"/>
+    {% endif %}
+    {% if object.metadata.x_creator %}
+      <meta name="twitter:site" content="{{object.metadata.x_creator}}"/>
+    {% endif %}
+    {% if object.metadata.mastodon_host and object.metadata.mastodon_user %}
+      <meta name="fediverse:creator" content="{{object.metadata.mastodon_user}}@{{object.metadata.mastodon_host}}" />
+    {% endif %}
+
+    {% if object.metadata.url %}
+      <meta property="og:url" content="{{object.metadata.url}}{{object.url}}"/>
+
+      {% if object.metadata.image %}
+        <meta itemprop="image" content="{{object.metadata.url}}/{% static object.metadata.image %}"/>
+        <meta name="twitter:image:src" content="{{object.metadata.url}}/{% static object.metadata.image %}"/>
+        <meta property="og:image" content="{{object.metadata.url}}/{% static object.metadata.image %}" />
+      {% endif %}
+    {% endif %}
+  
+    {% if object.metadata.rss_feed %}
+      <link rel="alternate" type="application/rss+xml" href="{{object.metadata.rss_feed}}" />
+    {% endif %}
+
+    {% for css in stylesheets %}
+      <link rel="stylesheet" href="{{css}}" />
+    {% endfor %}
+    {% for js in javascripts %}
+      <script defer src="{{js}}"></script>
+    {% endfor %}
+  </head>
+  <body class="{{object.metadata.body_class|default:''}}" id="{{object.metadata.body_id|default:''}}">
+    {% block header %}
+      {% if object.components.header %}
+        <header>
+          {% for section in object.components.header %}
+            <cc-component section.widget|default:'text' wrap:class=section.class|default:'' wrap:style=section.style|default:'' with slug=object.slug>
+              {{section.content|md_include}}
+            </cc-component>
+          {% endfor %}
+        </header>
+      {% endif %}
+    {% endblock header %}
+    <main class="{{object.metadata.main_class|default:''}}">
+      {% block content %}{% endblock content %}
+    </main>
+    {% block footer %}
+      {% if object.components.footer %}
+        <footer class="{{object.metadata.footer_class|default:''}}">
+          {% for section in object.components.footer %}
+            <cc-component section.widget|default:'text' wrap:class=section.class|default:'' wrap:style=section.style|default:'' with slug=object.slug>
+              {{section.content|md_include}}
+            </cc-component>
+          {% endfor %}
+        </footer>
+      {% endif %}
+    {% endblock footer %}
+  </body>
+</html>

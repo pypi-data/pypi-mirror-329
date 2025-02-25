@@ -1,0 +1,12 @@
+{% if section.image %}
+  <style>
+    {{ section.image|background_img }}
+  </style>
+{% endif %}
+
+<div class="image-separator d-flex flex-column justify-content-center p-0" id="{{section.image|slugify}}">
+  {% if section.anchor %}
+    <a name="{{section.anchor}}"></a>
+  {% endif %}
+  {{yield}}
+</div>

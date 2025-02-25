@@ -1,0 +1,16 @@
+<div class="row tags-list" x-data="{
+  query:new URLSearchParams(location.search).get('tag')    
+}">
+  {% for tag, posts in author|tags %}
+    <div class="tag" x-show="query == '{{tag|slugify}}' || !query" class="col-12">
+      <h2>{{tag|capfirst}} <a href="/blog/feeds/{{tag|slugify}}.xml"><small class="text-light"><cc-svg.rss wrap:style="display: inline-block; width: 1.5rem;" /></small></a></h2>
+      {% for post in posts %}
+        <article>
+          <dj-post_excerpt with exclude_tag=tag />
+        </article>
+        <hr/>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+

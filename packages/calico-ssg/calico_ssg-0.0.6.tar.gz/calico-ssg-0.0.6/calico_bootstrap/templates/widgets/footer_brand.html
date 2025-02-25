@@ -1,0 +1,8 @@
+{% load static %}
+
+{% if section.image %}
+  <div class="brand">
+    <img class="footer-logo" src="{% static section.image %}" alt="{{section.image_alt|default:'Logo'}}" />
+  </div>
+{% endif %}
+{{yield}}

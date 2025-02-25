@@ -1,0 +1,44 @@
+{% load static %}
+
+<nav>
+  <ul>
+    {% if section.logo or section.home_text %}
+      <li>
+        {% if section.logo %}
+          <img src="{% static section.logo %}" alt="{{section.home_text|default:'Home'}}">
+        {% else %}
+          {{section.home_text}}
+        {% endif %}
+      </li>
+    {% endif %}
+  </ul>
+  <ul>
+    {% for url, lang in object|translations %}
+      <li>
+        <a href="{{url}}">{{lang}}</a>
+      </li>
+    {% endfor %}
+    {% if section.list_anchors %}
+      {% for anchor, title in object.anchors.items %}
+        <li>
+          <a href="#{{anchor}}">{{title}}</a>
+        </li>
+      {% endfor %}
+    {% endif %}
+    {% for page in object.current_root_without_me %}
+      <li>
+        <a href="/{{page.slug}}.html">{{page.metadata.title}}</a>
+      </li>
+    {% endfor %}
+    {% for link in section.extra_links %}
+      <li>
+        <a href="{{link.url}}">{{link.title}}</a>
+      </li>
+    {% endfor %}
+    {% if section.include_light_switch %}
+      <li>
+        <cc-light-switch />
+      </li>
+    {% endif %}
+  </ul>
+</nav>

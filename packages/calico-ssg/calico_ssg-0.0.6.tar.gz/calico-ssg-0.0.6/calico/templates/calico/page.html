@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}{{object.metadata.title}}{% endblock %}
+
+{% block content %}
+  {% for section in object.content %}
+    <cc-component section.widget|default:'text' wrap:class=section.class|default:'' wrap:style=section.style|default:'' with slug=object.slug>
+      {{section.content|md_include}}
+    </cc-component>
+  {% endfor %}
+{% endblock content %}

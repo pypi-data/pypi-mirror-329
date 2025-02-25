@@ -1,0 +1,70 @@
+{% load static %}
+
+<article>
+  <header>
+    {% if not object.metadata.omit_content_title %}
+      <h1>{{section.title}}</h1>
+    {% endif %}
+    <section class="post-meta">
+      <time datetime="{% if section.published_at %}{{section.published_at|date_from_str|date:'Y-m-d'}}{% else %}{{object.lastmod|date:'Y-m-d'}}{% endif %}">
+        {% if section.published_at %}
+          {{section.published_at|date_from_str|date:'d F Y'}}
+        {% else %}
+          {{object.lastmod|date:'d F Y'}}
+        {% endif %}
+      </time>
+      <div class="tags">
+        {% for tag in section.tags %}
+          <a href="{{tag|tag_link}}">
+            <small>
+              <span class="badge bg-primary">#{{ tag }}</span>
+            </small>
+          </a>&nbsp;
+        {% endfor %}
+      </div>
+    </section>
+  </header>
+  <section>
+    {{yield}}
+  </section>
+</article>
+{% if object.metadata.mastodon_host and object.metadata.mastodon_user and object.metadata.mastodon_thread_id %}
+  <section x-data="{
+                isLoading: true,
+                comments: [],
+                fetchData() {
+                      this.isLoading = true;
+                      fetch('https://{{object.metadata.mastodon_host}}/api/v1/statuses/{{object.metadata.mastodon_thread_id}}/context')
+                        .then((response) => response.json())
+                        .then((data) => {
+                              if (data.descendants && Array.isArray(data.descendants)) {
+                                    this.comments = data.descendants;
+                                    this.isLoading = false;
+                                  }
+                            });
+                    }
+              }" x-init="fetchData()">
+    <h2>Comments</h2>
+    <small>(<a target="_blank" href="https://{{object.metadata.mastodon_host}}/@{{object.metadata.mastodon_user}}/{{object.metadata.mastodon_thread_id}}">
+      via Mastodon
+    </a>)</small>
+    <div x-show="isLoading">Loading...</div>
+    <template x-if="!isLoading" x-for="comment in comments" :key="comment.id">
+      <article class="comment" x-show="comment.account">
+        <header class="comment--author">
+          <img :src="comment.account.avatar" />
+          <div>
+            <span x-text="comment.account.display_name"></span></br>
+            <small><a :href="comment.account.url" target="_blank" x-text="comment.account.acct.indexOf('@') > 0 ? comment.account.acct : `${comment.account.acct}@{{object.metadata.mastodon_host}}`"></a></small></br>
+            <small><time :datetime="comment.created_at" x-text="comment.created_at.split('T')[0]"></time></small>
+          </div>
+        </header>
+        <div class="comment--content" x-show="comment.content" x-html="comment.content"></div>
+        <footer><small><a :href="comment.url">See original</a></small></footer>
+      </article>
+    </template>
+    <a target="_blank" href="https://{{object.metadata.mastodon_host}}/@{{object.metadata.mastodon_user}}/{{object.metadata.mastodon_thread_id}}">
+      Comment via Mastodon
+    </a>
+  </section>
+{% endif %}

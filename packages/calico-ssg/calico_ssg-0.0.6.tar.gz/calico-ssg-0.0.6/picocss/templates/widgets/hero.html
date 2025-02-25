@@ -1,0 +1,30 @@
+{% load static %}
+
+{% with img=section|section_or_obj_background:object %}
+
+  {% if img %}
+    <style>
+      {{ img|background_img }}
+    </style>
+  {% endif %}
+
+  <hero id="{{img|slugify}}">
+    {% if section.image %}
+      <col><img src="{{section.image}}"></col>
+    {% endif %}
+    <hgroup>
+      {% if section.use_title %}
+        <h1>{{object.metadata.title}}</h1>
+        {% if section.use_subtitle %}
+          {{object.metadata.subtitle|markdown}}
+        {% endif %}
+      {% endif %}
+      {{yield}}
+    </hgroup>
+    {% if section.cta %}
+      <a class="{{ section.cta.class|default:'btn btn-primary btn-lg px-4 me-md-2' }}" href="{{ section.cta.link|default:'#' }}">
+        {{ section.cta.text }}
+      </a>
+    {% endif %}
+  </hero>
+{% endwith %}

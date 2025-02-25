@@ -1,0 +1,22 @@
+{% load static %}
+
+<div class={{section.class|default:'social'}}>
+  {% if section.lead_with_separator %}
+    <span>&nbsp;|&nbsp;</span>
+  {% endif %}
+  {{yield}}
+  {% for social in section.socials %}
+   {% if not section.no_separator and forloop.counter > 1 %}
+      <span>&nbsp;|&nbsp;</span>
+    {% endif %}
+    <a href="{{social.url}}" target="_blank" title="{{social.name}}">
+      {% if social.widget %}
+        <cc-component social.widget></cc-component>
+      {% elif social.image %}
+        <img src="{% static social.image %}" alt="{{social.name}}"/>
+      {% else %}
+        {{social.name}}
+      {% endif %}
+    </a>
+  {% endfor %}
+</div>

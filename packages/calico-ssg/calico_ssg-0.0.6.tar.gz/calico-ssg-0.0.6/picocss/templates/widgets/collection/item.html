@@ -1,0 +1,10 @@
+{% if section.metadata.title %}
+  <h4>
+    {% if section.metadata.link %}
+      <a href="{{section.metadata.link}}">{{section.metadata.title}}</a>
+    {% else %}
+      {{section.metadata.title}}
+    {% endif %}
+  </h4>
+{% endif %}
+{{yield}}

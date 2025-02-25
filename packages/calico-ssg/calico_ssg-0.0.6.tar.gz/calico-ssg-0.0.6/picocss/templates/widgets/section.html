@@ -1,0 +1,14 @@
+{% if section.anchor %}
+  <a name="{{section.anchor}}"></a>
+{% endif %}
+{% if section.header %}
+  <h2>{{section.header}}</h2>
+{% endif %}
+<section class="{{section.class|default:''}}" style="{{section.style|default:''}}">
+  {{yield}}
+  {% for item in section.items|load_items:object %}
+    <cc-component item.widget|default:'text' with section=item>
+      {{item.content|markdown}}
+    </cc-component>
+  {% endfor %}
+</section>

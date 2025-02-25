@@ -1,0 +1,16 @@
+{% load static %}
+
+{% if section.lead_with_separator %}
+<span>&nbsp;|&nbsp;</span>
+{% endif %}
+{{yield}}
+{% for social in section.socials %}
+<a href="{{social.url}}" target="_blank" title="{{social.name}}">
+    {% if social.image %}
+      <img src="{% static social.image %}" alt="{{social.name}}"/>
+    {% else %}
+      {{social.name}}
+    {% endif %}
+  </a>
+{% endfor %}
+  

@@ -1,0 +1,132 @@
+calico-blog_index {
+  @extend .container;
+  
+  section#timeline {
+    &::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 50%;
+      height: 100%;
+      width: 4px;
+      transform: translateX(100%);
+      background-color: $primary;
+      z-index: 0;
+
+      @include media-breakpoint-down(xl) {
+        left: 65px;
+      }
+    }
+
+    .equalizer {
+      margin-top: 175px;
+      @include media-breakpoint-down(xl) {
+        margin-top: 0;
+      }
+    }
+
+    article {
+      position: relative;
+      margin-bottom: -150px;
+      
+      @include media-breakpoint-down(xl) {
+        margin-bottom: 25px;
+      }
+
+      calico-post_excerpt {
+        position: relative;
+        padding: .5em 1em;
+        display: inline-block;
+        width: 45%;
+        background-color: $gray-300;
+        border-radius: 15px;
+
+        @include media-breakpoint-down(xl) {
+          width: calc(100% - 130px);
+          margin-left: 55px;
+        }
+        @include media-breakpoint-down(md) {
+          width: calc(100% - 130px);
+          margin-left: 75px;
+        }
+
+        .blog-article {
+          padding: 15px;
+        }
+
+        &::before {
+          top: 100px;
+          content: '';
+          position: absolute;
+          height: 0;
+          width: 0;
+          border: 14px solid transparent;
+          border-right-color: $gray-300;
+          left: auto;
+          right: 100%;
+          transform: translateY(-50%);
+        }
+
+      }
+
+      &:nth-child(odd) calico-post_excerpt {
+        @include media-breakpoint-up(xl) {
+          &::before {
+            left: 100%;
+            right: auto;
+            border-right-color: transparent;
+            border-left-color: $gray-300;
+          }
+        }
+      }
+
+      &:nth-child(even) calico-post_excerpt {
+        @include media-breakpoint-up(xl) {
+          transform: translateX(122.5%);
+        }
+      }
+
+      time {
+        width: 100px;
+        height: 100px;
+        left: 50%;
+        margin-left: -50px;
+        position: absolute;
+        top: 0;
+        color: $white !important;
+        text-align: center;
+        font-weight: bold;
+        transform: translateY(50%);
+        padding-top: 25px;
+        background-color: $primary;
+        border-radius: 50%;
+        z-index: 2;
+
+        @include media-breakpoint-down(xl) {
+          left: 5px;
+        }
+        @include media-breakpoint-down(md) {
+          left: 25px;
+        }
+      }
+    }
+  }
+}
+
+[data-bs-theme=dark] {
+  calico-blog_index section#timeline article {
+    calico-post_excerpt {
+      background-color: $gray-800;
+
+      &::before {
+        border-right-color: $gray-800;
+      }
+    }
+
+    &:nth-child(odd) calico-post_excerpt::before {
+      @include media-breakpoint-up(xl) {
+        border-left-color: $gray-800;
+      }
+    }
+  }
+}

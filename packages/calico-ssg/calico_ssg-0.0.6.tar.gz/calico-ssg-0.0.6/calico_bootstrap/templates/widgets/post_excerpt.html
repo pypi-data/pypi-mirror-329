@@ -1,0 +1,50 @@
+<a href="{{post.url}}"><h3>{{post.title}}</h3></a>
+<section class="post-meta">
+  {% if not exclude_date %}
+    {% if post.published_date %}
+      <time class="post-date text-muted" datetime="{{section.published_date|date:'Y-m-d'}}">
+        {{post.published_date|date:'d F Y'}}
+      </time>
+    {% elif post.published_at %}
+      <time class="post-date text-muted" datetime="{{section.published_at|date_from_str|date:'Y-m-d'}}">
+        {{post.published_at|date_from_str|date:'d F Y'}}
+      </time>
+    {% endif %}
+  {% endif %}
+
+  {% if not exclude_author %}
+    {% var author=post.author|author_details %}
+    <a href="{{post.author|author_link}}"><small>{{author.title}}</small></a>
+  {% endif %}
+</section>
+<div>
+  {% for tag in post.tags %}
+    {% if tag != exclude_tag %}
+      <a href="{{tag|tag_link}}">
+        <small><span class="badge bg-primary">{{tag}}</span></small>
+      </a>
+    {% endif %}
+  {% endfor %}
+</div>
+{% if post.readtime %}
+  <div>
+    {{post.readtime}}
+  </div>
+{% endif %}
+{% if include_read_full %}
+  <div class="d-flex justify-content-center mt-2">
+    <a href="{{post.url}}">Read full article here!</a>
+  </div>
+{% endif %}
+<div class="excerpt blog-article">
+  {% if 'excerpt' in post %}
+    {{post.excerpt|markdown}}
+  {% else %}
+    {{post.content|markdown|truncatewords_html:80}}
+  {% endif %}
+  {% if not exclude_read_more %}
+    <div class="d-flex flex-row-reverse">
+      <a href="{{post.url}}">Read more...</a>
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,17 @@
+{% if section.anchor %}
+  <a name="{{section.anchor}}"></a>
+{% endif %}
+{% if section.header %}
+  <h2>{{section.header}}</h2>
+{% endif %}
+{% if section.inner_row %}
+  <div class="row">
+{% endif %}
+{% for item in section.items|load_items:object %}
+  <cc-component item.widget|default:'text' wrap:class=item.class|default:'' wrap:style=item.style|default:'' with section=item>
+    {{item.content|markdown}}
+  </cc-component>
+{% endfor %}
+{% if section.inner_row %}
+  </div>
+{% endif %}

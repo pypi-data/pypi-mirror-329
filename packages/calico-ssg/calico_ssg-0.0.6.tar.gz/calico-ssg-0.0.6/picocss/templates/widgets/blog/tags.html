@@ -1,0 +1,22 @@
+<section x-data="{
+  query:new URLSearchParams(location.search).get('tag')    
+}">
+  {% for tag, posts in author|tags %}
+    <div x-show="query == '{{tag|slugify}}' || !query">
+      <h2>
+        #{{tag|capfirst}}
+        <a href="{% url 'tag_feed' tag=tag|slugify %}" title="RSS Feed">
+          <small>
+            <cc-svg.rss />
+          </small>
+        </a>
+      </h2>
+      {% for post in posts %}
+        <article>
+          <cc-blog.excerpt with exclude_tag=tag />
+        </article>
+        <hr/>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</section>

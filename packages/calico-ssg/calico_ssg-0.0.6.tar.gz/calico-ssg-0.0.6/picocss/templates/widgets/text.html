@@ -1,0 +1,8 @@
+{% if section.title %} 
+  <h2>{{section.title}}</h2>
+{% endif %}
+{% if section.image %}
+  {% sourceset section.image class='block-image '|add:section.image_class|default:'' %}
+{% endif %}
+{{yield}}
+

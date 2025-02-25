@@ -1,0 +1,30 @@
+{% load emma %}
+
+<article class="{{section.class|default:''}}" style="{{section.style|default:''}}">
+  {% if section.title %}
+    <header>
+      <{{section.title_tag|default:'h2'}}>
+        {{section.title}}
+      </{{section.title_tag|default:'h2'}}>
+    </header>
+  {% endif %}
+  {% for group, items in section|collection_grouped_top %}
+    <{{section.group_tag}}>{{group}}</{{section.group_tag}}>
+    <ul>
+      {% for item in items %}
+        <li>
+          <cc-component section.item_widget|default:'collection.item' with section=item>
+            {{item.md_content|md_include}}
+          </cc-component>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+  {% if section.more %}
+    <a href="{{section.more.link}}" style="float: right;">
+      {{section.more.text}}
+    </a>
+  {% endif %}
+</article>
+  
+

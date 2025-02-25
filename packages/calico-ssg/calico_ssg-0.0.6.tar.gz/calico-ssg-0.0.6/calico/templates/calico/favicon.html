@@ -1,0 +1,13 @@
+{% load static %}
+
+{% if favicon.ico_url %}
+  <link rel="icon" href="{%static favicon.ico_url %}" sizes="{{favicon.sizes}}">
+  <link rel="apple-touch-icon" href="{% static favicon.png_url %}">
+{% endif %}
+{% if favicon.svg_url %}
+  <link rel="icon" href="{% static favicon.svg_url %}" type="image/svg+xml">
+{% endif %}
+
+{% if include_manifest %}
+  <link rel="manifest" href="/manifest.webmanifest">
+{% endif %}

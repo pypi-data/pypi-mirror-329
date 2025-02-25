@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row">
+    <section class="col-12">
+      {{yield}}
+    </section>
+  </div>
+  <section class="row" id="timeline">
+    {% for post in None|authored %}
+      <article>
+        {% if post.published_date %}
+          {% var pub=post.published_date %}
+        {% elif post.published_at %}
+          {% var pub=post.published_at|date_from_str %}
+        {% endif %}
+        {% if pub %}
+          <time class="post-date text-muted" datetime="{{pub|date:'Y-m-d'}}">
+            {{pub|date:'d M'}}<br/>
+            {{pub|date:'Y'}}
+          </time>
+        {% endif %}
+        <dj-post_excerpt with exclude_author=True exclude_date=True exclude_read_more=True include_read_full=True />
+      </article>
+    {% endfor %}
+    <div class="equalizer"></div>
+  </section>
+</div>
+

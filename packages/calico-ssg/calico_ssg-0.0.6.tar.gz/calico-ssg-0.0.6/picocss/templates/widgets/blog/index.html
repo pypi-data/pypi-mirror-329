@@ -1,0 +1,11 @@
+<section>
+  {{yield}}
+</section>
+
+<section>
+  {% for post in None|authored %}
+    <article>
+      <cc-blog.excerpt with exclude_author=section.exclude_author|default:True exclude_date=section.exclude_date|default:False exclude_read_more=section.exclude_read_more|default:False include_read_full=section.include_read_full|default:False />
+    </article>
+  {% endfor %}
+</section>

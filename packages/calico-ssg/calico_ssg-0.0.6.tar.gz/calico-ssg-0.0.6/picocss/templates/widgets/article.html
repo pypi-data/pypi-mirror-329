@@ -1,0 +1,10 @@
+<article class="{{section.class|default:''}}" style="{{section.style|default:''}}">
+  {% if section.title %}
+    <header>
+      <{{section.title_tag|default:'h2'}}>
+        {{section.title}}
+      </{{section.title_tag|default:'h2'}}>
+    </header>
+  {% endif %}
+  {{yield}}
+</article>

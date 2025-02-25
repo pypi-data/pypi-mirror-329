@@ -1,0 +1,6 @@
+{% for page in object.current_root_without_me %}
+  {% if forloop.counter0 > 0 %}
+    <span>&nbsp;|&nbsp;</span>
+  {% endif %}
+  <a href="/{{page.slug}}.html">{{page.metadata.title}}</a>
+{% endfor %}

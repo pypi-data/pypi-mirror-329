@@ -1,0 +1,11 @@
+<div class="row">
+  <cc-team wrap:class=section.team_class|default:'col-xs-12 col-lg-4 col-xl-5 rounded'>
+    {{yield}}
+  </cc-team>
+  <div class="col-xs-12 col-lg-8 col-xl-7">
+    {% for post in section.title|authored %}
+      <dj-post_excerpt with exclude_author=True />
+      <hr/>
+    {% endfor %}
+  </div>
+</div>

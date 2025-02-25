@@ -1,0 +1,16 @@
+{% if section.image %}
+  <div class="team-image d-flex flex-row justify-content-center mb-2">
+    {% sourceset section.image divide_by=3 class=section.image_class|default:'' %}
+  </div>
+{% endif %}
+<h2 class="team-name">
+  {% if section.name %}
+    {{section.name}}
+  {% elif section.title %}
+    {{section.title}}
+  {% endif %}
+</h2>
+
+<div class="team-bio">
+  {{yield}}
+</div>
