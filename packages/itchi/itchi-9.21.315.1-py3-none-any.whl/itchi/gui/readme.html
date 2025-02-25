@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>iTCHi Readme</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <style type="text/css">
+  html {
+    font-size: 100%;
+    overflow-y: scroll;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+
+  body {
+    color: #444;
+    font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif;
+    font-size: 12px;
+    line-height: 1.7;
+    padding: 1em;
+    margin: auto;
+    max-width: 42em;
+    background: #fefefe;
+  }
+
+  a {
+    color: #0645ad;
+    text-decoration: none;
+  }
+
+  a:visited {
+    color: #0b0080;
+  }
+
+  a:hover {
+    color: #06e;
+  }
+
+  a:active {
+    color: #faa700;
+  }
+
+  a:focus {
+    outline: thin dotted;
+  }
+
+  *::-moz-selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #000;
+  }
+
+  *::selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #000;
+  }
+
+  a::-moz-selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #0645ad;
+  }
+
+  a::selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #0645ad;
+  }
+
+  p {
+    margin: 1em 0;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #111;
+    line-height: 125%;
+    margin-top: 2em;
+    font-weight: normal;
+  }
+
+  h4, h5, h6 {
+    font-weight: bold;
+  }
+
+  h1 {
+    font-size: 2.5em;
+  }
+
+  h2 {
+    font-size: 2em;
+  }
+
+  h3 {
+    font-size: 1.5em;
+  }
+
+  h4 {
+    font-size: 1.2em;
+  }
+
+  h5 {
+    font-size: 1em;
+  }
+
+  h6 {
+    font-size: 0.9em;
+  }
+
+  blockquote {
+    color: #666666;
+    margin: 0;
+    padding-left: 3em;
+    border-left: 0.5em #EEE solid;
+  }
+
+  hr {
+    display: block;
+    height: 2px;
+    border: 0;
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #eee;
+    margin: 1em 0;
+    padding: 0;
+  }
+
+  pre, code, kbd, samp {
+    color: #000;
+    font-family: monospace, monospace;
+    _font-family: 'courier new', monospace;
+    font-size: 0.98em;
+  }
+
+  pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  b, strong {
+    font-weight: bold;
+  }
+
+  dfn {
+    font-style: italic;
+  }
+
+  ins {
+    background: #ff9;
+    color: #000;
+    text-decoration: none;
+  }
+
+  mark {
+    background: #ff0;
+    color: #000;
+    font-style: italic;
+    font-weight: bold;
+  }
+
+  sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+
+  sup {
+    top: -0.5em;
+  }
+
+  sub {
+    bottom: -0.25em;
+  }
+
+  ul, ol {
+    margin: 1em 0;
+    padding: 0 0 0 2em;
+  }
+
+  li p:last-child {
+    margin-bottom: 0;
+  }
+
+  ul ul, ol ol {
+    margin: .3em 0;
+  }
+
+  dl {
+    margin-bottom: 1em;
+  }
+
+  dt {
+    font-weight: bold;
+    margin-bottom: .8em;
+  }
+
+  dd {
+    margin: 0 0 .8em 2em;
+  }
+
+  dd:last-child {
+    margin-bottom: 0;
+  }
+
+  img {
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+    vertical-align: middle;
+  }
+
+  figure {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+  }
+
+  figure img {
+    border: none;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    font-size: 0.8em;
+    font-style: italic;
+    margin: 0 0 .8em;
+  }
+
+  table {
+    margin-bottom: 2em;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-spacing: 0;
+    border-collapse: collapse;
+  }
+
+  table th {
+    padding: .2em 1em;
+    background-color: #eee;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+  }
+
+  table td {
+    padding: .2em 1em;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    vertical-align: top;
+  }
+
+  .author {
+    font-size: 1.2em;
+    text-align: center;
+  }
+
+  @media only screen and (min-width: 480px) {
+    body {
+      font-size: 14px;
+    }
+  }
+  @media only screen and (min-width: 768px) {
+    body {
+      font-size: 16px;
+    }
+  }
+  @media print {
+    * {
+      background: transparent !important;
+      color: black !important;
+      filter: none !important;
+      -ms-filter: none !important;
+    }
+
+    body {
+      font-size: 12pt;
+      max-width: 100%;
+    }
+
+    a, a:visited {
+      text-decoration: underline;
+    }
+
+    hr {
+      height: 1px;
+      border: 0;
+      border-bottom: 1px solid black;
+    }
+
+    a[href]:after {
+      content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+      content: " (" attr(title) ")";
+    }
+
+    .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after {
+      content: "";
+    }
+
+    pre, blockquote {
+      border: 1px solid #999;
+      padding-right: 1em;
+      page-break-inside: avoid;
+    }
+
+    tr, img {
+      page-break-inside: avoid;
+    }
+
+    img {
+      max-width: 100% !important;
+    }
+
+    @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+  }
+
+    @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+  }
+
+    p, h2, h3 {
+      orphans: 3;
+      widows: 3;
+    }
+
+    h2, h3 {
+      page-break-after: avoid;
+    }
+  }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">iTCHi Readme</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#itchi-readme">iTCHi Readme</a>
+<ul>
+<li><a href="#introduction">Introduction</a>
+<ul>
+<li><a href="#use-itchi-via-the-gui">Use iTCHi via the GUI</a></li>
+<li><a href="#run-itchi-via-the-winidea-python-executable">Run iTCHi via the winIDEA Python executable</a></li>
+<li><a href="#run-itchi-by-installing-it-via-pip">Run iTCHi by installing it via pip</a></li>
+<li><a href="#basic-workflow">Basic Workflow</a></li>
+<li><a href="#basic-configuration">Basic Configuration</a></li>
+</ul></li>
+<li><a href="#commands">Commands</a>
+<ul>
+<li><a href="#running-taskisr">Running Task/ISR</a></li>
+<li><a href="#running-taskisr-tracing-with-btf-export">Running Task/ISR tracing with BTF Export</a></li>
+<li><a href="#running-taskisr-sampling">Running Task/ISR Sampling</a></li>
+<li><a href="#task-state-tracing-with-single-state-variables">Task State Tracing with Single State Variables</a></li>
+<li><a href="#task-state-tracing-with-complex-state-native">Task State Tracing with Complex State Native</a></li>
+<li><a href="#task-state-tracing-with-instrumentation">Task State Tracing with Instrumentation</a></li>
+<li><a href="#runnable-tracing-with-instrumentation">Runnable Tracing with Instrumentation</a></li>
+<li><a href="#running-taskisr-tracing-with-os-signaling">Running Task/ISR tracing with OS Signaling</a></li>
+<li><a href="#runnable-program-flow">Runnable Program Flow</a></li>
+<li><a href="#signals">Signals</a></li>
+<li><a href="#spinlock-with-instrumentation">Spinlock with Instrumentation</a></li>
+</ul></li>
+<li><a href="#use-cases">Use-Cases</a>
+<ul>
+<li><a href="#basic-taskisr-timing-analysis">Basic Task/ISR Timing-Analysis</a></li>
+<li><a href="#advanced-taskisr-timing-analysis">Advanced Task/ISR Timing-Analysis</a></li>
+<li><a href="#runnable-tracing">Runnable Tracing</a></li>
+</ul></li>
+<li><a href="#appendix">Appendix</a>
+<ul>
+<li><a href="#itchi-help">iTCHi help</a></li>
+<li><a href="#config-attributes">Config attributes</a></li>
+<li><a href="#empty-itchi.json">Empty itchi.json</a></li>
+<li><a href="#changelog">Changelog</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="itchi-readme">iTCHi Readme</h1>
+<h2 id="introduction">Introduction</h2>
+<p>The iTCHi trace configuration helper is a program that helps users configure the winIDEA Analyzer to record and analyze OS and RTE aware traces. There are three ways to run iTCHi:</p>
+<ol type="1">
+<li>Open the iTCHi graphical user interface (GUI) from winIDEA.</li>
+<li>Run the iTCHi command line interface (CLI) via the Python installation that comes with winIDEA.</li>
+<li>Install iTCHi via the Python packing manager (pip) of your Python installation.</li>
+</ol>
+<h3 id="use-itchi-via-the-gui">Use iTCHi via the GUI</h3>
+<p>To launch the GUI, navigate to <em>Debug / Configure Session / Applications / Application</em> in winIDEA. There, use the <code>iTCHi Wizard</code> button to launch the GUI. It is recommended to still read this document even when using the graphical user interface.</p>
+<h3 id="run-itchi-via-the-winidea-python-executable">Run iTCHi via the winIDEA Python executable</h3>
+<p>To launch iTCHi via the Python installation that comes with winIDEA, find the the Python executable that is part of the winIDEA installation. The default location on Windows would be <code>C:\iSYSTEM\winIDEA9\Python\python.exe</code>. Given the winIDEA Python executable, use the following call to run the iTCHi CLI.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="ex">C</span>:\iSYSTEM\winIDEA9\Python\python.exe -m itchi.itchi_cli</span></code></pre></div>
+<p>For example, you can call iTCHi with the <code>--help</code> flag to see available commands. The output of this command is also shown in the <a href="#itchi-help">appendix</a>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="ex">C</span>:\iSYSTEM\winIDEA9\Python\python.exe -m itchi.itchi_cli --help</span></code></pre></div>
+<h3 id="run-itchi-by-installing-it-via-pip">Run iTCHi by installing it via pip</h3>
+<p>To run iTCHi using pip, you can optionally create a virtual environment first:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="ex">python</span> -m venv myvenv</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="co"># activate the venv on Linux:</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="bu">source</span> myvenv/Scripts/activate</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="co"># activate the venv on Windows:</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="ex">myvenv/Scripts/activate</span></span></code></pre></div>
+<p>Then, install iTCHi as a Python package using pip:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="ex">pip</span> install itchi</span></code></pre></div>
+<p>After the installation, the iTCHi command line interface is available as <code>itchi-cli.exe</code> and you can also run the GUI via <code>itchi-gui.exe</code>.</p>
+<p>For the rest of this document, it is assumed that the command line interface is available via <code>itchi-cli.exe</code>. If you prefer the approach using the Python executable, replace the call to iTCHi accordingly.</p>
+<p>By default, iTCHi logs to <code>itchi.log</code>. If you encounter any problems with iTCHi add this log file to your support request. If you want to specify a different log file location you can do so via the <code>--log</code> flag.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ex">itchi-cli.exe</span> --log path/to/my_itchi.log</span></code></pre></div>
+<p>The rest of this document explains how to configure iTCHi for different use-cases. If you don’t have a basic understanding of OS Profiling and hardware tracing familiarize yourself with these concepts by reading the application note for your operating system<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> or request a training session from a TASKING FAE.</p>
+<h3 id="basic-workflow">Basic Workflow</h3>
+<p>All commands follow a similar workflow; they take one or more input files (usually at least an ORTI file is required) and produce one or more output files such as an winIDEA Profiler XML file and C source and header files with instrumentation code.</p>
+<p>The required input files, output files, and additional settings for the different commands are configured via a configuration file called <code>itchi.json</code>. By default, iTCHi expects the configuration file in the current working directory, i.e. in the directory from where iTCHi is called. Alternatively, the location of the configuration file can be specified with the <code>--config</code> flag.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="ex">itchi-cli.exe</span> --config path/to/itchi.json</span></code></pre></div>
+<p>The rest of this document consists of three parts. The <a href="#basic-configuration">next section</a> explains how to set up the basic configuration of iTCHi via the <code>itchi.json</code> file. The <a href="#commands">second part</a> describes the functionality of the different commands (i.e. command line flags), as well as the configuration attributes required to use them. Finally, the <a href="#use-cases">use-cases</a> section explains the most common applications of iTCHi.</p>
+<h3 id="basic-configuration">Basic Configuration</h3>
+<p>All iTCHi use-cases rely on a <code>itchi.json</code> configuration file. If you do not have such a file, you can generate an empty one with the <code>--write_default_config</code> flag.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="ex">itchi-cli.exe</span> --write_default_config --config itchi.json</span></code></pre></div>
+<p>The use of <code>--config</code> is redundant here because the default <code>itchi.json</code> location is the same as the one specified in the call. You should now have an empty configuration file equal to the one in the <a href="#appendix">appendix</a>. Take a look at the configuration file.</p>
+<p>You can see that there two top-level attributes called <code>orti_file</code> and <code>profiler_xml_file</code> that map to a string. All other attributes map to dictionaries (or objects if you prefer JSON terminology) with further attributes. The two top-level attributes are always required. All other objects are optional and only required for specific commands.</p>
+<p>Start by configuring the ORTI file<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> attribute. All OSEK/AUTOSAR Operating Systems can generate an ORTI file which contains information about OS objects such as Tasks, ISRs, and alarms. Refer to the documentation of your OS for how to enable the ORTI file generation. Once you have generated an ORTI file enter the absolute or relative path to the file (usually it has an <code>.ORT</code> or <code>.ORTI</code> file ending) to the configuration.</p>
+<blockquote>
+<p><strong>Important:</strong> All relative file paths in <code>itchi.json</code> are evaluated relative to the location of the configuration file. In other words, iTCHi uses the directory in which <code>itchi.json</code> is located as its working directory. The motivation for this was to make it easy to exchange configurations by adding them inside a winIDEA workspace directory. Absolute file paths are supported, too.</p>
+</blockquote>
+<p>If you have a <code>profiler.xml</code> file you can add it to the <code>profiler_xml_file</code> attribute in the configuration file. If you do not have such a file yet, simply specify a non-existing file such as <code>profiler.xml</code>. iTCHi creates the file if it does not exist, otherwise it changes only those parts of the XML that are affected by the current command.</p>
+<p>You can leave all other attributes as they are or remove them if you prefer a less cluttered configuration file. Remember that relative file paths are relative to the configuration file, and you will always at least need the <code>orti_file</code> and the <code>profiler_xml_file</code> attribute.</p>
+<blockquote>
+<p><strong>Important:</strong> iTCHi writes the ORTI file path into the Profiler XML file so that winIDEA can access it. Currently, iTCHi does not update the ORTI path to be relative to the Profiler XML file. To avoid issues, it is best to either create the <code>profiler.xml</code> in the same directory as <code>itchi.json</code> or to specify an absolute path to the ORTI file.</p>
+</blockquote>
+<p>Your <code>itchi.json</code> file should now look as shown on the following listing. Make sure to remove trailing commas (i.e. commas behind the last attribute in a list or object).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>    <span class="dt">&quot;orti_file&quot;</span><span class="fu">:</span> <span class="st">&quot;path/to/Os_Trace.ORT&quot;</span><span class="fu">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>    <span class="dt">&quot;profiler_xml_file&quot;</span><span class="fu">:</span> <span class="st">&quot;profiler.xml&quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<p>You can now run iTCHi to generate your first Profiler XML file.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="ex">itchi-cli.exe</span> --config itchi.json --running_taskisr</span></code></pre></div>
+<p>This should generate a <code>profiler.xml</code> file at that location you have specified. Open that file and verify that it references your ORTI file. It should also contain at least one Task and ISR object. Don’t worry about the contents in detail. With the help of iTCHi you should never have to edit the Profiler XML manually.</p>
+<p>You can now record your first Task/ISR aware trace as explained in the winIDEA online help<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Make sure you specify the file type <code>Profiler XML</code> instead of <code>ORTI</code> in the Debug Operating Systems dialog. Point winIDEA to your newly generated Profiler XML file, and download or load symbols to apply the newly configured OS file.</p>
+<p>The rest of this document assumes that you have a basic configuration file as explained in this section.</p>
+<h2 id="commands">Commands</h2>
+<p>This section explains the available <code>iTCHi</code> commands and their configuration attributes. Each of the commands requires at least an <code>orti_file</code> and a <code>profiler_xml_file</code> in your <code>itchi.json</code> file. If you do not have at least these two attributes in your configuration read through the <a href="#basic-configuration">Basic Configuration section</a> section first.</p>
+<p>It is possible to combine multiple commands for a single call to iTCHi. For example, if you want to trace tasks and Runnables you can combine the <code>--running_taskisr</code> flag with the <code>--runnable_instrumentation</code> flag.</p>
+<p>If you have an existing Profiler XML file iTCHi will only change the XML attributes related to the current command. For example, if you have received a Profiler XML that configures Task state tracing you can add Runnable tracing and iTCHi will leave the existing configuration as it is.</p>
+<p>You can also specify commands via the <code>commands</code> attribute in the <code>itchi.json</code>. Generate the iTCHi default configuration file via <code>--write_default_config</code> and then change the desired command attributes under <code>commands</code> to <code>true</code>. These commands will always be active in addition to the ones specified via the command line.</p>
+<h3 id="running-taskisr">Running Task/ISR</h3>
+<p>A Running Task/ISR trace records the currently running Task and ISR for each CPU core that runs an OSEK/AUTOSAR OS. This is the most basic form of tracing. Using the Profiler XML with this command is similar to using the ORTI file by itself. However, there are two reasons why it might still be necessary to use iTCHi to generate a Profiler XML: a missing default Task or ISR attribute, or a running Task or ISR expression containing pointers. For these cases add the following JSON object to your iTCHi configuration file.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>    <span class="dt">&quot;running_taskisr&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>        <span class="dt">&quot;default_task&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>        <span class="dt">&quot;default_isr2&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>        <span class="dt">&quot;search_replace_list&quot;</span><span class="fu">:</span> <span class="fu">{},</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>        <span class="dt">&quot;orti_core_to_soc_core&quot;</span><span class="fu">:</span> <span class="fu">{},</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a>        <span class="dt">&quot;orti_core_to_core_name&quot;</span><span class="fu">:</span> <span class="fu">{}</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a>    <span class="fu">}</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="default-taskisr">Default Task/ISR</h4>
+<p>ORTI specifies that the Running Task and the Running ISR2 attributes contain a value <code>NO_TASK</code> and <code>NO_ISR</code> respectively. These are the default values when no other task or ISR is active. winIDEA needs to be aware of these values to properly analyze a trace.</p>
+<p>However, some operating systems do not follow the notion of <code>NO_TASK</code>/<code>NO_ISR</code>. In that case winIDEA might complain about a missing default Task or default ISR (<em>no default IRQ</em>). To work around this issue it is possible to specify a default Task and ISR via the iTCHi configuration file. For example, the new default task could be <code>BackgroundTaskCore0</code>.</p>
+<p>iTCHi uses the following steps to decide which default Task and ISR is written into the Profiler XML file.</p>
+<ol type="1">
+<li>If a default ISR2 or Task is specified in the iTCHi config it is used.</li>
+<li>If <code>NO_ISR</code>/<code>NO_TASK</code> is found in the ORTI file it is used.</li>
+<li>If <code>INVALID_ISR</code>/<code>INVALID_TASK</code> is found in the ORTI file it is used.</li>
+<li>Otherwise, the last element in the RUNNINGTASK/RUNNINGISR2 declaration is used.</li>
+</ol>
+<h4 id="taskisr-expression-with-pointer">Task/ISR expression with pointer</h4>
+<p>If the running Task or running ISR expression contains a pointer winIDEA might not be able to resolve the address. In this case iTCHi prints a warning and the expression can be changed via the configuration file. This makes sense for some operating systems where the running Task or ISR is accessible via a pointer, but also via a static symbol.</p>
+<p>For example, if instead of <code>OS_kernel_ptr[0]-&gt;isrCurrent</code> the expression <code>(OS_kernelData_core0).isrCurrent</code> should be written to the Profiler XML file you can add the following two-item lists to the search and replace list.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>  <span class="dt">&quot;search_replace_list&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>    <span class="dt">&quot;OS_kernel_ptr[&quot;</span><span class="fu">:</span> <span class="st">&quot;(OS_kernelData_core&quot;</span><span class="fu">,</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>    <span class="dt">&quot;]-&gt;isrCurrent&quot;</span><span class="fu">:</span> <span class="st">&quot;).isrCurrent&quot;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a>  <span class="fu">}</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<p>Please note that the <code>search_replace_list</code> must be a JSON object where the value replaces a specific key. iTCHi will iterate over the items and replace each key with the respective value for both the running Task and the running ISR expression.</p>
+<h4 id="update-autosar-to-physical-core-mapping">Update AUTOSAR to physical core mapping</h4>
+<p>On SoCs with multiple Cortex-M and Cortex-A cores you might run into the situation that the AUTOSAR cores in the ORTI file do not match the physical cores in the real-world. For example, you might have only one AUTOSAR core that runs on the physical Cortex-M core of your SoC. That Cortex-M core might have the ID <code>3</code> in which case you would update the mapping as shown in the following listing.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>  <span class="dt">&quot;orti_core_to_soc_core&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>      <span class="dt">&quot;0&quot;</span><span class="fu">:</span> <span class="st">&quot;3&quot;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a>  <span class="fu">}</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<p>You might also want to rename a specific (ORTI) core to a more expressive name. For example, if you know that the ORTI core 0 on PowerPC has the name “CPU2”, then you could use the following mapping.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>  <span class="dt">&quot;orti_core_to_core_name&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>      <span class="dt">&quot;0&quot;</span><span class="fu">:</span> <span class="st">&quot;CPU2&quot;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>  <span class="fu">}</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="running-taskisr-tracing-with-btf-export">Running Task/ISR tracing with BTF Export</h3>
+<p>In addition to writing the information for a running Task/ISR trace this command also adds the necessary information for a BTF trace export to the Profiler XML. This works by creating <em>pseudo</em> states for all Task and ISR profiler objects that are used by the BTF export algorithm to create the respective BTF events. The command uses the same configuration attributes as the <a href="#running-taskisr">regular Running Task/ISR</a> command.</p>
+<h3 id="running-taskisr-sampling">Running Task/ISR Sampling</h3>
+<p>There are cases when OS and RTE profiling is not feasible because hardware tracing is not available. In such cases, <a href="https://www.isystem.com/downloads/winIDEA/help/profiler-sampling.html">winIDEA Profiler Sampling</a> can help you get an approximation of your Task and ISR load based on sampling (periodically reading) the Running Task and ISR variables.</p>
+<blockquote>
+<p><strong>Warning:</strong> Running Task and ISR Sampling does not guarantee exact metrics like hardware tracing. Instead, you get an approximation that becomes more accurate the longer you sample but might have systematic errors, for example, when an ISR executes for very short durations.</p>
+</blockquote>
+<p>iTCHi can help you to create the correct Profiler XML for this use case. First, you need to create a default iTCHi configuration file that includes the <code>orti_file</code> and <code>profiler_xml_file</code> attributes, as explained in the Running Task/ISR section.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>    <span class="dt">&quot;orti_file&quot;</span><span class="fu">:</span> <span class="st">&quot;path/to/Os_Trace.ORT&quot;</span><span class="fu">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>    <span class="dt">&quot;profiler_xml_file&quot;</span><span class="fu">:</span> <span class="st">&quot;profiler.xml&quot;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<p>Then you can run iTCHi with the <code>--running_taskisr_sampling</code> flag. Before you start sampling, you have to set the Analyzer operation mode to <em>None</em> under <em>Hardware - CPU Options</em>.</p>
+<blockquote>
+<p><strong>Important:</strong> Make sure to set the Analyzer operation mode to <em>None</em>.</p>
+</blockquote>
+<p>Now, point winIDEA to the generated Profiler XML file and open the Analyzer. Under <em>Profiler OS Objects</em>, you should find the Running Task/ISR objects with <code>(SAMPLING)</code> at the end. Make sure only to select these objects and start a recording.</p>
+<p>You should now see the Task and ISR sampling data for the selected objects.</p>
+<h3 id="task-state-tracing-with-single-state-variables">Task State Tracing with Single State Variables</h3>
+<p>For Running Task/ISR profiling there is no indication for why a task switch occurs. Different reasons for task switches are preemptions, waiting for events and terminations. ORTI specifies a <code>STATE</code> attribute for each task object to make this information accessible. The <code>STATE</code> attribute can either be a single variable or a more complicated expression consisting of multiple variables. The string <code>OS_taskTableBase[27].dynamic-&gt;state</code> is an example for a single variable (though the pointer is problematic), whereas the following string is considered a complex expression.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a>(((Os_ControlledCoreInfo[<span class="dv">1</span><span class="bu">U</span>].RunningTask == Os_const_tasks[<span class="dv">1</span>]) * <span class="dv">1</span>) &amp; <span class="dv">1</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>+ ((Os_ControlledCoreInfo[<span class="dv">1</span><span class="bu">U</span>].ReadyTasks.p1 &amp; <span class="bn">0x1</span>) &lt;&lt; <span class="dv">1</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>+ ((Os_ControlledCoreInfo[<span class="dv">1</span><span class="bu">U</span>].WaitingTasks.p1 &amp; <span class="bn">0x1</span>) &lt;&lt; <span class="dv">2</span>)<span class="st">&quot;;</span></span></code></pre></div>
+<p>If the task states in your ORTI file use complex expressions skip to <a href="#task-state-tracing-with-complex-state-native">Task State Tracing with Complex Expressions</a>.</p>
+<p>This command creates the Profiler XML suitable for state tracing with a single variable for each task. ISRs are still traced via <code>RUNNINGISR2</code> and the configuration from <a href="#running-taskisr">Running Task/ISR</a> applies.</p>
+<p>For single core applications creating the Profiler XML from the ORTI file works automatically. For multi-core applications additional configuration is necessary because the ORTI file does not specify a core index attribute for tasks. There are different ways to specify the core indices in the iTCHi configuration file. If you are using a multi-core application add the following object to your configuration file.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>  <span class="dt">&quot;task_state&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>    <span class="dt">&quot;task_to_core_mapping&quot;</span><span class="fu">:</span> <span class="fu">{},</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>    <span class="dt">&quot;task_to_core_heuristic&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a>    <span class="dt">&quot;autocore_os_config_h&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a>    <span class="dt">&quot;autocore_mk_gen_config_h&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a>  <span class="fu">}</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<p>There are three ways to get the task to core mapping:</p>
+<ol type="1">
+<li>Specify the core fore each task explicitly.</li>
+<li>Reference an <code>Os_config.h</code> or <code>Mk_Gen_Config.h</code> file. This is the recommended way if you use the EB tresos AutoCore OS.</li>
+<li>Use a heuristic to extract the core ID from the <code>STATE</code> expression.</li>
+</ol>
+<p>Note that the options are mutually exclusive, i.e., only one of them can be used at the same time. Remove the attributes for the options that you are not using.</p>
+<h4 id="manually-define-task-to-core-mapping">Manually define task to core mapping</h4>
+<p>The attribute <code>task_to_core_mapping</code> points to a dictionary that maps from task names to core indices. iTCHi sets the core index for each task based on this mapping. If no mapping is available for a certain task iTCHi defaults to <code>0</code> and logs a warning. iTCHi does not report a mapping for a non-existent task.</p>
+<p>The following shows an example mapping that maps <code>task_a</code> and <code>task_c</code> to core 0 while <code>task_b</code> is allocated to core 3.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a>  <span class="dt">&quot;task_to_core_mapping&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>    <span class="dt">&quot;task_a&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a>    <span class="dt">&quot;task_b&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a>    <span class="dt">&quot;task_c&quot;</span><span class="fu">:</span> <span class="dv">0</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a>  <span class="fu">}</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="extract-mapping-from-eb-tresos-autocore-os-os_config.h-file">Extract mapping from EB tresos AutoCore OS <code>Os_config.h</code> file</h4>
+<p>Users of the EB tresos AutoCore OS can point the <code>autocore_os_config_h</code> attribute to the <code>OS_config.h</code> file of their application. This file includes a structure with the core index as well as a non-pointer version of the state variable for each task.</p>
+<p>For newer versions of EB tresos AutoCore you might want to specify <code>autocore_mk_gen_config_h</code> instead. It depends on the exact version and chip architecture you are using.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a>  <span class="dt">&quot;task_state&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a>    <span class="dt">&quot;autocore_os_config_h&quot;</span><span class="fu">:</span> <span class="st">&quot;Os_config.h&quot;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a>  <span class="fu">}</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="itchi-heuristic-feature">iTCHi heuristic feature</h4>
+<p>iTCHi can try to find the core for each task. If <code>task_to_core_heuristic</code> is set to <code>true</code> iTCHi scans the task state formula with the regular expression <code>[Cc]ore_?(\d+)</code>. If the formula matches the regular expression iTCHi assigns the respective number <code>(\d+)</code> to the task. If the regex does not match iTCHi assigns the core <code>0</code> to the task and logs a warning.</p>
+<h3 id="task-state-tracing-with-complex-state-native">Task State Tracing with Complex State Native</h3>
+<p>For complex state variables (ORTI <code>STATE</code> attributes consisting of more than one variable), the winIDEA Analyzer has the capability to reconstruct the task states if all variables in the state formula are part of the trace recording.</p>
+<p>This feature uses the iTCHi configuration options from the <a href="#running-taskisr">Running Task/ISR</a> sections to remap AUTOSAR cores and remove pointers from the Running TASK or ISR expressions.</p>
+<blockquote>
+<p><strong>Note:</strong> This command effectively replaces complex state profiling via Inspectors and should be used instead.</p>
+</blockquote>
+<p>The following snippet shows the iTCHi configuration for this command.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a>  <span class="dt">&quot;task_state_complex&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a>    <span class="dt">&quot;constant_variables&quot;</span><span class="fu">:</span> <span class="fu">{}</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true"></a>  <span class="fu">}</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<h4 id="constant-variables">Constant Variables</h4>
+<p>The <code>STATE</code> expressions of some operating systems contain variables that are only written once at the start-up of the application. If that initial write event is not traced the Inspectors cannot reconstruct the task state. To avoid this issue such variables can be set to a constant value. For example, consider the following expression.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>OsCfg_Core_OsCore_Core0_Status_Dyn.OsState == <span class="dv">2</span> ?</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a>  ( OsCfg_Trace_OsCore_Core0_Dyn.CurrentTask ==</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true"></a>    &amp;OsCfg_Trace_Default_Appl_Init_Task ?</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true"></a>    <span class="dv">0</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true"></a>    : OsCfg_Task_Default_Appl_Init_Task_Dyn.State )</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true"></a>  : <span class="bn">0xFF</span>;</span></code></pre></div>
+<p>In this example the <code>OsState</code> is only initialized to <code>2</code> once when the application starts to execute. If that write is not recorded the expression as a whole cannot be evaluated. In this case it is best to define that variable as a constant via <code>constant_variables</code>. This attribute is a dictionary that maps from variable names to integers.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a>  <span class="dt">&quot;constant_variables&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a>    <span class="dt">&quot;OsCfg_Core_OsCore_Core0_Status_Dyn.OsState&quot;</span><span class="fu">:</span> <span class="dv">2</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a>  <span class="fu">},</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="task-state-tracing-with-instrumentation">Task State Tracing with Instrumentation</h3>
+<p>This command utilizes the OS hooks to generate Task and ISR events by either writing into a global variable or using an instrumentation trace technique (such as RH850 software trace).</p>
+<p>Task state tracing is currently supported for the Vector MICROSAR OS via the <code>--task_state_instrumentation_microsar</code> flag and for EB tresos AutoCore OS via <code>--task_state_instrumentation_autocore</code>.</p>
+<h4 id="vector-microsar">Vector MICROSAR</h4>
+<p>For MICROSAR, the following configuration section is required.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a>    <span class="dt">&quot;task_state_inst_microsar&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a>        <span class="dt">&quot;vector_os_timing_hooks_h&quot;</span><span class="fu">:</span> <span class="st">&quot;Os_TimingHooks_isystem.h&quot;</span><span class="fu">,</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a>        <span class="dt">&quot;vector_os_timing_hooks_c&quot;</span><span class="fu">:</span> <span class="st">&quot;Os_TimingHooks_isystem.c&quot;</span><span class="fu">,</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>        <span class="dt">&quot;instrumentation_type&quot;</span><span class="fu">:</span> <span class="st">&quot;data_trace&quot;</span><span class="fu">,</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a>        <span class="dt">&quot;software_based_coreid_gen&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a>        <span class="dt">&quot;trace_variable&quot;</span><span class="fu">:</span> <span class="st">&quot;isystem_trace&quot;</span><span class="fu">,</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a>        <span class="dt">&quot;trace_variable_definition&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true"></a>        <span class="dt">&quot;stm_base_address&quot;</span><span class="fu">:</span> <span class="st">&quot;0x0&quot;</span><span class="fu">,</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true"></a>        <span class="dt">&quot;stm_channel&quot;</span><span class="fu">:</span> <span class="st">&quot;0x0&quot;</span><span class="fu">,</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true"></a>        <span class="dt">&quot;sft_dbpush_register&quot;</span><span class="fu">:</span> <span class="dv">0</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true"></a>    <span class="fu">}</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<p>iTCHi supports different types of instrumentation. Set the <code>instrumentation_type</code> attribute to <code>data_trace</code>, <code>stm_trace</code>, or <code>software_trace</code> depending on the approach you are using. This will also effect the generate instrumentation files.</p>
+<p>For <code>data_trace</code>, use <code>trace_variable</code> to specify the name of the trace variable.</p>
+<p>For <code>stm_trace</code>, use <code>stm_base_address</code> and <code>stm_channel</code> to specify the respective values. Both values must be hex-strings, i.e., start with <code>0x</code>.</p>
+<p>For <code>software_trace</code>, use <code>db_push_register</code> to specify the DB push register.</p>
+<h4 id="elektrobit-tresos-autocore">Elektrobit tresos AutoCore</h4>
+<p>For tresos AutoCore, the following configuration section is required.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a>    <span class="dt">&quot;task_state_inst_autocore&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a>        <span class="dt">&quot;dbg_h&quot;</span><span class="fu">:</span> <span class="st">&quot;Dbg.h&quot;</span><span class="fu">,</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a>        <span class="dt">&quot;dbg_c&quot;</span><span class="fu">:</span> <span class="st">&quot;Dbg.c&quot;</span><span class="fu">,</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true"></a>        <span class="dt">&quot;trace_variable_task&quot;</span><span class="fu">:</span> <span class="st">&quot;isystem_os_task&quot;</span><span class="fu">,</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true"></a>        <span class="dt">&quot;trace_variable_isr&quot;</span><span class="fu">:</span> <span class="st">&quot;isystem_os_isr&quot;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true"></a>    <span class="fu">}</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="runnable-tracing-with-instrumentation">Runnable Tracing with Instrumentation</h3>
+<p>Runnable tracing is an important feature to get deeper insights into the behavior of an application. Runnables can be traced via program flow trace or via instrumentation utilizing data trace. While program flow trace works without instrumentation it produces short trace durations for most setups. Instrumentation based tracing is good compromise as it generates significant longer traces while keeping the instrumentation as minimal as possible.</p>
+<p>Instrumented tracing works by utilizing the VFB trace feature of the AUTOSAR RTE. VFB trace enables the user to generate instrumentation hooks for Runnables and other RTE objects of interests. Once you have activated the hooks in your RTE generation tool iTCHi helps to implement the instrumentation and to make winIDEA aware of the Runnable identifier to Runnable name mapping. To use this feature add the following object to your iTCHi configuration file.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a>    <span class="dt">&quot;runnable_instrumentation&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a>        <span class="dt">&quot;isystem_vfb_hooks_c&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a>        <span class="dt">&quot;rte_hook_h&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true"></a>        <span class="dt">&quot;rte_xdm&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true"></a>        <span class="dt">&quot;regex&quot;</span><span class="fu">:</span> <span class="st">&quot;(FUNC</span><span class="ch">\\</span><span class="st">(void, RTE_APPL_CODE</span><span class="ch">\\</span><span class="st">) Rte_Runnable_(</span><span class="ch">\\</span><span class="st">w+)_(Start|Return)</span><span class="ch">\\</span><span class="st">([^</span><span class="ch">\\</span><span class="st">n]+</span><span class="ch">\\</span><span class="st">))&quot;</span><span class="fu">,</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true"></a>        <span class="dt">&quot;trace_variable&quot;</span><span class="fu">:</span> <span class="st">&quot;isystem_trace_runnable&quot;</span><span class="fu">,</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true"></a>        <span class="dt">&quot;template_file&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true"></a>        <span class="dt">&quot;instrumentation_type&quot;</span><span class="fu">:</span> <span class="st">&quot;data_trace&quot;</span><span class="fu">,</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true"></a>        <span class="dt">&quot;stm_base_address&quot;</span><span class="fu">:</span> <span class="st">&quot;0x0&quot;</span><span class="fu">,</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true"></a>        <span class="dt">&quot;stm_channel&quot;</span><span class="fu">:</span> <span class="st">&quot;0x0&quot;</span><span class="fu">,</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true"></a>        <span class="dt">&quot;db_push_register&quot;</span><span class="fu">:</span> <span class="st">&quot;0x0&quot;</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true"></a>    <span class="fu">}</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<p>The <code>isystem_vfb_hooks_c</code> attribute specifies the location of the instrumentation file that is generated by iTCHi. At the moment VFB tracing is supported for Vector MICROSAR Classic RTE and Elektrobit tresos AutoCore RTE. For the former point <code>rte_hook_h</code> to the <code>Rte_Hook.h</code> header file. For the latter point <code>rte_xdm</code> to the <code>Rte.xdm</code> file of your EB tresos Studio project.</p>
+<p>iTCHi uses the <code>regex</code> to extract Runnable hooks from <code>Rte_Hook.h</code>. If you are unsure, just leave this attribute as it is. For more information see the next section.</p>
+<blockquote>
+<p><strong>Note:</strong> iTCHi allows you to provide your own Runnable instrumentation template. To start simply point <code>template_file</code> to a non-existing file. iTCHi will write the default template into that location for you. You can then adapt it to your needs.</p>
+</blockquote>
+<p>iTCHi comes with default instrumentation templates. The <code>template_file</code> attribute allows you to specify a custom template. If you point <code>template_file</code> to a non-existing file iTCHi will write the default template into this file. If you leave the attribute empty or remove it the default template file is used.</p>
+<p>Refer to the <a href="#task-state-tracing-with-instrumentation">previous section</a> for an explanation of the <code>instrumentation_type</code>, <code>trace_variable</code>, <code>stm</code>, and <code>db_push_register</code> attributes.</p>
+<h4 id="runnable-instrumentation-with-vector-microsar-classic-rte">Runnable Instrumentation with Vector MICROSAR Classic RTE</h4>
+<p>DaVinci Configurator writes the active RTE hooks into <code>Rte_Hook.h</code> during the RTE code generation step. iTCHi extracts those hooks from the header file, assigns an identifier and writes them into the Profiler XML and the <code>isystem_vfb_hooks_c</code> file.</p>
+<p>The following regular expression (regex) is used to find hooks within the header file. The outer parentheses are simply Python’s way of allowing multi-line strings. The parentheses inside the string specify matching groups.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a>regex <span class="op">=</span> (<span class="st">&quot;(&quot;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a>         <span class="st">&quot;FUNC\(void, RTE_APPL_CODE\) &quot;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a>         <span class="st">&quot;Rte_Runnable_&quot;</span> <span class="st">&quot;(\w+)&quot;</span> <span class="st">&quot;_(Start|Return)&quot;</span> <span class="st">&quot;\([^</span><span class="ch">\\</span><span class="st">n]+\)&quot;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a>         <span class="st">&quot;)&quot;</span>)</span></code></pre></div>
+<p>You can overwrite the default regex via the <code>regex</code> attribute within <code>runnable_instrumentation</code>. If you create a default iTCHi file with <code>--write_default_config</code> it will contain the default regex that you can adapt to your needs. Keep in mind that <code>\</code> and <code>"</code> have to be escaped in the JSON file. Also, regular parentheses are used for grouping in Python<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. For example, <code>(foo)</code> specifies a group that matches the string <code>foo</code>. If you want to use groups yourself be sure to make them non-capturing with <code>(?:foo)</code>, because iTCHi relies on exact the four groups that are part of the default regex.</p>
+<h4 id="runnable-instrumentation-with-elektrobit-tresos-autocore-rte">Runnable Instrumentation with Elektrobit tresos AutoCore RTE</h4>
+<p>EB tresos Studio stores active RTE hooks in the <code>Rte.xdm</code> XML file. iTCHi is able to parse this file and extract all active Runnable hooks. The rest works similar to Vector MICROSAR Classic RTE; iTCHi assigns an identifier to each Runnable, generates the instrumentation and writes the identifier to name mapping into the Profiler XML file.</p>
+<h3 id="running-taskisr-tracing-with-os-signaling">Running Task/ISR tracing with OS Signaling</h3>
+<p><strong>Not supported.</strong></p>
+<p>Task/ISR tracing with additional OS Signaling gives the Profiler the information whether a task context switch was caused by a preemption, termination or waiting transition. This information is signaled with an additional ORTI Attribute <code>vs_OSSIGNAL</code> and is only supported by ETAS RTA-OS. If you need support for this feature contact a TASKING FAE.</p>
+<h3 id="runnable-program-flow">Runnable Program Flow</h3>
+<p>Runnables are functions and can be recorded via Program Flow trace. The Profiler XML file can specify which functions should be treated as Runnables. This has two benefits. First, the Runnables are shown under a dedicated node in the Profiler timeline. Second, the functions that are marked as Runnables are included in the BTF export for analysis in third party timing-tools.</p>
+<p>Add the <code>runnable_program_flow</code> object to your iTCHi configuration file. <code>runnables</code> is a list of function symbols that will be added to the Profiler XML as a Runnable.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>    <span class="dt">&quot;runnable_program_flow&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a>        <span class="dt">&quot;runnables&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true"></a>            <span class="st">&quot;first_runnable&quot;</span><span class="ot">,</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true"></a>            <span class="st">&quot;second_runnable&quot;</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true"></a>        <span class="ot">]</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true"></a>    <span class="fu">}</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<p>Once you have added the Runnables to the Profiler XML file run iTCHi with the <code>--runnable_program_flow</code> flag.</p>
+<h3 id="signals">Signals</h3>
+<p>The term signal means a single global variable. The winIDEA Analyzer can display global variables via data areas. Alternatively, you can configure signals in the Profiler XML. The biggest advantage of this approach is that winIDEA exports these signals into BTF.</p>
+<p>To add signal objects to the Profiler XML, create a <code>signals</code> configuration object, and then add signals via a second <code>signals</code> attribute that points to a list of strings.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a>    <span class="dt">&quot;signals&quot;</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">&quot;signals&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;foo&quot;</span><span class="ot">,</span> <span class="st">&quot;bar&quot;</span><span class="ot">,</span> <span class="st">&quot;quz&quot;</span><span class="ot">]</span><span class="fu">}</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="spinlock-with-instrumentation">Spinlock with Instrumentation</h3>
+<blockquote>
+<p><strong>Information:</strong> This command currently only supports the Vector MICROSAR OS Timing-Hooks.</p>
+</blockquote>
+<p>Please contact your TASKING FAE if you want to use spinlock profiling.</p>
+<h2 id="use-cases">Use-Cases</h2>
+<p>This section helps you find out which of the iTCHi flags (or commands) you need for your use-case. Read through the different parts and note which flags you need. You can then get to the command section above. You will find a separate section explaining each of the commands you have written down. Once you have configured each command separately you can run iTCHi with all flags combined.</p>
+<p>Please, also refer to the <a href="https://www.isystem.com/downloads/winIDEA/help/autosar.html">AUTOSAR Classic Profiling Section</a> in our online help to find the correct use-case for your setup.</p>
+<h3 id="basic-taskisr-timing-analysis">Basic Task/ISR Timing-Analysis</h3>
+<p>If you are just getting started you want to use Running Task/ISR profiling first. Use the <code>--running_taskisr</code> flag if you want to analyze the data only in winIDEA or <code>--running_taskisr_btf</code> if you want to export the data into a third party timing-tool in the BTF trace format.</p>
+<p>You can use iTCHi for this use-case if you have data trace available. If you have RH850 Software Trace available, use task state tracing via instrumentation and select RH8850 Software Trace as the instrumentation technique.</p>
+<h3 id="advanced-taskisr-timing-analysis">Advanced Task/ISR Timing-Analysis</h3>
+<p>If the information about the currently running Task and ISR is not enough for your analysis you can record the task states. You have to look into your OS ORTI file to find the right approach. If the <code>TASK STATE</code> expression for your tasks is a single symbol (e.g. <code>OS_task_states[3]</code>) you want to use <code>--task_state_single_variable</code>.</p>
+<p>If you see a more complex expression you can use <code>--task_state_complex_native</code>. Note that this requires a higher number of data trace comparators since each of the symbols that are part of the expression have to be recorded. If you do not have enough data trace comparators you might have to use instrumentation with the <code>--task_state_instrumentation</code> command.</p>
+<p>Task state tracing requires data trace in most cases. If you do not have enough data trace comparators you might have to fall back to basic Task/ISR analysis. Software trace is supported via instrumentation. In that case the configuration needs to be done manually. Task state tracing is not supported with program-flow trace.</p>
+<h3 id="runnable-tracing">Runnable Tracing</h3>
+<p>If you want to go beyond task/ISR analysis you can use Runnable tracing. If you have data or software trace only you need to use instrumentation to record Runnables. The <code>--runnable_instrumentation</code> command helps with that use-case. If you have program-flow trace you can record Runnables with the <code>--runnable_program_flow</code> command. Note that you might want to use instrumentation even if you have program-flow trace to record longer traces or more Runnable objects.</p>
+<h2 id="appendix">Appendix</h2>
+<h3 id="itchi-help">iTCHi help</h3>
+<div class="sourceCode" id="cb28"><pre class="sourceCode txt"><code class="sourceCode default"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a>usage: itchi.py [-h] [--config config] [--log_file log_file] [--write_default_config] [--arti] [--running_taskisr] [--running_taskisr_btf] [--running_taskisr_sampling]</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a>                [--running_taskisr_ossignaling] [--task_state_single_variable] [--task_state_complex_expression] [--task_state_complex_native] [--task_state_instrumentation_microsar]</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a>                [--task_state_instrumentation_autocore] [--runnable_instrumentation] [--runnable_program_flow] [--signals] [--spinlock_instrumentation_microsar] [--log_trace_symbols]</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true"></a>                [--version]</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true"></a>iTCHi Trace Configuration Helper</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true"></a>optional arguments:</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true"></a>  -h, --help            show this help message and exit</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true"></a>  --config config       path to config file (default: itchi.json)</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true"></a>  --log_file log_file   path to log file (default: itchi.log)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true"></a>  --write_default_config</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true"></a>                        Writes an empty configuration file and exits.</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true"></a>  --arti                Creates profiler XML and instrumentation code for tracing as specified by the ARTI standard.</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true"></a>  --running_taskisr     Prepares profiler XML for running Task/ISR tracing.</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true"></a>  --running_taskisr_btf</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true"></a>                        Same as --running_taskisr but with BTF export.</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true"></a>  --running_taskisr_sampling</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true"></a>                        Profiler XML for running Task/ISR sampling.</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true"></a>  --running_taskisr_ossignaling</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true"></a>                        Not supported via iTCHi. Import ORTI directly.</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true"></a>  --task_state_single_variable</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true"></a>                        Prepares profiler XML for task state tracing based on a single variable for each task.</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true"></a>  --task_state_complex_expression, --task_state_inspectors</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true"></a>                        Prepares profiler XML and Inspectors for task state tracing with complex expressions.</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true"></a>  --task_state_complex_native</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true"></a>                        Prepares profiler XML for native task state tracing via complex expressions.</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true"></a>  --task_state_instrumentation_microsar, --task_state_instrumentation</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true"></a>                        Creates profiler XML and instrumentation code for state tracing with the Vector MICROSAR OS.</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true"></a>  --task_state_instrumentation_autocore</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true"></a>                        Creates profiler XML and instrumentation code for state tracing with the EB tresos AutoCore OS.</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true"></a>  --runnable_instrumentation</span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true"></a>                        Prepares profiler XML for instrumented Runnable tracing and creates instrumentation.</span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true"></a>  --runnable_program_flow</span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true"></a>                        Prepares profiler XML for Runnable tracing based on program flow trace.</span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true"></a>  --signals             Prepares profiler XML for signals.</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true"></a>  --spinlock_instrumentation_microsar, --spinlock_instrumentation</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true"></a>                        Experimental: prepares profiler XML for spinlock profiling.</span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true"></a>  --log_trace_symbols   Logs symbols that have to be traced for current Profiler XML.</span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true"></a>  --version             Prints build date and exits.</span></code></pre></div>
+<h3 id="config-attributes">Config attributes</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>attribute</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>orti_file</td>
+<td>Mandatory path to the OS ORTI file.</td>
+</tr>
+<tr class="even">
+<td>profiler_xml_file</td>
+<td>Mandatory path to the Profiler XML file that iTCHi will generate.</td>
+</tr>
+<tr class="odd">
+<td>running_taskisr default_task</td>
+<td>Name of default task; only required if ORTI file does not include NO_TASK or INVALID_TASK.</td>
+</tr>
+<tr class="even">
+<td>running_taskisr default_isr2</td>
+<td>Name of default ISR; only required if ORTI file does not include NO_ISR or INVALID_ISR.</td>
+</tr>
+<tr class="odd">
+<td>running_taskisr search_replace_list</td>
+<td>Rename Task or ISR variable to a static symbol if it includes a pointer. iTCHi will consecutively replace the key with the value.</td>
+</tr>
+<tr class="even">
+<td>running_taskisr orti_core_to_soc_core</td>
+<td>Map an AUTOSAR OS core to a different physical core. For example, to remap AUTOSAR core 0 to SoC core 3, enter “0” and “3”.</td>
+</tr>
+<tr class="odd">
+<td>running_taskisr orti_core_to_core_name</td>
+<td>Rename an AUTOSAR OS core. For example, to rename AUTOSAR core 0 to ‘Cortex-M4.1’, enter “0” and “Cortex-M4-1”.</td>
+</tr>
+<tr class="even">
+<td>task_state task_to_core_mapping</td>
+<td>Explicitly map tasks to AUTOSAR cores if ‘task_to_core_heuristic’ does not work.</td>
+</tr>
+<tr class="odd">
+<td>task_state task_to_core_heuristic</td>
+<td>If ‘true’, iTCHi tries to extract the core ID for each task from the ORTI STATE attribute.</td>
+</tr>
+<tr class="even">
+<td>task_state autocore_os_config_h</td>
+<td>For Elektrobit tresos AutoCore OS, point this attribute to the ‘OsConfig.h’ file.</td>
+</tr>
+<tr class="odd">
+<td>task_state autocore_mk_gen_config_h</td>
+<td>For Elektrobit tresos Safety OS, point this attribute to the ‘MkGenConfig.h’ file.</td>
+</tr>
+<tr class="even">
+<td>task_state_inspectors inspector_group_btf_states_prefix</td>
+<td>iTCHi prefixes the BTF TypeEnums with this string. This is helpful when using Inspector groups.</td>
+</tr>
+<tr class="odd">
+<td>task_state_inspectors constant_variables</td>
+<td>Use this attribute to map specific symbols (variables) to a specific value for task state based profiling. This is helpful when a variable only changes once during startup.</td>
+</tr>
+<tr class="even">
+<td>task_state_inspectors create_data_areas</td>
+<td>If ‘true’, iTCHi adds the required data areas for the Task Inspectors to the Profiler XML.</td>
+</tr>
+<tr class="odd">
+<td>task_state_inspectors create_preemption_aware_running_state</td>
+<td>If ‘true’, iTCHi adds a second Inspector for each task that provides a second ‘RUNNING_’ state with correct preempt statistics.</td>
+</tr>
+<tr class="even">
+<td>task_state_inspectors default_state</td>
+<td>Default state for Inspectors; usually it is SUSPENDED or UNKNOWN.</td>
+</tr>
+<tr class="odd">
+<td>task_state_inspectors inspectors_file</td>
+<td>iTCHi generates the Inspectors into this file. It should have a ‘.json’ file ending.</td>
+</tr>
+<tr class="even">
+<td>task_state_inspectors parent_area_template</td>
+<td>References the parent object for the Inspectors. The default should be fine.</td>
+</tr>
+<tr class="odd">
+<td>task_state_inspectors reference_inspectors_file_from_xml</td>
+<td>If ‘true’, the Profiler XML references the Inspectors file and winIDEA loads them automatically. To import the Inspectors manually, use ‘false’.</td>
+</tr>
+<tr class="even">
+<td>task_state_inspectors task_core_to_core_name</td>
+<td>Map a SoC Task core ID to a different core name. If a Task on core 0 should reference CPU2, enter “0” and “CPU2”</td>
+</tr>
+<tr class="odd">
+<td>task_state_complex constant_variables</td>
+<td>Use this attribute to map specific symbols (variables) to a specific value for task state based profiling. This is helpful when a variable only changes once during startup.</td>
+</tr>
+<tr class="even">
+<td>task_state_inst_microsar vector_os_timing_hooks_h</td>
+<td>Header file into which iTCHi generates the Vector OS Timing Hooks instrumentation code.</td>
+</tr>
+<tr class="odd">
+<td>task_state_inst_microsar vector_os_timing_hooks_c</td>
+<td>Source file into which iTCHi generates the data trace instrumentation variable definition.</td>
+</tr>
+<tr class="even">
+<td>task_state_inst_microsar instrumentation_type</td>
+<td>Select the trace type. It can be ‘data_trace’, ‘stm_trace’, or ‘software_trace’. The default is ‘data_trace’.</td>
+</tr>
+<tr class="odd">
+<td>task_state_inst_microsar software_based_coreid_gen</td>
+<td>If ‘true’, use core ID from timing hooks. If ‘false’, use core ID from trace.</td>
+</tr>
+<tr class="even">
+<td>task_state_inst_microsar trace_variable</td>
+<td>If ‘instrumentation_type’ is ‘data_trace’, this specifies the name of the Thread instrumentation trace variable.</td>
+</tr>
+<tr class="odd">
+<td>task_state_inst_microsar trace_variable_definition</td>
+<td>Override the definition of the trace variable. Useful when using vendor specific MemMap includes.</td>
+</tr>
+<tr class="even">
+<td>task_state_inst_microsar stm_base_address</td>
+<td>If ‘instrumentation_type’ is ‘stm_trace’, this specifies the STM base address.</td>
+</tr>
+<tr class="odd">
+<td>task_state_inst_microsar stm_channel</td>
+<td>If ‘instrumentation_type’ is ‘stm_trace’, this specifies the STM Thread channel.</td>
+</tr>
+<tr class="even">
+<td>task_state_inst_microsar sft_dbpush_register</td>
+<td>If ‘instrumentation_type’ is ‘software_trace’ this specifies the Thread DB Push register.</td>
+</tr>
+<tr class="odd">
+<td>task_state_inst_autocore dbg_h</td>
+<td>Header file into which iTCHi generates the EB tresos AutoCore Dbg hooks.</td>
+</tr>
+<tr class="even">
+<td>task_state_inst_autocore dbg_c</td>
+<td>Source file into which iTCHi generates the EB tresos AutoCore Dbg trace variable definitions</td>
+</tr>
+<tr class="odd">
+<td>task_state_inst_autocore trace_variable_task</td>
+<td>Name of the task instrumentation variable.</td>
+</tr>
+<tr class="even">
+<td>task_state_inst_autocore trace_variable_isr</td>
+<td>Name of the ISR instrumentation variable.</td>
+</tr>
+<tr class="odd">
+<td>runnable_instrumentation isystem_vfb_hooks_c</td>
+<td>Path to the VFB hook implementation file that iTCHi generates.</td>
+</tr>
+<tr class="even">
+<td>runnable_instrumentation rte_hook_h</td>
+<td>If you use Vector MICROSAR Classic RTE, point this attribute to the ‘RteHook.h’ file.</td>
+</tr>
+<tr class="odd">
+<td>runnable_instrumentation rte_xdm</td>
+<td>If you use Elektrobit tresos AutoCore RTE, point this attribute to the ‘RTE.xdm’ file.</td>
+</tr>
+<tr class="even">
+<td>runnable_instrumentation regex</td>
+<td>A regular expression to extract hooks from ‘RteHook.h’. Adapt this to find other hooks, but preserve the three Python regex matching groups.</td>
+</tr>
+<tr class="odd">
+<td>runnable_instrumentation trace_variable</td>
+<td>If Runnable ‘instrumentation_type’ is ‘data_trace’, this specifies the name of the Runnable trace variable.</td>
+</tr>
+<tr class="even">
+<td>runnable_instrumentation trace_variable_definition</td>
+<td>Override the definition of the trace variable. Useful when using vendor specific MemMap includes.</td>
+</tr>
+<tr class="odd">
+<td>runnable_instrumentation template_file</td>
+<td>If specified, iTCHi writes the VFB trace template into it. The user can then adapt it, and iTCHi will use it in the following runs.</td>
+</tr>
+<tr class="even">
+<td>runnable_instrumentation instrumentation_type</td>
+<td>Select the Runnable trace type. It can be ‘data_trace’, ‘stm_trace’, or ‘software_trace’. Default is ‘data_trace’.</td>
+</tr>
+<tr class="odd">
+<td>runnable_instrumentation software_based_coreid_gen</td>
+<td>If ‘true’, uses core ID from core ID method in the generated file. If ‘false’, uses core ID from trace (if available).</td>
+</tr>
+<tr class="even">
+<td>runnable_instrumentation stm_base_address</td>
+<td>If ‘instrumentation_type’ is ‘stm_trace’, this specifies the STM base address.</td>
+</tr>
+<tr class="odd">
+<td>runnable_instrumentation stm_channel</td>
+<td>If ‘instrumentation_type’ is ‘stm_trace’, this specifies the STM Runnable channel.</td>
+</tr>
+<tr class="even">
+<td>runnable_instrumentation sft_dbpush_register</td>
+<td>If ‘instrumentation_type’ is ‘software_trace’ this specifies the Runnable DB Push register.</td>
+</tr>
+<tr class="odd">
+<td>runnable_instrumentation sft_dbtag</td>
+<td>If ‘instrumentation_type’ is ‘software_trace’ and this is ‘true’, DBTAG instrumentation is used.</td>
+</tr>
+<tr class="even">
+<td>runnable_program_flow runnables</td>
+<td>List of functions that should be treated as Runnables. Adding regular functions as Runnables will likely lead to undesired behavior.</td>
+</tr>
+<tr class="odd">
+<td>runnable_program_flow csv_file</td>
+<td>Optional path to CSV file listing functions that should be treated as Runnables</td>
+</tr>
+<tr class="even">
+<td>runnable_program_flow csv_column_name</td>
+<td>Column name of interest in csv_file (either column_name or column_id has to be specified)</td>
+</tr>
+<tr class="odd">
+<td>runnable_program_flow csv_column_id</td>
+<td>Column index of interest in csv_file (either column_name or column_id has to be specified)</td>
+</tr>
+<tr class="even">
+<td>signals signals</td>
+<td>List of signals (variables) that should be visualized as separate objects in the Profiler timeline. These signals are also exported to BTF.</td>
+</tr>
+<tr class="odd">
+<td>spinlock_inst_microsar spinlock_trace_variable</td>
+<td>Name of of the spinlock trace variable. Defaults to “isystem_trace_spinlock”.</td>
+</tr>
+<tr class="even">
+<td>spinlock_inst_microsar spinlock_trace_variable_definition</td>
+<td>Override the definition of the trace variable. Useful when using vendor specific MemMap includes.</td>
+</tr>
+<tr class="odd">
+<td>arti os_trace_c</td>
+<td>ARTI OS instrumentation C file.</td>
+</tr>
+<tr class="even">
+<td>arti os_trace_h</td>
+<td>ARTI OS instrumentation H file.</td>
+</tr>
+<tr class="odd">
+<td>arti os_trace_variable</td>
+<td>ARTI OS instrumentation variable.</td>
+</tr>
+<tr class="even">
+<td>arti rte_trace_c</td>
+<td>ARTI RTE instrumentation C file.</td>
+</tr>
+<tr class="odd">
+<td>arti rte_trace_h</td>
+<td>ARTI RTE instrumentation H file.</td>
+</tr>
+<tr class="even">
+<td>arti rte_trace_variable</td>
+<td>ARTI RTE instrumentation variable.</td>
+</tr>
+<tr class="odd">
+<td>arti software_based_coreid_gen</td>
+<td>If ‘true’, uses core ID from core ID method in the generated file. If ‘false’, uses core ID from trace (if available).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="empty-itchi.json">Empty itchi.json</h3>
+<div class="sourceCode" id="cb29"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="fu">{</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a>    <span class="dt">&quot;orti_file&quot;</span><span class="fu">:</span> <span class="st">&quot;OS.ort&quot;</span><span class="fu">,</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a>    <span class="dt">&quot;profiler_xml_file&quot;</span><span class="fu">:</span> <span class="st">&quot;profiler.xml&quot;</span><span class="fu">,</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a>    <span class="dt">&quot;running_taskisr&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a>        <span class="dt">&quot;default_task&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true"></a>        <span class="dt">&quot;default_isr2&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true"></a>        <span class="dt">&quot;search_replace_list&quot;</span><span class="fu">:</span> <span class="fu">{},</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true"></a>        <span class="dt">&quot;orti_core_to_soc_core&quot;</span><span class="fu">:</span> <span class="fu">{},</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true"></a>        <span class="dt">&quot;orti_core_to_core_name&quot;</span><span class="fu">:</span> <span class="fu">{}</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true"></a>    <span class="fu">},</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true"></a>    <span class="dt">&quot;task_state&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true"></a>        <span class="dt">&quot;task_to_core_mapping&quot;</span><span class="fu">:</span> <span class="fu">{},</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true"></a>        <span class="dt">&quot;task_to_core_heuristic&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true"></a>        <span class="dt">&quot;autocore_os_config_h&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true"></a>        <span class="dt">&quot;autocore_mk_gen_config_h&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true"></a>    <span class="fu">},</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true"></a>    <span class="dt">&quot;task_state_inspectors&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true"></a>        <span class="dt">&quot;inspector_group_btf_states_prefix&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true"></a>        <span class="dt">&quot;constant_variables&quot;</span><span class="fu">:</span> <span class="fu">{},</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true"></a>        <span class="dt">&quot;create_data_areas&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true"></a>        <span class="dt">&quot;create_preemption_aware_running_state&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true"></a>        <span class="dt">&quot;default_state&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true"></a>        <span class="dt">&quot;inspectors_file&quot;</span><span class="fu">:</span> <span class="st">&quot;inspectors.json&quot;</span><span class="fu">,</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true"></a>        <span class="dt">&quot;parent_area_template&quot;</span><span class="fu">:</span> <span class="st">&quot;Data/{core_name}: Tasks/{task_name}&quot;</span><span class="fu">,</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true"></a>        <span class="dt">&quot;reference_inspectors_file_from_xml&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true"></a>        <span class="dt">&quot;task_core_to_core_name&quot;</span><span class="fu">:</span> <span class="fu">{}</span></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true"></a>    <span class="fu">},</span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true"></a>    <span class="dt">&quot;task_state_complex&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true"></a>        <span class="dt">&quot;constant_variables&quot;</span><span class="fu">:</span> <span class="fu">{}</span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true"></a>    <span class="fu">},</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true"></a>    <span class="dt">&quot;task_state_inst_microsar&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true"></a>        <span class="dt">&quot;vector_os_timing_hooks_h&quot;</span><span class="fu">:</span> <span class="st">&quot;Os_TimingHooks_isystem.h&quot;</span><span class="fu">,</span></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true"></a>        <span class="dt">&quot;vector_os_timing_hooks_c&quot;</span><span class="fu">:</span> <span class="st">&quot;Os_TimingHooks_isystem.c&quot;</span><span class="fu">,</span></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true"></a>        <span class="dt">&quot;instrumentation_type&quot;</span><span class="fu">:</span> <span class="st">&quot;data_trace&quot;</span><span class="fu">,</span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true"></a>        <span class="dt">&quot;software_based_coreid_gen&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true"></a>        <span class="dt">&quot;trace_variable&quot;</span><span class="fu">:</span> <span class="st">&quot;isystem_trace&quot;</span><span class="fu">,</span></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true"></a>        <span class="dt">&quot;trace_variable_definition&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true"></a>        <span class="dt">&quot;stm_base_address&quot;</span><span class="fu">:</span> <span class="st">&quot;0x0&quot;</span><span class="fu">,</span></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true"></a>        <span class="dt">&quot;stm_channel&quot;</span><span class="fu">:</span> <span class="st">&quot;0x0&quot;</span><span class="fu">,</span></span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true"></a>        <span class="dt">&quot;sft_dbpush_register&quot;</span><span class="fu">:</span> <span class="dv">0</span></span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true"></a>    <span class="fu">},</span></span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true"></a>    <span class="dt">&quot;task_state_inst_autocore&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true"></a>        <span class="dt">&quot;dbg_h&quot;</span><span class="fu">:</span> <span class="st">&quot;Dbg.h&quot;</span><span class="fu">,</span></span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true"></a>        <span class="dt">&quot;dbg_c&quot;</span><span class="fu">:</span> <span class="st">&quot;Dbg.c&quot;</span><span class="fu">,</span></span>
+<span id="cb29-45"><a href="#cb29-45" aria-hidden="true"></a>        <span class="dt">&quot;trace_variable_task&quot;</span><span class="fu">:</span> <span class="st">&quot;isystem_os_task&quot;</span><span class="fu">,</span></span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true"></a>        <span class="dt">&quot;trace_variable_isr&quot;</span><span class="fu">:</span> <span class="st">&quot;isystem_os_isr&quot;</span></span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true"></a>    <span class="fu">},</span></span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true"></a>    <span class="dt">&quot;runnable_instrumentation&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true"></a>        <span class="dt">&quot;isystem_vfb_hooks_c&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true"></a>        <span class="dt">&quot;rte_hook_h&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-51"><a href="#cb29-51" aria-hidden="true"></a>        <span class="dt">&quot;rte_xdm&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-52"><a href="#cb29-52" aria-hidden="true"></a>        <span class="dt">&quot;regex&quot;</span><span class="fu">:</span> <span class="st">&quot;(FUNC</span><span class="ch">\\</span><span class="st">(void, RTE_APPL_CODE</span><span class="ch">\\</span><span class="st">) Rte_Runnable_(</span><span class="ch">\\</span><span class="st">w+)_(Start|Return)</span><span class="ch">\\</span><span class="st">([^</span><span class="ch">\\</span><span class="st">n]+</span><span class="ch">\\</span><span class="st">))&quot;</span><span class="fu">,</span></span>
+<span id="cb29-53"><a href="#cb29-53" aria-hidden="true"></a>        <span class="dt">&quot;trace_variable&quot;</span><span class="fu">:</span> <span class="st">&quot;isystem_trace_runnable&quot;</span><span class="fu">,</span></span>
+<span id="cb29-54"><a href="#cb29-54" aria-hidden="true"></a>        <span class="dt">&quot;trace_variable_definition&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-55"><a href="#cb29-55" aria-hidden="true"></a>        <span class="dt">&quot;template_file&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-56"><a href="#cb29-56" aria-hidden="true"></a>        <span class="dt">&quot;instrumentation_type&quot;</span><span class="fu">:</span> <span class="st">&quot;data_trace&quot;</span><span class="fu">,</span></span>
+<span id="cb29-57"><a href="#cb29-57" aria-hidden="true"></a>        <span class="dt">&quot;software_based_coreid_gen&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb29-58"><a href="#cb29-58" aria-hidden="true"></a>        <span class="dt">&quot;stm_base_address&quot;</span><span class="fu">:</span> <span class="st">&quot;0x0&quot;</span><span class="fu">,</span></span>
+<span id="cb29-59"><a href="#cb29-59" aria-hidden="true"></a>        <span class="dt">&quot;stm_channel&quot;</span><span class="fu">:</span> <span class="st">&quot;0x0&quot;</span><span class="fu">,</span></span>
+<span id="cb29-60"><a href="#cb29-60" aria-hidden="true"></a>        <span class="dt">&quot;sft_dbpush_register&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb29-61"><a href="#cb29-61" aria-hidden="true"></a>        <span class="dt">&quot;sft_dbtag&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb29-62"><a href="#cb29-62" aria-hidden="true"></a>    <span class="fu">},</span></span>
+<span id="cb29-63"><a href="#cb29-63" aria-hidden="true"></a>    <span class="dt">&quot;runnable_program_flow&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-64"><a href="#cb29-64" aria-hidden="true"></a>        <span class="dt">&quot;runnables&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb29-65"><a href="#cb29-65" aria-hidden="true"></a>        <span class="dt">&quot;csv_file&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-66"><a href="#cb29-66" aria-hidden="true"></a>        <span class="dt">&quot;csv_column_name&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></span>
+<span id="cb29-67"><a href="#cb29-67" aria-hidden="true"></a>        <span class="dt">&quot;csv_column_id&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb29-68"><a href="#cb29-68" aria-hidden="true"></a>    <span class="fu">},</span></span>
+<span id="cb29-69"><a href="#cb29-69" aria-hidden="true"></a>    <span class="dt">&quot;signals&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-70"><a href="#cb29-70" aria-hidden="true"></a>        <span class="dt">&quot;signals&quot;</span><span class="fu">:</span> <span class="ot">[]</span></span>
+<span id="cb29-71"><a href="#cb29-71" aria-hidden="true"></a>    <span class="fu">},</span></span>
+<span id="cb29-72"><a href="#cb29-72" aria-hidden="true"></a>    <span class="dt">&quot;spinlock_inst_microsar&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-73"><a href="#cb29-73" aria-hidden="true"></a>        <span class="dt">&quot;spinlock_trace_variable&quot;</span><span class="fu">:</span> <span class="st">&quot;isystem_trace_spinlock&quot;</span><span class="fu">,</span></span>
+<span id="cb29-74"><a href="#cb29-74" aria-hidden="true"></a>        <span class="dt">&quot;spinlock_trace_variable_definition&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb29-75"><a href="#cb29-75" aria-hidden="true"></a>    <span class="fu">},</span></span>
+<span id="cb29-76"><a href="#cb29-76" aria-hidden="true"></a>    <span class="dt">&quot;arti&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-77"><a href="#cb29-77" aria-hidden="true"></a>        <span class="dt">&quot;os_trace_variable&quot;</span><span class="fu">:</span> <span class="st">&quot;arti_os_trace&quot;</span><span class="fu">,</span></span>
+<span id="cb29-78"><a href="#cb29-78" aria-hidden="true"></a>        <span class="dt">&quot;rte_trace_variable&quot;</span><span class="fu">:</span> <span class="st">&quot;arti_rte_trace&quot;</span><span class="fu">,</span></span>
+<span id="cb29-79"><a href="#cb29-79" aria-hidden="true"></a>        <span class="dt">&quot;os_trace_c&quot;</span><span class="fu">:</span> <span class="st">&quot;ARTI_Os_Trace.c&quot;</span><span class="fu">,</span></span>
+<span id="cb29-80"><a href="#cb29-80" aria-hidden="true"></a>        <span class="dt">&quot;os_trace_h&quot;</span><span class="fu">:</span> <span class="st">&quot;ARTI_Os_Trace.h&quot;</span><span class="fu">,</span></span>
+<span id="cb29-81"><a href="#cb29-81" aria-hidden="true"></a>        <span class="dt">&quot;rte_trace_c&quot;</span><span class="fu">:</span> <span class="st">&quot;ARTI_Rte_Trace.c&quot;</span><span class="fu">,</span></span>
+<span id="cb29-82"><a href="#cb29-82" aria-hidden="true"></a>        <span class="dt">&quot;rte_trace_h&quot;</span><span class="fu">:</span> <span class="st">&quot;ARTI_RTe_Trace.h&quot;</span><span class="fu">,</span></span>
+<span id="cb29-83"><a href="#cb29-83" aria-hidden="true"></a>        <span class="dt">&quot;software_based_coreid_gen&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb29-84"><a href="#cb29-84" aria-hidden="true"></a>    <span class="fu">},</span></span>
+<span id="cb29-85"><a href="#cb29-85" aria-hidden="true"></a>    <span class="dt">&quot;commands&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb29-86"><a href="#cb29-86" aria-hidden="true"></a>        <span class="dt">&quot;arti&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-87"><a href="#cb29-87" aria-hidden="true"></a>        <span class="dt">&quot;running_taskisr&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-88"><a href="#cb29-88" aria-hidden="true"></a>        <span class="dt">&quot;running_taskisr_btf&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-89"><a href="#cb29-89" aria-hidden="true"></a>        <span class="dt">&quot;running_taskisr_sampling&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-90"><a href="#cb29-90" aria-hidden="true"></a>        <span class="dt">&quot;task_state_single_variable&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-91"><a href="#cb29-91" aria-hidden="true"></a>        <span class="dt">&quot;task_state_complex_expression&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-92"><a href="#cb29-92" aria-hidden="true"></a>        <span class="dt">&quot;task_state_complex_native&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-93"><a href="#cb29-93" aria-hidden="true"></a>        <span class="dt">&quot;task_state_instrumentation_microsar&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-94"><a href="#cb29-94" aria-hidden="true"></a>        <span class="dt">&quot;task_state_instrumentation_autocore&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-95"><a href="#cb29-95" aria-hidden="true"></a>        <span class="dt">&quot;runnable_instrumentation&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-96"><a href="#cb29-96" aria-hidden="true"></a>        <span class="dt">&quot;runnable_program_flow&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-97"><a href="#cb29-97" aria-hidden="true"></a>        <span class="dt">&quot;signals&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-98"><a href="#cb29-98" aria-hidden="true"></a>        <span class="dt">&quot;spinlock_instrumentation_microsar&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-99"><a href="#cb29-99" aria-hidden="true"></a>        <span class="dt">&quot;swat&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb29-100"><a href="#cb29-100" aria-hidden="true"></a>        <span class="dt">&quot;log_trace_symbols&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb29-101"><a href="#cb29-101" aria-hidden="true"></a>    <span class="fu">}</span></span>
+<span id="cb29-102"><a href="#cb29-102" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="changelog">Changelog</h3>
+<ul>
+<li>24-Jan-2025
+<ul>
+<li>Remove PLY dependency.</li>
+</ul></li>
+<li>14-Jan-2025
+<ul>
+<li>Adjust memory mapping file name in VFB hook implementation file</li>
+</ul></li>
+<li>02-Dec-2024
+<ul>
+<li>Update explanation of how iTCHi can be called.</li>
+<li>Apply more consistent markdown styling to this document.</li>
+</ul></li>
+<li>08-Jul-2024
+<ul>
+<li>Support NeuSAR OS task state tracing via single variables.</li>
+</ul></li>
+<li>03-Jul-2024
+<ul>
+<li><code>search_replace_list</code> is now an object (aka Python dict) for consistency with other attributes.</li>
+<li>Fix issue that task structs are not extracted from <code>Os_config.h</code> for newer EB AutoCore OS versions.</li>
+</ul></li>
+<li>27-Oct-2023
+<ul>
+<li>Update company name at many (but not all) locations.<br />
+</li>
+</ul></li>
+<li>21-Sep-2023
+<ul>
+<li>Fix spelling error in BTF transition from <code>Unknown</code> to <code>Terminated</code> (the <code>d</code> was missing).</li>
+</ul></li>
+<li>21-Jul-2023
+<ul>
+<li>Fix issue that MICROSAR thread and spinlock instrumentation definitions don’t have a newline.</li>
+</ul></li>
+<li>28-Jun-2023
+<ul>
+<li>Fix issue that <code>trace_variable</code> is not rendered into <code>trace_variable_definition</code> for runnables.</li>
+</ul></li>
+<li>20-Jun-2023
+<ul>
+<li>Split <code>task_state_instrumentation</code> into <code>task_state_inst_microsar</code> and <code>task_state_inst_autocore</code>.</li>
+<li>Internally translate <code>task_state_instrumentation</code> into <code>task_state_inst_microsar</code>.</li>
+<li>Add new command line flag <code>--task_state_instrumentation_autocore</code>.</li>
+<li>Implement Elektrobit AutoCore instrumentation use case.</li>
+</ul></li>
+<li>12-Jun-2023
+<ul>
+<li>Add <code>spinlock_trace_variable_definition</code> attribute for spinlock instrumentation use case.</li>
+<li>Rename <code>spinlock_instrumentation.generate_instrumentation</code> to <code>spinlock_generate_instrumentation</code>.</li>
+</ul></li>
+<li>07-Jun-2023
+<ul>
+<li>Add <code>trace_variable_definition</code> attribute for task state and runnable instrumentation use cases.</li>
+<li>This is useful to define vendor specific includes to map the trace variable.</li>
+</ul></li>
+<li>16-May-2023
+<ul>
+<li>Add feature to print symbols that have to be traced for profiling based on the current Profiler XML file.</li>
+</ul></li>
+<li>01-May-2023
+<ul>
+<li>Add <code>software_based_coreid_gen</code> attribute for task state instrumentation use case. If this attribute is true, the hook implementation uses the core ID from the hook macro. If it is false, the <code>MASK_CORE</code> macro is defined to <code>0</code> and the core ID from the hardware trace (if available) is used.</li>
+</ul></li>
+<li>18-Apr-2023
+<ul>
+<li>Make <code>template_directory</code> attribute obsolete.</li>
+<li>Introduce <code>vector_os_timing_hooks_h</code> and <code>vector_os_timing_hooks_c</code> to specify Vector OS instrumentation files.</li>
+</ul></li>
+<li>11-Apr-2023
+<ul>
+<li>Exit with better error message for ORTI/EB Os_config.h mismatch.</li>
+<li>Log iTCHi version date in global exception handler.</li>
+<li>Update readme to document all configuration attributes.</li>
+<li>Fix RH850 Software Trace Runnable templates.</li>
+</ul></li>
+<li>14-Mar-2023
+<ul>
+<li>Add support for native complex task state analysis to GUI and document in readme.</li>
+</ul></li>
+<li>20-Jan-2023
+<ul>
+<li>Implement Running Task and ISR support for KPIT KSAR OS.</li>
+</ul></li>
+<li>18-Jan-2023
+<ul>
+<li>Fix issue where mismatch between running task objects and number of cores would cause an exception.</li>
+<li>Catch exception globally and ask user to create a ticket if that happens.</li>
+</ul></li>
+<li>10-Jan-2023
+<ul>
+<li>Implement support for complex task state analysis natively in winIDEA</li>
+</ul></li>
+<li>12-Dec-2022
+<ul>
+<li>Do not write MaskCore for ARTI by default (meaning we take the Core ID from the trace)</li>
+<li>Do not reference ORTI file for ARTI</li>
+<li>Handle multiple states with the same name for ARTI</li>
+</ul></li>
+<li>07-Oct-2022
+<ul>
+<li>Add preliminary ARTI support.</li>
+<li>Improve error message if ORTI file cannot be parsed.</li>
+</ul></li>
+<li>09-Aug-2022
+<ul>
+<li>Use the same RTE Runnable template file for all OSes.</li>
+<li>Generate <code>Core</code> instead of <code>SourceCore</code> because the latter is obsolete.</li>
+</ul></li>
+<li>18-Jul-2022
+<ul>
+<li>Update Vector RTE Runnable template to better facilitate different multi-core architectures.</li>
+</ul></li>
+<li>21-Jun-2022
+<ul>
+<li>Significantly update readme.</li>
+</ul></li>
+<li>16-Jun-2022
+<ul>
+<li>Add STM trace support for instrumented Runnable profiling.</li>
+<li>Update Vector Runnable template to include trace type.</li>
+<li>Trace types are the same as for Thread profiling.</li>
+<li>Update documentation for all config attributes.</li>
+</ul></li>
+<li>24-Apr-2022
+<ul>
+<li>Rename <code>btf_export_mapping_prefix</code> to <code>inspector_group_btf_states_prefix</code>.</li>
+</ul></li>
+<li>20-Apr-2022
+<ul>
+<li>Finalize spinlock support by adding <code>spinlock_instrumentation</code> attribute.</li>
+<li>This feature is not part of the official winIDEA release as of today.</li>
+</ul></li>
+<li>06-Apr-2022
+<ul>
+<li>Add a configuration option <code>create_preemption_aware_running_states</code> for the task state Inspectors use case.</li>
+<li>If this flag is <em>true</em>, iTCHi creates an additional Inspector for each task, that has a running state <em>RUNNING_</em> that correctly handles preemptions.</li>
+<li>Set this attribute to <em>true</em> for more accurate gross execution time metrics.</li>
+</ul></li>
+<li>21-Mar-2022
+<ul>
+<li>Add STM trace support for instrumented task state profiling.</li>
+<li>Update Os_TimingHooks template generation to account for trace type.</li>
+<li>Trace types are currently <code>data_trace</code>, <code>stm_trace</code>, and <code>software_trace</code>.</li>
+</ul></li>
+<li>15-Feb-2022
+<ul>
+<li>Add ‘btf_export_mapping_prefix’ to add a prefix to the BTF states for the Inspectors use case. This is helpful when using Inspector groups.</li>
+</ul></li>
+<li>11-Feb-2022
+<ul>
+<li>Fix bug that READY_ISR is not considered for BTF export.</li>
+</ul></li>
+<li>10-Feb-2022
+<ul>
+<li>Deprecate <code>autosar_to_physical_core</code> and <code>winidea_trd_file</code> attributes.</li>
+<li>Introduce <code>orti_core_to_soc_core</code> attribute.</li>
+<li>Introduce <code>orti_core_to_core_name</code> attribute.</li>
+<li>Introduce <code>task_core_to_core_name</code> attribute.</li>
+<li>Utilize the new attributes to support Inspectors on SoCs like Traveo-II and Chorus10M</li>
+<li>Improve logging and error handling.</li>
+</ul></li>
+<li>03-Feb-2022
+<ul>
+<li>Task State Complex expression correctly uses running Task/ISR mode.</li>
+<li>Task State Complex expression generates ISR Inspectors.</li>
+</ul></li>
+<li>01-Feb-2022
+<ul>
+<li>Do not write empty Types as that violates the Profiler XML schema.</li>
+</ul></li>
+<li>21-Dec-2021
+<ul>
+<li>Create MDF4 export configuration for MICROSAR instrumentation use case.</li>
+</ul></li>
+<li>17-Dec-2021
+<ul>
+<li>Update MICROSAR instrumentation template to differentiate between RUNNING task and ISR states.</li>
+<li>The MICROSAR instrumentation must be updated by the user to avoid errors.</li>
+</ul></li>
+</ul>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p><a href="https://www.isystem.com/support/application-notes.html">TASKING Application Notes</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p><a href="https://web.archive.org/web/20070806123957/http://portal.osek-vdx.org/index.php?option=com_content&amp;task=view&amp;id=9&amp;Itemid=13">OSEK Run-Time Interface</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p><a href="https://www.isystem.com/downloads/winIDEA/help/autosar.html">winIDEA Online Help</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p><a href="https://docs.python.org/3/howto/regex.html#grouping">Python Regex Grouping</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
