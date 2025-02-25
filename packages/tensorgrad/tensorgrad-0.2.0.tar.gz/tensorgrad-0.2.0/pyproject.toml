@@ -1,0 +1,61 @@
+[project]
+name = "tensorgrad"
+version = "0.2.0"
+dependencies = [
+   "networkx==3.2.1",
+   "numpy",
+   "torch",
+   "nbval",
+   "pytest",
+   "einops",
+   "pdf2image",
+   "sympy",
+   "sparse",
+   "opt_einsum"
+]
+requires-python = ">=3.10"
+authors = [
+  {name = "Thomas Ahle", email = "lobais@gmail.com"},
+]
+description = "Tensor Network Library with Symbolic Autograd"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["tensors", "autograd"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+
+[project.urls]
+Homepage = "https://tensorcookbook.com"
+Repository = "https://github.com/thomasahle/tensorgrad.git"
+Issues = "https://github.com/thomasahle/tensorgrad/issues"
+
+[build-system]
+requires = [
+   "setuptools",
+   "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+
+[tool.setuptools.packages]
+find = {}
+
+[tool.ruff]
+line-length = 110
+indent-width = 4
+
+[tool.mypy]
+# Enable/disable type checking options
+check_untyped_defs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+exclude = "tests/"
+
+
+[tool.pytest.ini_options]
+# addopts = "-s"
+# addopts = "--nbval"
+
