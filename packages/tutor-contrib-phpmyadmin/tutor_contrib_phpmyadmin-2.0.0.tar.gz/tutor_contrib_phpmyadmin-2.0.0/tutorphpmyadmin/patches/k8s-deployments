@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phpmyadmin
+  labels:
+    app.kubernetes.io/name: phpmyadmin
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: phpmyadmin
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: phpmyadmin
+    spec:
+      containers:
+        - name: phpmyadmin
+          image: {{ PHPMYADMIN_DOCKER_IMAGE }}
+          ports:
+            - containerPort: 80
+          env:
+            - name: PMA_HOST
+              value: {{ MYSQL_HOST }}
+            - name: PMA_PORT
+              value: "{{ MYSQL_PORT }}"
+          volumeMounts:
+            - mountPath: /etc/phpmyadmin/config.user.inc.php
+              name: configs
+              subPath: plugins/phpmyadmin/apps/config/pma_config.php
+            - mountPath: /usr/local/etc/php/conf.d/conf.ini
+              name: configs
+              subPath: plugins/phpmyadmin/apps/config/pma_php.ini
+          securityContext:
+            allowPrivilegeEscalation: false
+      volumes:
+        - name: configs
+          configMap:
+            name: phpmyadmin-configs

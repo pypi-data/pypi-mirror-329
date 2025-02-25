@@ -1,0 +1,14 @@
+phpmyadmin:
+  image: {{ PHPMYADMIN_DOCKER_IMAGE }}
+  restart: unless-stopped
+  environment:
+    PMA_HOST: {{ MYSQL_HOST }}
+    PMA_PORT: {{ MYSQL_PORT }}
+    UPLOAD_LIMIT: {{ PHPMYADMIN_UPLOAD_LIMIT }}
+  {%- if RUN_MYSQL %}
+  depends_on:
+    - mysql
+  {% endif -%}
+  volumes:
+    - ./config/pma_php.ini:/usr/local/etc/php/conf.d/conf.ini
+    - ./config/pma_config.php:/etc/phpmyadmin/config.user.inc.php
