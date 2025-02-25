@@ -1,0 +1,36 @@
+<script setup>
+import {{ api_name }} from '#/{{ api_path }}'
+import { provide } from 'vue'
+
+const injections = {{ api_name }}.init()
+const { api, params, obj, total } = injections
+provide('injections', injections)
+
+const columns = {{ columns }}
+</script>
+
+
+<template>
+    <xl-data-view
+         class="{{ english }}"
+         title="{{ chinese }}"
+         :columns="columns"
+         :callback="() => handlers.save()"
+         show-summary 
+         :summary-method="() => ({ 0: total })"
+         >
+         <template #columns>
+             <xl-col l="操作" v-slot="{ row }">
+                 <xl-edit-button type="primary" @click="() => api.onSave(row)"/>
+                 <xl-delete-button type="danger" @click="() => api.onDelete(row)"/>
+             </xl-col>
+         </template>
+     </xl-data-view>
+</template>
+
+
+<style lang="less">
+.{{ english }} {
+   
+}
+</style>
