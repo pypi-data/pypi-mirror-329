@@ -1,0 +1,89 @@
+# -------------------- build-system --------------------- #
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cctp"
+version = "1.0.12"
+description = "Cookiecutter Template for Python."
+readme = "README.rst"
+authors = [{ name = "gooker_young", email = "gooker_young@qq.com" }]
+maintainers = [{ name = "gooker_young", email = "gooker_young@qq.com" }]
+requires-python = ">=3.8"
+dependencies = [
+    "rich>=13.9.4",
+    "typer>=0.15.1",
+]
+classifiers = []
+license = { text = "MIT license" }
+
+[project.scripts]
+cctp = "cctp.cli:app"
+
+[project.urls]
+Repository = "https://gitee.com/gooker_young/cctp"
+Issues = "https://gitee.com/gooker_young/cctp/issues"
+
+# -------------------- hatch-version -------------------- #
+[tool.hatch]
+[tool.hatch.version]
+path = "src/cctp/__init__.py"
+
+# ------------------------ mypy ------------------------- #
+[tool.mypy]
+files = "."
+strict = true
+pretty = true
+show_error_codes = true
+warn_unreachable = true
+warn_no_return = true
+
+[[tool.mypy.overrides]]
+module = [
+  "tests.*",
+  "asgiref.*",
+  "dotenv.*",
+  "cryptography.*",
+  "importlib_metadata",
+]
+allow_untyped_defs = true
+disable_error_code = "attr-defined"
+ignore_missing_imports = true
+
+# ----------------------- pytest ------------------------ #
+[tool.pytest]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["error"]
+
+# ------------------------ ruff ------------------------- #
+[tool.ruff]
+line-length = 120
+fix = true
+show-fixes = true
+output-format = "full"
+exclude = ["*cookiecutter.project_slug*"]
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "UP", "W"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+order-by-type = false
+
+# ----------------------- uv-dependencies ------------------------ #
+[tool.uv]
+dev-dependencies = [
+  "pip>=25.0.1",
+  "pytest-cookies>=0.7.0",
+  "pytest>=8.3.4",
+  "sphinx>=7.1.2",
+  "sphinx-rtd-theme",
+  "wheel>=0.45.1",
+  "cctp",
+]
+
+[tool.uv.sources]
+cctp = { workspace = true }
