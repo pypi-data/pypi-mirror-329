@@ -1,0 +1,77 @@
+Metadata-Version: 2.4
+Name: xraygpt
+Version: 0.2.10.post0
+Summary: Generate kindle-like x-ray for e-books with LLM
+Project-URL: homepage, https://github.com/iaalm/xraygpt
+Project-URL: repository, https://github.com/iaalm/xraygpt
+Project-URL: documentation, https://github.com/iaalm/xraygpt
+Author-email: iaalm <iaalmsimon@gmail.com>
+License: BSD-3
+License-File: LICENSE
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 3 :: Only
+Requires-Python: >=3.9
+Requires-Dist: beautifulsoup4
+Requires-Dist: ebooklib
+Requires-Dist: langchain-chroma
+Requires-Dist: langchain-community
+Requires-Dist: langchain-openai
+Requires-Dist: langchain>=0.3
+Requires-Dist: loguru
+Provides-Extra: all
+Requires-Dist: azure-ai-textanalytics; extra == 'all'
+Requires-Dist: azure-core; extra == 'all'
+Provides-Extra: azure
+Requires-Dist: azure-ai-textanalytics; extra == 'azure'
+Requires-Dist: azure-core; extra == 'azure'
+Provides-Extra: dev
+Requires-Dist: azure-ai-textanalytics; extra == 'dev'
+Requires-Dist: azure-core; extra == 'dev'
+Requires-Dist: black; extra == 'dev'
+Requires-Dist: build; extra == 'dev'
+Requires-Dist: hatch; extra == 'dev'
+Requires-Dist: isort; extra == 'dev'
+Requires-Dist: mypy; extra == 'dev'
+Requires-Dist: q; extra == 'dev'
+Requires-Dist: types-tqdm; extra == 'dev'
+Description-Content-Type: text/markdown
+
+# 🔬📖 X-ray GPT
+[![PyPI version](https://badge.fury.io/py/xraygpt.svg)](https://badge.fury.io/py/xraygpt) [![Release Building](https://github.com/iaalm/xraygpt/actions/workflows/release.yml/badge.svg)](https://github.com/iaalm/xraygpt/actions/workflows/release.yml) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) 
+
+Generate kindle-like X-ray for e-books with LLM
+
+## 🚀 Usage
+```shell
+pip install xraygpt
+python -m xraygpt [epub_file]
+```
+
+
+#### 🤖 LLM Support
+Current this tool only support OpenAI (or compatible API like DeepSeek, Kimi, etc.) and Azure OpenAI by setting environment variables.
+
+You can config following environment variables to use different LLM service:
+- `OPENAI_API_BASE`: OpenAI API or other compatible API base URL
+- `OPENAI_API_KEY`: OpenAI API key
+- `OPENAI_API_VERSION`: OpenAI API version
+- `AZURE_OPENAI_ENDPOINT`: Use Azure OpenAI endpoint instead of standard OpenAI
+
+Model name can be set by command line argument `--chat_model` and `--embedding_model`.
+
+#### 📚 E-book Support
+Currently only support `.epub` format. Output format is a .json file as [WordDumb](https://github.com/xxyzz/WordDumb) style. You can import this file manualy via Calibre. First select the book and click "Open book Folder". Then create/replace `worddumb-custom-x-ray.json` with the generated json file.
+
+Generating X-Ray DB file is in progress.
+
+## 🧑‍💻 Dev Setup
+```shell
+pip install -e '.[dev]'
+```
+
+#### 🎩 Static analysis
+```shell
+make format
+```
