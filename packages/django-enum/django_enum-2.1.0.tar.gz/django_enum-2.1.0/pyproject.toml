@@ -1,0 +1,177 @@
+[project]
+name = "django-enum"
+version = "2.1.0"
+description = "Full and natural support for enumerations as Django model fields."
+requires-python = ">=3.9,<4.0"
+authors = [
+  {name = "Brian Kohan", email = "bckohan@gmail.com"},
+]
+license = "MIT"
+license-files = [ "LICENSE" ]
+repository = "https://github.com/bckohan/django-enum"
+homepage = "https://django-enum.rtfd.io"
+readme = "README.md"
+keywords = [
+    "enum",  "properties", "defines", "field", "django", "database",
+    "bitmask", "mask", "bitfield", "flags"
+]
+dependencies = ["django (>=3.2,<6.0)"]
+classifiers = [
+    "Environment :: Console",
+    "Framework :: Django",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
+    "Framework :: Django :: 4.1",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Site Management",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = true
+
+
+[tool.hatch.build.targets.sdist]
+# todo - these artifacts should be moved into tests
+exclude = ["benchmarks.json", "plot_benchmarks.py"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/django_enum"]
+
+
+[project.optional-dependencies]
+properties = ["enum-properties>=2.0.0"]
+filters = ["django-filter>=21"]
+rest = ["djangorestframework>=3.9,<4.0"]
+
+
+[project.urls]
+"Homepage" = "https://django-enum.readthedocs.io"
+"Documentation" = "https://django-enum.readthedocs.io"
+"Repository" = "https://github.com/bckohan/django-enum"
+"Issues" = "https://github.com/bckohan/django-enum/issues"
+"Changelog" = "https://django-enum.readthedocs.io/en/latest/changelog.html"
+"Code_of_Conduct" = "https://github.com/bckohan/membership/blob/main/CODE_OF_CONDUCT.md"
+
+
+[dependency-groups]
+dev = [
+    "beautifulsoup4>=4.13.3",
+    "coverage>=7.6.12",
+    "darglint>=1.8.1",
+    "deepdiff>=8.2.0",
+    "django-stubs[compatible-mypy]>=5.1.3",
+    "django-test-migrations>=1.4.0",
+    "ipdb>=0.13.13",
+    "matplotlib>=3.9.4",
+    "mypy>=1.15.0",
+    "numpy>=2.0.2",
+    "pre-commit>=4.1.0",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "pytest-django>=4.10.0",
+    "python-dateutil>=2.9.0.post0",
+    "ruff>=0.9.7",
+    "tomlkit>=0.13.2",
+    "tqdm>=4.67.1",
+    "types-pyyaml>=6.0.12.20241230",
+    "typing-extensions>=4.12.2",
+]
+docs = [
+    "doc8>=1.1.2",
+    "docutils>=0.21.2",
+    "furo>=2024.8.6",
+    "readme-renderer[md]>=44.0",
+    "sphinx>=7.4.7",
+    "sphinx-autobuild>=2024.10.3",
+    "sphinx-tabs>=3.4.7",
+]
+psycopg2 = [
+    "psycopg2>=2.9.10",
+]
+psycopg3 = [
+    "psycopg",
+]
+mysql = [
+    "mysqlclient>=1.4.0",
+]
+oracle = [
+    "cx-oracle>=8.3.0",
+]
+
+[tool.mypy]
+# The mypy configurations: http://bit.ly/2zEl9WI
+# allow_redefinition = false
+check_untyped_defs = true
+ignore_missing_imports = true
+exclude = ["tests"]
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "tests.settings"
+
+
+# todo doc8 configuration here is not being picked up and doesnt seem to be working
+# as expected - for now pass these parameters manually
+[tool.doc8]
+max-line-length = 100
+sphinx = true
+
+
+[tool.pytest.ini_options]
+# py.test options:
+DJANGO_SETTINGS_MODULE = "tests.settings"
+python_files = "test*.py"
+norecursedirs = "*.egg .eggs dist build docs .tox .git __pycache__"
+
+addopts = [
+  "--strict-markers",
+  "--cov=django_enum",
+  "--cov-branch",
+  "--cov-report=term-missing:skip-covered"
+]
+
+[tool.coverage.run]
+omit = ["tests/**/*py"]
+branch = true
+source = ["django_enum"]
+concurrency = ["multiprocessing"]
+parallel = true
+relative_files = true
+command_line = "-m pytest --cov=django_enum"
+
+[tool.coverage.paths]
+source = ["django_enum"]
+
+
+[tool.ruff]
+line-length = 88
+exclude = [
+    "doc",
+    "dist",
+    "examples",
+    "plot_benchmarks.py"
+]
+
+[tool.ruff.lint]
+exclude = ["tests/**/*"]
