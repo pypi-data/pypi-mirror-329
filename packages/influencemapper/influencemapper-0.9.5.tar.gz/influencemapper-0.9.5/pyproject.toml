@@ -1,0 +1,53 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "influencemapper"
+version = "0.9.5"
+description = "A tool for extracting information from disclosure statements."
+authors = ["Hardy <hardy.oei@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+keywords = ["disclosure", "conflict of interests", "competing interest", "research"]
+homepage = "https://github.com/networkdynamics/influencemapper"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+attrs = "^24.2.0"
+beautifulsoup4 = "^4.12.3"
+fuzzywuzzy = "^0.18.0"
+lxml = "^5.3.0"
+openai = "^1.55.3"
+pydantic = "^2.8.2"
+tiktoken = "^0.8.0"
+tqdm = "^4.66.5"
+python-Levenshtein = "^0.26.1"
+httpx = "0.27.2"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.4"
+pandas = "^2.2.3"
+jupyterlab = "^4.2.5"
+pytest-asyncio = "^0.25.0"
+coverage = "^7.6.9"
+pytest-cov = "^6.0.0"
+pytest-mock= "^3.14.0"
+
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-report=term-missing --no-cov-on-fail"

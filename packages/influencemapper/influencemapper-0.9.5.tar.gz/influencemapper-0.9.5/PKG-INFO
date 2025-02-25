@@ -1,0 +1,77 @@
+Metadata-Version: 2.3
+Name: influencemapper
+Version: 0.9.5
+Summary: A tool for extracting information from disclosure statements.
+License: MIT
+Keywords: disclosure,conflict of interests,competing interest,research
+Author: Hardy
+Author-email: hardy.oei@gmail.com
+Requires-Python: >=3.9,<4.0
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Requires-Dist: attrs (>=24.2.0,<25.0.0)
+Requires-Dist: beautifulsoup4 (>=4.12.3,<5.0.0)
+Requires-Dist: fuzzywuzzy (>=0.18.0,<0.19.0)
+Requires-Dist: httpx (==0.27.2)
+Requires-Dist: lxml (>=5.3.0,<6.0.0)
+Requires-Dist: openai (>=1.55.3,<2.0.0)
+Requires-Dist: pydantic (>=2.8.2,<3.0.0)
+Requires-Dist: python-Levenshtein (>=0.26.1,<0.27.0)
+Requires-Dist: tiktoken (>=0.8.0,<0.9.0)
+Requires-Dist: tqdm (>=4.66.5,<5.0.0)
+Project-URL: Homepage, https://github.com/networkdynamics/influencemapper
+Description-Content-Type: text/markdown
+
+# InfluenceMapper
+
+InfluenceMapper is a python library for extracting disclosure information from scholarly articles. It uses fine-tuned OpenAI's GPT models for the extraction of entities and relationships from the text. The functions included in the library are:
+- Extract entities from the text.
+- Extract relationships between authors and entities.
+- Extract relationships between entities and the study.
+
+## Installation
+
+To install the library, run the following command:
+
+```bash
+pip install influencemapper
+```
+
+## Training the model
+
+The model is trained on a dataset of scholarly articles. The dataset is available at the `data` folder. To train the model, clone the directory and run the following command:
+
+```bash
+python core/src/influencemapper/cli.py fine_tune -train_data data/train.jsonl -valid_data data/valid.jsonl -model_name gpt-4o-mini -threshold 1500 study_org 
+python core/src/influencemapper/cli.py fine_tune -train_data data/train.jsonl -valid_data data/valid.jsonl -model_name gpt-4o-mini -threshold 1500 author_org
+```
+
+As of the writing of this README, the resulting file has to be uploaded manually to the OpenAI platform to fine-tune the model. The model will be available for use after the fine-tuning process is completed.The `threshold` parameter is used to restrict samples, allowing only those with a maximum token count that meets the training requirements to pass.
+
+## Inferring entities and relationships
+
+To infer entities and relationships from a disclosure text, run the following command:
+
+```bash 
+python core/src/influencemapper/cli.py infer -data data/test.jsonl -model_name gpt-4o-mini -API_KEY [API_KEY] study_org
+python core/src/influencemapper/cli.py infer -data data/test.jsonl -model_name gpt-4o-mini -API_KEY [API_KEY] author_org
+```
+
+To get the results, you have to visit the OpenAI platform and download the results. After dowlnoading the results, you need to combine the results back to the original dataset using the following command:
+
+```bash
+python core/src/influencemapper/cli.py combine -data data/test.jsonl -result batch*.jsonl study_org
+python core/src/influencemapper/cli.py combine -data data/test.jsonl -result batch*.jsonl author_org
+```
