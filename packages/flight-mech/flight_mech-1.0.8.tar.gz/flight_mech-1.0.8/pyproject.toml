@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = ["flight_mech"]
+
+[project]
+name = "flight-mech"
+version = "1.0.8"
+authors = [{ name = "PaulCreusy", email = "paul.creusy@gmail.com" }]
+description = "A package to compute the characteristics of an airplane using simple flight mechanics equations."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["numpy>=2.0.0", "matplotlib", "scipy", "bs4", "pandas", "tqdm"]
+keywords = [
+    "flight",
+    "airplane",
+    "plane",
+    "mechanics",
+    "flight mechanics",
+    "airfoil",
+    "wing",
+    "turbojet",
+    "airfoil-analysis",
+]
+
+[project.urls]
+Homepage = "https://github.com/PaulCreusy/flight-mech"
+Issues = "https://github.com/PaulCreusy/flight-mech/issues"
+Documentation = "https://flight-mech.creusy.fr"
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "examples"]
