@@ -1,0 +1,3 @@
+APP_FOLDER = "apps/"
+CONFIG_FOLDER = "project"
+API_KEY = "AIzaSyBGCkNZ9wfFZDboBqqn98lYZRtYP2WDG74"
