@@ -1,0 +1,92 @@
+Metadata-Version: 2.3
+Name: acrud
+Version: 0.4.2
+Summary: 
+Author: jacantwell
+Author-email: jasper66018@gmail.com
+Requires-Python: >=3.10,<3.13
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Provides-Extra: gdrive
+Provides-Extra: s3
+Requires-Dist: boto3 (>=1.34.143,<2.0.0) ; extra == "s3"
+Requires-Dist: dill (>=0.3.8,<0.4.0)
+Requires-Dist: google-api-python-client (>=2.154.0,<3.0.0) ; extra == "gdrive"
+Requires-Dist: google-auth-httplib2 (>=0.2.0,<0.3.0) ; extra == "gdrive"
+Requires-Dist: google-auth-oauthlib (>=1.2.1,<2.0.0) ; extra == "gdrive"
+Requires-Dist: multimethod (>=1.12,<2.0)
+Requires-Dist: mypy-boto3-s3 (>=1.37.0,<2.0.0) ; extra == "s3"
+Requires-Dist: pydantic (>=2.9.2,<3.0.0)
+Requires-Dist: pypdf2 (>=3.0.1,<4.0.0)
+Requires-Dist: pytest (>=8.2.2,<9.0.0)
+Requires-Dist: python-dotenv (>=1.0.1,<2.0.0)
+Requires-Dist: stringcase (>=1.2.0,<2.0.0)
+Requires-Dist: typeguard (>=2.13.3)
+Description-Content-Type: text/markdown
+
+<p align="center">
+  <img src="./resources/logo.png" alt="Logo" width="100"> 
+</p>
+
+
+# aCRUD
+
+This python package provides a CRUD interfaces for a number of storage providers. Currently supported providers:
+
+- [x] Local
+- [x] AWS S3
+- [x] Google Drive
+
+aCRUD handles the loading and saving of multiple file types, including:
+
+- [x] JSON
+- [x] CSV
+- [x] PDF
+- [x] PKL
+- [x] TXT
+
+## Installation
+
+```bash
+pip install acrud --extras s3, gdrive, ...
+```
+
+```bash
+poetry add acrud --extras s3, gdrive, ...
+```
+
+## Usage
+
+```python
+from acrud import create_storage, get_storage_from_string, S3StorageConfig
+
+# Create a storage config object
+# Directly:
+config = S3StorageConfig(
+    bucket="my-bucket",
+)
+
+# Or from a string and a dictionary
+config = get_storage_from_string("s3", {"bucket": "my-bucket"})
+
+# Create a storage object
+storage = create_storage("s3", config)
+
+# Create a file
+storage.create_file("my-file.txt", "Hello, World!")
+
+# Read a file
+content = storage.read_file("my-file.txt")
+
+# Update a file
+storage.update_file("my-file.txt", "Hello, World! Updated")
+
+# Delete a file
+storage.delete_file("my-file.txt")
+```
+
+##### Note
+
+Original version of this package can be found on the branch `v0.1.0`.
