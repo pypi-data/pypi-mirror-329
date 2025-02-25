@@ -1,0 +1,33 @@
+package:
+  name: datahub
+  version: "{{ load_setup_py_data().version }}"
+
+source:
+  path: ../
+
+build:
+  entry_points:
+    - main = datahub.main:main
+  noarch: python
+
+requirements:
+  build:
+    - python
+  run:
+    - python
+    - requests
+    - h5py
+    - numpy
+
+#Optional requirements
+#    - pyepics
+#    - bsread
+#    - pytz
+#    - pandas
+#    - bitshuffle
+#    - dateutil
+#    - cbor2
+
+about:
+  home: https://github.com/paulscherrerinstitute/datahub
+  license: GPLv3
