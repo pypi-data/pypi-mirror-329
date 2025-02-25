@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "nupaac"
+version = "0.1.7"
+description = "Pandas Series accessor to handle nuclides."
+authors = ["Christian Schreinemachers (Cs137)"]
+license = "MIT"
+readme = "README.md"
+keywords = [
+    "radioactive", "nuclides", "radionuclides", "radio chemistry",
+    "nuclear chemistry", "physics", "health physics", "half-life",
+    "science", "pandas", "series"
+]
+classifiers = [
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering",
+]
+
+[tool.poetry.urls]
+"Changelog" = "https://codeberg.org/Cs137/NuPaAc/src/branch/main/CHANGELOG.md"
+"Issues" = "https://codeberg.org/Cs137/NuPaAc/issues"
+"Repository" = "https://codeberg.org/Cs137/NuPaAc"
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+radioactivedecay = "^0.6.1"
+pint-pandas = "^0.7.1"
+numpy = "^2.2.2"
+pandas = "^2.2.3"
+scipy = "^1.15.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+pytest-cov = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
