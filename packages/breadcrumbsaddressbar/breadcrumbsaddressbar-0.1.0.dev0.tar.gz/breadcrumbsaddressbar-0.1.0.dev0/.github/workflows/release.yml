@@ -1,0 +1,25 @@
+
+# https://docs.astral.sh/uv/guides/integration/github
+
+name: Release
+on:
+  release:
+    types: [published]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/astral-sh/setup-uv
+      - uses: astral-sh/setup-uv@v5
+        # cache uses uv.lock and requirements*.txt by default
+        with: { enable-cache: true }
+
+      # https://github.com/actions/setup-python
+      # Reads .python-version file by default
+      - uses: actions/setup-python@v5
+
+      - name: Build package
+        run: uv build
+
+      - name: Minimize uv cache
+        run: uv cache prune --ci

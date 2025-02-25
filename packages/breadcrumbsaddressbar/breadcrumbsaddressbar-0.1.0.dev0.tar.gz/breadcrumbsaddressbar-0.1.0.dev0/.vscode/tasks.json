@@ -1,0 +1,84 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "docker-build",
+			"label": "docker-build",
+			"platform": "python",
+			"dockerBuild": {
+				"tag": "breadcrumbsaddressbar:latest",
+				"dockerfile": "${workspaceFolder}/Dockerfile",
+				"context": "${workspaceFolder}",
+				"pull": true
+			}
+		},
+		{
+			// WSLg https://github.com/microsoft/wslg
+			// https://github.com/microsoft/wslg/blob/main/samples/container/Containers.md
+			"type": "docker-run",
+			"label": "docker-run: debug",
+			"dependsOn": [
+				"docker-build"
+			],
+			"python": {
+				"args": ["${relativeFile}"],
+				"file": "docker_import.py"
+			},
+			"dockerRun": {
+				// https://code.visualstudio.com/docs/containers/reference#_dockerrun-object-properties
+				"volumes": [
+					{
+						"localPath": "/run/desktop/mnt/host/wslg",
+						"containerPath": "/mnt/wslg"
+					},
+					{
+						// https://unix.stackexchange.com/questions/196677/what-is-tmp-x11-unix
+						"localPath": "/run/desktop/mnt/host/wslg/.X11-unix",
+						"containerPath": "/tmp/.X11-unix"
+					},
+					{
+						"localPath": "/usr/lib/wsl",
+						"containerPath": "/usr/lib/wsl"
+					},
+					{
+						"localPath": "${workspaceFolder}",
+						"containerPath": "/app"
+					}
+				],
+				"env": {
+					"DISPLAY": ":0",
+					"WAYLAND_DISPLAY": "wayland-0",
+					"XDG_RUNTIME_DIR": "/mnt/wslg/runtime-dir",
+					"PULSE_SERVER": "/mnt/wslg/PulseServer",
+					"LD_LIBRARY_PATH": "/usr/lib/wsl/lib",
+					// "QT_DEBUG_PLUGINS": "1",
+				}
+				// https://github.com/microsoft/vscode-docker/issues/3200
+				// , "remove": false
+			}
+		},
+		{
+			// XServer
+			"type": "docker-run",
+			"label": "docker-run: debug (XServer)",
+			"dependsOn": [
+				"docker-build"
+			],
+			"python": {
+				"args": ["${relativeFile}"],
+				"file": "docker_import.py"
+			},
+			"dockerRun": {
+				"volumes": [
+					{
+						"localPath": "${workspaceFolder}",
+						"containerPath": "/app"
+					}
+				],
+				"env": {
+					"DISPLAY": "host.docker.internal:0.0"
+				}
+			}
+		}
+	]
+}
