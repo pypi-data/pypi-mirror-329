@@ -1,0 +1,36 @@
+[project]
+name = "toyoildata"
+version = "0.3.1"
+description = "Synthetic segmentation data with given TP, FP and FN small instances for visualization and testing of pipelines and metrics." 
+authors = [
+    { name = "Halyjo", email = "35629262+Halyjo@users.noreply.github.com" }
+]
+# classifiers = ["Private :: Do Not Upload"]
+dependencies = [
+    "lightning",
+    "matplotlib",
+    "numpy",
+    "opencv-python",
+    "pre-commit",
+    "torch",
+]
+licence = "MIT"
+readme = "README.md"
+requires-python = ">= 3.10"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+managed = true
+dev-dependencies = [
+    "pytest",
+    "ruff",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/toyoildata"]

@@ -1,0 +1,58 @@
+# ToyOilData
+
+Synthetic segmentation data with given TP, FP and FN small instances for visualization and testing of pipelines and metrics.
+
+![Example](https://github.com/Halyjo/ToyOilData/blob/main/assets/example.png)
+
+## Installation
+
+### With uv
+
+```bash
+uv add toyoildata
+```
+
+### With pip
+
+```bash
+pip install toyoildata
+```
+
+
+## Example Usage
+
+```python
+from toydata import ToyOilSpillDataset
+import matplotlib.pyplot as plt
+
+## init dataset
+ds = ToyOilSpillDataset()
+
+## get a sample
+img, pred, label = ds[0]
+print(img.shape, pred.shape, label.shape)
+
+## show examples from the dataset to understand the data
+ds.show_examples()
+plt.show()
+
+```
+
+## Development Notes
+
+### Install (assuming you have `uv` installed)
+1. `git clone <repo>`
+2. `cd <repo>`
+3. `uv sync`
+
+### Publish
+1. Make sure you have the following environment variables set:
+    - `UV_PUBLISH_URL`
+    - `UV_PUBLISH_TOKEN`
+I have defined this in `.zshrc`. Note sure if this is really the best way, but it works and does not reveal the token in the repo.
+
+2. 
+```bash
+uv build
+uv publish
+```
