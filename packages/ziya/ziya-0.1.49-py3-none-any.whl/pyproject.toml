@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "ziya"
+version = "0.1.49"
+description = ""
+authors = ["Vishnu Krishnaprasad <vishnukool@gmail.com>"]
+readme = "README.md"
+include = ["templates/**/*", "pyproject.toml" ,"scripts.py"]
+packages = [
+    { include = "app" },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+uvicorn = "^0.23.2"
+whatthepatch = ">=1.0.2"
+patch-ng = ">=1.17"
+pydantic = "^2.9.2"
+jinja2 = "^3.1.3"
+tiktoken = "^0.8.0"
+anthropic = "^0.46.0"
+boto3 = "^1.34.88"
+langchain-aws = ">=0.2,<0.3"
+langchain = ">=0.3,<0.4"
+langgraph = ">=0.2,<0.3"
+langchainhub = ">=0.1.15"
+langchain-anthropic = ">=0.2,<0.3"
+pydevd-pycharm = "^243.18137.19"
+langchain-community = "^0.3.1"
+transformers = "^4.36.2"
+
+langchain-cli = "^0.0.35"
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+ziya = 'scripts:ziya'
+dev = 'scripts:dev'
+finstall = "scripts:frontend_install"
+fstart = "scripts:frontend_start"
+fbuild = "scripts:frontend_build"
