@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "giji"
+version = "0.1.21"
+description = "Git tools for Commitizen and PR Summary Generation using AI"
+readme = "README.md"
+authors = [
+    {name = "Cometa", email = "apps@getcometa.com"}
+]
+license = {text = "MIT"}
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "typer>=0.9.0",
+    "rich>=13.7.0",
+    "jira>=3.5.1",
+    "google-generativeai>=0.3.2",
+    "questionary>=2.0.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+namespaces = false
+
+[project.urls]
+Homepage = "https://github.com/cometa/giji"
+"Bug Tracker" = "https://github.com/cometa/giji/issues"
+
+[project.scripts]
+giji = "src.cli:main"
+
+[tool.commitizen]
+name = "cz_ai_conventional"
+version = "0.1.21"
+tag_format = "v$version"
