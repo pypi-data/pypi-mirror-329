@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<script src="https://cdn.jsdelivr.net/npm/gojs@3.0.16/release/go.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<div id="allSampleContent" class="p-4 w-full">
+<script src="https://cdn.jsdelivr.net/npm/create-gojs-kit@3.0.16/dist/extensions/ColumnResizingTool.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/create-gojs-kit@3.0.16/dist/extensions/RowResizingTool.js"></script>
+<script id="code">
+  function init() {
+    myDiagram = new go.Diagram('myDiagramDiv', {
+      validCycle: go.CycleMode.NotDirected, // don't allow loops
+      'undoManager.isEnabled': true
+    });
+
+    myDiagram.toolManager.mouseDownTools
+      .add(
+        new RowResizingTool({
+          doResize: function (rowdef, height) {
+            rowdef.height = height;
+          }
+        })
+      );
+    myDiagram.toolManager.mouseDownTools.add(new ColumnResizingTool());
+
+    // This template is a Panel that is used to represent each item in a Panel.itemArray.
+    // The Panel is data bound to the item object.
+    var fieldTemplate = new go.Panel('TableRow', { // this Panel is a row in the containing Table
+      background: 'transparent', // so this port's background can be picked by the mouse
+      fromSpot: go.Spot.Right, // links only go from the right side to the left side
+      toSpot: go.Spot.Left,
+      // allow drawing links from or to this port:
+      fromLinkable: true,
+      toLinkable: true
+    })
+      .bind('portId', 'name') // this Panel is a "port"
+      .add(
+        new go.Shape({
+          column: 0,
+          width: 12,
+          height: 12,
+          margin: 4,
+          // but disallow drawing links from or to this shape:
+          fromLinkable: false,
+          toLinkable: false
+        })
+          .bind('figure', 'figure')
+          .bind('fill', 'color'),
+        new go.TextBlock({
+          name: 'TB',
+          column: 1,
+          margin: new go.Margin(0, 2),
+          stretch: go.Stretch.Horizontal,
+          font: 'bold 13px sans-serif',
+          wrap: go.Wrap.None,
+          verticalAlignment: go.Spot.Center, // keep this text centered when resized
+          overflow: go.TextOverflow.Ellipsis,
+          // and disallow drawing links from or to this text:
+          fromLinkable: false,
+          toLinkable: false
+        })
+          .bind('text', 'name'),
+        new go.TextBlock({
+          column: 2,
+          margin: new go.Margin(0, 2),
+          stretch: go.Stretch.Horizontal,
+          font: '13px sans-serif',
+          maxLines: 3,
+          overflow: go.TextOverflow.Ellipsis,
+          editable: true
+        }).bindTwoWay('text', 'info')
+      );
+
+    // Return initialization for a RowColumnDefinition, specifying a particular column
+    // and adding a Binding of RowColumnDefinition.width to the IDX'th number in the data.widths Array
+    function makeWidthBinding(idx) {
+      // These two conversion functions are closed over the IDX variable.
+      // This source-to-target conversion extracts a number from the Array at the given index.
+      function getColumnWidth(arr) {
+        if (Array.isArray(arr) && idx < arr.length) return arr[idx];
+        return NaN;
+      }
+      // This target-to-source conversion sets a number in the Array at the given index.
+      function setColumnWidth(w, data) {
+        var arr = data.widths;
+        if (!arr) arr = [];
+        if (idx >= arr.length) {
+          for (var i = arr.length; i <= idx; i++) arr[i] = NaN; // default to NaN
+        }
+        arr[idx] = w;
+        return arr; // need to return the Array (as the value of data.widths)
+      }
+      return new go.RowColumnDefinition({ column: idx }).bindTwoWay(
+        'width',
+        'widths',
+        getColumnWidth,
+        setColumnWidth
+      );
+    }
+
+    // This template represents a whole "record".
+    myDiagram.nodeTemplate = new go.Node('Auto')
+      .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
+      .add(
+        // this rectangular shape surrounds the content of the node
+        new go.Shape({ fill: '#EEEEEE' }),
+        // the content consists of a header and a list of items
+        new go.Panel('Vertical', { stretch: go.Stretch.Horizontal, margin: 0.5 })
+          .add(
+            // this is the header for the whole node
+            new go.Panel('Auto', { stretch: go.Stretch.Horizontal }) // as wide as the whole node
+              .add(
+                new go.Shape({ fill: '#1570A6', strokeWidth: 0 }),
+                new go.TextBlock({
+                  alignment: go.Spot.Center,
+                  margin: 3,
+                  stroke: 'white',
+                  textAlign: 'center',
+                  font: 'bold 12pt sans-serif'
+                }).bind('text', 'key')
+              ),
+            // this Panel holds a Panel for each item object in the itemArray;
+            // each item Panel is defined by the itemTemplate to be a TableRow in this Table
+            new go.Panel('Table', {
+              name: 'TABLE',
+              stretch: go.Stretch.Horizontal,
+              minSize: new go.Size(100, 10),
+              defaultAlignment: go.Spot.Left,
+              defaultStretch: go.Stretch.Horizontal,
+              defaultColumnSeparatorStroke: 'gray',
+              defaultRowSeparatorStroke: 'gray',
+              itemTemplate: fieldTemplate
+            })
+              .bind('itemArray', 'fields')
+              .addRowColumnDefinition(makeWidthBinding(0))
+              .addRowColumnDefinition(makeWidthBinding(1))
+              .addRowColumnDefinition(makeWidthBinding(2))
+              // end Table Panel of items
+          ) // end Vertical Panel
+      ); // end Node
+
+    myDiagram.linkTemplate = new go.Link({
+      relinkableFrom: true,
+      relinkableTo: true,
+      toShortLength: 4
+    }) // let user reconnect links
+      .add(new go.Shape({ strokeWidth: 1.5 }), new go.Shape({ toArrow: 'Standard', stroke: null }));
+
+    var data = [];
+    data.nodeDataArray = [
+        {
+          key: 'M70JP90W',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'M70JP90W', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'PCDevice', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'ports', info: ['/dev/ttyUSB0', '/dev/ttyUSB1', '/dev/video0', '172.24.32.28:5555', '172.24.32.28:60000', 'GPIO12', 'GPIO26', 'GPIO21', 'GPIO5/6'], color: '#FFB900', figure: 'Diamond' }
+          ],
+          loc: '1000 0'
+        },
+        {
+          key: '/dev/ttyUSB0',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: '/dev/ttyUSB0', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'CommSerialPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: 'M70JP90W', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'baud_rate', info: 115200, color: '#00BCF2' },
+            { name: 'remote_ports', info: ['CommSerialPort'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '0 300'
+        },
+        {
+          key: '/dev/ttyUSB1',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: '/dev/ttyUSB1', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'InfraredSerialPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: 'M70JP90W', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'baud_rate', info: 115200, color: '#00BCF2' },
+            { name: 'remote_ports', info: ['InfraredSerialPort'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '300 300'
+        },
+        {
+          key: '/dev/video0',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: '/dev/video0', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'VideoStreamSerialPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: 'M70JP90W', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['VideoStreamSerialPort'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '600 300'
+        },
+        {
+          key: '10.120.26.46:5555',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: '10.120.26.46:5555', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'AdbPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: 'M70JP90W', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['AdbPort'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '900 300'
+        },
+        {
+          key: '10.120.26.46:60000',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: '10.120.26.46:60000', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'GRPCPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: 'M70JP90W', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['GRPCPort'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '1200 300'
+        },
+        {
+          key: 'GPIO12',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'GPIO12', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'PowerPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: 'M70JP90W', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['PowerPort'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '1500 300'
+        },
+        {
+          key: 'GPIO26',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'GPIO26', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'HDMIPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: 'M70JP90W', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['HDMIPort'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '1800 300'
+        },
+        {
+          key: 'GPIO21',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'GPIO21', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'EthernetPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: 'M70JP90W', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['EthernetPort'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '2100 300'
+        },
+        {
+          key: 'GPIO5/6',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'GPIO5/6', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'USBPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: 'M70JP90W', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['USBPort'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '2400 300'
+        },
+        {
+          key: 'CommSerialPort',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'CommSerialPort', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'CommSerialPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: '5C0AD0760BB0C50AD', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['/dev/ttyUSB0'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '0 600'
+        },
+        {
+          key: 'InfraredSerialPort',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'InfraredSerialPort', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'InfraredSerialPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: '5C0AD0760BB0C50AD', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['/dev/ttyUSB1'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '300 600'
+        },
+        {
+          key: 'VideoStreamSerialPort',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'VideoStreamSerialPort', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'VideoStreamSerialPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: '5C0AD0760BB0C50AD', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['/dev/video0'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '600 600'
+        },
+        {
+          key: 'AdbPort',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'AdbPort', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'AdbPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: '5C0AD0760BB0C50AD', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['10.120.26.46:5555'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '900 600'
+        },
+        {
+          key: 'GRPCPort',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'GRPCPort', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'GRPCPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: '5C0AD0760BB0C50AD', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['10.120.26.46:60000'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '1200 600'
+        },
+        {
+          key: 'PowerPort',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'PowerPort', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'PowerPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: '5C0AD0760BB0C50AD', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['GPIO12'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '1500 600'
+        },
+        {
+          key: 'HDMIPort',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'HDMIPort', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'HDMIPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: '5C0AD0760BB0C50AD', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['GPIO26'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '1800 600'
+        },
+        {
+          key: 'EthernetPort',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'EthernetPort', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'EthernetPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: '5C0AD0760BB0C50AD', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['GPIO21'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '2100 600'
+        },
+        {
+          key: 'USBPort',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: 'USBPort', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'USBPort', color: '#F25022', figure: 'Ellipse' },
+            { name: 'parent', info: '5C0AD0760BB0C50AD', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'remote_ports', info: ['GPIO5/6'], color: '#66B900', figure: 'Diamond' }
+          ],
+          loc: '2400 600'
+        },
+        {
+          key: '5C0AD0760BB0C50AD',
+          widths: [NaN, NaN, NaN],
+          fields: [
+            { name: 'name', info: '5C0AD0760BB0C50AD', color: '#F7B84B', figure: 'Ellipse' },
+            { name: 'type', info: 'TVDevice', color: '#F25022', figure: 'Ellipse' },
+            { name: 'description', info: '', color: '#00BCF2' },
+            { name: 'client_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'shared_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'server_attributes', info: '{"k1":"v1","k2":"v2"}', color: '#00BCF2' },
+            { name: 'ports', info: ['CommSerialPort','InfraredSerialPort','VideoStreamSerialPort','AdbPort','GRPCPort','PowerPort','HDMIPort','EthernetPort','USBPort'], color: '#FFB900', figure: 'Diamond' }
+          ],
+          loc: '1000 900'
+        }
+      ];
+    data.linkDataArray = [
+        { from: 'M70JP90W', fromPort: 'key', to: '/dev/ttyUSB0', toPort: 'key' },
+        { from: 'M70JP90W', fromPort: 'key', to: '/dev/ttyUSB1', toPort: 'key' },
+        { from: 'M70JP90W', fromPort: 'key', to: '/dev/video0', toPort: 'key' },
+        { from: 'M70JP90W', fromPort: 'key', to: '10.120.26.46:5555', toPort: 'key' },
+        { from: 'M70JP90W', fromPort: 'key', to: '10.120.26.46:60000', toPort: 'key' },
+        { from: 'M70JP90W', fromPort: 'key', to: 'GPIO12', toPort: 'key' },
+        { from: 'M70JP90W', fromPort: 'key', to: 'GPIO26', toPort: 'key' },
+        { from: 'M70JP90W', fromPort: 'key', to: 'GPIO21', toPort: 'key' },
+        { from: 'M70JP90W', fromPort: 'key', to: 'GPIO5/6', toPort: 'key' },
+
+        { from: '5C0AD0760BB0C50AD', fromPort: 'key', to: 'CommSerialPort', toPort: 'key' },
+        { from: '5C0AD0760BB0C50AD', fromPort: 'key', to: 'InfraredSerialPort', toPort: 'key' },
+        { from: '5C0AD0760BB0C50AD', fromPort: 'key', to: 'VideoStreamSerialPort', toPort: 'key' },
+        { from: '5C0AD0760BB0C50AD', fromPort: 'key', to: 'AdbPort', toPort: 'key' },
+        { from: '5C0AD0760BB0C50AD', fromPort: 'key', to: 'GRPCPort', toPort: 'key' },
+        { from: '5C0AD0760BB0C50AD', fromPort: 'key', to: 'PowerPort', toPort: 'key' },
+        { from: '5C0AD0760BB0C50AD', fromPort: 'key', to: 'HDMIPort', toPort: 'key' },
+        { from: '5C0AD0760BB0C50AD', fromPort: 'key', to: 'EthernetPort', toPort: 'key' },
+        { from: '5C0AD0760BB0C50AD', fromPort: 'key', to: 'USBPort', toPort: 'key' },
+
+        { from: '/dev/ttyUSB0', fromPort: 'key', to: 'CommSerialPort', toPort: 'key' },
+        { from: 'CommSerialPort', fromPort: 'key', to: '/dev/ttyUSB0', toPort: 'key' },
+        { from: '/dev/ttyUSB1', fromPort: 'key', to: 'InfraredSerialPort', toPort: 'key' },
+        { from: 'InfraredSerialPort', fromPort: 'key', to: '/dev/ttyUSB1', toPort: 'key' },
+        { from: '/dev/video0', fromPort: 'key', to: 'VideoStreamSerialPort', toPort: 'key' },
+        { from: 'VideoStreamSerialPort', fromPort: 'key', to: '/dev/video0', toPort: 'key' },
+        { from: '10.120.26.46:5555', fromPort: 'key', to: 'AdbPort', toPort: 'key' },
+        { from: 'AdbPort', fromPort: 'key', to: '10.120.26.46:5555', toPort: 'key' },
+        { from: '10.120.26.46:60000', fromPort: 'key', to: 'GRPCPort', toPort: 'key' },
+        { from: 'GRPCPort', fromPort: 'key', to: '10.120.26.46:60000', toPort: 'key' },
+        { from: 'GPIO12', fromPort: 'key', to: 'PowerPort', toPort: 'key' },
+        { from: 'PowerPort', fromPort: 'key', to: 'GPIO12', toPort: 'key' },
+        { from: 'GPIO26', fromPort: 'key', to: 'HDMIPort', toPort: 'key' },
+        { from: 'HDMIPort', fromPort: 'key', to: 'GPIO26', toPort: 'key' },
+        { from: 'GPIO21', fromPort: 'key', to: 'EthernetPort', toPort: 'key' },
+        { from: 'EthernetPort', fromPort: 'key', to: 'GPIO21', toPort: 'key' },
+        { from: 'GPIO5/6', fromPort: 'key', to: 'USBPort', toPort: 'key' },
+        { from: 'USBPort', fromPort: 'key', to: 'GPIO5/6', toPort: 'key' },
+    ];
+    fetch('pool.json').then((response) => response.json()).then(json => {
+       data.raw = json;
+       // console.log(data.raw.devices);
+       for (const [key, value] of Object.entries(data.raw.devices)) {
+          console.log(key);
+          console.log(value);
+       };
+
+    }).catch(function () {
+       data.dataError = true;
+    });
+
+    myDiagram.model = new go.GraphLinksModel({
+      copiesArrays: true,
+      copiesArrayObjects: true,
+      linkFromPortIdProperty: 'fromPort',
+      linkToPortIdProperty: 'toPort',
+      // automatically update the model that is shown on this page
+      Changed: (e) => {
+        if (e.isTransactionFinished) showModel();
+      },
+      nodeDataArray: data.nodeDataArray,
+      linkDataArray: data.linkDataArray
+    });
+
+    showModel(); // show the diagram's initial model
+
+    function showModel() {
+      document.getElementById('mySavedModel').innerHTML = myDiagram.model.toJson();
+      if (window.Prism) window.Prism.highlightAll();
+    }
+  }
+  window.addEventListener('DOMContentLoaded', init);
+</script>
+
+<div id="sample">
+  <div id="myDiagramDiv" style="border: solid 1px black; width: 100%; height: 1200px"></div>
+  <pre style="width: 99%; height: 200px" class="lang-js"><code id="mySavedModel"></code></pre>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1458 @@
+Metadata-Version: 2.1
+Name: pytestbot
+Version: 2025.8.209
+Summary: 一款支持手机、电视、手表等智能硬件产品的自动化测试框架，提供开发测试工具、开发测试脚本、扩展基础原子接口、扩展业务封装接口、扩展测试插件等使用支持。最新版本基于分支: main和提交ID: 3137a86b所编译生成
+Home-page: https://gitlab.com/nuangua/testbot.git
+Author: Nuanguang Gu(Sunny)
+Author-email: nuanguang.gu@aliyun.com
+License: Copyright (c) 2024 Nuanguang Gu(Sunny) Reserved
+Project-URL: Bug Reports, https://confluence.tclking.com/pages/viewpage.action?pageId=346260551
+Project-URL: Source, https://gitlab.com/nuangua/testbot
+Keywords: testbot,testbot-aw,testbot-apps
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3 :: Only
+Requires-Python: >=3.7, <4
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: adbutils ==2.2.1 ; python_version == "3.7" and sys_platform == "win32" or python_version == "3.7" and sys_platform == "linux" or python_version == "3.7" and sys_platform == "darwin"
+Requires-Dist: pkginfo ==1.10.0 ; python_version == "3.7" and sys_platform == "win32" or python_version == "3.7" and sys_platform == "linux" or python_version == "3.7" and sys_platform == "darwin"
+Requires-Dist: pillow ==9.5.0 ; python_version == "3.7" and sys_platform == "win32" or python_version == "3.7" and sys_platform == "linux" or python_version == "3.7" and sys_platform == "darwin"
+Requires-Dist: rst2html5 ==2.0 ; python_version == "3.7" and sys_platform == "win32" or python_version == "3.7" and sys_platform == "linux" or python_version == "3.7" and sys_platform == "darwin"
+Requires-Dist: opencv-contrib-python ==4.4.0.42 ; python_version == "3.7" and sys_platform == "win32" or python_version == "3.7" and sys_platform == "linux" or python_version == "3.7" and sys_platform == "darwin"
+Requires-Dist: opencv-python ==4.4.0.42 ; python_version == "3.7" and sys_platform == "win32" or python_version == "3.7" and sys_platform == "linux" or python_version == "3.7" and sys_platform == "darwin"
+Requires-Dist: uiautomator2 ==2.16.26 ; python_version == "3.7" and sys_platform == "win32" or python_version == "3.7" and sys_platform == "linux" or python_version == "3.7" and sys_platform == "darwin"
+Requires-Dist: protobuf ==4.24.4 ; python_version >= "3.7" and sys_platform == "win32" or python_version == "3.7" and sys_platform == "linux" or python_version == "3.7" and sys_platform == "darwin"
+Requires-Dist: click ==8.1.7 ; python_version >= "3.7" and sys_platform == "win32" or python_version >= "3.7" and sys_platform == "linux" or python_version >= "3.7" and sys_platform == "darwin"
+Requires-Dist: atlassian-python-api ==3.41.16 ; python_version >= "3.7" and sys_platform == "win32" or python_version >= "3.7" and sys_platform == "linux" or python_version >= "3.7" and sys_platform == "darwin"
+Requires-Dist: imagehash ==4.3.1 ; python_version >= "3.7" and sys_platform == "win32" or python_version >= "3.7" and sys_platform == "linux" or python_version >= "3.7" and sys_platform == "darwin"
+Requires-Dist: pyserial ==3.5 ; python_version >= "3.7" and sys_platform == "win32" or python_version >= "3.7" and sys_platform == "linux" or python_version >= "3.7" and sys_platform == "darwin"
+Requires-Dist: docutils ==0.19 ; python_version >= "3.7" and sys_platform == "win32" or python_version >= "3.7" and sys_platform == "linux" or python_version >= "3.7" and sys_platform == "darwin"
+Requires-Dist: docstring-parser ==0.16 ; python_version >= "3.7" and sys_platform == "win32" or python_version >= "3.7" and sys_platform == "linux" or python_version >= "3.7" and sys_platform == "darwin"
+Requires-Dist: json2html ==1.3.0 ; python_version >= "3.7" and sys_platform == "win32" or python_version >= "3.7" and sys_platform == "linux" or python_version >= "3.7" and sys_platform == "darwin"
+Requires-Dist: pytest ==7.2.0 ; python_version >= "3.7" and sys_platform == "win32" or python_version >= "3.7" and sys_platform == "linux" or python_version >= "3.7" and sys_platform == "darwin"
+Requires-Dist: adbutils ==2.5.0 ; python_version >= "3.8" and sys_platform == "win32" or python_version >= "3.8" and sys_platform == "linux" or python_version >= "3.8" and sys_platform == "darwin"
+Requires-Dist: pkginfo ==1.11.2 ; python_version >= "3.8" and sys_platform == "win32" or python_version >= "3.8" and sys_platform == "linux" or python_version >= "3.8" and sys_platform == "darwin"
+Requires-Dist: grpcio ==1.68.0 ; python_version >= "3.8" and sys_platform == "win32" or python_version >= "3.8" and sys_platform == "linux" or python_version >= "3.8" and sys_platform == "darwin"
+Requires-Dist: grpcio-tools ==1.68.0 ; python_version >= "3.8" and sys_platform == "win32" or python_version >= "3.8" and sys_platform == "linux" or python_version >= "3.8" and sys_platform == "darwin"
+Requires-Dist: protobuf ==5.29.0 ; python_version >= "3.8" and sys_platform == "win32" or python_version >= "3.8" and sys_platform == "linux" or python_version >= "3.8" and sys_platform == "darwin"
+Requires-Dist: pillow ==10.3.0 ; python_version >= "3.8" and sys_platform == "win32" or python_version >= "3.8" and sys_platform == "linux" or python_version >= "3.8" and sys_platform == "darwin"
+Requires-Dist: rst2html5 ==2.0.1 ; python_version >= "3.8" and sys_platform == "win32" or python_version >= "3.8" and sys_platform == "linux" or python_version >= "3.8" and sys_platform == "darwin"
+Requires-Dist: opencv-contrib-python ==4.10.0.84 ; python_version >= "3.8" and sys_platform == "win32" or python_version >= "3.8" and sys_platform == "linux" or python_version >= "3.8" and sys_platform == "darwin"
+Requires-Dist: opencv-python ==4.10.0.84 ; python_version >= "3.8" and sys_platform == "win32" or python_version >= "3.8" and sys_platform == "linux" or python_version >= "3.8" and sys_platform == "darwin"
+Requires-Dist: uiautomator2 ==3.2.5 ; python_version >= "3.8" and sys_platform == "win32" or python_version >= "3.8" and sys_platform == "linux" or python_version >= "3.8" and sys_platform == "darwin"
+
+# TestBot技术交流群
+
+![QR](https://gitlab.com/nuangua/testbot/-/raw/main/docs/_static/qr.jpg)
+
+# 项目文档
+
+* [需求文档](https://gitlab.com/nuangua/testbot/-/wikis/requirement_docs)
+* [设计文档](https://gitlab.com/nuangua/testbot/-/wikis/design_docs)
+* [开发文档](https://gitlab.com/nuangua/testbot/-/wikis/design_docs)
+* [使用文档](https://gitlab.com/nuangua/testbot/-/wikis/usage_docs)
+* [接口文档](https://nuangua.gitlab.io/testbot/)
+
+# 快速入门
+
+## 安装最新版本及其依赖库
+
+```buildoutcfg
+Python命令：python -m pip install -U pytestbot
+Windows命令：powershell -command "Invoke-Command -ScriptBlock ([scriptblock]::Create($((new-object net.webclient).DownloadString('https://gitlab.com/nuangua/testbot/-/raw/main/src/devops/deploy.ps1')))) -ArgumentList 'Install','testbot'"
+Linux命令：curl -s https://gitlab.com/nuangua/testbot/-/raw/main/src/devops/deploy.sh | bash -s Install testbot
+```
+
+## 接口调用示例
+
+### 获取资源对象
+
+```
+from testbot.resource.pool import ResourcePool
+pool = ResourcePool()
+print(pool.topology)
+```
+
+### 自动发现资源和端口
+
+```
+pool.discover_resources()
+print(pool.topology)
+```
+
+### 按测试类型初始化测试资源池
+
+```
+from testbot.app.base import TestType
+pool.init_resources(test_type=TestType.CHECK_TEST.name)
+```
+
+### 获取PC设备对象
+
+```
+pc = pool.collect_device(device_type="PCDevice", count=1)[0]
+```
+
+### 获取TVDevice设备对象
+
+```
+tv = pool.collect_device(device_type="TVDevice", count=1)[0]
+```
+
+### 检查gRPC端口保活状态
+
+```
+tv.get_port(type="GRPCPort")._alive
+```
+
+### 检查TV设备对象有哪些模块类对象
+
+```
+[attr for attr in tv.__dict__ if attr.endswith('Module')]
+ 
+>['BluetoothWrapperModule', 'ChannelWrapperModule', 'FactoryModeWrapperModule', 'MultimediaWrapperModule', 'PowerWrapperModule', 'SettingsWrapperModule', 'UIWrapperModule', 'WIFIWrapperModule', 'YoutubeWrapperModule', 'CommSerialWrapperModule', 'DemoAtomModule', 'ADBAtomModule', 'AudioAtomModule', 'CaptureCardAtomModule', 'CommSerialAtomModule', 'GRPCAtomModule', 'InfraredSerialAtomModule', 'PowerAtomModule']
+
+```
+
+### 检查TV对象的接口模块类对象有哪些接口方法
+
+```
+dir(tv.CommSerialAtomModule)
+```
+
+### 调用TV对象的接口方法
+
+```
+tv.CommSerialAtomModule.send_command(data="ifconfig")
+print(tv.SettingsWrapperModule.connect_wifi(wifi_name="lucky_mario_wifi_5G", wifi_password="xm123456"))
+```
+
+## 测试脚本
+
+测试脚本代码路径：src/testbot_apps/scripts/unit_test/TcDemo.py
+
+```buildoutcfg
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+@TC_ID          : CNTC-94402
+@Introduction   : 恢复出厂设置
+@Description    :
+@Precondition   :
+1、电视TV下有频道
+2、电视连接信号较强的wifi热点
+@Steps:
+1、进入设置菜单，修改图效、声效为任意值
+2、进入VOD下播放视频
+3、HDMI1信源播放视频时，执行恢复出厂设置操作
+4、完成开机向导后，进入系统
+5、检查launcher默认模板下的各个Tab页
+6、检查HDMI高级标准默认值
+@Expected       :
+4.1、过完开机向导后，电视回到主页
+4.2、所有频道节目，视频观看历史被清除
+4.3、设置菜单里用户数据恢复默认值
+--（仅保留WIFI账号密码）--
+5、非TCL品牌，各个Tab页下不能出现TCL字样，海报中不能出现TCL的logo
+（如：雷鸟，乐华，东芝等品牌不能出现TCL的字样，海报中不能出现TCL的logo）
+6、HDMI高级标准默认为开（根据项目的PQ tree检查具体默认值：https://confluence.tclking.com/pages/viewpage.action?pageId=79309061）
+注：982项目HDMI高级标准菜单默认为关，不区分品牌；963机型，TCL是关闭；雷鸟是打开
+"""
+
+__copyright__ = "Copyright (c) 2024 Nuanguang Gu(Sunny) Reserved"
+__author__ = "Nuanguang Gu(Sunny)"
+__email__ = "nuanguang.gu@aliyun.com"
+
+import os
+import random
+
+from testbot.app.case.base import TestCaseBase
+from testbot.app.base import TestType
+from testbot.app.case.decorator import case
+from testbot.config import TESTBOT_ROOT
+from testbot.config.setting import TestSettingBase
+
+
+@case(priority=1, test_type=TestType.CHECK_TEST.name, testcase_id="TcDemo", testcase_name="TcDemo")
+class TcDemo(TestCaseBase):
+
+    def collect_resource(self, **kwargs):
+        with self.step.start(headline="筛选设备") as step:
+            with step.start(headline="筛选PC设备") as step2:
+                self.pc = self.pool.collect_device(device_type="PCDevice", count=1)[0]
+                if self.pc:
+                    self.logger.info(f"self.pc={self.pc}, type={type(self.pc)}")
+                    self.logger.info(f"self.pc funcs={dir(self.pc)}")
+                    step2.passed(message="筛选PC设备成功")
+                else:
+                    step2.failed(message="筛选PC设备失败")
+            with step.start(headline="筛选TV设备") as step2:
+                self.tv = self.pool.collect_device(device_type="TVDevice", count=1)[0]
+                if self.tv:
+                    self.logger.info(f"self.tv={self.tv}, type={type(self.tv)}")
+                    self.logger.info(f"self.tv funcs={dir(self.tv)}")
+                    step2.passed(message="筛选TV设备成功")
+                else:
+                    step2.failed(message="筛选TV设备失败")
+        pass
+
+    def setup_class(self, **kwargs):
+        with self.step.start(headline="检查是否安装和启动grpc服务APK", message="") as step:
+            with step.start(headline="检查是否执行前置指令", message="") as step2:
+                pass
+            with step.start(headline="检查是否安装应用", message="") as step2:
+                pass
+            with step.start(headline="检查是否启动grpc服务", message="") as step2:
+                pass
+
+    def setup(self, **kwargs):
+        with self.step.start(headline="TV进入主页") as step:
+            pass
+        with self.step.start(headline="", message="") as step:
+            pass
+        with self.step.start(headline="电视TV下有频道") as step:
+            pass
+        with self.step.start(headline="建立WIFI连接") as step:
+            pass
+
+    def test(self, **kwargs):
+        with self.step.start(headline="进入设置菜单，修改图效、声效为任意值") as step:
+            with step.start(headline="修改图效为任意值") as step2:
+                pass
+            with step.start(headline="修改声效为任意值") as step2:
+                pass
+        with self.step.start(headline="进入VOD下播放视频") as step:
+            pass
+        with self.step.start(headline="HDMI1信源播放视频时，执行恢复出厂设置操作") as step:
+            pass
+        with self.step.start(headline="完成开机向导后，进入系统") as step:
+            with step.start(headline="过完开机向导后，电视回到主页") as step2:
+                pass
+            with step.start(headline="执行安装前置指令") as step2:
+                pass
+            with step.start(headline="安装应用") as step2:
+                pass
+            with step.start(headline="检查是否启动grpc服务", message="") as step2:
+                pass
+            with step.start(headline="重新初始化grpc", message="") as step2:
+                pass
+            with self.step.start(headline="建立WIFI连接") as step2:
+                pass
+            with step.start(headline="检查设置菜单里用户数据是否恢复默认值") as step2:
+                pass
+        with self.step.start(headline="检查launcher默认模板下的各个Tab页") as step:
+            with step.start(headline="切换tv进入标准桌面") as step2:
+                pass
+            with step.start(headline="非TCL品牌，各个Tab页下不能出现TCL字样，海报中不能出现TCL的logo") as step2:
+                pass
+        with self.step.start(headline="检查HDMI高级标准默认值") as step:
+            pass
+
+    def cleanup(self, **kwargs):
+        with self.step.start(headline="电视回到主页") as step:
+            pass
+
+    class TcDemoSetting(TestSettingBase):
+        case_setting1 = "setting1"
+        case_setting2 = 10
+        TIMEOUT = 60
+
+```
+
+## 测试脚本配置文件
+
+```buildoutcfg
+{
+    "case_setting1": "setting1",
+    "case_setting2": 10,
+    "TIMEOUT": 60,
+    "new_var": "Hello World"
+}
+```
+
+## 测试用例列表配置文件
+
+```buildoutcfg
+{
+    "name": "测试用例列表",
+    "description": "测试用例列表清单",
+    "setting_path": "",
+    "iterations": 5,
+    "cases": [
+        "testbot_apps.scripts.unit_test.TcDemo.TcDemo"
+    ],
+    "sublist": []
+}
+```
+
+## 测试资源池配置文件
+
+测试资源池配置文件，目前需要手动配置，后续设备和端口自动发现功能实现后，即可自动生成、不再需要手动配置。
+
+```buildoutcfg
+{
+    "devices": {
+        "M70JP90W": {
+            "name": "M70JP90W",
+            "type": "PCDevice",
+            "description": null,
+            "pre_connect": false,
+            "client_attributes": {},
+            "shared_attributes": {},
+            "server_attributes": {},
+            "reserved": false,
+            "ports": {
+                "COM7": {
+                    "name": "COM7",
+                    "type": "CommSerialPort",
+                    "baud_rate": 115200,
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "M70JP90W",
+                    "remote_ports": [
+                        {
+                            "device": "5C0AD0760BB0C50AD",
+                            "port": "CommSerialPort"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "COM18": {
+                    "name": "COM18",
+                    "type": "InfraredSerialPort",
+                    "baud_rate": 115200,
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "M70JP90W",
+                    "remote_ports": [
+                        {
+                            "device": "5C0AD0760BB0C50AD",
+                            "port": "InfraredSerialPort"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "0": {
+                    "name": "0",
+                    "type": "VideoStreamSerialPort",
+                    "fps": 30.0,
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "M70JP90W",
+                    "remote_ports": [
+                        {
+                            "device": "5C0AD0760BB0C50AD",
+                            "port": "VideoStreamSerialPort"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "172.24.32.28:5555": {
+                    "name": "172.24.32.28:5555",
+                    "type": "AdbPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "M70JP90W",
+                    "remote_ports": [
+                        {
+                            "device": "5C0AD0760BB0C50AD",
+                            "port": "AdbPort"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "172.24.32.28:60000": {
+                    "name": "172.24.32.28:60000",
+                    "type": "GRPCPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "M70JP90W",
+                    "remote_ports": [
+                        {
+                            "device": "5C0AD0760BB0C50AD",
+                            "port": "GRPCPort"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "GPIO12": {
+                    "name": "GPIO12",
+                    "type": "PowerPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "M70JP90W",
+                    "remote_ports": [
+                        {
+                            "device": "5C0AD0760BB0C50AD",
+                            "port": "PowerPort"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "GPIO26": {
+                    "name": "GPIO26",
+                    "type": "HDMIPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "M70JP90W",
+                    "remote_ports": [
+                        {
+                            "device": "5C0AD0760BB0C50AD",
+                            "port": "HDMIPort"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "GPIO21": {
+                    "name": "GPIO21",
+                    "type": "EthernetPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "M70JP90W",
+                    "remote_ports": [],
+                    "_instance": null
+                },
+                "GPIO5/6": {
+                    "name": "GPIO5/6",
+                    "type": "USBPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "M70JP90W",
+                    "remote_ports": [
+                        {
+                            "device": "5C0AD0760BB0C50AD",
+                            "port": "USBPort"
+                        }
+                    ],
+                    "_instance": null
+                }
+            },
+            "_instance": null
+        },
+        "5C0AD0760BB0C50AD": {
+            "name": "5C0AD0760BB0C50AD",
+            "type": "TVDevice",
+            "description": null,
+            "pre_connect": false,
+            "client_attributes": {},
+            "shared_attributes": {},
+            "server_attributes": {},
+            "reserved": false,
+            "ports": {
+                "CommSerialPort": {
+                    "name": "CommSerialPort",
+                    "type": "CommSerialPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "5C0AD0760BB0C50AD",
+                    "remote_ports": [
+                        {
+                            "device": "M70JP90W",
+                            "port": "COM7"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "InfraredSerialPort": {
+                    "name": "InfraredSerialPort",
+                    "type": "InfraredSerialPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "5C0AD0760BB0C50AD",
+                    "remote_ports": [
+                        {
+                            "device": "M70JP90W",
+                            "port": "COM18"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "VideoStreamSerialPort": {
+                    "name": "VideoStreamSerialPort",
+                    "type": "VideoStreamSerialPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "5C0AD0760BB0C50AD",
+                    "remote_ports": [
+                        {
+                            "device": "M70JP90W",
+                            "port": "0"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "AdbPort": {
+                    "name": "AdbPort",
+                    "type": "AdbPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "5C0AD0760BB0C50AD",
+                    "remote_ports": [
+                        {
+                            "device": "M70JP90W",
+                            "port": "172.24.32.28:5555"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "GRPCPort": {
+                    "name": "GRPCPort",
+                    "type": "GRPCPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "5C0AD0760BB0C50AD",
+                    "remote_ports": [
+                        {
+                            "device": "M70JP90W",
+                            "port": "172.24.32.28:60000"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "PowerPort": {
+                    "name": "PowerPort",
+                    "type": "PowerPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "5C0AD0760BB0C50AD",
+                    "remote_ports": [
+                        {
+                            "device": "M70JP90W",
+                            "port": "GPIO12"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "HDMIPort": {
+                    "name": "HDMIPort",
+                    "type": "HDMIPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "5C0AD0760BB0C50AD",
+                    "remote_ports": [
+                        {
+                            "device": "M70JP90W",
+                            "port": "GPIO26"
+                        }
+                    ],
+                    "_instance": null
+                },
+                "EthernetPort": {
+                    "name": "EthernetPort",
+                    "type": "EthernetPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "5C0AD0760BB0C50AD",
+                    "remote_ports": [],
+                    "_instance": null
+                },
+                "USBPort": {
+                    "name": "USBPort",
+                    "type": "USBPort",
+                    "description": null,
+                    "pre_connect": false,
+                    "client_attributes": {},
+                    "shared_attributes": {},
+                    "server_attributes": {},
+                    "reserved": false,
+                    "parent": "5C0AD0760BB0C50AD",
+                    "remote_ports": [
+                        {
+                            "device": "M70JP90W",
+                            "port": "GPIO5/6"
+                        }
+                    ],
+                    "_instance": null
+                }
+            },
+            "_instance": null
+        }
+    },
+    "info": {},
+    "reserved": null
+}
+```
+
+## 执行测试用例列表
+
+* 以命令方式执行
+
+参数testlist指定了要执行的测试用例列表配置文件，参数resource指定了手动配置的测试资源池配置文件。
+
+```buildoutcfg
+python -m testbot.cli runner test --testlist src/testbot_apps/scripts/unit_test/TCList.json --resource src/testbot_apps/scripts/unit_test/ResourcePool.json
+```
+
+## 测试日志
+
+执行的测试日志，会存放到%TB_HOME%/logs路径（若设置了TB_HOME环境变量）或%HOMEPATH%/TESTBOT/logs（若未设置TB_HOME环境变量）下面。
+
+```buildoutcfg
+C:\Python38\python.exe D:/codes/testbot/src/testbot/cli.py runner test --testlist src/testbot_apps/scripts/unit_test/TCList.json --resource src/testbot_apps/scripts/unit_test/ResourcePool.json
+[2024-12-25 17:04:33,829][INFO][CaseRunner][testbot.testengine.caserunner.__init__  :+76][pid|tid:29044|9332]:执行器装载完毕
+[2024-12-25 17:04:33,830][INFO][Resource  ][testbot.resource.pool.load      :+141][pid|tid:29044|9332]:Entering ResourcePool.load...
+[2024-12-25 17:04:33,831][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.device.device.PCDevice'>接口模块类['testbot_aw.modules.atom.device.PCDevice.network.NetworkAtomModule']
+[2024-12-25 17:04:33,841][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,841][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,841][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,841][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,841][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,841][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,842][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,842][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,842][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,842][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.device.device.TVDevice'>接口模块类['testbot_aw.modules.wrapper.device.TCLTVDevice.bluetooth.BluetoothWrapperModule', 'testbot_aw.modules.wrapper.device.TCLTVDevice.channel.ChannelWrapperModule', 'testbot_aw.modules.wrapper.device.TCLTVDevice.factory_mode.FactoryModeWrapperModule', 'testbot_aw.modules.wrapper.device.TCLTVDevice.multimedia.MultimediaWrapperModule', 'testbot_aw.modules.wrapper.device.TCLTVDevice.power.PowerWrapperModule', 'testbot_aw.modules.wrapper.device.TCLTVDevice.settings.SettingsWrapperModule', 'testbot_aw.modules.wrapper.device.TCLTVDevice.ui.UIWrapperModule', 'testbot_aw.modules.wrapper.device.TCLTVDevice.wifi.WIFIWrapperModule', 'testbot_aw.modules.wrapper.device.TCLTVDevice.youtube.YoutubeWrapperModule', 'testbot_aw.modules.wrapper.device.TCLTVDevice.settings.SettingsWrapperModule', 'testbot_aw.modules.atom.device.TCLTVDevice.demo.DemoAtomModule', 'testbot_aw.modules.atom.device.TCLTVDevice.adb.ADBAtomModule', 'testbot_aw.modules.atom.device.TCLTVDevice.audio.AudioAtomModule', 'testbot_aw.modules.atom.device.TCLTVDevice.capture_card.CaptureCardAtomModule', 'testbot_aw.modules.atom.device.TCLTVDevice.commserial.CommSerialAtomModule', 'testbot_aw.modules.atom.device.TCLTVDevice.grpc.GRPCAtomModule', 'testbot_aw.modules.atom.device.TCLTVDevice.infraserial.InfraredSerialAtomModule', 'testbot_aw.modules.atom.device.TCLTVDevice.power.PowerAtomModule']
+[2024-12-25 17:04:33,929][INFO][Resource  ][testbot.resource.resource.__init__  :+274][pid|tid:29044|9332]:Initialize Device...
+[2024-12-25 17:04:33,929][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,929][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,929][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,929][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,930][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,930][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,930][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,930][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,930][INFO][Resource  ][testbot.resource.resource.__init__  :+72][pid|tid:29044|9332]:加载<class 'testbot.resource.resource.Port'>接口模块类[]
+[2024-12-25 17:04:33,930][INFO][Resource  ][testbot.resource.pool.load      :+180][pid|tid:29044|9332]:topology={'M70JP90W': <testbot.resource.device.device.PCDevice object at 0x00000200DD994700>, '5C0AD0760BB0C50AD': <testbot.resource.device.device.TVDevice object at 0x00000200DD9A7040>}
+[2024-12-25 17:04:33,930][INFO][Resource  ][testbot.resource.pool.load      :+181][pid|tid:29044|9332]:Exiting ResourcePool.load...
+[2024-12-25 17:04:33,930][INFO][CaseRunner][testbot.testengine.caserunner.load_resource:+111][pid|tid:29044|9332]:测试资源装载完毕
+[2024-12-25 17:04:33,932][INFO][CaseRunner][testbot.testengine.caserunner.load_test :+146][pid|tid:29044|9332]:正在加载用例模块: testbot_apps.scripts.unit_test.TcDemo...
+[2024-12-25 17:04:33,932][INFO][CaseRunner][testbot.testengine.caserunner.print_module_info:+156][pid|tid:29044|9332]:################################################################################
+C:\Python38\lib\site-packages\pkginfo\installed.py:62: UserWarning: No PKG-INFO found for package: testbot
+  warnings.warn('No PKG-INFO found for package: %s' % self.package_name)
+C:\Python38\lib\site-packages\pkginfo\distribution.py:178: UnknownMetadataVersion: Unknown metadata version: None
+  warnings.warn(UnknownMetadataVersion(self.metadata_version))
+[2024-12-25 17:04:34,436][INFO][CaseRunner][testbot.testengine.caserunner.print_module_info:+170][pid|tid:29044|9332]:############## testbot模块 【Version】:None,【概要】:None,【安装路径】:None ##############
+C:\Python38\lib\site-packages\pkginfo\installed.py:62: UserWarning: No PKG-INFO found for package: testbot_aw
+  warnings.warn('No PKG-INFO found for package: %s' % self.package_name)
+[2024-12-25 17:04:34,938][INFO][CaseRunner][testbot.testengine.caserunner.print_module_info:+170][pid|tid:29044|9332]:############## testbot_aw模块 【Version】:None,【概要】:None,【安装路径】:None ##############
+C:\Python38\lib\site-packages\pkginfo\installed.py:62: UserWarning: No PKG-INFO found for package: testbot_apps
+  warnings.warn('No PKG-INFO found for package: %s' % self.package_name)
+[2024-12-25 17:04:35,455][INFO][CaseRunner][testbot.testengine.caserunner.print_module_info:+170][pid|tid:29044|9332]:############## testbot_apps模块 【Version】:None,【概要】:None,【安装路径】:None ##############
+[2024-12-25 17:04:35,455][INFO][CaseRunner][testbot.testengine.caserunner.print_module_info:+171][pid|tid:29044|9332]:################################################################################
+[2024-12-25 17:04:35,475][INFO][CaseRunner][testbot.app.base.check_env :+275][pid|tid:29044|9332]:pool.topology = {'M70JP90W': <testbot.resource.device.device.PCDevice object at 0x00000200DD994700>, '5C0AD0760BB0C50AD': <testbot.resource.device.device.TVDevice object at 0x00000200DD9A7040>}
+[2024-12-25 17:04:35,475][INFO][CaseRunner][testbot.app.base.check_env :+277][pid|tid:29044|9332]:test_type = CHECK_TEST
+[2024-12-25 17:04:35,475][INFO][CaseRunner][testbot.app.base.check_env :+292][pid|tid:29044|9332]:执行检查项：是否可以通过指令串口获取TV IP地址
+[2024-12-25 17:04:35,475][INFO][CaseRunner][testbot.app.base.check_env :+297][pid|tid:29044|9332]:执行检查项：TV端是否可以正常访问公司网络，如Panda、AI服务
+[2024-12-25 17:04:35,475][INFO][CaseRunner][testbot.app.base.check_env :+302][pid|tid:29044|9332]:执行检查项：TV端是否可以正常访问国内网络
+[2024-12-25 17:04:35,476][INFO][CaseRunner][testbot.app.base.check_env :+307][pid|tid:29044|9332]:执行检查项：TV端是否可以正常访问海外网络
+[2024-12-25 17:04:35,476][INFO][CaseRunner][testbot.app.base.check_env :+318][pid|tid:29044|9332]:执行检查项：通过红外串口发送红外指令是否正常
+[2024-12-25 17:04:35,476][INFO][CaseRunner][testbot.app.base.check_env :+329][pid|tid:29044|9332]:执行检查项：是否能够通过采集卡串口采集图像正常
+[2024-12-25 17:04:35,476][INFO][CaseRunner][testbot.app.base.init_resource_pool:+258][pid|tid:29044|9332]:pool.topology = {'M70JP90W': <testbot.resource.device.device.PCDevice object at 0x00000200DD994700>, '5C0AD0760BB0C50AD': <testbot.resource.device.device.TVDevice object at 0x00000200DD9A7040>}
+[2024-12-25 17:04:35,476][INFO][CaseRunner][testbot.app.base.init_resource_pool:+260][pid|tid:29044|9332]:test_type = CHECK_TEST
+[2024-12-25 17:04:35,476][INFO][Resource  ][testbot.resource.resource.init_resource:+138][pid|tid:29044|9332]:初始化测试资源:PCDevice(name=M70JP90W,type=PCDevice).init_resource
+[2024-12-25 17:04:35,476][INFO][Resource  ][testbot.resource.resource.init_resource:+140][pid|tid:29044|9332]:检查项列表：[<CheckItem.COMM_SERIAL_PORT_CHECK__HAS_IP: 1>, <CheckItem.COMM_SERIAL_PORT_CHECK__ACCESS_INTERNAL_NET: 2>, <CheckItem.COMM_SERIAL_PORT_CHECK__ACCESS_DOMESTIC_NET: 3>, <CheckItem.COMM_SERIAL_PORT_CHECK__ACCESS_OVERSEAS_NET: 4>, <CheckItem.INFRA_SERIAL_PORT_CHECK__NORMAL: 17>, <CheckItem.CAP_SERIAL_PORT_CHECK__NORMAL: 33>]，测试类型：CHECK_TEST
+[2024-12-25 17:04:35,476][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：COMM_SERIAL_PORT_CHECK__HAS_IP
+[2024-12-25 17:04:35,476][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：COMM_SERIAL_PORT_CHECK__ACCESS_INTERNAL_NET
+[2024-12-25 17:04:35,476][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：COMM_SERIAL_PORT_CHECK__ACCESS_DOMESTIC_NET
+[2024-12-25 17:04:35,476][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：COMM_SERIAL_PORT_CHECK__ACCESS_OVERSEAS_NET
+[2024-12-25 17:04:35,477][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：INFRA_SERIAL_PORT_CHECK__NORMAL
+[2024-12-25 17:04:35,477][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：CAP_SERIAL_PORT_CHECK__NORMAL
+[2024-12-25 17:04:35,477][INFO][Resource  ][testbot.resource.resource.init_resource:+138][pid|tid:29044|9332]:初始化测试资源:TVDevice(name=5C0AD0760BB0C50AD,type=TVDevice).init_resource
+[2024-12-25 17:04:35,477][INFO][Resource  ][testbot.resource.resource.init_resource:+140][pid|tid:29044|9332]:检查项列表：[<CheckItem.COMM_SERIAL_PORT_CHECK__HAS_IP: 1>, <CheckItem.COMM_SERIAL_PORT_CHECK__ACCESS_INTERNAL_NET: 2>, <CheckItem.COMM_SERIAL_PORT_CHECK__ACCESS_DOMESTIC_NET: 3>, <CheckItem.COMM_SERIAL_PORT_CHECK__ACCESS_OVERSEAS_NET: 4>, <CheckItem.INFRA_SERIAL_PORT_CHECK__NORMAL: 17>, <CheckItem.CAP_SERIAL_PORT_CHECK__NORMAL: 33>]，测试类型：CHECK_TEST
+[2024-12-25 17:04:35,488][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：COMM_SERIAL_PORT_CHECK__HAS_IP
+[2024-12-25 17:04:35,488][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：COMM_SERIAL_PORT_CHECK__ACCESS_INTERNAL_NET
+[2024-12-25 17:04:35,488][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：COMM_SERIAL_PORT_CHECK__ACCESS_DOMESTIC_NET
+[2024-12-25 17:04:35,488][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：COMM_SERIAL_PORT_CHECK__ACCESS_OVERSEAS_NET
+[2024-12-25 17:04:35,488][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：INFRA_SERIAL_PORT_CHECK__NORMAL
+[2024-12-25 17:04:35,488][INFO][Resource  ][testbot.resource.resource.init_resource:+142][pid|tid:29044|9332]:检查项：CAP_SERIAL_PORT_CHECK__NORMAL
+[2024-12-25 17:04:35,490][INFO][CaseRunner][testbot.testengine.caserunner.set_test_list:+183][pid|tid:29044|9332]:测试列表装载完毕
+[2024-12-25 17:04:35,498][INFO][CaseRunner][testbot.testengine.caserunner.__run_test_list:+294][pid|tid:29044|22500]:切换日志路径：C:\Users\nuanguang.gu\TESTBOT\logs\runner\CaseRunner.log -> C:\Users\nuanguang.gu\TESTBOT\logs\cases\20241225170435\测试用例列表\TcDemo.log
+[2024-12-25 17:04:35,498][INFO][TcDemo    ][testbot.app.case.precondition.is_meet   :+37][pid|tid:29044|22500]:测试用例的类型必须是COMMON_TEST
+[2024-12-25 17:04:35,498][INFO][TcDemo    ][testbot_apps.scripts.unit_test.TcDemo.collect_resource:+50][pid|tid:29044|22500]:self.pc=<testbot.resource.device.device.PCDevice object at 0x00000200DD994700>, type=<class 'testbot.resource.device.device.PCDevice'>
+[2024-12-25 17:04:35,499][INFO][TcDemo    ][testbot_apps.scripts.unit_test.TcDemo.collect_resource:+51][pid|tid:29044|22500]:self.pc funcs=['MODULES', 'NetworkAtomModule', '__abstractmethods__', '__annotations__', '__class__', '__del__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_abc_impl', '_instance', 'add_port', 'client_attributes', 'description', 'from_dict', 'get_comm_instance', 'get_port', 'get_port_count', 'init_resource', 'logger', 'name', 'ports', 'pre_connect', 'register_module', 'reserved', 'server_attributes', 'shared_attributes', 'to_dict', 'type']
+[2024-12-25 17:04:35,500][INFO][TcDemo    ][testbot_apps.scripts.unit_test.TcDemo.collect_resource:+58][pid|tid:29044|22500]:self.tv=<testbot.resource.device.device.TVDevice object at 0x00000200DD9A7040>, type=<class 'testbot.resource.device.device.TVDevice'>
+[2024-12-25 17:04:35,500][INFO][TcDemo    ][testbot_apps.scripts.unit_test.TcDemo.collect_resource:+59][pid|tid:29044|22500]:self.tv funcs=['ADBAtomModule', 'AudioAtomModule', 'BluetoothWrapperModule', 'CaptureCardAtomModule', 'ChannelWrapperModule', 'CommSerialAtomModule', 'DemoAtomModule', 'FactoryModeWrapperModule', 'GRPCAtomModule', 'InfraredSerialAtomModule', 'MODULES', 'MultimediaWrapperModule', 'PowerAtomModule', 'PowerWrapperModule', 'SettingsWrapperModule', 'UIWrapperModule', 'WIFIWrapperModule', 'YoutubeWrapperModule', '__abstractmethods__', '__annotations__', '__class__', '__del__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_abc_impl', '_instance', 'add_port', 'client_attributes', 'description', 'from_dict', 'get_comm_instance', 'get_port', 'get_port_count', 'init_resource', 'logger', 'name', 'ports', 'pre_connect', 'register_module', 'reserved', 'server_attributes', 'shared_attributes', 'to_dict', 'type']
+[2024-12-25 17:04:35,503][INFO][TcDemo    ][testbot.app.case.base._run_case :+168][pid|tid:29044|22500]:执行第1次测试
+[2024-12-25 17:04:35,503][INFO][TcDemo    ][testbot.app.case.base._run_case :+168][pid|tid:29044|22500]:执行第2次测试
+[2024-12-25 17:04:35,504][INFO][TcDemo    ][testbot.app.case.base._run_case :+168][pid|tid:29044|22500]:执行第3次测试
+[2024-12-25 17:04:35,504][INFO][TcDemo    ][testbot.app.case.base._run_case :+168][pid|tid:29044|22500]:执行第4次测试
+[2024-12-25 17:04:35,504][INFO][TcDemo    ][testbot.app.case.base._run_case :+168][pid|tid:29044|22500]:执行第5次测试
+[2024-12-25 17:04:35,505][INFO][TcDemo    ][testbot.app.case.base._write_result:+256][pid|tid:29044|22500]:<测试节点> 【步骤】:Root,【描述】:
+<测试节点> 【步骤】:执行测试,【描述】:
+        <测试用例> 【步骤】:执行环境检查,【描述】:--------------------------------------------------------------------PASSED
+            <测试步骤-1> 【步骤】:执行检查项,【描述】:---------------------------------------------------------------PASSED
+                <测试步骤-1> 【步骤】:,【描述】:INFO: 执行检查项：是否可以通过指令串口获取TV IP地址---------------------------------PASSED
+                <测试步骤-2> 【步骤】:,【描述】:INFO: 执行检查项：TV端是否可以正常访问公司网络，如Panda、AI服务-------------------------PASSED
+                <测试步骤-3> 【步骤】:,【描述】:INFO: 执行检查项：TV端是否可以正常访问国内网络-------------------------------------PASSED
+                <测试步骤-4> 【步骤】:,【描述】:INFO: 执行检查项：TV端是否可以正常访问海外网络-------------------------------------PASSED
+                <测试步骤-5> 【步骤】:,【描述】:INFO: 执行检查项：通过红外串口发送红外指令是否正常------------------------------------PASSED
+                <测试步骤-6> 【步骤】:,【描述】:INFO: 执行检查项：是否能够通过采集卡串口采集图像正常-----------------------------------PASSED
+            <测试步骤-1> 【步骤】:执行资源初始化,【描述】:-------------------------------------------------------------PASSED
+        <测试用例> 【步骤】:执行测试用例,【描述】:--------------------------------------------------------------------PASSED
+            <筛选资源-1> 【步骤】:收集测试资源,【描述】:--------------------------------------------------------------PASSED
+                <测试步骤-1> 【步骤】:筛选设备,【描述】:------------------------------------------------------------PASSED
+                    <测试步骤-1> 【步骤】:筛选PC设备,【描述】:筛选PC设备成功----------------------------------------------PASSED
+                    <测试步骤-2> 【步骤】:筛选TV设备,【描述】:筛选TV设备成功----------------------------------------------PASSED
+            <测试步骤-1> 【步骤】:初始化测试,【描述】:---------------------------------------------------------------PASSED
+                <测试步骤-1> 【步骤】:检查是否安装和启动grpc服务APK,【描述】:----------------------------------------------PASSED
+                    <测试步骤-1> 【步骤】:检查是否执行前置指令,【描述】:--------------------------------------------------PASSED
+                    <测试步骤-2> 【步骤】:检查是否安装应用,【描述】:----------------------------------------------------PASSED
+                    <测试步骤-3> 【步骤】:检查是否启动grpc服务,【描述】:------------------------------------------------PASSED
+            <测试主体-1> 【步骤】:执行次测试,【描述】:---------------------------------------------------------------PASSED
+                <测试步骤-1> 【步骤】:执行第1次测试,【描述】:---------------------------------------------------------PASSED
+                    <测试步骤-1> 【步骤】:执行前置插件,【描述】:------------------------------------------------------PASSED
+                    <前提条件-2> 【步骤】:初始化前置条件,【描述】:-----------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:TV进入主页,【描述】:--------------------------------------------------PASSED
+                        <测试步骤-2> 【步骤】:,【描述】:--------------------------------------------------------PASSED
+                        <测试步骤-3> 【步骤】:电视TV下有频道,【描述】:------------------------------------------------PASSED
+                        <测试步骤-4> 【步骤】:建立WIFI连接,【描述】:------------------------------------------------PASSED
+                    <前提条件-3> 【步骤】:执行测试主体,【描述】:------------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:进入设置菜单，修改图效、声效为任意值,【描述】:--------------------------------------PASSED
+                            <测试步骤-1> 【步骤】:修改图效为任意值,【描述】:--------------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:修改声效为任意值,【描述】:--------------------------------------------PASSED
+                        <测试步骤-2> 【步骤】:进入VOD下播放视频,【描述】:----------------------------------------------PASSED
+                        <测试步骤-3> 【步骤】:HDMI1信源播放视频时，执行恢复出厂设置操作,【描述】:---------------------------------PASSED
+                        <测试步骤-4> 【步骤】:完成开机向导后，进入系统,【描述】:--------------------------------------------PASSED
+                            <测试步骤-1> 【步骤】:过完开机向导后，电视回到主页,【描述】:--------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:执行安装前置指令,【描述】:--------------------------------------------PASSED
+                            <测试步骤-3> 【步骤】:安装应用,【描述】:------------------------------------------------PASSED
+                            <测试步骤-4> 【步骤】:检查是否启动grpc服务,【描述】:----------------------------------------PASSED
+                            <测试步骤-5> 【步骤】:重新初始化grpc,【描述】:-------------------------------------------PASSED
+                            <测试步骤-6> 【步骤】:检查设置菜单里用户数据是否恢复默认值,【描述】:----------------------------------PASSED
+                        <测试步骤-5> 【步骤】:建立WIFI连接,【描述】:------------------------------------------------PASSED
+                        <测试步骤-6> 【步骤】:检查launcher默认模板下的各个Tab页,【描述】:----------------------------------PASSED
+                            <测试步骤-1> 【步骤】:切换tv进入标准桌面,【描述】:------------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:非TCL品牌，各个Tab页下不能出现TCL字样，海报中不能出现TCL的logo,【描述】:-------------PASSED
+                        <测试步骤-7> 【步骤】:检查HDMI高级标准默认值,【描述】:-------------------------------------------PASSED
+                    <后置清理-4> 【步骤】:清理后置条件,【描述】:------------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:电视回到主页,【描述】:--------------------------------------------------PASSED
+                    <测试步骤-5> 【步骤】:执行后置插件,【描述】:------------------------------------------------------PASSED
+                <测试步骤-2> 【步骤】:执行第2次测试,【描述】:---------------------------------------------------------PASSED
+                    <测试步骤-1> 【步骤】:执行前置插件,【描述】:------------------------------------------------------PASSED
+                    <前提条件-2> 【步骤】:初始化前置条件,【描述】:-----------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:TV进入主页,【描述】:--------------------------------------------------PASSED
+                        <测试步骤-2> 【步骤】:,【描述】:--------------------------------------------------------PASSED
+                        <测试步骤-3> 【步骤】:电视TV下有频道,【描述】:------------------------------------------------PASSED
+                        <测试步骤-4> 【步骤】:建立WIFI连接,【描述】:------------------------------------------------PASSED
+                    <前提条件-3> 【步骤】:执行测试主体,【描述】:------------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:进入设置菜单，修改图效、声效为任意值,【描述】:--------------------------------------PASSED
+                            <测试步骤-1> 【步骤】:修改图效为任意值,【描述】:--------------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:修改声效为任意值,【描述】:--------------------------------------------PASSED
+                        <测试步骤-2> 【步骤】:进入VOD下播放视频,【描述】:----------------------------------------------PASSED
+                        <测试步骤-3> 【步骤】:HDMI1信源播放视频时，执行恢复出厂设置操作,【描述】:---------------------------------PASSED
+                        <测试步骤-4> 【步骤】:完成开机向导后，进入系统,【描述】:--------------------------------------------PASSED
+                            <测试步骤-1> 【步骤】:过完开机向导后，电视回到主页,【描述】:--------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:执行安装前置指令,【描述】:--------------------------------------------PASSED
+                            <测试步骤-3> 【步骤】:安装应用,【描述】:------------------------------------------------PASSED
+                            <测试步骤-4> 【步骤】:检查是否启动grpc服务,【描述】:----------------------------------------PASSED
+                            <测试步骤-5> 【步骤】:重新初始化grpc,【描述】:-------------------------------------------PASSED
+                            <测试步骤-6> 【步骤】:检查设置菜单里用户数据是否恢复默认值,【描述】:----------------------------------PASSED
+                        <测试步骤-5> 【步骤】:建立WIFI连接,【描述】:------------------------------------------------PASSED
+                        <测试步骤-6> 【步骤】:检查launcher默认模板下的各个Tab页,【描述】:----------------------------------PASSED
+                            <测试步骤-1> 【步骤】:切换tv进入标准桌面,【描述】:------------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:非TCL品牌，各个Tab页下不能出现TCL字样，海报中不能出现TCL的logo,【描述】:-------------PASSED
+                        <测试步骤-7> 【步骤】:检查HDMI高级标准默认值,【描述】:-------------------------------------------PASSED
+                    <后置清理-4> 【步骤】:清理后置条件,【描述】:------------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:电视回到主页,【描述】:--------------------------------------------------PASSED
+                    <测试步骤-5> 【步骤】:执行后置插件,【描述】:------------------------------------------------------PASSED
+                <测试步骤-3> 【步骤】:执行第3次测试,【描述】:---------------------------------------------------------PASSED
+                    <测试步骤-1> 【步骤】:执行前置插件,【描述】:------------------------------------------------------PASSED
+                    <前提条件-2> 【步骤】:初始化前置条件,【描述】:-----------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:TV进入主页,【描述】:--------------------------------------------------PASSED
+                        <测试步骤-2> 【步骤】:,【描述】:--------------------------------------------------------PASSED
+                        <测试步骤-3> 【步骤】:电视TV下有频道,【描述】:------------------------------------------------PASSED
+                        <测试步骤-4> 【步骤】:建立WIFI连接,【描述】:------------------------------------------------PASSED
+                    <前提条件-3> 【步骤】:执行测试主体,【描述】:------------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:进入设置菜单，修改图效、声效为任意值,【描述】:--------------------------------------PASSED
+                            <测试步骤-1> 【步骤】:修改图效为任意值,【描述】:--------------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:修改声效为任意值,【描述】:--------------------------------------------PASSED
+                        <测试步骤-2> 【步骤】:进入VOD下播放视频,【描述】:----------------------------------------------PASSED
+                        <测试步骤-3> 【步骤】:HDMI1信源播放视频时，执行恢复出厂设置操作,【描述】:---------------------------------PASSED
+                        <测试步骤-4> 【步骤】:完成开机向导后，进入系统,【描述】:--------------------------------------------PASSED
+                            <测试步骤-1> 【步骤】:过完开机向导后，电视回到主页,【描述】:--------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:执行安装前置指令,【描述】:--------------------------------------------PASSED
+                            <测试步骤-3> 【步骤】:安装应用,【描述】:------------------------------------------------PASSED
+                            <测试步骤-4> 【步骤】:检查是否启动grpc服务,【描述】:----------------------------------------PASSED
+                            <测试步骤-5> 【步骤】:重新初始化grpc,【描述】:-------------------------------------------PASSED
+                            <测试步骤-6> 【步骤】:检查设置菜单里用户数据是否恢复默认值,【描述】:----------------------------------PASSED
+                        <测试步骤-5> 【步骤】:建立WIFI连接,【描述】:------------------------------------------------PASSED
+                        <测试步骤-6> 【步骤】:检查launcher默认模板下的各个Tab页,【描述】:----------------------------------PASSED
+                            <测试步骤-1> 【步骤】:切换tv进入标准桌面,【描述】:------------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:非TCL品牌，各个Tab页下不能出现TCL字样，海报中不能出现TCL的logo,【描述】:-------------PASSED
+                        <测试步骤-7> 【步骤】:检查HDMI高级标准默认值,【描述】:-------------------------------------------PASSED
+                    <后置清理-4> 【步骤】:清理后置条件,【描述】:------------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:电视回到主页,【描述】:--------------------------------------------------PASSED
+                    <测试步骤-5> 【步骤】:执行后置插件,【描述】:------------------------------------------------------PASSED
+                <测试步骤-4> 【步骤】:执行第4次测试,【描述】:---------------------------------------------------------PASSED
+                    <测试步骤-1> 【步骤】:执行前置插件,【描述】:------------------------------------------------------PASSED
+                    <前提条件-2> 【步骤】:初始化前置条件,【描述】:-----------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:TV进入主页,【描述】:--------------------------------------------------PASSED
+                        <测试步骤-2> 【步骤】:,【描述】:--------------------------------------------------------PASSED
+                        <测试步骤-3> 【步骤】:电视TV下有频道,【描述】:------------------------------------------------PASSED
+                        <测试步骤-4> 【步骤】:建立WIFI连接,【描述】:------------------------------------------------PASSED
+                    <前提条件-3> 【步骤】:执行测试主体,【描述】:------------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:进入设置菜单，修改图效、声效为任意值,【描述】:--------------------------------------PASSED
+                            <测试步骤-1> 【步骤】:修改图效为任意值,【描述】:--------------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:修改声效为任意值,【描述】:--------------------------------------------PASSED
+                        <测试步骤-2> 【步骤】:进入VOD下播放视频,【描述】:----------------------------------------------PASSED
+                        <测试步骤-3> 【步骤】:HDMI1信源播放视频时，执行恢复出厂设置操作,【描述】:---------------------------------PASSED
+                        <测试步骤-4> 【步骤】:完成开机向导后，进入系统,【描述】:--------------------------------------------PASSED
+                            <测试步骤-1> 【步骤】:过完开机向导后，电视回到主页,【描述】:--------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:执行安装前置指令,【描述】:--------------------------------------------PASSED
+                            <测试步骤-3> 【步骤】:安装应用,【描述】:------------------------------------------------PASSED
+                            <测试步骤-4> 【步骤】:检查是否启动grpc服务,【描述】:----------------------------------------PASSED
+                            <测试步骤-5> 【步骤】:重新初始化grpc,【描述】:-------------------------------------------PASSED
+                            <测试步骤-6> 【步骤】:检查设置菜单里用户数据是否恢复默认值,【描述】:----------------------------------PASSED
+                        <测试步骤-5> 【步骤】:建立WIFI连接,【描述】:------------------------------------------------PASSED
+                        <测试步骤-6> 【步骤】:检查launcher默认模板下的各个Tab页,【描述】:----------------------------------PASSED
+                            <测试步骤-1> 【步骤】:切换tv进入标准桌面,【描述】:------------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:非TCL品牌，各个Tab页下不能出现TCL字样，海报中不能出现TCL的logo,【描述】:-------------PASSED
+                        <测试步骤-7> 【步骤】:检查HDMI高级标准默认值,【描述】:-------------------------------------------PASSED
+                    <后置清理-4> 【步骤】:清理后置条件,【描述】:------------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:电视回到主页,【描述】:--------------------------------------------------PASSED
+                    <测试步骤-5> 【步骤】:执行后置插件,【描述】:------------------------------------------------------PASSED
+                <测试步骤-5> 【步骤】:执行第5次测试,【描述】:---------------------------------------------------------PASSED
+                    <测试步骤-1> 【步骤】:执行前置插件,【描述】:------------------------------------------------------PASSED
+                    <前提条件-2> 【步骤】:初始化前置条件,【描述】:-----------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:TV进入主页,【描述】:--------------------------------------------------PASSED
+                        <测试步骤-2> 【步骤】:,【描述】:--------------------------------------------------------PASSED
+                        <测试步骤-3> 【步骤】:电视TV下有频道,【描述】:------------------------------------------------PASSED
+                        <测试步骤-4> 【步骤】:建立WIFI连接,【描述】:------------------------------------------------PASSED
+                    <前提条件-3> 【步骤】:执行测试主体,【描述】:------------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:进入设置菜单，修改图效、声效为任意值,【描述】:--------------------------------------PASSED
+                            <测试步骤-1> 【步骤】:修改图效为任意值,【描述】:--------------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:修改声效为任意值,【描述】:--------------------------------------------PASSED
+                        <测试步骤-2> 【步骤】:进入VOD下播放视频,【描述】:----------------------------------------------PASSED
+                        <测试步骤-3> 【步骤】:HDMI1信源播放视频时，执行恢复出厂设置操作,【描述】:---------------------------------PASSED
+                        <测试步骤-4> 【步骤】:完成开机向导后，进入系统,【描述】:--------------------------------------------PASSED
+                            <测试步骤-1> 【步骤】:过完开机向导后，电视回到主页,【描述】:--------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:执行安装前置指令,【描述】:--------------------------------------------PASSED
+                            <测试步骤-3> 【步骤】:安装应用,【描述】:------------------------------------------------PASSED
+                            <测试步骤-4> 【步骤】:检查是否启动grpc服务,【描述】:----------------------------------------PASSED
+                            <测试步骤-5> 【步骤】:重新初始化grpc,【描述】:-------------------------------------------PASSED
+                            <测试步骤-6> 【步骤】:检查设置菜单里用户数据是否恢复默认值,【描述】:----------------------------------PASSED
+                        <测试步骤-5> 【步骤】:建立WIFI连接,【描述】:------------------------------------------------PASSED
+                        <测试步骤-6> 【步骤】:检查launcher默认模板下的各个Tab页,【描述】:----------------------------------PASSED
+                            <测试步骤-1> 【步骤】:切换tv进入标准桌面,【描述】:------------------------------------------PASSED
+                            <测试步骤-2> 【步骤】:非TCL品牌，各个Tab页下不能出现TCL字样，海报中不能出现TCL的logo,【描述】:-------------PASSED
+                        <测试步骤-7> 【步骤】:检查HDMI高级标准默认值,【描述】:-------------------------------------------PASSED
+                    <后置清理-4> 【步骤】:清理后置条件,【描述】:------------------------------------------------------PASSED
+                        <测试步骤-1> 【步骤】:电视回到主页,【描述】:--------------------------------------------------PASSED
+                    <测试步骤-5> 【步骤】:执行后置插件,【描述】:------------------------------------------------------PASSED
+            <测试步骤-1> 【步骤】:清理测试,【描述】:----------------------------------------------------------------PASSED
+
+[2024-12-25 17:04:35,521][INFO][TcDemo    ][testbot.app.case.base._write_result:+258][pid|tid:29044|22500]:{"headline": "Root", "message": "", "timestamp": "2024-12-25 17:04:33", "children": [{"headline": "\u6267\u884c\u6d4b\u8bd5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u6267\u884c\u73af\u5883\u68c0\u67e5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u6267\u884c\u68c0\u67e5\u9879", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "", "message": "INFO: \u6267\u884c\u68c0\u67e5\u9879\uff1a\u662f\u5426\u53ef\u4ee5\u901a\u8fc7\u6307\u4ee4\u4e32\u53e3\u83b7\u53d6TV IP\u5730\u5740", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_CHECK1-"}, {"headline": "", "message": "INFO: \u6267\u884c\u68c0\u67e5\u9879\uff1aTV\u7aef\u662f\u5426\u53ef\u4ee5\u6b63\u5e38\u8bbf\u95ee\u516c\u53f8\u7f51\u7edc\uff0c\u5982Panda\u3001AI\u670d\u52a1", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_CHECK1-"}, {"headline": "", "message": "INFO: \u6267\u884c\u68c0\u67e5\u9879\uff1aTV\u7aef\u662f\u5426\u53ef\u4ee5\u6b63\u5e38\u8bbf\u95ee\u56fd\u5185\u7f51\u7edc", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_CHECK1-"}, {"headline": "", "message": "INFO: \u6267\u884c\u68c0\u67e5\u9879\uff1aTV\u7aef\u662f\u5426\u53ef\u4ee5\u6b63\u5e38\u8bbf\u95ee\u6d77\u5916\u7f51\u7edc", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_CHECK1-"}, {"headline": "", "message": "INFO: \u6267\u884c\u68c0\u67e5\u9879\uff1a\u901a\u8fc7\u7ea2\u5916\u4e32\u53e3\u53d1\u9001\u7ea2\u5916\u6307\u4ee4\u662f\u5426\u6b63\u5e38", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_CHECK1-"}, {"headline": "", "message": "INFO: \u6267\u884c\u68c0\u67e5\u9879\uff1a\u662f\u5426\u80fd\u591f\u901a\u8fc7\u91c7\u96c6\u5361\u4e32\u53e3\u91c7\u96c6\u56fe\u50cf\u6b63\u5e38", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_CHECK1-"}], "result": "Passed", "prefix": "RUN_CHECK"}, {"headline": "\u6267\u884c\u8d44\u6e90\u521d\u59cb\u5316", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_INIT"}], "result": "Passed"}, {"headline": "\u6267\u884c\u6d4b\u8bd5\u7528\u4f8b", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u6536\u96c6\u6d4b\u8bd5\u8d44\u6e90", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u7b5b\u9009\u8bbe\u5907", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u7b5b\u9009PC\u8bbe\u5907", "message": "\u7b5b\u9009PC\u8bbe\u5907\u6210\u529f", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}, {"headline": "\u7b5b\u9009TV\u8bbe\u5907", "message": "\u7b5b\u9009TV\u8bbe\u5907\u6210\u529f", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "COLLECT_RESOURCE"}, {"headline": "\u521d\u59cb\u5316\u6d4b\u8bd5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u68c0\u67e5\u662f\u5426\u5b89\u88c5\u548c\u542f\u52a8grpc\u670d\u52a1APK", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u68c0\u67e5\u662f\u5426\u6267\u884c\u524d\u7f6e\u6307\u4ee4", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "SETUP_CLASS1-1-"}, {"headline": "\u68c0\u67e5\u662f\u5426\u5b89\u88c5\u5e94\u7528", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "SETUP_CLASS1-1-"}, {"headline": "\u68c0\u67e5\u662f\u5426\u542f\u52a8grpc\u670d\u52a1", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "SETUP_CLASS1-1-"}], "result": "Passed", "prefix": "SETUP_CLASS1-"}], "result": "Passed", "prefix": "SETUP_CLASS"}, {"headline": "\u6267\u884c\u6b21\u6d4b\u8bd5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u6267\u884c\u7b2c1\u6b21\u6d4b\u8bd5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u6267\u884c\u524d\u7f6e\u63d2\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_PRE_PLUGINS"}, {"headline": "\u521d\u59cb\u5316\u524d\u7f6e\u6761\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "TV\u8fdb\u5165\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u7535\u89c6TV\u4e0b\u6709\u9891\u9053", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u5efa\u7acbWIFI\u8fde\u63a5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "SETUP"}, {"headline": "\u6267\u884c\u6d4b\u8bd5\u4e3b\u4f53", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u8fdb\u5165\u8bbe\u7f6e\u83dc\u5355\uff0c\u4fee\u6539\u56fe\u6548\u3001\u58f0\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u4fee\u6539\u56fe\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}, {"headline": "\u4fee\u6539\u58f0\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}], "result": "Passed", "prefix": ""}, {"headline": "\u8fdb\u5165VOD\u4e0b\u64ad\u653e\u89c6\u9891", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "HDMI1\u4fe1\u6e90\u64ad\u653e\u89c6\u9891\u65f6\uff0c\u6267\u884c\u6062\u590d\u51fa\u5382\u8bbe\u7f6e\u64cd\u4f5c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u5b8c\u6210\u5f00\u673a\u5411\u5bfc\u540e\uff0c\u8fdb\u5165\u7cfb\u7edf", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u8fc7\u5b8c\u5f00\u673a\u5411\u5bfc\u540e\uff0c\u7535\u89c6\u56de\u5230\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u6267\u884c\u5b89\u88c5\u524d\u7f6e\u6307\u4ee4", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u5b89\u88c5\u5e94\u7528", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u68c0\u67e5\u662f\u5426\u542f\u52a8grpc\u670d\u52a1", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u91cd\u65b0\u521d\u59cb\u5316grpc", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u68c0\u67e5\u8bbe\u7f6e\u83dc\u5355\u91cc\u7528\u6237\u6570\u636e\u662f\u5426\u6062\u590d\u9ed8\u8ba4\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}], "result": "Passed", "prefix": ""}, {"headline": "\u5efa\u7acbWIFI\u8fde\u63a5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u68c0\u67e5launcher\u9ed8\u8ba4\u6a21\u677f\u4e0b\u7684\u5404\u4e2aTab\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u5207\u6362tv\u8fdb\u5165\u6807\u51c6\u684c\u9762", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "6-"}, {"headline": "\u975eTCL\u54c1\u724c\uff0c\u5404\u4e2aTab\u9875\u4e0b\u4e0d\u80fd\u51fa\u73b0TCL\u5b57\u6837\uff0c\u6d77\u62a5\u4e2d\u4e0d\u80fd\u51fa\u73b0TCL\u7684logo", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "6-"}], "result": "Passed", "prefix": ""}, {"headline": "\u68c0\u67e5HDMI\u9ad8\u7ea7\u6807\u51c6\u9ed8\u8ba4\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "SETUP"}, {"headline": "\u6e05\u7406\u540e\u7f6e\u6761\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u7535\u89c6\u56de\u5230\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "CLEANUP"}, {"headline": "\u6267\u884c\u540e\u7f6e\u63d2\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_POST_PLUGINS"}], "result": "Passed", "prefix": "TEST-1"}, {"headline": "\u6267\u884c\u7b2c2\u6b21\u6d4b\u8bd5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u6267\u884c\u524d\u7f6e\u63d2\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_PRE_PLUGINS"}, {"headline": "\u521d\u59cb\u5316\u524d\u7f6e\u6761\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "TV\u8fdb\u5165\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u7535\u89c6TV\u4e0b\u6709\u9891\u9053", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u5efa\u7acbWIFI\u8fde\u63a5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "SETUP"}, {"headline": "\u6267\u884c\u6d4b\u8bd5\u4e3b\u4f53", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u8fdb\u5165\u8bbe\u7f6e\u83dc\u5355\uff0c\u4fee\u6539\u56fe\u6548\u3001\u58f0\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u4fee\u6539\u56fe\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}, {"headline": "\u4fee\u6539\u58f0\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}], "result": "Passed", "prefix": ""}, {"headline": "\u8fdb\u5165VOD\u4e0b\u64ad\u653e\u89c6\u9891", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "HDMI1\u4fe1\u6e90\u64ad\u653e\u89c6\u9891\u65f6\uff0c\u6267\u884c\u6062\u590d\u51fa\u5382\u8bbe\u7f6e\u64cd\u4f5c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u5b8c\u6210\u5f00\u673a\u5411\u5bfc\u540e\uff0c\u8fdb\u5165\u7cfb\u7edf", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u8fc7\u5b8c\u5f00\u673a\u5411\u5bfc\u540e\uff0c\u7535\u89c6\u56de\u5230\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u6267\u884c\u5b89\u88c5\u524d\u7f6e\u6307\u4ee4", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u5b89\u88c5\u5e94\u7528", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u68c0\u67e5\u662f\u5426\u542f\u52a8grpc\u670d\u52a1", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u91cd\u65b0\u521d\u59cb\u5316grpc", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u68c0\u67e5\u8bbe\u7f6e\u83dc\u5355\u91cc\u7528\u6237\u6570\u636e\u662f\u5426\u6062\u590d\u9ed8\u8ba4\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}], "result": "Passed", "prefix": ""}, {"headline": "\u5efa\u7acbWIFI\u8fde\u63a5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u68c0\u67e5launcher\u9ed8\u8ba4\u6a21\u677f\u4e0b\u7684\u5404\u4e2aTab\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u5207\u6362tv\u8fdb\u5165\u6807\u51c6\u684c\u9762", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "6-"}, {"headline": "\u975eTCL\u54c1\u724c\uff0c\u5404\u4e2aTab\u9875\u4e0b\u4e0d\u80fd\u51fa\u73b0TCL\u5b57\u6837\uff0c\u6d77\u62a5\u4e2d\u4e0d\u80fd\u51fa\u73b0TCL\u7684logo", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "6-"}], "result": "Passed", "prefix": ""}, {"headline": "\u68c0\u67e5HDMI\u9ad8\u7ea7\u6807\u51c6\u9ed8\u8ba4\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "SETUP"}, {"headline": "\u6e05\u7406\u540e\u7f6e\u6761\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u7535\u89c6\u56de\u5230\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "CLEANUP"}, {"headline": "\u6267\u884c\u540e\u7f6e\u63d2\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_POST_PLUGINS"}], "result": "Passed", "prefix": "TEST-2"}, {"headline": "\u6267\u884c\u7b2c3\u6b21\u6d4b\u8bd5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u6267\u884c\u524d\u7f6e\u63d2\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_PRE_PLUGINS"}, {"headline": "\u521d\u59cb\u5316\u524d\u7f6e\u6761\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "TV\u8fdb\u5165\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u7535\u89c6TV\u4e0b\u6709\u9891\u9053", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u5efa\u7acbWIFI\u8fde\u63a5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "SETUP"}, {"headline": "\u6267\u884c\u6d4b\u8bd5\u4e3b\u4f53", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u8fdb\u5165\u8bbe\u7f6e\u83dc\u5355\uff0c\u4fee\u6539\u56fe\u6548\u3001\u58f0\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u4fee\u6539\u56fe\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}, {"headline": "\u4fee\u6539\u58f0\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}], "result": "Passed", "prefix": ""}, {"headline": "\u8fdb\u5165VOD\u4e0b\u64ad\u653e\u89c6\u9891", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "HDMI1\u4fe1\u6e90\u64ad\u653e\u89c6\u9891\u65f6\uff0c\u6267\u884c\u6062\u590d\u51fa\u5382\u8bbe\u7f6e\u64cd\u4f5c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u5b8c\u6210\u5f00\u673a\u5411\u5bfc\u540e\uff0c\u8fdb\u5165\u7cfb\u7edf", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u8fc7\u5b8c\u5f00\u673a\u5411\u5bfc\u540e\uff0c\u7535\u89c6\u56de\u5230\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u6267\u884c\u5b89\u88c5\u524d\u7f6e\u6307\u4ee4", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u5b89\u88c5\u5e94\u7528", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u68c0\u67e5\u662f\u5426\u542f\u52a8grpc\u670d\u52a1", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u91cd\u65b0\u521d\u59cb\u5316grpc", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u68c0\u67e5\u8bbe\u7f6e\u83dc\u5355\u91cc\u7528\u6237\u6570\u636e\u662f\u5426\u6062\u590d\u9ed8\u8ba4\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}], "result": "Passed", "prefix": ""}, {"headline": "\u5efa\u7acbWIFI\u8fde\u63a5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u68c0\u67e5launcher\u9ed8\u8ba4\u6a21\u677f\u4e0b\u7684\u5404\u4e2aTab\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u5207\u6362tv\u8fdb\u5165\u6807\u51c6\u684c\u9762", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "6-"}, {"headline": "\u975eTCL\u54c1\u724c\uff0c\u5404\u4e2aTab\u9875\u4e0b\u4e0d\u80fd\u51fa\u73b0TCL\u5b57\u6837\uff0c\u6d77\u62a5\u4e2d\u4e0d\u80fd\u51fa\u73b0TCL\u7684logo", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "6-"}], "result": "Passed", "prefix": ""}, {"headline": "\u68c0\u67e5HDMI\u9ad8\u7ea7\u6807\u51c6\u9ed8\u8ba4\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "SETUP"}, {"headline": "\u6e05\u7406\u540e\u7f6e\u6761\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u7535\u89c6\u56de\u5230\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "CLEANUP"}, {"headline": "\u6267\u884c\u540e\u7f6e\u63d2\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_POST_PLUGINS"}], "result": "Passed", "prefix": "TEST-3"}, {"headline": "\u6267\u884c\u7b2c4\u6b21\u6d4b\u8bd5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u6267\u884c\u524d\u7f6e\u63d2\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_PRE_PLUGINS"}, {"headline": "\u521d\u59cb\u5316\u524d\u7f6e\u6761\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "TV\u8fdb\u5165\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u7535\u89c6TV\u4e0b\u6709\u9891\u9053", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u5efa\u7acbWIFI\u8fde\u63a5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "SETUP"}, {"headline": "\u6267\u884c\u6d4b\u8bd5\u4e3b\u4f53", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u8fdb\u5165\u8bbe\u7f6e\u83dc\u5355\uff0c\u4fee\u6539\u56fe\u6548\u3001\u58f0\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u4fee\u6539\u56fe\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}, {"headline": "\u4fee\u6539\u58f0\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}], "result": "Passed", "prefix": ""}, {"headline": "\u8fdb\u5165VOD\u4e0b\u64ad\u653e\u89c6\u9891", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "HDMI1\u4fe1\u6e90\u64ad\u653e\u89c6\u9891\u65f6\uff0c\u6267\u884c\u6062\u590d\u51fa\u5382\u8bbe\u7f6e\u64cd\u4f5c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u5b8c\u6210\u5f00\u673a\u5411\u5bfc\u540e\uff0c\u8fdb\u5165\u7cfb\u7edf", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u8fc7\u5b8c\u5f00\u673a\u5411\u5bfc\u540e\uff0c\u7535\u89c6\u56de\u5230\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u6267\u884c\u5b89\u88c5\u524d\u7f6e\u6307\u4ee4", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u5b89\u88c5\u5e94\u7528", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u68c0\u67e5\u662f\u5426\u542f\u52a8grpc\u670d\u52a1", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u91cd\u65b0\u521d\u59cb\u5316grpc", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u68c0\u67e5\u8bbe\u7f6e\u83dc\u5355\u91cc\u7528\u6237\u6570\u636e\u662f\u5426\u6062\u590d\u9ed8\u8ba4\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}], "result": "Passed", "prefix": ""}, {"headline": "\u5efa\u7acbWIFI\u8fde\u63a5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u68c0\u67e5launcher\u9ed8\u8ba4\u6a21\u677f\u4e0b\u7684\u5404\u4e2aTab\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u5207\u6362tv\u8fdb\u5165\u6807\u51c6\u684c\u9762", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "6-"}, {"headline": "\u975eTCL\u54c1\u724c\uff0c\u5404\u4e2aTab\u9875\u4e0b\u4e0d\u80fd\u51fa\u73b0TCL\u5b57\u6837\uff0c\u6d77\u62a5\u4e2d\u4e0d\u80fd\u51fa\u73b0TCL\u7684logo", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "6-"}], "result": "Passed", "prefix": ""}, {"headline": "\u68c0\u67e5HDMI\u9ad8\u7ea7\u6807\u51c6\u9ed8\u8ba4\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "SETUP"}, {"headline": "\u6e05\u7406\u540e\u7f6e\u6761\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u7535\u89c6\u56de\u5230\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "CLEANUP"}, {"headline": "\u6267\u884c\u540e\u7f6e\u63d2\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_POST_PLUGINS"}], "result": "Passed", "prefix": "TEST-4"}, {"headline": "\u6267\u884c\u7b2c5\u6b21\u6d4b\u8bd5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u6267\u884c\u524d\u7f6e\u63d2\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_PRE_PLUGINS"}, {"headline": "\u521d\u59cb\u5316\u524d\u7f6e\u6761\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "TV\u8fdb\u5165\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u7535\u89c6TV\u4e0b\u6709\u9891\u9053", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u5efa\u7acbWIFI\u8fde\u63a5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "SETUP"}, {"headline": "\u6267\u884c\u6d4b\u8bd5\u4e3b\u4f53", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u8fdb\u5165\u8bbe\u7f6e\u83dc\u5355\uff0c\u4fee\u6539\u56fe\u6548\u3001\u58f0\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u4fee\u6539\u56fe\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}, {"headline": "\u4fee\u6539\u58f0\u6548\u4e3a\u4efb\u610f\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "1-"}], "result": "Passed", "prefix": ""}, {"headline": "\u8fdb\u5165VOD\u4e0b\u64ad\u653e\u89c6\u9891", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "HDMI1\u4fe1\u6e90\u64ad\u653e\u89c6\u9891\u65f6\uff0c\u6267\u884c\u6062\u590d\u51fa\u5382\u8bbe\u7f6e\u64cd\u4f5c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u5b8c\u6210\u5f00\u673a\u5411\u5bfc\u540e\uff0c\u8fdb\u5165\u7cfb\u7edf", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u8fc7\u5b8c\u5f00\u673a\u5411\u5bfc\u540e\uff0c\u7535\u89c6\u56de\u5230\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u6267\u884c\u5b89\u88c5\u524d\u7f6e\u6307\u4ee4", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u5b89\u88c5\u5e94\u7528", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u68c0\u67e5\u662f\u5426\u542f\u52a8grpc\u670d\u52a1", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u91cd\u65b0\u521d\u59cb\u5316grpc", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}, {"headline": "\u68c0\u67e5\u8bbe\u7f6e\u83dc\u5355\u91cc\u7528\u6237\u6570\u636e\u662f\u5426\u6062\u590d\u9ed8\u8ba4\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "4-"}], "result": "Passed", "prefix": ""}, {"headline": "\u5efa\u7acbWIFI\u8fde\u63a5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}, {"headline": "\u68c0\u67e5launcher\u9ed8\u8ba4\u6a21\u677f\u4e0b\u7684\u5404\u4e2aTab\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u5207\u6362tv\u8fdb\u5165\u6807\u51c6\u684c\u9762", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "6-"}, {"headline": "\u975eTCL\u54c1\u724c\uff0c\u5404\u4e2aTab\u9875\u4e0b\u4e0d\u80fd\u51fa\u73b0TCL\u5b57\u6837\uff0c\u6d77\u62a5\u4e2d\u4e0d\u80fd\u51fa\u73b0TCL\u7684logo", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "6-"}], "result": "Passed", "prefix": ""}, {"headline": "\u68c0\u67e5HDMI\u9ad8\u7ea7\u6807\u51c6\u9ed8\u8ba4\u503c", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "SETUP"}, {"headline": "\u6e05\u7406\u540e\u7f6e\u6761\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [{"headline": "\u7535\u89c6\u56de\u5230\u4e3b\u9875", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": ""}], "result": "Passed", "prefix": "CLEANUP"}, {"headline": "\u6267\u884c\u540e\u7f6e\u63d2\u4ef6", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "RUN_POST_PLUGINS"}], "result": "Passed", "prefix": "TEST-5"}], "result": "Passed", "prefix": "TEST"}, {"headline": "\u6e05\u7406\u6d4b\u8bd5", "message": "", "timestamp": "2024-12-25 17:04:35", "children": [], "result": "Passed", "prefix": "CLEANUP_CLASS"}], "result": "Passed"}]}]}
+[2024-12-25 17:04:35,533][INFO][TcDemo    ][testbot.app.case.base._write_result:+262][pid|tid:29044|22500]:结果文件保存到C:\Users\nuanguang.gu\TESTBOT\logs\cases\20241225170435\测试用例列表\result.json
+[2024-12-25 17:04:35,539][INFO][TcDemo    ][testbot.app.case.base._write_result:+268][pid|tid:29044|22500]:将HTML结果模板文件D:\codes\testbot\src\testbot\result\result.html拷贝到C:\Users\nuanguang.gu\TESTBOT\logs\cases\20241225170435\测试用例列表\result.html
+[2024-12-25 17:04:35,547][INFO][CaseRunner][testbot.testengine.caserunner.__run_test_list:+300][pid|tid:29044|22500]:切换日志路径：C:\Users\nuanguang.gu\TESTBOT\logs\runner\CaseRunner.log -> C:\Users\nuanguang.gu\TESTBOT\logs\runner\CaseRunner.log
+
+Process finished with exit code 0
+
+```
+
+## 验证点结果数据
+
+验证点前缀。区分验证点信息属于SETUP_CLASS、SETUP、TEST还是CLEANUP、CLEANUP_CLASS执行期间。
+
+执行的测试数据文件result.json和result.html，会存放到%TB_HOME%/logs/cases/{时间戳}/{测试用例名称}路径（若设置了TB_HOME环境变量）或%HOMEPATH%/TESTBOT/logs/cases/{时间戳}/{测试用例名称}（若未设置TB_HOME环境变量）下面。
+
+```buildoutcfg
+{
+    "headline": "Root",
+    "message": "",
+    "timestamp": "2024-12-12 09:23:14",
+    "children": [
+        {
+            "headline": "执行测试",
+            "message": "",
+            "timestamp": "2024-12-12 09:23:15",
+            "children": [
+                {
+                    "headline": "执行环境检查",
+                    "message": "",
+                    "timestamp": "2024-12-12 09:23:15",
+                    "children": [
+                        {
+                            "headline": "执行检查项",
+                            "message": "",
+                            "timestamp": "2024-12-12 09:23:15",
+                            "children": [
+                                {
+                                    "headline": "",
+                                    "message": "INFO: 执行检查项：是否有指令串口",
+                                    "timestamp": "2024-12-12 09:23:15",
+                                    "children": [],
+                                    "result": "Passed",
+                                    "prefix": "RUNCHECK1-"
+                                },
+                                {
+                                    "headline": "",
+                                    "message": "INFO: 执行检查项：是否可以通过指令串口获取TV IP地址",
+                                    "timestamp": "2024-12-12 09:23:15",
+                                    "children": [],
+                                    "result": "Passed",
+                                    "prefix": "RUNCHECK1-"
+                                },
+                                {
+                                    "headline": "",
+                                    "message": "INFO: 执行检查项：TV端是否可以正常访问公司网络，如Panda、AI服务",
+                                    "timestamp": "2024-12-12 09:23:15",
+                                    "children": [],
+                                    "result": "Passed",
+                                    "prefix": "RUNCHECK1-"
+                                },
+                                {
+                                    "headline": "",
+                                    "message": "INFO: 执行检查项：TV端是否可以正常访问国内网络",
+                                    "timestamp": "2024-12-12 09:23:15",
+                                    "children": [],
+                                    "result": "Passed",
+                                    "prefix": "RUNCHECK1-"
+                                },
+                                {
+                                    "headline": "",
+                                    "message": "INFO: 执行检查项：TV端是否可以正常访问海外网络",
+                                    "timestamp": "2024-12-12 09:23:15",
+                                    "children": [],
+                                    "result": "Passed",
+                                    "prefix": "RUNCHECK1-"
+                                },
+                                {
+                                    "headline": "",
+                                    "message": "INFO: 执行检查项：是否有采集卡串口",
+                                    "timestamp": "2024-12-12 09:23:15",
+                                    "children": [],
+                                    "result": "Passed",
+                                    "prefix": "RUNCHECK1-"
+                                },
+                                {
+                                    "headline": "",
+                                    "message": "INFO: 执行检查项：是否能够通过采集卡串口采集图像正常",
+                                    "timestamp": "2024-12-12 09:23:15",
+                                    "children": [],
+                                    "result": "Passed",
+                                    "prefix": "RUNCHECK1-"
+                                },
+                                {
+                                    "headline": "",
+                                    "message": "INFO: 执行检查项：是否有ADB无线连接",
+                                    "timestamp": "2024-12-12 09:23:15",
+                                    "children": [],
+                                    "result": "Passed",
+                                    "prefix": "RUNCHECK1-"
+                                },
+                                {
+                                    "headline": "",
+                                    "message": "INFO: 执行检查项：是否有gRPC连接",
+                                    "timestamp": "2024-12-12 09:23:15",
+                                    "children": [],
+                                    "result": "Passed",
+                                    "prefix": "RUNCHECK1-"
+                                }
+                            ],
+                            "result": "Passed",
+                            "prefix": "RUNCHECK"
+                        },
+                        {
+                            "headline": "执行资源初始化",
+                            "message": "",
+                            "timestamp": "2024-12-12 09:23:15",
+                            "children": [],
+                            "result": "Passed",
+                            "prefix": "RUNINIT"
+                        }
+                    ],
+                    "result": "Passed"
+                },
+                {
+                    "headline": "执行测试用例",
+                    "message": "INFO: CNTC94313",
+                    "timestamp": "2024-12-12 09:23:15",
+                    "children": [
+                        {
+                            "headline": "收集测试资源",
+                            "message": "",
+                            "timestamp": "2024-12-12 09:23:15",
+                            "children": [
+                                {
+                                    "headline": "筛选设备",
+                                    "message": "",
+                                    "timestamp": "2024-12-12 09:23:15",
+                                    "children": [
+                                        {
+                                            "headline": "筛选PC设备",
+                                            "message": "筛选PC设备成功",
+                                            "timestamp": "2024-12-12 09:23:15",
+                                            "children": [],
+                                            "result": "Passed",
+                                            "prefix": "1-"
+                                        },
+                                        {
+                                            "headline": "筛选TV设备",
+                                            "message": "筛选TV设备成功",
+                                            "timestamp": "2024-12-12 09:23:15",
+                                            "children": [],
+                                            "result": "Passed",
+                                            "prefix": "1-"
+                                        }
+                                    ],
+                                    "result": "Passed",
+                                    "prefix": ""
+                                }
+                            ],
+                            "result": "Passed",
+                            "prefix": "COLLECT_RESOURCE"
+                        },
+                        {
+                            "headline": "初始化测试",
+                            "message": "",
+                            "timestamp": "2024-12-12 09:23:15",
+                            "children": [],
+                            "result": "Passed",
+                            "prefix": "SETUP_CLASS"
+                        },
+                        {
+                            "headline": "执行次测试",
+                            "message": "",
+                            "timestamp": "2024-12-12 09:23:15",
+                            "children": [
+                                {
+                                    "headline": "执行第0次测试",
+                                    "message": "",
+                                    "timestamp": "2024-12-12 09:23:15",
+                                    "children": [
+                                        {
+                                            "headline": "初始化前置条件",
+                                            "message": "",
+                                            "timestamp": "2024-12-12 09:23:15",
+                                            "children": [
+                                                {
+                                                    "headline": "电视TV下有频道",
+                                                    "message": "INFO: ",
+                                                    "timestamp": "2024-12-12 09:23:15",
+                                                    "children": [],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "电视连接信号较强的wifi热点",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:15",
+                                                    "children": [],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                }
+                                            ],
+                                            "result": "Passed",
+                                            "prefix": "SETUP"
+                                        },
+                                        {
+                                            "headline": "执行测试主体",
+                                            "message": "",
+                                            "timestamp": "2024-12-12 09:23:15",
+                                            "children": [
+                                                {
+                                                    "headline": "进入设置菜单，修改图效、声效为任意值",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:15",
+                                                    "children": [
+                                                        {
+                                                            "headline": "修改图效为任意值",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:15",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "1-"
+                                                        },
+                                                        {
+                                                            "headline": "修改声效为任意值",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "1-"
+                                                        }
+                                                    ],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "进入VOD下播放视频",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "HDMI1信源播放视频时，执行恢复出厂设置操作",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "完成开机向导后，进入系统",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [
+                                                        {
+                                                            "headline": "过完开机向导后，电视回到主页",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "4-"
+                                                        },
+                                                        {
+                                                            "headline": "所有频道节目，视频观看历史被清除",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "4-"
+                                                        },
+                                                        {
+                                                            "headline": "设置菜单里用户数据恢复默认值（仅保留WIFI账号密码）",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "4-"
+                                                        }
+                                                    ],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "检查launcher默认模板下的各个Tab页",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [
+                                                        {
+                                                            "headline": "非TCL品牌，各个Tab页下不能出现TCL字样，海报中不能出现TCL的logo",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "5-"
+                                                        },
+                                                        {
+                                                            "headline": "非TCL品牌，各个Tab页下不能出现TCL字样，海报中不能出现TCL的logo（如：雷鸟，乐华，东芝等品牌不能出现TCL的字样，海报中不能出现TCL的logo）",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "5-"
+                                                        }
+                                                    ],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "检查HDMI高级标准默认值",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [
+                                                        {
+                                                            "headline": "HDMI高级标准默认为开（根据项目的PQ tree检查具体默认值：https://confluence.tclking.com/pages/viewpage.action?pageId=79309061）",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "6-"
+                                                        }
+                                                    ],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                }
+                                            ],
+                                            "result": "Passed",
+                                            "prefix": "SETUP"
+                                        },
+                                        {
+                                            "headline": "清理后置条件",
+                                            "message": "",
+                                            "timestamp": "2024-12-12 09:23:16",
+                                            "children": [
+                                                {
+                                                    "headline": "电视断开wifi热点",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                }
+                                            ],
+                                            "result": "Passed",
+                                            "prefix": "CLEANUP"
+                                        }
+                                    ],
+                                    "result": "Passed",
+                                    "prefix": "TEST-0"
+                                },
+                                {
+                                    "headline": "执行第1次测试",
+                                    "message": "",
+                                    "timestamp": "2024-12-12 09:23:16",
+                                    "children": [
+                                        {
+                                            "headline": "初始化前置条件",
+                                            "message": "",
+                                            "timestamp": "2024-12-12 09:23:16",
+                                            "children": [
+                                                {
+                                                    "headline": "电视TV下有频道",
+                                                    "message": "INFO: ",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "电视连接信号较强的wifi热点",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                }
+                                            ],
+                                            "result": "Passed",
+                                            "prefix": "SETUP"
+                                        },
+                                        {
+                                            "headline": "执行测试主体",
+                                            "message": "",
+                                            "timestamp": "2024-12-12 09:23:16",
+                                            "children": [
+                                                {
+                                                    "headline": "进入设置菜单，修改图效、声效为任意值",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [
+                                                        {
+                                                            "headline": "修改图效为任意值",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "1-"
+                                                        },
+                                                        {
+                                                            "headline": "修改声效为任意值",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "1-"
+                                                        }
+                                                    ],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "进入VOD下播放视频",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "HDMI1信源播放视频时，执行恢复出厂设置操作",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "完成开机向导后，进入系统",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [
+                                                        {
+                                                            "headline": "过完开机向导后，电视回到主页",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "4-"
+                                                        },
+                                                        {
+                                                            "headline": "所有频道节目，视频观看历史被清除",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "4-"
+                                                        },
+                                                        {
+                                                            "headline": "设置菜单里用户数据恢复默认值（仅保留WIFI账号密码）",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "4-"
+                                                        }
+                                                    ],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "检查launcher默认模板下的各个Tab页",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [
+                                                        {
+                                                            "headline": "非TCL品牌，各个Tab页下不能出现TCL字样，海报中不能出现TCL的logo",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "5-"
+                                                        },
+                                                        {
+                                                            "headline": "非TCL品牌，各个Tab页下不能出现TCL字样，海报中不能出现TCL的logo（如：雷鸟，乐华，东芝等品牌不能出现TCL的字样，海报中不能出现TCL的logo）",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "5-"
+                                                        }
+                                                    ],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                },
+                                                {
+                                                    "headline": "检查HDMI高级标准默认值",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [
+                                                        {
+                                                            "headline": "HDMI高级标准默认为开（根据项目的PQ tree检查具体默认值：https://confluence.tclking.com/pages/viewpage.action?pageId=79309061）",
+                                                            "message": "",
+                                                            "timestamp": "2024-12-12 09:23:16",
+                                                            "children": [],
+                                                            "result": "Passed",
+                                                            "prefix": "6-"
+                                                        }
+                                                    ],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                }
+                                            ],
+                                            "result": "Passed",
+                                            "prefix": "SETUP"
+                                        },
+                                        {
+                                            "headline": "清理后置条件",
+                                            "message": "",
+                                            "timestamp": "2024-12-12 09:23:16",
+                                            "children": [
+                                                {
+                                                    "headline": "电视断开wifi热点",
+                                                    "message": "",
+                                                    "timestamp": "2024-12-12 09:23:16",
+                                                    "children": [],
+                                                    "result": "Passed",
+                                                    "prefix": ""
+                                                }
+                                            ],
+                                            "result": "Passed",
+                                            "prefix": "CLEANUP"
+                                        }
+                                    ],
+                                    "result": "Passed",
+                                    "prefix": "TEST-1"
+                                }
+                            ],
+                            "result": "Passed",
+                            "prefix": "TEST"
+                        },
+                        {
+                            "headline": "清理测试",
+                            "message": "",
+                            "timestamp": "2024-12-12 09:23:16",
+                            "children": [],
+                            "result": "Passed",
+                            "prefix": "CLEANUP_CLASS"
+                        }
+                    ],
+                    "result": "Passed"
+                }
+            ]
+        }
+    ]
+}
+```
+
+## 验证点HTML报告
+
+在测试日志同目录下，有result.json和result.html文件，用火狐浏览器打开result.html文件，可以查看结果数据result.json的HTML格式的测试报告。
+

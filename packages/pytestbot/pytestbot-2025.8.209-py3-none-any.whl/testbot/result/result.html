@@ -1,0 +1,211 @@
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>测试报告</title>
+
+	<!-- INCLUDING JQUERY-->
+	<script src="https://code.jquery.com/jquery-3.5.1.js">
+	</script>
+	<!-- CSS FOR STYLING THE PAGE -->
+	<style>
+		table {
+			margin: 0 auto;
+			font-size: large;
+			border: 1px solid black;
+		}
+
+		h1 {
+			text-align: center;
+			color: #006600;
+			font-size: xx-large;
+			font-family: 'Gill Sans',
+				'Gill Sans MT', ' Calibri',
+				'Trebuchet MS', 'sans-serif';
+		}
+
+		td {
+			background-color: #E4F5D4;
+			border: 1px solid black;
+		}
+
+		th,
+		td {
+			font-weight: bold;
+			border: 1px solid black;
+			padding: 10px;
+			text-align: center;
+		}
+
+		td {
+			font-weight: lighter;
+		}
+	</style>
+</head>
+
+<body>
+	<section>
+		<h1>测试报告</h1>
+
+		<!-- TABLE CONSTRUCTION-->
+		<table id='table'>
+			<!-- HEADING FORMATION -->
+			<tr>
+				<th colspan="8" style="width:50%">headline</th>
+				<th>message</th>
+				<th>timestamp</th>
+				<th>result</th>
+				<th>prefix</th>
+			</tr>
+
+			<script>
+				$(document).ready(function () {
+
+					// FETCHING DATA FROM JSON FILE
+					$.getJSON("result.json", function (data) {
+						var step = '';
+
+						step += '<tr>';
+						step += '<td>' + data.headline + '</td>';
+						step += '<td></td>';
+						step += '<td></td>';
+						step += '<td></td>';
+						step += '<td></td>';
+						step += '<td></td>';
+						step += '<td></td>';
+						step += '<td></td>';
+						step += '<td>' + (data.message!="undefined" && data.message!=null?data.message:'') + '</td>';
+						step += '<td>' + (data.timestamp!="undefined" && data.timestamp!=null?data.timestamp:'') + '</td>';
+						step += '<td>' + (data.result!="undefined" && data.result!=null?data.result:'') + '</td>';
+						step += '<td>' + (data.prefix!="undefined" && data.prefix!=null?data.prefix:'') + '</td>';
+						step += '</tr>';
+
+						$.each(data.children, function (key, value) {
+							step += '<tr>';
+							step += '<td></td>';
+							step += '<td>' + value.headline + '</td>';
+							step += '<td></td>';
+							step += '<td></td>';
+							step += '<td></td>';
+							step += '<td></td>';
+							step += '<td></td>';
+							step += '<td></td>';
+							step += '<td>' + (value.message!="undefined" && value.message!=null?value.message:'') + '</td>';
+							step += '<td>' + (value.timestamp!="undefined" && value.timestamp!=null?value.timestamp:'') + '</td>';
+							step += '<td>' + (value.result!="undefined" && value.result!=null?value.result:'') + '</td>';
+							step += '<td>' + (value.prefix!="undefined" && value.prefix!=null?value.prefix:'') + '</td>';
+							step += '</tr>';
+							$.each(value.children, function (key2, value2) {
+								step += '<tr>';
+								step += '<td></td>';
+								step += '<td></td>';
+								step += '<td>' + value2.headline + '</td>';
+								step += '<td></td>';
+								step += '<td></td>';
+								step += '<td></td>';
+								step += '<td></td>';
+								step += '<td></td>';
+								step += '<td>' + (value2.message!="undefined" && value2.message!=null?value2.message:'') + '</td>';
+								step += '<td>' + (value2.timestamp!="undefined" && value2.timestamp!=null?value2.timestamp:'') + '</td>';
+								step += '<td>' + (value2.result!="undefined" && value2.result!=null?value2.result:'') + '</td>';
+								step += '<td>' + (value2.prefix!="undefined" && value2.prefix!=null?value2.prefix:'') + '</td>';
+								step += '</tr>';
+
+								$.each(value2.children, function (key3, value3) {
+									step += '<tr>';
+									step += '<td></td>';
+									step += '<td></td>';
+									step += '<td></td>';
+									step += '<td>' + value3.headline + '</td>';
+									step += '<td></td>';
+									step += '<td></td>';
+									step += '<td></td>';
+									step += '<td></td>';
+									step += '<td>' + (value3.message!="undefined" && value3.message!=null?value3.message:'') + '</td>';
+									step += '<td>' + (value3.timestamp!="undefined" && value3.timestamp!=null?value3.timestamp:'') + '</td>';
+									step += '<td>' + (value3.result!="undefined" && value3.result!=null?value3.result:'') + '</td>';
+									step += '<td>' + (value3.prefix!="undefined" && value3.prefix!=null?value3.prefix:'') + '</td>';
+									step += '</tr>';
+
+									$.each(value3.children, function (key4, value4) {
+										step += '<tr>';
+										step += '<td></td>';
+										step += '<td></td>';
+										step += '<td></td>';
+										step += '<td></td>';
+										step += '<td>' + value4.headline + '</td>';
+										step += '<td></td>';
+										step += '<td></td>';
+										step += '<td></td>';
+										step += '<td>' + (value4.message!="undefined" && value4.message!=null?value4.message:'') + '</td>';
+										step += '<td>' + (value4.timestamp!="undefined" && value4.timestamp!=null?value4.timestamp:'') + '</td>';
+										step += '<td>' + (value4.result!="undefined" && value4.result!=null?value4.result:'') + '</td>';
+										step += '<td>' + (value4.prefix!="undefined" && value4.prefix!=null?value4.prefix:'') + '</td>';
+										step += '</tr>';
+
+										$.each(value4.children, function (key5, value5) {
+											step += '<tr>';
+											step += '<td></td>';
+											step += '<td></td>';
+											step += '<td></td>';
+											step += '<td></td>';
+											step += '<td></td>';
+											step += '<td>' + value5.headline + '</td>';
+											step += '<td></td>';
+											step += '<td></td>';
+											step += '<td>' + (value5.message!="undefined" && value5.message!=null?value5.message:'') + '</td>';
+											step += '<td>' + (value5.timestamp!="undefined" && value5.timestamp!=null?value5.timestamp:'') + '</td>';
+											step += '<td>' + (value5.result!="undefined" && value5.result!=null?value5.result:'') + '</td>';
+											step += '<td>' + (value5.prefix!="undefined" && value5.prefix!=null?value5.prefix:'') + '</td>';
+											step += '</tr>';
+
+											$.each(value5.children, function (key6, value6) {
+												step += '<tr>';
+												step += '<td></td>';
+												step += '<td></td>';
+												step += '<td></td>';
+												step += '<td></td>';
+												step += '<td></td>';
+												step += '<td></td>';
+												step += '<td>' + value6.headline + '</td>';
+												step += '<td></td>';
+												step += '<td>' + (value6.message!="undefined" && value6.message!=null?value6.message:'') + '</td>';
+												step += '<td>' + (value6.timestamp!="undefined" && value6.timestamp!=null?value6.timestamp:'') + '</td>';
+												step += '<td>' + (value6.result!="undefined" && value6.result!=null?value6.result:'') + '</td>';
+												step += '<td>' + (value6.prefix!="undefined" && value6.prefix!=null?value6.prefix:'') + '</td>';
+												step += '</tr>';
+
+												$.each(value6.children, function (key7, value7) {
+													step += '<tr>';
+													step += '<td></td>';
+													step += '<td></td>';
+													step += '<td></td>';
+													step += '<td></td>';
+													step += '<td></td>';
+													step += '<td></td>';
+													step += '<td></td>';
+													step += '<td>' + value7.headline + '</td>';
+													step += '<td>' + (value7.message!="undefined" && value7.message!=null?value7.message:'') + '</td>';
+													step += '<td>' + (value7.timestamp!="undefined" && value7.timestamp!=null?value7.timestamp:'') + '</td>';
+													step += '<td>' + (value7.result!="undefined" && value7.result!=null?value7.result:'') + '</td>';
+													step += '<td>' + (value7.prefix!="undefined" && value7.prefix!=null?value7.prefix:'') + '</td>';
+													step += '</tr>';
+												});
+											});
+										});
+									});
+								});
+
+							});
+						});
+
+						//INSERTING ROWS INTO TABLE
+						$('#table').append(step);
+					});
+				});
+			</script>
+		</table>
+	</section>
+</body>
+
+</html>
