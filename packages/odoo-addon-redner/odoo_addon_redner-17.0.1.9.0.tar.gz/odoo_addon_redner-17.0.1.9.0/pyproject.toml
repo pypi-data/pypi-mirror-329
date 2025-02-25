@@ -1,0 +1,98 @@
+[project]
+name = "odoo-addon-redner"
+description = "Odoo addon to use redner (producer of reports and emails)"
+dynamic = ["version"]
+readme = "README.rst"
+requires-python = "~=3.10"
+license = { file = "LICENSE", name = "GNU Affero General Public License v3" }
+keywords = ["odoo"]
+authors = [{ name = "XCG Consulting" }]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Framework :: Odoo",
+  "Framework :: Odoo :: 17.0",
+  "License :: OSI Approved :: GNU Affero General Public License v3"
+]
+dependencies = ["odoo==17.0.*", "odoo-addon-converter >=17.0.2,<17.0.4"]
+
+[project.optional-dependencies]
+unixsocket = ["requests_unixsocket"]
+doc = ["sphinx", "sphinx-odoo-autodoc"]
+test = []
+
+[project.urls]
+homepage = "https://orbeet.io/services/generateur-documents-redner/"
+repository = "https://orus.io/xcg/odoo-modules/redner"
+changelog = "https://orus.io/xcg/odoo-modules/redner/-/blob/branch/17.0/NEWS.rst"
+
+[build-system]
+requires = ["hatchling >=1.19", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+exclude = [
+  "/doc/",
+  "/.editorconfig",
+  "/.eslintrc.yml",
+  ".gitlab-ci.yml",
+  "/.hgignore",
+  "/.hgtags",
+  "/.prettierrc.yml",
+  "/.yamllint.yaml"
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+  "*.csv",
+  "/i18n/",
+  "/static/",
+  "README.rst",
+  "*.xml",
+  "*.py",
+  "*.svg",
+  "*.png"
+]
+
+[tool.hatch.build.targets.wheel.sources]
+"" = "odoo/addons/redner"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.isort]
+section-order = [
+  "future",
+  "standard-library",
+  "third-party",
+  "odoo",
+  "odoo-addons",
+  "first-party",
+  "local-folder"
+]
+
+[tool.isort.sections]
+"odoo" = ["odoo"]
+"odoo-addons" = ["odoo.addons"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 16
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+extend-select = [
+  "B",
+  "C90",
+  "E501", # line too long (default 88)
+  "I", # isort
+  "UP", # pyupgrade
+
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "I001"] # ignore unused and unsorted imports in __init__.py
+"__manifest__.py" = ["B018"] # useless expression
