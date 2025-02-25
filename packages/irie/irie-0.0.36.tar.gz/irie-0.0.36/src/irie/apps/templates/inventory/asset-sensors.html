@@ -1,0 +1,50 @@
+<!-- 
+===----------------------------------------------------------------------===#
+
+         STAIRLab -- STructural Artificial Intelligence Laboratory
+
+===----------------------------------------------------------------------===#
+
+Claudio Perez, Summer 2023 
+Chrystal Chern, Spring 2025
+
+-->
+
+{% extends "layouts/base.html" %}
+{% block title %} {{ asset.calid }} Sensors {% endblock %} 
+
+{% block content %}
+<h1><code>{{ asset.calid }}</code> Sensors</h1>
+  <div class="py-4 align-right">
+    <a role="button" class="button btn btn-outline-white btn-gray-600 text-white"
+    href="{% url 'asset_profile' calid=asset.calid %}" class="me-1">Back to Structure</a>
+    <a role="button" class="button btn btn-outline-white btn-gray-600 text-white"
+    href="{% url 'sensor_upload' calid=asset.calid %}" class="me-1">Add SensorGroup</a>
+  </div>
+
+
+<div class="col-10">
+    {% for group in groups %}
+    <div class="card">
+        <div class="card-header">
+            {{group.name}}
+        </div>
+        <div class="card-body">
+          <table>
+            {% for sensor in group.sensors.all %}
+            <tr>
+                <td>{{ sensor }} </td><td>{{sensor.x}}</td><td>{{sensor.y}}</td><td>{{sensor.z}}</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}
+

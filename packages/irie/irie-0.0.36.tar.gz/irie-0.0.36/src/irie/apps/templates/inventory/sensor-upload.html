@@ -1,0 +1,119 @@
+<!-- 
+===----------------------------------------------------------------------===#
+
+         STAIRLab -- STructural Artificial Intelligence Laboratory
+
+===----------------------------------------------------------------------===#
+
+Chrystal Chern, Spring 2025
+
+-->
+{% extends "layouts/base.html" %}
+{% block title %} Add Sensor Group to {{ asset.calid }} {% endblock %} 
+
+{% block content %}
+
+<h1>Add Sensor Group to <code>{{ asset.calid }}</code></h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <fieldset>
+        <legend>Sensor Group</legend>
+        {{ group_form.as_p }}
+    </fieldset>
+
+    <fieldset>
+        <legend>Sensors</legend>
+        {{ formset.management_form }}
+        <div id="formset-container" class="container">
+                {% for form in formset %}
+                    <div class="sensor-form">
+                        <div class="row"><div class="col-md-6 d-flex align-items-center mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text col-md-2">{{ form.x.label }}</span>
+                                <input id="{{form.x.html_name}}" type="number" name="{{form.x.html_name}}" class="form-control col-md-4"></input>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text col-md-2">{{ form.y.label }}</span>
+                                <input id="{{form.y.html_name}}" type="number" name="{{form.y.html_name}}" class="form-control col-md-4"></input>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text col-md-2">{{ form.z.label }}</span>
+                                <input id="{{form.z.html_name}}" type="number" name="{{form.z.html_name}}" class="form-control col-md-4"></input>
+                            </div>
+                        </div></div>
+                        <div class="row"><div class="col-md-4 d-flex align-items-center mb-3">
+                            <div class="form-group">
+                                {{ form.dx.label }}: {{ form.dx }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.dy.label }}: {{ form.dy }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.dz.label }}: {{ form.dz }}
+                            </div>
+                        </div></div>
+                        
+                        <button class="remove-form btn btn-danger btn-sm ml-2">Remove</button>
+                    </div>
+                {% endfor %}
+        </div>
+
+        <button id="add-form" class="btn btn-sm button btn-outline-white btn-gray-600 text-white">Add Sensor</button>
+    </fieldset>
+
+    <button type="submit" class="btn btn-sm button btn-success btn-outline-white ">Submit</button>
+</form>
+{%endblock content %}
+{% block javascripts %}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const formsetContainer = document.getElementById("formset-container");
+    const addButton = document.getElementById("add-form");
+    const totalForms = document.getElementById("id_form-TOTAL_FORMS");
+
+    function updateRemoveButtons() {
+        let forms = document.querySelectorAll(".sensor-form");
+
+        forms.forEach((form, index) => {
+            let removeButton = form.querySelector(".remove-form");
+            if (forms.length > 1)
+                removeButton.style.display = "inline-block";
+            else 
+                removeButton.style.display =  "none";
+        });
+    }
+
+    addButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        let formNum = parseInt(totalForms.value);
+        let newForm = document.querySelector(".sensor-form").cloneNode(true);
+        
+        // Update form attributes
+        newForm.innerHTML = newForm.innerHTML.replace(/form-(\d+)-/g, `form-${formNum}-`);
+        formsetContainer.appendChild(newForm);
+
+        // Increment the management form count
+        totalForms.value = formNum + 1;
+
+        updateRemoveButtons();
+    });
+
+    formsetContainer.addEventListener("click", (e) => {
+        if (e.target.classList.contains("remove-form")) {
+            e.preventDefault();
+            if (document.querySelectorAll(".sensor-form").length > 1) {
+                e.target.closest(".sensor-form").remove();
+                totalForms.value = document.querySelectorAll(".sensor-form").length;
+                updateRemoveButtons();
+            }
+        }
+    });
+
+    // Ensure the correct remove button state on load
+    updateRemoveButtons();
+});
+</script>
+{% endblock javascripts %}
