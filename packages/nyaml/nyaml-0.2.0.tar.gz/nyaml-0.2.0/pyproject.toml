@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools>=64.0.1", "setuptools-scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nyaml"
+dynamic = ["version"]
+authors = [
+    { name = "The NOMAD Authors" },
+]
+description = "A tool to convert yaml NeXus application definitions (nyaml) to nexus definitions language (nxdl)."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "click",
+    "lxml",
+    "pyyaml"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/FAIRmat-NFDI/nyaml"
+"Bug Tracker" = "https://github.com/FAIRmat-NFDI/nyaml/issues"
+
+[project.optional-dependencies]
+dev = [
+    "mypy",
+    "ruff>=0.9.6",
+    "pytest",
+    "types-lxml",
+    "pip-tools",
+    "pre-commit",
+    "types-pyyaml",
+    "lxml-stubs",
+    "uv>=0.4.10",
+]
+
+[project.scripts]
+nyaml2nxdl = "nyaml.cli:launch_tool"
+n2n = "nyaml.cli:launch_tool"
+
+[tool.setuptools_scm]
+
+[tool.ruff]
+include = ["src/nyaml/*.py", "src/tests/*.py"]
+lint.select = [
+    "E", # pycodestyle
+    "W", # pycodestyle
+    "PL", # pylint
+]
+lint.ignore = [
+    "E501", # Line too long ({width} > {limit} characters)
+    "E701", # Multiple statements on one line (colon)
+    "E731", # Do not assign a lambda expression, use a def
+    "E402",  # Module level import not at top of file
+    "PLR0911", # Too many return statements
+    "PLR0912", # Too many branches
+    "PLR0913", # Too many arguments in function definition
+    "PLR0915", # Too many statements
+    "PLR2004", # Magic value used instead of constant
+    "PLW0603", # Using the global statement
+    "PLW2901", # redefined-loop-name
+    "PLR1714", # consider-using-in
+    "PLR5501", # else-if-used
+]
+lint.fixable = ["ALL"]
+
+[tool.mypy]
+strict = false
+ignore_missing_imports = true
+follow_imports = "silent"
+no_strict_optional = true
+disable_error_code = "import, annotation-unchecked"
