@@ -1,0 +1,110 @@
+[tool.poetry]
+name = "wlr-layout-ui"
+version = "1.6.16"
+description = "A tiny GUI to configure screen layouts on wayland"
+authors = ["fdev31 <fdev31@gmail.com>"]
+readme = "README.md"
+homepage = "https://github.com/fdev31/wlr-layout-ui"
+packages = [{include = "wlr_layout_ui", from = "src"}]
+license = "MIT"
+
+[tool.poetry.scripts]
+wlrlui = 'wlr_layout_ui:main'
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pyglet = "^2.0.0"
+tomli = "^2.0.1"
+tomli-w = "^1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.2.0"
+vulture = "^2.7"
+pydantic = "^1.10.7"
+black = "^23.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 140
+preview = true
+
+exclude = ["*_v?.py", "tests", "scripts", "sample_extension", ".git"]
+
+
+[tool.ruff.lint]
+fixable = ["ALL"]
+select = [
+    # pycodestyle
+    "E", # error
+    "W", # warn
+    # builtins
+    "A",
+    # bugbear
+    "B",
+    # comprehensions
+    "C",
+    # err msg
+    "EM",
+    # str concat
+    "ISC",
+    # import conventions
+    "ICN",
+    # flake8 log
+    "G",
+    "LOG",
+    # pep8 naming
+    "D",
+    # pydocstyle
+    "D",
+    # mccabe
+    "C",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # flake-2020
+    "YTT",
+    # flake-annotations
+    "ANN",
+    # flake-async
+    "ASYNC",
+    # flake-blind-except
+    "BLE",
+    # flake-boolean-trap
+    "FBT",
+    # pytest
+    "PT",
+    # self
+    "SLF",
+    # tidy-imports
+    "TID",
+    # type checking
+    "TCH",
+    # unused arg
+    "ARG",
+    # pathlib
+    "PTH",
+    # pylint
+    "PL",
+    # perflnt
+    "PERF",
+    # ruf
+    "RUF",
+]
+ignore = ["ANN201", "ANN001", "ANN002", "ANN202", "ARG002", "PLR", "C", "FBT002", "D107", "ANN204", "D", "ISC001"]
+
+[tool.ruff.format]
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
