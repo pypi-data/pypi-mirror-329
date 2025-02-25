@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zarf_image_injector"
+version = "1.0"
+dependencies = [
+    "pyyaml",
+]
+authors = [
+    { name="Andrew Robbins", email="ncvarsity3@gmail.com" },
+]
+description = "This does dynamic image discovery for the zarf CD pipeline"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+keywords = ["zarf", "image", "injector"]
+classifiers = [
+   "Programming Language :: Python :: 3",
+   "Operating System :: OS Independent",
+   "License :: OSI Approved :: MIT License",
+]
+
+[project.scripts]
+zarf-image-injector = "app.image_injector:main"

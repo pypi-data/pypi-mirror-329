@@ -1,0 +1,1 @@
+This provides dynamic image discovery and injection to be used with GitLab CI/CD pipelines.
