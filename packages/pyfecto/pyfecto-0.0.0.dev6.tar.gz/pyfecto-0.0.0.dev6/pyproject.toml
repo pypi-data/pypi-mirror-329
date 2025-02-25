@@ -1,0 +1,50 @@
+[tool.poetry]
+name = "pyfecto"
+description = "A simple yet powerful library for handling effects and errors in Python"
+authors = ["fernanluyano"]
+license = "MIT"
+readme = "README.md"
+packages = [
+    { include = "pyfecto", from = "src" }
+]
+version = "0.0.0.dev6" # dynamically overwritten
+
+[tool.poetry.dependencies]
+python = "^3.11"
+gitpython = "^3.1.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-cov = "^6.0.0"
+black = "^25.1.0"
+isort = "^6.0.0"
+flake8 = "^7.1.2"
+mypy = "^1.15.0"
+
+[build-system]
+requires = [
+    "poetry-core>=2.0.0,<3.0.0",
+    "poetry-dynamic-versioning>=1.0.0,<2.0.0"
+]
+build-backend = "poetry_dynamic_versioning.backend"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+
+[tool.poetry-dynamic-versioning]
+enable = false
+vcs = "git"
+style = "pep440"
+format-jinja = """
+{%- if branch == "main" or branch == "master" or branch == "develop" -%}
+0.0.0
+{%- elif branch.startswith("release/") -%}
+{{ branch.split("/")[1] }}
+{%- else -%}
+0.0.0.dev{{ branch.split("/")[1].split("-")[1] }}
+{%- endif -%}
+"""
+
+[tool.poetry.requires-plugins]
+poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
