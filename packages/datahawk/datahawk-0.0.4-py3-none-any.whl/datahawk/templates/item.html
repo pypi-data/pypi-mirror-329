@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Datahawk</title>
+    <style>
+        .scroll-container {
+            border: 0.0625em solid #ccc;
+            border-radius: 0.5em;
+            padding: 0.625em;
+            margin: 0.3125em 0;
+            resize: vertical;
+            min-height: 3em;
+            height: auto;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .json-header {
+            position: sticky;
+            top: 0;
+            background-color: white; /* Or match your page background color */
+            padding: 0.1em 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5em;
+        }
+
+        .value-scroll {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .json-key {
+            color: darkblue;
+            font-weight: bold;
+            font-size: 1.5em;
+            font-family: monospace;
+            flex: 1;
+        }
+
+        /* Each line is wrapped in a .json-value-wrapper containing value-line-number & text */
+        .json-value-wrapper {
+            /*color: rgb(42, 42, 42);*/
+            color: black;
+            font-size: 1.3em;
+            white-space: pre-wrap;    /* do not wrap lines automatically */
+            font-family: monospace;
+            display: flex;
+            line-height: 1.5;
+        }
+        
+        .value-line-number {
+            width: 3em;         /* fixed width for line numbers */
+            text-align: right;
+            margin-right: 1em;
+            color: #666;
+            user-select: none;  /* optional: prevent text selection on numbers */
+            flex-shrink: 0;
+        }
+
+        .value-line-text {
+            flex: 1;
+            /* If a line is too long, allow horizontal scroll inside the .value-scroll container */
+        }
+
+        hr {
+            border: 1px solid lightgray;
+            margin: 1em 0;
+        }
+
+        .toggle-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            padding: 0 5px;
+            color: #999;
+        }
+        
+        .toggle-button:hover {
+            color: #000;
+        }
+
+        h1 {
+            display: flex;
+            align-items: center;
+            font-size: 2.5em;
+        }
+    </style>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🦅</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="static/mystyles.css">
+    <script>
+        // Copy to clipboard
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.addEventListener('click', function(event) {
+                if (event.target.classList.contains('clipboardIcon')) {
+                   // Get the current target which is the clicked .clipboardIcon element
+                   var clickedIcon = event.target;
+                   // get text to copy
+                   idToCopy = clickedIcon.getAttribute("data-argument");
+                   var textToCopyElement = document.getElementById(idToCopy);
+                   if (textToCopyElement) {
+                        var textToCopy = textToCopyElement.textContent;
+                        // copy by creating new element
+                        var textarea = document.createElement("textarea");
+                        textarea.value = textToCopy;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        // Remove the element
+                        document.body.removeChild(textarea);
+                        
+                        // Change the icon and hover text to indicate text has been copied
+                        clickedIcon.classList.remove("far", "fa-clone");
+                        clickedIcon.classList.add("fa", "fa-check");
+                        clickedIcon.title = "Copied!";
+                        // Revert the icon and hover text back to the original after 2 seconds
+                        setTimeout(function() {
+                            clickedIcon.classList.remove("fa", "fa-check");
+                            clickedIcon.classList.add("far", "fa-clone");
+                            clickedIcon.title = "Copy Text";
+                        }, 500);
+                    }
+                }
+            });
+        });
+
+        // Function to render the JSON output
+        function renderJson() {
+            var jsonOutput = document.getElementById('json-output');
+            var jsonData = {{ json_entry|safe }};
+            
+            for (var key in jsonData) {
+                // Create the scrollable container first
+                var scrollContainer = document.createElement('div');
+                scrollContainer.className = 'scroll-container';
+
+                var jsonHeader = document.createElement('div');
+                jsonHeader.className = 'json-header';
+
+                // Add toggle button
+                var toggleButton = document.createElement('button');
+                toggleButton.innerHTML = '▼'; // Down arrow to indicate expanded
+                toggleButton.className = 'toggle-button';
+                toggleButton.style.marginRight = '5px';
+                var toggleFunction = function(valueContainer) {
+                    return function() {
+                        if (valueContainer.style.display === 'none') {
+                            valueContainer.style.display = 'block';
+                            this.innerHTML = '▼';
+                            adjustScrollContainerHeights();
+                        } else {
+                            valueContainer.style.display = 'none';
+                            this.innerHTML = '▶';
+                            adjustScrollContainerHeights();
+                        }
+                    };
+                };
+                jsonHeader.appendChild(toggleButton);
+
+                var keyElement = document.createElement('div');
+                keyElement.className = 'json-key';
+                keyElement.textContent = key + ':';
+                jsonHeader.appendChild(keyElement);
+
+                var clipboardElement = document.createElement('i');
+                clipboardElement.classList.add('clipboardIcon', 'far', 'fa-clone');
+                clipboardElement.setAttribute('data-argument', `${key}-value`);
+                clipboardElement.style.cursor = 'pointer';
+                jsonHeader.appendChild(clipboardElement);
+
+                scrollContainer.appendChild(jsonHeader);
+
+                // Create a scrollable div for the value
+                var valueScrollContainer = document.createElement('div');
+                valueScrollContainer.className = 'value-scroll';
+
+                // Prepare the content (unescape any special chars)
+                let content = jsonData[key]
+                    .replace(/\\n/g, '\n')
+                    .replace(/\\'/g, '\'')
+                    .replace(/\\"/g, '"')
+                    .replace(/\\\\/g, '\\');
+
+                // This hidden div will hold the entire text to be copied
+                // (since line numbering is separated out)
+                var hiddenFullValue = document.createElement('div');
+                hiddenFullValue.id = `${key}-value`;
+                hiddenFullValue.style.display = 'none';  // don't show it
+                hiddenFullValue.textContent = content;
+                scrollContainer.appendChild(hiddenFullValue);
+
+                // Split by newlines, render each line in a .json-value-wrapper
+                var lines = content.split('\n');
+                lines.forEach(function(line, index) {
+                    var lineWrapper = document.createElement('div');
+                    lineWrapper.className = 'json-value-wrapper';
+
+                    var lineNumberSpan = document.createElement('span');
+                    lineNumberSpan.className = 'value-line-number';
+                    lineNumberSpan.textContent = (index + 1).toString();
+
+                    var lineTextSpan = document.createElement('span');
+                    lineTextSpan.className = 'value-line-text';
+                    lineTextSpan.textContent = line;
+
+                    // Add both to the wrapper
+                    lineWrapper.appendChild(lineNumberSpan);
+                    lineWrapper.appendChild(lineTextSpan);
+
+                    // Add this line to the value scroll container
+                    valueScrollContainer.appendChild(lineWrapper);
+                });
+                toggleButton.onclick = toggleFunction(valueScrollContainer);
+
+                // Add the value scroll container to the main container
+                scrollContainer.appendChild(valueScrollContainer);
+                
+                // Add the scroll container to the output
+                jsonOutput.appendChild(scrollContainer);
+            }
+        }
+        
+        // Call the renderJson function on page load
+        window.onload = function() {
+            renderJson();
+            adjustScrollContainerHeights();
+        }
+
+        let initial_filters = {% if filter_list %}{{ filter_list|tojson }}{% else %}[]{% endif %};
+        let filterCount = 0;
+        let initial_keys = {% if key_list %}{{ key_list|tojson }}{% else %}[]{% endif %};
+        let keyCount = 0;
+
+        function adjustScrollContainerHeights() {
+            const containers = document.querySelectorAll('.scroll-container');
+
+            // Create a test element to find out how many px correspond to 1em in current environment
+            let testElement = document.createElement('div');
+            testElement.style.height = '1em';
+            testElement.style.position = 'absolute';
+            document.body.appendChild(testElement);
+
+            // Calculate 1em in pixels
+            let oneEmInPx = testElement.clientHeight;
+            document.body.removeChild(testElement);
+
+            // 25em in pixels
+            let maxHeightPx = 25 * oneEmInPx;
+
+            containers.forEach(function(container) {
+                container.style.height = 'auto';
+
+                // If scrollHeight is less than 25em in px, set the container's height to auto
+                if (container.scrollHeight > maxHeightPx) {
+                    container.style.height = '25em';
+                }
+                // Check if valueScroll is collapsed
+                const valueScroll = container.querySelector('.value-scroll');
+                if (valueScroll && valueScroll.style.display === 'none') {
+                    container.style.height = '0em'; // Collapsed height
+                }
+            });
+        }
+        
+        // Handle filters
+        function addFilter(filterInput) {
+            if (!filterInput) {
+                filterInput = document.getElementById('filterInput').value;
+            }
+            if (filterInput) {
+                const filterList = document.getElementById('filterList');
+                const newFilter = document.createElement('div');
+                const hrElement = document.createElement('hr');
+
+                // Create a hidden input for this filter
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'filter_' + filterCount;
+                hiddenInput.value = filterInput;
+                filterCount++;
+
+                newFilter.style.fontFamily = "monospace";
+                newFilter.style.fontSize = "1.1em";
+                newFilter.style.margin = "5px 0";
+                newFilter.style.display = "flex";
+                newFilter.style.justifyContent = "space-between";
+
+                const filterText = document.createElement('span');
+                filterText.innerText = filterInput;
+                
+                const removeIcon = document.createElement('span');
+                removeIcon.innerHTML = "&#10005;";
+                removeIcon.style.cursor = "pointer";
+                
+                removeIcon.onclick = function() {
+                    filterList.removeChild(newFilter);
+                    filterList.removeChild(hiddenInput);
+                    filterList.removeChild(hrElement);
+                };
+
+                newFilter.appendChild(filterText);
+                newFilter.appendChild(removeIcon);
+                
+                filterList.appendChild(newFilter);
+                filterList.appendChild(hiddenInput); // Append the hidden input
+                filterList.appendChild(hrElement);
+
+                document.getElementById('filterInput').value = '';
+            }
+        }
+
+        // Handle keys
+        function addKey(keyInput) {
+            if (!keyInput) {
+                keyInput = document.getElementById('keyInput').value;
+            }
+            if (keyInput) {
+                const keyList = document.getElementById('keyList');
+                const newKey = document.createElement('div');
+                const hrElement = document.createElement('hr');
+
+                // Create a hidden input for this key
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'key_' + keyCount;
+                hiddenInput.value = keyInput;
+                keyCount++;
+
+                newKey.style.fontFamily = "monospace";
+                newKey.style.fontSize = "1.1em";
+                newKey.style.margin = "5px 0";
+                newKey.style.display = "flex";
+                newKey.style.justifyContent = "space-between";
+
+                const keyText = document.createElement('span');
+                keyText.innerText = keyInput;
+                
+                const removeIcon = document.createElement('span');
+                removeIcon.innerHTML = "&#10005;";
+                removeIcon.style.cursor = "pointer";
+                
+                removeIcon.onclick = function() {
+                    keyList.removeChild(newKey);
+                    keyList.removeChild(hiddenInput);
+                    keyList.removeChild(hrElement);
+                };
+
+                newKey.appendChild(keyText);
+                newKey.appendChild(removeIcon);
+                
+                keyList.appendChild(newKey);
+                keyList.appendChild(hiddenInput); // Append the hidden input
+                keyList.appendChild(hrElement);
+
+                document.getElementById('keyInput').value = '';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Initialize with existing filters and keys
+            if (initial_filters && initial_filters.length > 0) {
+                initial_filters.forEach(function(filter) {
+                    addFilter(filter);
+                });
+                filterCount = initial_filters.length;
+            }
+            if (initial_keys && initial_keys.length > 0) {
+                initial_keys.forEach(function(key) {
+                    addKey(key);
+                });
+                keyCount = initial_keys.length;
+            }
+        });
+
+    </script>
+</head>
+<body>
+
+<div class="main-layout">
+
+    <div class="container">
+        <h1><img src="static/hawk-128x128.png" width="75em">datahawk</h1>
+        {% if error_message %}
+            <p style="color: red;">{{ error_message }}</p>
+        {% endif %}
+        <span style="font-weight: bold">
+            Viewing: 
+            <span id="dataPath" style="font-family: monospace; font-size: 1.1em; color: rgb(158, 27, 158)">{{ data_path }}</span>
+            <span id="dataPathClipboardIcon" style="cursor:pointer; padding-right:1.5%" title="Copy Text"><i class="clipboardIcon far fa-clone" data-argument="dataPath"></i></span>
+        </span>
+        <button onclick="window.location.href='/'">Change Source File</button>
+        <br><br>
+        <form action="/update_index" method="post" style="display: inline; padding-right: 5%">
+            <label for="indexInput">Index: </label>
+            {% if read_mode == "load" %}
+                <input id="indexInput" name="indexInput" type="text" style="font-family: monospace; font-size: 1.1em;" size="5em" value="{{ index }}" />
+                {% if data_size is not none %}
+                    <strong style="font-family: monospace; font-size: 1.1em"> of {{ data_size }} </strong>
+                {% endif %}
+                <input type="submit" value="Go">
+            {% elif read_mode == "stream" %}
+                <strong style="font-family: monospace; font-size: 1.1em">{{ index }}</strong>
+                {% if data_size is not none %}
+                    <strong style="font-family: monospace; font-size: 1.1em"> of {{ data_size }} </strong>
+                {% endif %}
+            {% endif %}
+        </form>
+        Navigate: 
+        {% if read_mode == "load" %}
+            <button onclick="window.location.href='/first_item'">First</button>
+            <button onclick="window.location.href='/previous_item'">Previous</button>
+            <button onclick="window.location.href='/next_item'">Next</button>
+            <button onclick="window.location.href='/last_item'">Last</button>
+            <button onclick="window.location.href='/random_json'">Random</button>
+        {% elif read_mode == "stream" %}
+            <button onclick="window.location.href='/next_item'">Next</button>
+        {% endif %}
+        <hr>
+        <div id="json-output"></div>
+        <br>
+    </div>
+
+    {% if can_filter or can_sort %}
+        <div class="sidebar">
+            {% if can_filter %}
+                <div class="filters">
+                    <h3>Filters</h3>
+                    <p>Input Python lambda functions, assuming <code>x</code> as the <code>dict</code> item.</p> 
+                    <p>Example: <code>len(x["content"]) <= 100</code></p>
+                    <p style="color: darkblue;">Add multiple filters using <strong>Add</strong> and press <strong>Filter</strong> when done.<br>Note: Filters are applied in order.</p>
+                    <br>
+                    <form id="filterForm" action="/filter_data" method="post">
+                        <div id="filterList" class="filter-list">
+                            <!-- Filter list will appear here -->
+                        </div>
+                        <br>
+                        <div id="addFilterForm">
+                            <label for="newFilter">Filter: </label>
+                            <input id="filterInput" name="filterInput" type="text" 
+                                style="font-family: monospace; font-size: 1.1em;" 
+                                size="28" />
+                            <input type="button" value="Add" onclick="addFilter()" />
+                            <input type="submit" value="Filter" />
+                        </div>
+                    </form>
+                    {% if filter_error_message %}
+                        <p style="color: red;">{{ filter_error_message }}</p>
+                    {% elif is_filtered_data %}
+                        <p style="color: green;">Filtered data successfully!</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if can_sort %}
+                <div class="sorter">
+                    <h3>Sort</h3>
+                    <p>Input Python lambda functions, assuming <code>x</code> as the <code>dict</code> item.</p> 
+                    <p>Example: <code>len(x["content"])</code></p>
+                    <p style="color: darkblue;">Add multiple keys using <strong>Add</strong> and press <strong>Sort</strong> when done.<br>Note: Earlier keys take higher precedence.</p>
+                    <br>
+                    <form id="sortForm" action="/sort_data" method="post">
+                        <div id="keyList" class="key-list">
+                            <!-- Sort key list will appear here -->
+                        </div>
+                        <br>
+                        <div id="addKeyForm">
+                            <label for="newKey">Key: </label>
+                            <input id="keyInput" name="keyInput" type="text" 
+                                style="font-family: monospace; font-size: 1.1em;" 
+                                size="28" />
+                            <input type="button" value="Add" onclick="addKey()" />
+                            <input type="submit" value="Sort" />
+                        </div>
+                    </form>
+                    {% if sort_error_message %}
+                        <p style="color: red;">{{ sort_error_message }}</p>
+                    {% elif is_sorted_data %}
+                        <p style="color: green;">Sorted data successfully!</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
