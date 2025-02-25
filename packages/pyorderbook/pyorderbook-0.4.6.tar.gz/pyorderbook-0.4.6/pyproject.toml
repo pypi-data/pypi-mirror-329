@@ -1,0 +1,44 @@
+[build-system]
+requires = [ "hatchling>=1.0.0",]
+build-backend = "hatchling.build"
+
+[project]
+name = "pyorderbook"
+version = "v0.4.6"
+description = "Order Book and Matching Engine"
+keywords = [ "orderbook", "pyorderbook", "order book", "limit order book", "matching engine",]
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [ "Programming Language :: Python :: 3", "Programming Language :: Python :: 3.11", "Programming Language :: Python :: 3.12", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent",]
+[[project.authors]]
+name = "Zach Khorozian"
+email = "zkhorozianbc@gmail.com"
+
+[dependency-groups]
+dev = [ "pre-commit>=4.1.0", "mypy>=1.13.0", "pytest>=8.3.3", "ruff>=0.7.4", "pre-commit>=3.5.0", "toml>=0.10.2",]
+
+[project.license]
+file = "LICENSE"
+
+[project.urls]
+Repository = "https://github.com/zkhorozianbc/pyorderbook"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.mypy]
+ignore_missing_imports = true
+strict = true
+[[tool.mypy.overrides]]
+module = "toml"
+ignore_missing_imports = true
+
+[tool.ruff.lint]
+select = [ "E", "F", "UP", "B", "SIM", "I",]
+ignore = []
+fixable = [ "ALL",]
+
+[tool.hatch.build.targets.wheel]
+packages = [ "pyorderbook",]
+include = [ "pyorderbook/*.py", "test/*.py",]
