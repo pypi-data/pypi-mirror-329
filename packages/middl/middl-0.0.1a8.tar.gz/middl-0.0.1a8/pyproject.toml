@@ -1,0 +1,39 @@
+[project]
+name = "middl"
+description = "Composable middleware components for creating machine learning pipelines"
+readme = "README.md"
+authors = [{ name = "Tadej Svetina", email = "tadej.svetina@gmail.com" }]
+requires-python = ">=3.10"
+dependencies = []
+dynamic = ["version"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/middl/__init__.py"
+
+[dependency-groups]
+dev = ["mypy>=1.15.0", "pytest>=8.3.4", "ruff>=0.9.5"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "FBT001",
+    "FBT002",
+    "D200",
+    "D203",
+    "D205",
+    "D212",
+    "D401",
+    "COM812",
+    "ISC001",
+    "PERF203"
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D", "ANN401", "ARG001", "ARG002", "S101", "SLF001"]
