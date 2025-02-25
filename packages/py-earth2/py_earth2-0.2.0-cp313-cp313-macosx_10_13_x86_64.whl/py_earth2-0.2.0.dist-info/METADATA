@@ -1,0 +1,82 @@
+Metadata-Version: 2.4
+Name: py-earth2
+Version: 0.2.0
+Summary: A Python implementation of Jerome Friedman's Multivariate Adaptive Regression Splines.
+Author-email: Jason Rudy <jcrudy@gmail.com>
+License: Copyright (c) 2025, Felix Williams
+        Copyright (c) 2013, Jason Rudy
+        All rights reserved.
+        
+        Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+        
+        Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+        Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+        Neither the name of Clinicast, Inc., nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+License-File: LICENSE.txt
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Unix
+Classifier: Programming Language :: Cython
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Software Development
+Requires-Python: >=3.10
+Requires-Dist: numpy>=1
+Requires-Dist: scikit-learn>=0.16
+Requires-Dist: scipy>=1
+Provides-Extra: export
+Requires-Dist: sympy; extra == 'export'
+Description-Content-Type: text/markdown
+
+# py-earth2
+
+This project is copied from [py-earth](https://github.com/scikit-learn-contrib/py-earth), which has been archived since December 2023 and is licensed under BSD-3-Clause Copyright (c) 2013, Jason Rudy.
+
+The original README can be found in [`README-original.md`](README-original.md)
+
+A Python implementation of Jerome Friedman's Multivariate Adaptive Regression Splines algorithm,
+in the style of scikit-learn. The py-earth package implements Multivariate Adaptive Regression Splines using Cython and provides an interface that is compatible with scikit-learn's Estimator, Predictor, Transformer, and Model interfaces.  For more information about
+Multivariate Adaptive Regression Splines, see the references below.
+
+---
+
+## Usage
+
+```python
+import numpy
+from pyearth import Earth
+from matplotlib import pyplot
+
+#Create some fake data
+numpy.random.seed(0)
+m = 1000
+n = 10
+X = 80*numpy.random.uniform(size=(m,n)) - 40
+y = numpy.abs(X[:,6] - 4.0) + 1*numpy.random.normal(size=m)
+
+#Fit an Earth model
+model = Earth()
+model.fit(X,y)
+
+#Print the model
+print(model.trace())
+print(model.summary())
+
+#Plot the model
+y_hat = model.predict(X)
+pyplot.figure()
+pyplot.plot(X[:,6],y,'r.')
+pyplot.plot(X[:,6],y_hat,'b.')
+pyplot.xlabel('x_6')
+pyplot.ylabel('y')
+pyplot.title('Simple Earth Example')
+pyplot.show()
+```
