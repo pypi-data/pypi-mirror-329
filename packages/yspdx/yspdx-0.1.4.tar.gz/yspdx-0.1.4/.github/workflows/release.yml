@@ -1,0 +1,42 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "*" # Triggers when any tag is pushed
+
+permissions:
+  id-token: write # Needed for trusted publisher authentication
+  contents: write # Needed to create a GitHub release
+
+jobs:
+  release:
+    name: Create Release & Publish to PyPI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: uv pip install --system .  # Install from the current directory
+      
+      - name: Build package
+        run: uv build
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
+
+      - name: Publish to PyPI
+        run: uv publish
