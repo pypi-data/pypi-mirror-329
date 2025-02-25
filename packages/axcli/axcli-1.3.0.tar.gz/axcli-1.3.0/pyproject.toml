@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "axcli"
+version = "1.3.0"
+dependencies = ["axinite", "click", "colorama"]
+authors = [{ name = "Jewels", email = "jewels@jewels86.me" }]
+maintainers = [{ name = "Jewels", email = "jewels286@proton.me" }]
+description = "A command line interface for the Axinite library."
+readme = "README.md"
+license = { file = "LICENSE.md" }
+keywords = ["celestial-mechanics", "orbital-dynamics", "engine", "astrodynamics", "cli"]
+
+[project.scripts]
+axcli = "axcli.cli:main"
+
+[project.urls]
+Documentation = "https://jewels86.gitbook.io/axinite/axcli"
+Repository = "https://github.com/jewels86/axcli"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["axcli*"]
