@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pmd-django"
+version = "1.0.2"
+description = ""
+authors = [
+    { name = "TechServ Engineering Team", email = "engineering@techserv.com" }
+]
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = [
+    "Django==5.*"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["pmd_django"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
