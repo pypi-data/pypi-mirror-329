@@ -1,0 +1,19 @@
+[package]
+name = "text"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[features]
+default = ["serde", "lsp"]
+lsp = ["dep:tower-lsp"]
+serde = ["dep:serde"]
+
+[dependencies]
+serde = { workspace = true, optional = true }
+tower-lsp = { workspace = true, optional = true }
+tracing.workspace = true
+
+[dev-dependencies]
+rstest.workspace = true
