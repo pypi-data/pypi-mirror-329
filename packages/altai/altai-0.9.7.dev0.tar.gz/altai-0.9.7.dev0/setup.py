@@ -1,0 +1,77 @@
+from setuptools import find_packages, setup
+
+
+def readme():
+    with open("README.md", encoding="utf-8") as f:
+        return f.read()
+
+
+# read version file
+exec(open('altai/version.py').read())
+
+extras_require = {
+    'ray': ['ray>=0.8.7, <3.0.0'],
+    'shap': [
+        'shap>=0.40.0, <0.44.0',
+        'numba>=0.50.0, !=0.54.0, <0.60.0',
+    ],
+    'tensorflow': [
+        'tensorflow>=2.16.0, <2.19.0',
+        'tf-keras>=2.16.0, <2.19.0'
+    ],
+    'torch': ['torch>=1.9.0, <3.0.0'],
+    'all': [
+        'ray>=0.8.7, <3.0.0',
+        'shap>=0.40.0, <0.44.0',
+        'numba>=0.50.0, !=0.54.0, <0.60.0',
+        'tensorflow>=2.16.0, <2.19.0',
+        'tf-keras>=2.16.0, <2.19.0',
+        'torch>=1.9.0, <3.0.0',
+    ]
+}
+
+if __name__ == '__main__':
+    setup(name='altai',
+          author='AffectLog',
+          author_email='developers@affectlog.com',
+          version=__version__,
+          description="AffectLog's Trustworthy AI: Tools for model transparency, explainability, and regulatory compliance.",
+          long_description=readme(),
+          long_description_content_type='text/markdown',
+          url='https://github.com/roy-saurabh/altai.git',
+          license="Business Source License 1.1",
+          packages=find_packages(),
+          include_package_data=True,
+          python_requires='>=3.9',
+          # lower bounds based on Debian Stable versions where available
+          install_requires=[
+              'numpy>=1.16.2, <2.0.0',
+              'pandas>=1.0.0, <3.0.0',
+              'scikit-learn>=1.0.0, <2.0.0',
+              'spacy[lookups]>=2.0.0, <3.8.0',  # later versions depend on `numpy<3.0.0,>=2.0.0`
+              'blis<0.8.0',
+              'scikit-image>=0.17.2, <0.23',  # introduced `start_label` argument for `slic`
+              'requests>=2.21.0, <3.0.0',
+              'Pillow>=5.4.1, <11.0',
+              'attrs>=19.2.0, <24.0.0',
+              'scipy>=1.1.0, <2.0.0',
+              'matplotlib>=3.0.0, <4.0.0',
+              'typing-extensions>=3.7.4.3',
+              'dill>=0.3.0, <0.4.0',
+              'transformers>=4.7.0, <5.0.0',
+              'tqdm>=4.28.1, <5.0.0',
+          ],
+          extras_require=extras_require,
+          test_suite='tests',
+          zip_safe=False,
+          classifiers=[
+              "Intended Audience :: Science/Research",
+              "Operating System :: OS Independent",
+              "Programming Language :: Python :: 3",
+              "Programming Language :: Python :: 3.9",
+              "Programming Language :: Python :: 3.10",
+              "Programming Language :: Python :: 3.11",
+              "Programming Language :: Python :: 3.12",
+              "License :: Other/Proprietary License",
+              "Topic :: Scientific/Engineering",
+          ])
