@@ -1,0 +1,29 @@
+[project]
+name = "PyPaf"
+dynamic = ["version"]
+authors = [
+  { name="John Bard", email="johnbard@globalnet.co.uk" },
+]
+description = "Formats the elements of a Royal Mail Postcode Address File entry"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent"
+]
+license = { text = "MIT", files = ["LICEN[CS]E*"] }
+
+[project.urls]
+Homepage = "https://github.com/drabjay/pypaf"
+Repository = "https://github.com/drabjay/pypaf.git"
+Issues = "https://github.com/drabjay/paf/issues"
+
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+version = { attr = "paf.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"] 
