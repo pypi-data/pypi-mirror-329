@@ -1,0 +1,65 @@
+site_name: roboherd
+watch: [docs, mkdocs.yml, roboherd]
+
+repo_url: https://codeberg.org/bovine/roboherd/
+repo_name: bovine/roboherd
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/git-alt
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - content.code.copy
+    - content.tabs.link
+    - navigation.footer
+    - navigation.sections
+markdown_extensions:
+  - smarty
+  - tables
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - mkdocs-click
+plugins:
+  - search
+  - mkdocstrings:
+      enable_inventory: true
+      handlers:
+        python:
+          inventories:
+            - https://docs.python.org/3/objects.inv
+            - https://docs.pydantic.dev/latest/objects.inv
+            - https://bovine.readthedocs.io/en/latest/objects.inv
+          options:
+            docstring_style: sphinx
+            heading_level: 1
+            show_root_heading: true
+            show_submodules: true
+            extensions:
+              - griffe_fieldz: { include_inherited: true }
+nav:
+  - Home: index.md
+  - "Commang Line Tool": cli.md
+  - "References":
+      - "roboherd.annotations": annotations.md
+      - "roboherd.cow": cow.md
+      - "roboherd.herd": herd.md
+      - "roboherd.util": util.md

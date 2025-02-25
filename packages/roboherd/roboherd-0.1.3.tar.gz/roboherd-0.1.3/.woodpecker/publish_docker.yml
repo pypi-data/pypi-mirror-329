@@ -1,0 +1,29 @@
+when:
+  - event: tag
+    branch: main
+
+matrix:
+  PYTHON_VERSION: [3.13]
+
+depends_on: ["publish_pypi"]
+
+steps:
+  publish_docker_latest:
+    image: woodpeckerci/plugin-docker-buildx
+    settings:
+      platforms: linux/amd64,linux/arm64
+      repo: helgekr/roboherd
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      dockerfile: resources/docker/Dockerfile
+      tags:
+        - latest
+        - ${CI_COMMIT_TAG}
+        - ${CI_COMMIT_TAG}-python${PYTHON_VERSION}
+      build_args:
+        - tag=${CI_COMMIT_TAG}
+        - python_tag=${PYTHON_VERSION}
+    when:
+      - matrix: { PYTHON_VERSION: 3.13 }
