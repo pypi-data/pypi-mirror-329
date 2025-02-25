@@ -1,0 +1,33 @@
+# this is a parent helm chart for the DPPS project
+
+apiVersion: v2
+name: dpps
+version: "0.0.0-dev"
+appVersion: "0.0.0-dev"
+description: A Helm chart for the DPPS project
+type: application
+keywords:
+- dpps
+
+maintainers:
+- name: The DPPS Authors
+  email:
+
+dependencies:
+- name: bdms
+  version: v0.1.0
+  repository: oci://harbor.cta-observatory.org/dpps
+
+- name: wms
+  version: v0.1.0
+  repository: oci://harbor.cta-observatory.org/dpps
+
+- name: cvmfs
+  version: v0.1.0
+  condition: cvmfs.enabled
+  repository: oci://harbor.cta-observatory.org/dpps
+
+- name: cert-generator-grid
+  condition: cert-generator-grid.enabled
+  version: v0.2.3
+  repository: oci://harbor.cta-observatory.org/dpps

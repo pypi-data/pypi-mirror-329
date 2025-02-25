@@ -1,0 +1,60 @@
+#
+include:
+  - project: 'cta-computing/dpps/aiv/dpps-aiv-toolkit'
+    ref: 34ef394f4f707dacea789778c718300fa521b10d
+    file: 'ci-functions.yml'
+  - "aiv-config.yml"
+
+
+variables:
+  CHART_LOCATION: chart
+  CHART_NAME: dpps
+  CHART_EXTRA_VALUES: "--set dev.client_image_tag=${DOCKER_TAG}"
+  DPPS_AIV_TOOLKIT_DIR: dpps-aiv-toolkit
+  DOCKER_IMAGE_CONTEXT: '${CI_PROJECT_DIR}'
+  CONDA_IMAGE: "quay.io/condaforge/miniforge3:24.11.3-0"
+
+stages:
+  - prepare
+  - lint
+  - build
+  - sign
+  - tests
+  - sonarqube
+  - publish
+  - report
+
+
+build:
+  variables:
+    CI_HARBOR_REGISTRY_IMAGE: '${HARBOR_HOST}/dpps/dpps-clients:${DOCKER_TAG}'
+  rules:
+    - when: always
+
+
+# wms depends on gfal2 via dirac, which is sessentially impossible to install with pip
+build-docs:
+  image: "${CONDA_IMAGE}"
+
+  before_script:
+    - source /opt/conda/etc/profile.d/conda.sh
+    - mamba create -y -n ci python=3.12 gfal2 m2crypto dirac-grid make
+    - conda activate ci
+    - python --version
+    - pip install .[doc]
+
+
+pylint:
+  image: "${CONDA_IMAGE}"
+
+  before_script:
+    - apt update && apt install -y --no-install-recommends git
+    - source /opt/conda/etc/profile.d/conda.sh
+    - mamba create -y -n ci python=3.12 gfal2 m2crypto dirac-grid pylint
+    - conda activate ci
+    - python --version
+    - pip install .[all]
+
+sign:
+  rules:
+    - when: never
