@@ -1,0 +1,66 @@
+Metadata-Version: 2.2
+Name: mkdocs-breadcrumbs-plugin
+Version: 0.1.12
+Summary: Location-based breadcrumbs plugin for mkdocs.
+Home-page: https://github.com/mihaigalos/mkdocs-breadcrumbs-plugin
+Author: Mihai Galos
+Author-email: mihai@galos.one
+License: MIT
+Keywords: mkdocs plugin
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: License :: OSI Approved :: MIT License
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: mkdocs>=1.0.4
+Requires-Dist: mkdocs-material
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# mkdocs-breadcrumbs-plugin
+
+Mkdocs location-based breadcrumbs navigation.
+
+These directly get prepended to rendered Markdown.
+
+![screenshot](https://github.com/mihaigalos/mkdocs-breadcrumbs-plugin/raw/main/screenshots/mkdocs-breadcrumbs-plugin.png)
+
+## Setup
+
+Install the plugin using pip:
+
+```bash
+pip install mkdocs-breadcrumbs-plugin
+```
+
+Activate the plugin in `mkdocs.yaml`:
+```yaml
+plugins:
+  - mkdocs-breadcrumbs-plugin:
+      delimiter: " / "  # separator between sections
+      log_level: "WARNING"  # "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
+      exclude_paths:
+        - "docs/mkdocs/**"
+        - "docs/mkdocs"   # avoid generating index.md
+      additional_index_folders:
+        - temp_dir
+      generate_home_index: false
+      use_page_titles: true # use page title instead of path in breadcrumbs
+      home_text: "Home"
+```
+
