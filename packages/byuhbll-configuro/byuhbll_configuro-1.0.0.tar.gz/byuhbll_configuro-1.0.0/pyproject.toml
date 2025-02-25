@@ -1,0 +1,130 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "byuhbll-configuro"
+description = "A configuration library for Python applications."
+authors = [{ name = "BYU Library IT", email = "byulibraryit@byu.edu" }]
+readme = "README.md"
+requires-python = ">=3.8"
+license = "BSD-3-Clause"
+classifiers = [
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dependencies = ["pyyaml"]
+dynamic = ["version"]
+
+[dependency-groups]
+test = ["pytest", "pytest-cov"]
+type = ["mypy", "types-PyYAML"]
+dev = [{ include-group = "test" }, { include-group = "type" }]
+
+[project.urls]
+Homepage = "https://gitlab.com/byuhbll/lib/python/configuro"
+Source = "https://gitlab.com/byuhbll/lib/python/configuro"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.sdist]
+exclude = [".*", "docs"]
+
+[tool.uv]
+package = false
+
+[tool.ruff.lint]
+select = [
+  "B",   # flake8-bugbear
+  "C90", # mccabe complexity
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "I",   # isort
+  "W",   # pycodestyle warnings
+]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 18
+
+[tool.ruff.lint.isort]
+known-first-party = ["byuhbll_configuro"]
+combine-as-imports = true
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F403", "F405"]
+
+[tool.tox]
+requires = ["tox>=4.22"]
+env_list = [
+  "3.13",
+  "3.12",
+  "3.11",
+  "3.10",
+  "3.9",
+  "3.8",
+  "lint",
+  "type",
+  "docs",
+  "coverage",
+]
+
+[tool.tox.env_run_base]
+runner = "uv-venv-lock-runner"
+dependency_groups = ["test"]
+setenv = { "COVERAGE_FILE" = "{envtmpdir}/.coverage" }
+commands = [["pytest", "--basetemp", "{envtmpdir}", "--cov", "byuhbll_configuro"]]
+
+[tool.tox.env.type]
+dependency_groups = ["type"]
+commands = [["mypy", "byuhbll_configuro"]]
+
+[tool.tox.env.docs]
+commands = [
+  [
+    "python",
+    "-m",
+    "doctest",
+    "README.md",
+    "docs/api.md",
+    "docs/index.md",
+    "docs/user-guide.md",
+  ],
+]
+
+[tool.tox.env.lint]
+skip_install = true
+allowlist_externals = ["pre-commit"]
+deps = ["pre-commit-uv"]
+commands = [["pre-commit", "run", "--all-files", "--show-diff-on-failure"]]
+
+[tool.tox.env.coverage]
+skip_install = true
+allowlist_externals = ["sh"]
+dependency_groups = ["test"]
+commands = [
+    ["sh", "-c", "coverage combine $(find .tox/3.*/tmp -type f -name .coverage)"],
+    ["coverage", "report"],
+]
+
+[tool.tox.coverage.run]
+branch = true
+parallel = true
+source = "byuhbll_configuro"
+
+[tool.tox.coverage.report]
+show_missing = true
+skip_covered = true
+fail_under = 100
