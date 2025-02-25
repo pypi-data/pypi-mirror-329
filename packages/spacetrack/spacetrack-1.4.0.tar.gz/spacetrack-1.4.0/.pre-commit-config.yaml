@@ -1,0 +1,37 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-toml
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+  - repo: https://github.com/rbubley/mirrors-prettier
+    rev: v3.5.1
+    hooks:
+      - id: prettier
+  - repo: https://github.com/pycqa/doc8
+    rev: v1.1.2
+    hooks:
+      - id: doc8
+        exclude: README\.rst
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.7 # also update pyproject.toml
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.6.2
+    hooks:
+      - id: uv-lock
+      - id: uv-export
+        args:
+          - --frozen
+          - --no-dev
+          - --group=docs
+          - --no-emit-project
+          - --output-file=docs/requirements.txt
