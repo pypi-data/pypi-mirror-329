@@ -1,0 +1,95 @@
+[project]
+name = "huracanpy"
+version = "1.2.0-beta"
+authors = [
+  { name="Leo Saffin", email="l.saffin@reading.ac.uk" },
+  { name="Stella Bourdin", email="stella.bourdin@physics.ox.ac.uk" },
+]
+description = "A python package for working with various forms of feature tracking data"
+requires-python = ">=3.9, <3.14"
+dependencies = [
+    "numpy",
+    "xarray",
+    "cftime",
+    "parse",
+    "shapely",
+    "pandas",
+    # Issue with newer versions of fiona when using old versions of geopandas
+    # see https://stackoverflow.com/a/78949565/8270394
+    "geopandas>=0.14.4",
+    "matplotlib",
+    "seaborn",
+    "netcdf4",
+    "haversine",
+    "cartopy",
+    "matplotlib-venn<1",
+    "metpy",
+    "tqdm",
+    "pyarrow",
+    "pyproj"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "pytest",
+    "ruff>=0.9.0",
+    "tox",
+    "nbformat",
+    "nbsphinx",
+]
+docs = [
+    "pydata-sphinx-theme",
+    "sphinx-copybutton",
+    "nbsphinx",
+    "IPython",
+    "sphinx-design",
+    "ipykernel",
+    "myst-parser",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+huracanpy = ["_data/example_data/*", "_data/_ibtracs_files/*"]
+
+[tool.ruff]
+extend-include = ["*.ipynb"]
+
+[tool.ruff.lint]
+extend-select = [
+    "ARG", # Flake8 unused arguments
+    "S", # Flake8 bandit
+    "T20", # Flake8 print
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Only check for use of assert/print in main module
+"!huracanpy/**" = ["S101", "T20"]
+
+[tool.tox]
+requires = ["tox>=4.15.0"]
+env_list = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+[tool.tox.env_run_base]
+extras = ["dev"]
+commands = [
+    ["ruff", "format", "--check"],
+    ["ruff", "check"],
+    ["pytest"]
+]
+
+# - How to distribute the package
+
+# 0/ Applying black formatting
+
+# 1/ Generate the distribution
+# 1a. Make sure that build is up-to-date: `pip install --upgrade build`(add the --user option if necessary)
+# 1b. Run python -m build in the package's root directory
+# -> Two new files are created in the dist folder, a wheel (.whl) and a tarball (.tar.gz), with the the version code in the present file
+
+# 2/ Distribute the distribution of PyPI
+# 2a. Make sure that twine is up-to-date `pip install (--user) --upgrade twine`
+# 2b. Upload the package: `python -m twine upload --repository pypi dist/*x.x.x*` (x.x.x = version number)
