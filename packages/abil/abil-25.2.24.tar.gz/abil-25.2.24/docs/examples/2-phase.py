@@ -1,0 +1,110 @@
+"""
+2-phase regressor
+"""
+import pandas as pd
+import numpy as np
+from yaml import load, CLoader as Loader
+from abil.tune import tune
+from abil.predict import predict
+from abil.post import post
+from abil.utils import upsample
+
+import os
+
+# Load YAML config
+with open('2-phase.yml', 'r') as f:
+    model_config = load(f, Loader=Loader)
+
+# Example data
+X_predict =  pd.read_csv("./data/prediction.csv")
+X_predict.set_index(['depth', 'time'], inplace=True)
+
+import matplotlib.pyplot as plt
+# Convert to xarray Dataset
+ds = X_predict.to_xarray()
+
+# Create a figure with 1 row and 3 columns for subplots
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))  # Adjust figsize as needed
+# Plot each variable in its respective subplot
+ds['no3'].plot(ax=axes[0], yincrease=False)
+axes[0].set_title('NO3')
+ds['temperature'].plot(ax=axes[1], yincrease=False)
+axes[1].set_title('Temperature')
+ds['PAR'].plot(ax=axes[2], yincrease=False)
+axes[2].set_title('PAR')
+# Save the figure to a PNG file
+plt.savefig('environmental_data.png')
+# Optionally, close the plot to free up memory
+plt.close()
+
+d = pd.read_csv("./data/training.csv")
+d.set_index(['depth', 'time'], inplace=True)
+
+
+# Convert to xarray Dataset
+ds = d.to_xarray()
+
+# Create a figure with 1 row and 3 columns for subplots
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))  # Adjust figsize as needed
+# Plot each variable in its respective subplot
+ds['Emiliania huxleyi'].plot(ax=axes[0], yincrease=False)
+axes[0].set_title('Emiliania huxleyi')
+ds['Florisphaera profunda'].plot(ax=axes[1], yincrease=False)
+axes[1].set_title('Florisphaera profunda')
+ds['Umbellosphaera irregularis'].plot(ax=axes[2], yincrease=False)
+axes[2].set_title('Umbellosphaera irregularis')
+# Save the figure to a PNG file
+plt.savefig('observational_data.png')
+# Optionally, close the plot to free up memory
+plt.close()
+
+
+# def predict_single_species(d, species):
+#     df = d
+#     df[species] = df[species].fillna(0)
+#     df = upsample(df, species, ratio=10)
+#     y = df[species]
+#     X_train = df[['temperature', 'no3', 'PAR']]
+
+#     # Train model
+#     m = tune(X_train, y, model_config)
+#     m.train(model="rf", regressor=True)
+#     m.train(model="xgb", regressor=True)
+#     m.train(model="knn", regressor=True)
+
+#     # Predict
+#     m = predict(X_train, y, X_predict, model_config)
+#     m.make_prediction()
+
+# predict_single_species(d, 'Emiliania huxleyi')
+# predict_single_species(d, 'Florisphaera profunda')
+# predict_single_species(d, 'Umbellosphaera irregularis')
+
+
+# # Post-process
+# y = d[['Emiliania huxleyi', 'Florisphaera profunda', 'Umbellosphaera irregularis']]
+# X_train = d[['temperature', 'no3', 'PAR']]
+# m = post(X_train, y, X_predict, model_config, "mean")
+# m.export_ds("2-phase_model")
+
+
+# import xarray as xr
+
+# ds = xr.open_dataset("ModelOutput/2-phase/posts/2-phase_model_mean.nc")
+
+# # Create a figure with 1 row and 3 columns for subplots
+# fig, axes = plt.subplots(1, 3, figsize=(15, 5))  # Adjust figsize as needed
+# # Plot each variable in its respective subplot
+# ds['Emiliania huxleyi'].plot(ax=axes[0], yincrease=False)
+# axes[0].set_title('Emiliania huxleyi')
+
+# ds['Florisphaera profunda'].plot(ax=axes[1], yincrease=False)
+# axes[1].set_title('Florisphaera profunda')
+
+# ds['Umbellosphaera irregularis'].plot(ax=axes[2], yincrease=False)
+# axes[2].set_title('Umbellosphaera irregularis')
+# # Save the figure to a PNG file
+# plt.savefig('species_predictions.png')
+
+# # Optionally, close the plot to free up memory
+# plt.close()
