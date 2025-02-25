@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "i2cpy"
+dependencies = [
+  'typing_extensions>=4.6.0; python_version<"3.12"'
+]
+requires-python = ">=3.8"
+authors = [
+  {name = "Zhenyi Zhou", email = "iynehz@163.com"}
+]
+description = "Python I2C library supporting multiple driver implementations"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["i2c", "ch341", "ch341a"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Software Development",
+  "Topic :: Scientific/Engineering",
+  "Typing :: Typed"
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/iynehz/i2cpy"
+Documentation = "https://i2cpy.readthedocs.io/en/latest/"
+Repository = "https://github.com/iynehz/i2cpy"
+
+[tool.setuptools.dynamic]
+version = { attr = "i2cpy.__version__" }
