@@ -1,0 +1,38 @@
+Metadata-Version: 2.2
+Name: snap-env
+Version: 0.1.2
+Summary: A sassy little env var loader
+Home-page: https://github.com/mdigruber/snap-env
+Author: Markus Digruber
+Author-email: hello@markusdigruber.com
+License: MIT
+Description-Content-Type: text/markdown
+Dynamic: author
+Dynamic: author-email
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: summary
+
+# snap-env
+A sassy little env var loader for Python.
+
+## What for?
+Because env vars shouldn’t ghost you.
+
+## Install
+```bash
+pip install snap-env
+```
+
+## Use
+
+```
+import snap_env
+
+snap_env.load()  # Loads .env file
+api_key = snap_env.get("API_KEY")  # "secret123" or bust
+port = snap_env.get("PORT", 5000)  # Fallback to 5000 if unset
+
+```
