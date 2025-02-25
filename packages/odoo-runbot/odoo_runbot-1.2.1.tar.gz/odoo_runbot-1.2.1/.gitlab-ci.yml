@@ -1,0 +1,213 @@
+# yaml-language-server: $schema=https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json
+workflow:
+  auto_cancel:
+    on_job_failure: all
+include:
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - component: $CI_SERVER_FQDN/gitlab-ci/project-quality/project-files@1
+    inputs:
+      file_path: "README.md"
+      name: "README"
+  - component: $CI_SERVER_FQDN/gitlab-ci/code-quality/ruff@1
+  - component: $CI_SERVER_FQDN/$CI_PROJECT_PATH/runbot@$CI_COMMIT_SHA
+    inputs:
+      runbot_workdir: "tests/odoo_project"
+      odoo_version: "12.0"
+  - component: $CI_SERVER_FQDN/$CI_PROJECT_PATH/runbot@$CI_COMMIT_SHA
+    inputs:
+      runbot_workdir: "tests/odoo_project"
+      odoo_version: "13.0"
+  - component: $CI_SERVER_FQDN/$CI_PROJECT_PATH/runbot@$CI_COMMIT_SHA
+    inputs:
+      runbot_workdir: "tests/odoo_project"
+      odoo_version: "14.0"
+  - component: $CI_SERVER_FQDN/$CI_PROJECT_PATH/runbot@$CI_COMMIT_SHA
+    inputs:
+      runbot_workdir: "tests/odoo_project"
+      odoo_version: "15.0"
+  - component: $CI_SERVER_FQDN/$CI_PROJECT_PATH/runbot@$CI_COMMIT_SHA
+    inputs:
+      runbot_workdir: "tests/odoo_project"
+      odoo_version: "16.0"
+  - component: $CI_SERVER_FQDN/$CI_PROJECT_PATH/runbot@$CI_COMMIT_SHA
+    inputs:
+      runbot_workdir: "tests/odoo_project"
+      odoo_version: "17.0"
+  - component: $CI_SERVER_FQDN/$CI_PROJECT_PATH/runbot@$CI_COMMIT_SHA
+    inputs:
+      runbot_workdir: "tests/odoo_project"
+      odoo_version: "18.0"
+
+.tmpl:runbot:self:ci:
+  variables:
+    ADDONS_GIT_PRIVATE_PROJECT: odoo-addons/blank-private
+    ADDONS_GIT_IMG_TESTER: dockers/odoo-img-tester
+  before_script:
+    - pip install .
+    - odoo-runbot --verbose --workdir="tests/odoo_project" diag
+
+odoo:runbot:12.0:
+  extends: ".tmpl:runbot:self:ci"
+odoo:runbot:13.0:
+  extends: ".tmpl:runbot:self:ci"
+odoo:runbot:14.0:
+  extends: ".tmpl:runbot:self:ci"
+odoo:runbot:15.0:
+  extends: ".tmpl:runbot:self:ci"
+odoo:runbot:16.0:
+  extends: ".tmpl:runbot:self:ci"
+odoo:runbot:17.0:
+  extends: ".tmpl:runbot:self:ci"
+odoo:runbot:18.0:
+  extends: ".tmpl:runbot:self:ci"
+
+secret_detection:
+  stage: .pre
+  tags: ["lint"]
+  rules:
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG # overriding rules to ensure it runs on tags before the release.
+
+
+
+build:python:uv:
+  stage: "build"
+  tags:
+    - "lint"
+  image: ghcr.io/astral-sh/uv:python3.8-bookworm-slim
+  variables:
+    UV_CACHE_DIR: .uv-cache
+    UV_SYSTEM_PYTHON: 1
+    UV_VERSION: 0.5
+    # GitLab CI creates a separate mountpoint for the build directory,
+    # so we need to copy instead of using hard links.
+    UV_LINK_MODE: copy
+  cache:
+    - key:
+        files:
+          - uv.lock
+      paths:
+        - $UV_CACHE_DIR
+  script:
+    - uv build
+    # Your `uv` commands
+    - uv cache prune --ci
+  artifacts:
+    paths:
+      - "dist/"
+
+check:mkdocs:
+  stage: test
+  tags: ["lint"]
+  image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+  before_script:
+    - uv sync --group doc
+    - source .venv/bin/activate
+  script:
+    - mkdocs build --strict --verbose --site-dir test
+
+.tmpl:pytest:
+  stage: "test"
+  tags:
+    - "lint"
+  before_script:
+    - uv sync
+    - source .venv/bin/activate
+  script:
+    - pytest --cov --junit-xml=report.xml # Generate test report in junit format
+    - coverage xml    # for generating coverage.xml report
+  artifacts:
+    when: always
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: ./coverage.xml
+      junit: report.xml
+
+pytest:38:
+  extends: ".tmpl:pytest"
+  image:
+    name: ghcr.io/astral-sh/uv:python3.8-bookworm-slim
+    entrypoint: [ "" ]
+
+pytest:310:
+  extends: ".tmpl:pytest"
+  image:
+    name: ghcr.io/astral-sh/uv:python3.10-bookworm-slim
+    entrypoint: [ "" ]
+
+pytest:312:
+  extends: ".tmpl:pytest"
+  image:
+    name: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+    entrypoint: [ "" ]
+
+publish:mkdocs:
+  extends: ["check:mkdocs"]
+  stage: deploy
+  tags: ["lint"]
+  pages: true  # specifies that this is a Pages job
+  script:
+    - mkdocs build --site-dir=public
+  artifacts:
+    paths:
+    - public
+  rules:
+    - if: $CI_COMMIT_TAG =~ /\d+/
+# If we are tagging a release with a specific convention ("v" + number) and all
+# previous checks succeeded, we proceed with creating a release automatically.
+publish:release:
+  tags: ["lint"]
+  stage: deploy
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script: echo "Creating release $CI_COMMIT_TAG"
+  rules:
+    - if: $CI_COMMIT_TAG =~ /\d+/
+  release:
+    tag_name: $CI_COMMIT_TAG
+    description: "Release $CI_COMMIT_TAG of components repository $CI_PROJECT_PATH"
+
+".tmpl:publish:python":
+  stage: deploy
+  tags: [ "lint" ]
+  image: python:latest
+  dependencies: [ "build:python:uv" ]
+  variables:
+    PACKAGE_REGISTRY_USERNAME: "__token__"
+  before_script:
+    - pip install twine
+  script:
+    - python -m twine upload --verbose --repository $PACKAGE_REGISTRY -u $PACKAGE_REGISTRY_USERNAME -p $PACKAGE_REGISTRY_TOKEN dist/*
+
+publish:pypi:test:
+  extends: ".tmpl:publish:python"
+  dependencies:
+    - "build:python:uv"
+  variables:
+    PACKAGE_REGISTRY: "testpypi"
+    PACKAGE_REGISTRY_TOKEN: $TESTPYPI_REGISTRY_TOKEN
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+
+publish:pypi:
+  extends: ".tmpl:publish:python"
+  dependencies: ["build:python:uv"]
+  variables:
+    PACKAGE_REGISTRY: "pypi"
+    PACKAGE_REGISTRY_TOKEN: $PYPI_REGISTRY_TOKEN
+  rules:
+    - if: $CI_COMMIT_TAG && $CI_COMMIT_REF_PROTECTED && $PYPI_REGISTRY_TOKEN
+      exists:
+        - pyproject.toml
+      when: on_success
+    - when: never
+
+publish:pypi:gitlab:
+  extends: "publish:pypi"
+  script:
+    - python -m twine upload --verbose --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi -u gitlab-ci-token -p $CI_JOB_TOKEN dist/*
+  rules:
+    - if: $CI_COMMIT_TAG && $CI_COMMIT_REF_PROTECTED
+      when: on_success
+    - when: never
+
