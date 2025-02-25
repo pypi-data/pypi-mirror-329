@@ -1,0 +1,99 @@
+Metadata-Version: 2.2
+Name: egrader
+Version: 0.0.9
+Summary: Auto-grader for Git-based programming exercises
+Author-email: Nuno Fachada <nuno.fachada@ulusofona.pt>
+License: GPL-3
+Project-URL: Bug Reports, https://github.com/VideojogosLusofona/egrader/issues
+Project-URL: Documentation, https://videojogoslusofona.github.io/egrader/
+Project-URL: Source, https://github.com/VideojogosLusofona/egrader
+Keywords: aat,education,autograder,programming,computer science education
+Classifier: Development Status :: 3 - Alpha
+Classifier: Programming Language :: Python :: 3
+Classifier: Intended Audience :: Education
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: POSIX
+Classifier: Topic :: Education
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: python-dateutil
+Requires-Dist: pyyaml
+Requires-Dist: requests
+Requires-Dist: sh>=2.0.0
+Requires-Dist: yarl
+Requires-Dist: validators
+Provides-Extra: dev
+Requires-Dist: black; extra == "dev"
+Requires-Dist: flake8>=6.0.0; extra == "dev"
+Requires-Dist: flake8-black; extra == "dev"
+Requires-Dist: flake8-builtins; extra == "dev"
+Requires-Dist: flake8-bugbear; extra == "dev"
+Requires-Dist: flake8-comprehensions; extra == "dev"
+Requires-Dist: flake8-docstrings; extra == "dev"
+Requires-Dist: flake8-isort; extra == "dev"
+Requires-Dist: Flake8-pyproject; extra == "dev"
+Requires-Dist: flake8-pytest-style; extra == "dev"
+Requires-Dist: flake8-simplify; extra == "dev"
+Requires-Dist: isort; extra == "dev"
+Requires-Dist: mypy; extra == "dev"
+Requires-Dist: pep8-naming; extra == "dev"
+Requires-Dist: pre-commit; extra == "dev"
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: coverage; extra == "dev"
+Requires-Dist: pytest-cov>=3.0.0; extra == "dev"
+Requires-Dist: pytest-mypy; extra == "dev"
+Requires-Dist: types-python-dateutil; extra == "dev"
+Requires-Dist: types-PyYAML; extra == "dev"
+Requires-Dist: types-requests; extra == "dev"
+
+[![Tests](https://github.com/VideojogosLusofona/egrader/actions/workflows/tests.yml/badge.svg)](https://github.com/VideojogosLusofona/egrader/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/VideojogosLusofona/egrader/graph/badge.svg?token=US7KSSBSX4)](https://codecov.io/gh/VideojogosLusofona/egrader)
+[![PyPI](https://img.shields.io/pypi/v/egrader)](https://pypi.org/project/egrader/)
+[![MIT](https://img.shields.io/badge/license-GPLv3-yellowgreen.svg)](https://www.tldrlegal.com/license/gnu-general-public-license-v3-gpl-3)
+
+# EGrader
+
+Auto-grade simple programming exercises.
+
+## How to use
+
+```text
+egrader --help
+egrader fetch --help
+egrader assess --help
+egrader report --help
+```
+
+## How to install
+
+### From source/GitHub
+
+Install from PyPI:
+
+```text
+pip install egrader
+```
+
+Or each step at a time:
+
+```text
+pip install git+https://github.com/VideojogosLusofona/egrader.git#egg=egrader.
+```
+
+### Installing for development and/or improving the package
+
+```text
+git clone https://github.com/VideojogosLusofona/egrader.git
+cd egrader
+python -m venv env
+source env/bin/activate
+pip install -e .[dev]
+```
+
+<!-- On Windows replace `source env/bin/activate` with `. env\Scripts\activate`.-->
+
+## License
+
+[GPL v3](LICENSE)
