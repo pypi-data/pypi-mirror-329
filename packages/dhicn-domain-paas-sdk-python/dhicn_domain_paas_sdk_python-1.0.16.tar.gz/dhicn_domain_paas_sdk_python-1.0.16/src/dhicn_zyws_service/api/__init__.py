@@ -1,0 +1,22 @@
+from __future__ import absolute_import
+
+# flake8: noqa
+
+# import apis into api package
+from dhicn_zyws_service.api.algorithm_api import AlgorithmApi
+from dhicn_zyws_service.api.auto_run_result_api import AutoRunResultApi
+from dhicn_zyws_service.api.calculate_orifice_height_api import CalculateOrificeHeightApi
+from dhicn_zyws_service.api.configuration_api import ConfigurationApi
+from dhicn_zyws_service.api.control_api import ControlApi
+from dhicn_zyws_service.api.dam_gate_api import DamGateApi
+from dhicn_zyws_service.api.inflow_api import InflowApi
+from dhicn_zyws_service.api.model_result_api import ModelResultApi
+from dhicn_zyws_service.api.orifice_opened_result_api import OrificeOpenedResultApi
+from dhicn_zyws_service.api.scenario_api import ScenarioApi
+from dhicn_zyws_service.api.schdule_suggestion_api import SchduleSuggestionApi
+from dhicn_zyws_service.api.schedule_analysis_api import ScheduleAnalysisApi
+from dhicn_zyws_service.api.system_setting_api import SystemSettingApi
+from dhicn_zyws_service.api.timeseries_api import TimeseriesApi
+from dhicn_zyws_service.api.urban_water_distribution_algorithm_api import UrbanWaterDistributionAlgorithmApi
+from dhicn_zyws_service.api.water_delivery_principle_api import WaterDeliveryPrincipleApi
+from dhicn_zyws_service.api.water_delivery_principles_with_grade_api import WaterDeliveryPrinciplesWithGradeApi

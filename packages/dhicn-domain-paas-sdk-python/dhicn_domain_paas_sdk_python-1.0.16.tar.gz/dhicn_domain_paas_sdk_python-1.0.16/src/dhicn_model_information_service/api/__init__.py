@@ -1,0 +1,18 @@
+from __future__ import absolute_import
+
+# flake8: noqa
+
+# import apis into api package
+from dhicn_model_information_service.api.da_config_api import DAConfigApi
+from dhicn_model_information_service.api.initial_data_api import InitialDataApi
+from dhicn_model_information_service.api.model_edit_api import ModelEditApi
+from dhicn_model_information_service.api.scenario_code_convert_api import ScenarioCodeConvertApi
+from dhicn_model_information_service.api.scenario_operation_api import ScenarioOperationApi
+from dhicn_model_information_service.api.user_api import UserApi
+from dhicn_model_information_service.api.wd_demand_api import WDDemandApi
+from dhicn_model_information_service.api.wd_junction_api import WDJunctionApi
+from dhicn_model_information_service.api.wd_model_edit_api import WDModelEditApi
+from dhicn_model_information_service.api.wd_pipe_api import WDPipeApi
+from dhicn_model_information_service.api.wd_pump_api import WDPumpApi
+from dhicn_model_information_service.api.wd_tank_api import WDTankApi
+from dhicn_model_information_service.api.wd_valve_api import WDValveApi

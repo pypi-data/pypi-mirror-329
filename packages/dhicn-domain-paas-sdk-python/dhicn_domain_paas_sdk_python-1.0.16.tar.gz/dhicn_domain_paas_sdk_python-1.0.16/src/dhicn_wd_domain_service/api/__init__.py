@@ -1,0 +1,18 @@
+from __future__ import absolute_import
+
+# flake8: noqa
+
+# import apis into api package
+from dhicn_wd_domain_service.api.accident_api import AccidentApi
+from dhicn_wd_domain_service.api.accuracy_config_api import AccuracyConfigApi
+from dhicn_wd_domain_service.api.alarm_config_api import AlarmConfigApi
+from dhicn_wd_domain_service.api.alarm_log_api import AlarmLogApi
+from dhicn_wd_domain_service.api.document_api import DocumentApi
+from dhicn_wd_domain_service.api.gis_api import GISApi
+from dhicn_wd_domain_service.api.indicator_config_api import IndicatorConfigApi
+from dhicn_wd_domain_service.api.online_api import OnlineApi
+from dhicn_wd_domain_service.api.pipe_risk_api import PipeRiskApi
+from dhicn_wd_domain_service.api.scenario_compute_api import ScenarioComputeApi
+from dhicn_wd_domain_service.api.schedule_api import ScheduleApi
+from dhicn_wd_domain_service.api.statistic_api import StatisticApi
+from dhicn_wd_domain_service.api.valve_config_api import ValveConfigApi
