@@ -1,0 +1,73 @@
+Metadata-Version: 2.2
+Name: unit-tokenizer
+Version: 0.1.7
+Summary: Tokenizers that operate on integer sequences.
+Home-page: https://github.com/cromz22/unit-tokenizer
+Author: Shuichiro Shimizu
+Author-email: sshimizu@nlp.ist.i.kyoto-u.ac.jp
+Classifier: Programming Language :: Python :: 3.9
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Provides-Extra: dev
+Requires-Dist: pytest==8.2.1; extra == "dev"
+Requires-Dist: black==24.4.2; extra == "dev"
+Requires-Dist: isort==5.13.2; extra == "dev"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: provides-extra
+Dynamic: requires-python
+Dynamic: summary
+
+# Unit Tokenizer
+
+![pytest](https://github.com/cromz22/unit-tokenizer/actions/workflows/run_pytest.yml/badge.svg)
+
+Tokenizers that operate on integer sequences.
+
+## Requirements
+
+- Python >= 3.9 (because of type hinting syntax)
+
+## Features
+
+- BPETokenizer
+    - Byte-pair encoding algorithm
+
+- RLETokenizer
+    - Run-length encoding algorithm
+
+- PackBitsTokenizer
+    - Modified run-length encoding algorithm
+
+- NaivePackBitsTokenizer
+    - PackBitsTokenizer that allows negative units
+
+## Installation
+
+```
+pip install unit-tokenizer
+```
+
+## Installation for development
+
+```
+poetry install
+pre-commit install
+```
+
+### Test
+
+```
+poetry run pytest
+```
+
+## Usage
+
+See `tests/*.py`.
