@@ -1,0 +1,179 @@
+Metadata-Version: 2.2
+Name: quickmin_step
+Version: 2025.2.24
+Summary: A SEAMM plug-in for simple, quick minimization
+Home-page: https://github.com/molssi-seamm/quickmin_step
+Author: Paul Saxe
+Author-email: psaxe@molssi.org
+License: BSD-3-Clause
+Keywords: SEAMM,SEAMMplugin,flowchart
+Platform: Linux
+Platform: Mac OS-X
+Platform: Unix
+Platform: Windows
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Chemistry
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+License-File: AUTHORS.rst
+Requires-Dist: numpy
+Requires-Dist: seamm
+Requires-Dist: seamm-util
+Requires-Dist: seamm-widgets
+Requires-Dist: tabulate
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: platform
+Dynamic: requires-dist
+Dynamic: summary
+
+======================
+SEAMM QuickMin Plug-in
+======================
+
+.. image:: https://img.shields.io/github/issues-pr-raw/molssi-seamm/quickmin_step
+   :target: https://github.com/molssi-seamm/quickmin_step/pulls
+   :alt: GitHub pull requests
+
+.. image:: https://github.com/molssi-seamm/quickmin_step/workflows/CI/badge.svg
+   :target: https://github.com/molssi-seamm/quickmin_step/actions
+   :alt: Build Status
+
+.. image:: https://codecov.io/gh/molssi-seamm/quickmin_step/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/molssi-seamm/quickmin_step
+   :alt: Code Coverage
+
+.. image:: https://github.com/molssi-seamm/quickmin_step/workflows/CodeQL/badge.svg
+   :target: https://github.com/molssi-seamm/quickmin_step/security/code-scanning
+   :alt: Code Quality
+
+.. image:: https://github.com/molssi-seamm/quickmin_step/workflows/Release/badge.svg
+   :target: https://molssi-seamm.github.io/quickmin_step/index.html
+   :alt: Documentation Status
+
+.. image:: https://img.shields.io/pypi/v/quickmin_step.svg
+   :target: https://pypi.python.org/pypi/quickmin_step
+   :alt: PyPi VERSION
+
+A SEAMM plug-in for simple, quick minimization
+
+* Free software: BSD-3-Clause
+* Documentation: https://molssi-seamm.github.io/quickmin_step/index.html
+* Code: https://github.com/molssi-seamm/quickmin_step
+
+Features
+--------
+
+QuickMin provides quick, simple optimization of molecular structures using one of a
+number of forcefields. It is intended for small systems, with no more than about 300
+atoms. Beyond that size it will be rather slow, but more importantly larger systems
+typically have many local minima, often close to each other energetically, so the
+concept of the minimum structure is not very useful.
+
+QuickMin uses OpenBabel_ for the minimization. There are currently five forcefields
+available:
+
+  #. GAFF_ -- the general AMBER force field
+  #. MMFF94_ -- the Merck molecular force field
+  #. MMFF94s_ -- the Merck molecular force field for energy minimization
+  #. Ghemical_
+  #. UFF_ -- Universal force field
+
+The first four have parameters for organic and biomolecular systems, while UFF attempts
+to cover the entire periodic table with reasonable accuracy. The more specialized
+forcefields tend to be more accurate, roughly in the order listed (though the two MMFF94
+are essentially similar). By default QuickMin will try each of the forcefields in the
+order given until it finds one that can handle the given molecule. You can specify the
+forcefield to use; however, if it does not have parameters for your molecule, QuickMin
+will throw an error.
+
+.. _OpenBabel: http://openbabel.org/wiki/Main_Page
+.. _GAFF: https://ambermd.org/antechamber/gaff.html
+.. _MMFF94: https://onlinelibrary.wiley.com/doi/10.1002/%28SICI%291096-987X%28199604%2917%3A5/6%3C490%3A%3AAID-JCC1%3E3.0.CO%3B2-P
+.. _MMFF94s: https://onlinelibrary.wiley.com/doi/abs/10.1002/%28SICI%291096-987X%28199905%2920%3A7%3C720%3A%3AAID-JCC7%3E3.0.CO%3B2-X
+.. _Ghemical: http://bioinformatics.org/ghemical/ghemical/index.html
+.. _UFF: https://pubs.acs.org/doi/10.1021/ja00051a040
+
+Acknowledgements
+----------------
+
+This package was created with the `molssi-seamm/cookiecutter-seamm-plugin`_ tool, which
+is based on the excellent Cookiecutter_.
+
+.. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. _`molssi-seamm/cookiecutter-seamm-plugin`: https://github.com/molssi-seamm/cookiecutter-seamm-plugin
+
+Developed by the Molecular Sciences Software Institute (MolSSI_), which receives funding
+from the `National Science Foundation`_ under award CHE-2136142.
+
+.. _MolSSI: https://molssi.org
+.. _`National Science Foundation`: https://www.nsf.gov
+
+
+=======
+History
+=======
+2025.2.24 -- Changed structure option to "Discard the structure"
+
+2025.2.23 -- Add RMSD and other properties to the output and available results.
+    * Calculate the RMSD between the initial and final structures, and made it available
+      in the results and also reported to the output.
+    * Added control over where to place the optimized structure.
+
+2024.5.7 -- Bugfix: Corrected sign on gradients.
+    * OpenBabel calls "forces" "gradients", so needed to take the negative to get the
+      actual gradients.
+      
+2024.5.3 -- Added single point energy and Results.json
+    * Added control to allow a single point energy as well as optimization. This
+      supports using QuickMin with e.g energy scans.
+    * Standardized the name of the energy to simply "energy" to better support other
+      plug-ins and codes understanding the results.
+      
+2023.11.15 -- Bugfix: structure handling
+    Error putting the coordinates into a newly created configuration.
+    
+2023.10.30 -- Enhanced structure handling.
+    Switched to standard handling of structures, which adds ability to name with the
+    IUPAC name, InCHI, and InChIKey in addition to previous methods.
+
+2023.1.14 -- Changed documentation to new style and theme.
+    Switched the documentation to the MolSSI theme and diátaxis layout, though more work
+    is needed.
+    
+2022.11.7 -- Internal Release
+    Switching from LGTM code analysis to GitHub Actions using CodeQL, since LGTM is
+    shutting down!
+    
+2022.10.23 -- Properties added
+    Added a single property, 'total energy#QuickMin#<forcefield>', to store the final
+    energy in the database. Also added 'total energy' as a result for tables or
+    variables.
+
+2022.10.22 -- Documentation!
+    Got the documentation into reasonable shape.
+
+2022.10.20 -- Initial Release!
+    Provides quick minimization for smaller molecules, using OpenBabel. Probably
+    reasonable for some few hundred atoms. Supports the following forcefields:
+
+       1. GAFF
+       2. MMFF94 & MMFF94s (which is optimized for minimization)
+       3. Ghemical
+       4. UFF
+
+    The default is the "best available" forcefield, which tries them in the order given
+    above until it finds one that can handle the molecule. 
