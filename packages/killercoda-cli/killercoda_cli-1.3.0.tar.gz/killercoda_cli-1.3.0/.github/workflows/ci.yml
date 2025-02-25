@@ -1,0 +1,182 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'killercoda_cli/__about__.py'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: '3.11.5'
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup Hatch
+        run: pipx install hatch==1.14.0
+
+  unit-test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup Hatch
+        run: pipx install hatch==1.14.0
+
+      - name: Run Unit Tests
+        run: hatch run test:unit
+
+      - name: Generate test coverage
+        run: hatch run test:coverage-report
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+        env:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: Piotr1215/killercoda-cli
+
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup Hatch
+        run: pipx install hatch==1.14.0
+
+      - name: Get PyPI Project Version
+        run: |
+          VERSION=$(grep -oP '(?<=__version__ = ")[^"]*' killercoda_cli/__about__.py)
+          echo "PYPI_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Build Sdist and Wheel
+        run: hatch build
+
+      - name: Upload Sdist and Wheel to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: "dist/*"
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Download Sdist and Wheel from GitHub
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: "dist"
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@v1.8.14
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Get PyPI Project Version
+        run: |
+          VERSION=$(grep -oP '(?<=__version__ = ")[^"]*' killercoda_cli/__about__.py)
+          echo "PYPI_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Generate Changelog
+        run: |
+          if [ $(git tag -l | wc -l) -eq 0 ]; then
+            echo "No previous tags found. Generating changelog for all commits."
+            echo "## v${{ env.PYPI_VERSION }} - $(date +'%Y-%m-%d')" > CHANGELOG.md
+            git log --pretty=format:"* %s (%h)" >> CHANGELOG.md
+          else
+            PREVIOUS_TAG=$(git describe --tags --abbrev=0)
+            echo "## v${{ env.PYPI_VERSION }} - $(date +'%Y-%m-%d')" > CHANGELOG.md
+            git log $PREVIOUS_TAG..HEAD --pretty=format:"* %s (%h)" >> CHANGELOG.md
+          fi
+
+      - name: Create Git Tag
+        run: |
+          git tag "v${{ env.PYPI_VERSION }}"
+          git push origin "v${{ env.PYPI_VERSION }}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v${{ env.PYPI_VERSION }}"
+          name: "v${{ env.PYPI_VERSION }}"
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  docs:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup Hatch
+        run: pipx install hatch==1.14.0
+
+      - name: Build Documentation
+        run: hatch run docs:pdoc killercoda_cli -o docs
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
