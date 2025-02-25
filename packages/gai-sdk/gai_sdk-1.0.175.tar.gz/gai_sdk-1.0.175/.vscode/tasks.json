@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Pypi: [gai-sdk] publish",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "${userHome}/.venv/bin/python src/gai/scripts/main.py publish sdk ${workspaceFolder}"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Task: install",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "python ${workspaceFolder}/.vscode/install.py"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
