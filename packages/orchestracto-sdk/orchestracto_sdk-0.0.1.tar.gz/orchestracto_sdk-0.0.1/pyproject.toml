@@ -1,0 +1,20 @@
+[project]
+name = "orchestracto-sdk"
+authors = [{name = "TractoAI team"}]
+requires-python = ">=3.11"
+dependencies = [
+    "orchestracto-client>=0.5.0",
+    "PyYAML~=6.0.2",
+    "requests~=2.32.3",
+]
+dynamic = ["version"]
+
+[tool.setuptools]
+packages = ["orc_sdk"]
+
+[tool.setuptools.dynamic]
+version = {attr = "orc_sdk.__version__"}
+
+[project.scripts]
+orcsdk = "orc_sdk.processor:main_cli"
+orc_run_step = "orc_sdk.run_step:main"
