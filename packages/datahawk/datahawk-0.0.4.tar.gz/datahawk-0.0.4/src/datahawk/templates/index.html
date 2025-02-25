@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Datahawk</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🦅</text></svg>">
+    <link rel="stylesheet" href="static/mystyles.css">
+    <style>
+        .form-container {
+            max-width: 80em; /* Ensures enough space for the widest input plus label */
+            margin: 0 auto;   /* Centers the form container on the page */
+            padding-top: 2.5em;
+        }
+        .form-group {
+            display: flex;        /* Makes label and input appear on the same line */
+            align-items: center;  /* Vertically centers the label and input */
+            margin-bottom: 1em;   /* Adds space between form groups */
+        }
+        .form-group label {
+            margin-right: 0.1em;    /* Adds space between label and input */
+            white-space: nowrap;  /* Prevents label text from wrapping */
+        }
+        .form-group input, .form-group select {
+            /* No need for display: block; inputs are inline by default in flex */
+        }
+        .button-container {
+            text-align: center;   /* Centers the Submit button */
+        }
+        
+        h1 {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5em;
+        }
+
+        .info-container {
+            position: relative;
+            display: inline-block;
+            margin-left: 0.5em;
+            margin-right: 1.5em;    /* Adds space between label and input */
+        }
+        
+        .info-icon {
+            display: inline-block;
+            width: 1.2em; /* Slightly larger for better visibility */
+            height: 1.2em;
+            line-height: 1.2em;
+            text-align: center;
+            border-radius: 50%;
+            background-color: black; /* Soft blue for a modern, informative look */
+            color: white;
+            font-style: normal;
+            font-weight: bold; /* Enhances the "i" for prominence */
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth hover transition */
+            font-family:'Times New Roman', Times, serif;
+        }
+        
+        .info-icon:hover {
+            background-color: gray; /* Darker blue on hover for interactivity */
+        }
+        
+        .info-dialog {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 100%;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 0.5em;
+            z-index: 100;
+            width: 20em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .info-icon:hover + .info-dialog {
+            display: block;
+        }
+
+        .container-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            align-items: center;
+            min-height: 100vh;
+            margin-top: -10em;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container-wrapper">
+    <div class="container">
+        <h1><img src="static/hawk-128x128.png" width="75em">datahawk</h1>
+        {% if error_message %}
+            <p style="color: red;">{{ error_message }}</p>
+        {% endif %}
+        <form method="post">
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="data_path"><strong>Data Path</strong></label>
+                    <div class="info-container">
+                        <span class="info-icon">i</span>
+                        <div class="info-dialog">
+                            The path to the data file or dataset. Currently supported:
+                            <ul>
+                                <li><strong>Local files:</strong> Absolute path or relative path from where the app was run.</li><br />
+                                <li><strong>HuggingFace:</strong> Tag used to identify the dataset on HuggingFace Datasets, e.g., <a href="https://huggingface.co/datasets/openai/gsm8k"><code>openai/gsm8k</code></a>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <input type="text" id="data_path" name="data_path" 
+                        style="font-family: monospace; font-size: 1.1em; width: 75em;"
+                        placeholder="Local or remote path to data"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="read_mode"><strong>Read Mode</strong></label>
+                    <div class="info-container">
+                        <span class="info-icon">i</span>
+                        <div class="info-dialog">Choose whether to load the data entirely in memory or stream it.</div>
+                    </div>
+                    <select name="read_mode" id="read_mode" 
+                            style="font-family: monospace; font-size: 1.1em;">
+                        <option value="load">Load</option>
+                        <option value="stream">Stream</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="source"><strong>Source Type</strong></label>
+                    <div class="info-container">
+                        <span class="info-icon">i</span>
+                        <div class="info-dialog">
+                            Select the source of data: 
+                            <ul>
+                                <li><strong>JSONL: </strong>For local JSONL files.</li><br/>
+                                <li><strong>JSON: </strong>For local JSON files. The dataset should be an array of JSONs at the top level.</li><br/>
+                                <li><strong>HuggingFace: </strong>For local or remotely located HuggingFace datasets. If stored locally, specify path to directory containing <code>*.parquet</code> files.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <select name="source" id="source" onchange="toggleSplitInput()" 
+                            style="font-family: monospace; font-size: 1.1em;">
+                        <option value="jsonl">JSONL</option>
+                        <option value="json">JSON</option>
+                        <option value="hf">HuggingFace</option>
+                    </select>
+                </div>
+                <div class="form-group" id="hf_group" style="display:none">
+                    <label for="split"><strong>Split</strong></label>
+                    <div class="info-container">
+                        <span class="info-icon">i</span>
+                        <div class="info-dialog">
+                            Specify the split for HuggingFace datasets, e.g., <code>train</code>, <code>test</code>, etc. <br/><br/>
+                            Leave empty if not applicable.
+                        </div>
+                    </div>
+                    <input type="text" id="split" name="split" 
+                        style="font-family: monospace; font-size: 1.1em; width: 20em; margin-right: 2em" 
+                        placeholder="Leave empty if not applicable">
+                    <label for="config_name"><strong>Config name</strong></label>
+                    <div class="info-container">
+                        <span class="info-icon">i</span>
+                        <div class="info-dialog">
+                            Name of the dataset configuration, e.g., <code>main</code> or <code>socratic</code> for <a href="https://huggingface.co/datasets/openai/gsm8k"><code>openai/gsm8k</code></a>. <br/><br/>
+                            Leave empty if not applicable.
+                        </div>
+                    </div>
+                    <input type="text" id="split" name="config_name" 
+                        style="font-family: monospace; font-size: 1.1em; width: 20em" 
+                        placeholder="Leave empty if not applicable">
+                </div>
+                <div class="button-container">
+                    <button type="submit" style="font-size: 1em; width: 5em; height: 1.8em;">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+function toggleSplitInput() {
+    var source = document.getElementById("source");
+    var splitGroup = document.getElementById("hf_group");
+    if (source.value === "hf") {
+        splitGroup.style.display = "flex"; /* Matches .form-group display */
+    } else {
+        splitGroup.style.display = "none";
+    }
+}
+</script>
+</html>
