@@ -1,0 +1,44 @@
+Metadata-Version: 2.2
+Name: sqlclasses
+Version: 1.4
+Summary: Construct SQL commands and queries using Python classes.
+Home-page: https://github.com/dvorberg/sqlclasses
+Author: Diedrich Vorberg
+Author-email: diedrich@tux4web.de
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-python
+Dynamic: summary
+
+Construct SQL commands and queries using Python classes.
+
+```python
+
+from sqlclasses import sql
+
+login = "me"
+password = "secret"
+
+query = sql.select( ("firstname", "lastname", "login",),
+                    ("users",),
+                    sql.where("login = ", sql.string_literal(login),
+                              " AND ",
+                              "password = ", sql.string_literal(password)) )
+
+print(repr(query))
+
+# >> select: <SELECT firstname, lastname, login FROM users WHERE login = 'me' AND password = 'secret'>
+
+```
+
+This used to be at the core of my Object Ralational Membrane years ago. I have ported it to Python 3 and re-publish it here. More documentation forthcomming. 
