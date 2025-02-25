@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ten_utils"
+version = "0.0.6"
+description = "A toolkit for reuse"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Караваев Александр", email = "234iskateli234@gmail.com" }]
+dependencies = [
+    "colorama==0.4.6",
+    "termcolor==2.5.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools]
+packages = [
+    "ten_utils",
+    "ten_utils.log",
+    "ten_utils.log.common",
+]
