@@ -1,0 +1,55 @@
+[project]
+name = "panoramax_cli"
+authors = [
+    {name = "Antoine Desbordes", email = "antoine.desbordes@gmail.com"},
+	{name = "Adrien PAVIE", email = "panieravide@riseup.net"},
+]
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = ["License :: OSI Approved :: MIT License"]
+dynamic = ["version", "description"]
+dependencies = [
+    "typer ~= 0.15",
+    "rich ~= 13.9",
+    "tomli ~= 2.2.1",
+    "tomli-w ~= 1.2.0",
+    "qrcode ~= 8.0",
+    "geopic-tag-reader == 1.4.2",
+    "packaging ~= 24.2",
+    "httpx ~= 0.28.1",
+    "tenacity>=9.0.0",
+]
+requires-python = ">=3.9"
+
+[project.urls]
+Home = "https://gitlab.com/panoramax/clients/cli"
+
+[project.scripts]
+panoramax_cli="panoramax_cli.main:app"
+
+[project.optional-dependencies]
+dev = [
+    "black ~= 25.1.0",
+    "mypy ~= 1.15.0",
+    "pytest ~= 8.3",
+	"testcontainers ~= 4.9",
+    "pytest-datafiles ~= 3.0.0",
+    "pre-commit ~= 4.1",
+    "respx ~= 0.22.0", 
+]
+build = ["flit ~= 3.10.0"]
+
+build-binary = ["pyinstaller ~= 6.12.0"]
+
+docs = ["mkdocs-material ~= 9.6.3"]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+    "--ignore=pyinstaller",
+    "--doctest-modules",
+]
+
+[build-system]
+requires = ["flit_core ~= 3.8,<4"]
+build-backend = "flit_core.buildapi"
