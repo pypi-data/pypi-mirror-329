@@ -1,0 +1,135 @@
+Metadata-Version: 2.2
+Name: dbcache
+Version: 0.5.0
+Summary: A postgresql backed cache system 
+Home-page: https://hg.sr.ht/~pythonian/dbcache
+Author: Aurelien Campeas
+Author-email: aurelien.campeas@pythonian.fr
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Database
+Classifier: Topic :: System :: Distributed Computing
+Classifier: Topic :: Software Development :: Object Brokering
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: flask<3
+Requires-Dist: flask-restx
+Requires-Dist: python-dateutil
+Requires-Dist: sqlhelp
+Requires-Dist: sqlalchemy<2
+Requires-Dist: pytz
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: summary
+
+DBCACHE
+=======
+
+This small library provides small and simple stores based on
+postgresql for the following purposes:
+
+* a cache store for bytes with an expiration timestamp
+* a key-value store with json serializable values
+* a versioned key-value store with values as bytes
+
+To initialize the database schema, type:
+
+```bash
+$ dbcache init-db postgresql://foo:bar@postgresql/mydb
+```
+
+Example usage (cache):
+
+```python
+  from time import sleep
+  from datetime import timedelta
+  from dbcache.api import dbcache
+
+  cache = dbcache('postgresql://foo:bar@postgresql/mydb')
+
+  assert cache.get('a') is None
+  cache.set('a', b'aaa')
+  assert cache.get('a') == b'aaa'
+
+  cache.delete('a')
+  assert cache.get('a') is None
+
+  cache.set('b', b'bbb', lifetime=timedelta(seconds=1))
+  assert cache.get('b') == b'bbb'
+  sleep(1)
+  assert cache.get('b') is None
+```
+
+
+Example usage (key/value store):
+
+```python
+  from dbcache.api import kvstore
+  store = kvstore('postgresql://foo:bar@postgresql/mydb')
+
+  assert store.get('a') is None
+  store.set('a', 'aaa')
+  assert store.get('a') == 'aaa'
+  store.set('a', 'newvalue')
+  assert store.get('a') == 'newvalue'
+
+  store.delete('a')
+  assert store.get('a') is None
+
+  store.set('int', 42)
+  assert store.get('int') == 42
+
+  store.set('float', 42.0)
+  store.set('dict', {'a': [1, 2]})
+
+  assert store.all() == {
+      'dict': {'a': [1, 2]},
+      'float': 42.0,
+      'int': 42
+  }
+
+  assert store.keys() == ['dict', 'float', 'int']
+```
+
+Example usage (versioned key/value store):
+
+```python
+  from dbcache.api import vkvstore
+  vstore = vkvstore('postgresql://foo:bar@postgresql/mydb')
+
+  assert vstore.get('html') is None
+  v1 = datetime(2023, 1, 1, 12, 30, tzinfo=timezone.utc)
+  vstore.set(
+      'html',
+      b'<html></html>',
+      insertion_date=v1
+  )
+  assert vstore.get('html') == b'<html></html>'
+
+  v2 = datetime(2023, 1, 2, 12, 30, tzinfo=timezone.utc)
+  vstore.set(
+      'html',
+      b'<html>Hello, World</html>',
+      insertion_date=v2
+  )
+  assert vstore.get('html') == b'<html>Hello, World</html>'
+  assert vstore.get('html', insertion_date=v1) == b'<html></html>'
+
+  assert vstore.versions('html') == [
+      v1,
+      v2
+  ]
+  assert vstore.versions('nope') == []
+
+  vstore.delete('html')
+  assert vstore.keys() == []
+  assert vstore.get('html') is None
+```
