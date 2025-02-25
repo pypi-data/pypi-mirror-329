@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools-scm>=8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ml_mixins"
+dynamic = ["version"]
+authors = [
+  { name="Matthew B. A. McDermott", email="mattmcdermott8@gmail.com" },
+]
+description = "A collection of useful mixins for machine learning development code."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["numpy"]
+
+[project.optional-dependencies]
+memtrackable = ["memray"]
+dev = ["pre-commit<4"]
+tests = ["pytest", "pytest-cov", "pytest-benchmark"]
+
+[tool.setuptools_scm]
+
+[project.urls]
+"Homepage" = "https://github.com/mmcdermott/ML_mixins"
+"Bug Tracker" = "https://github.com/mmcdermott/ML_mixins/issues"
