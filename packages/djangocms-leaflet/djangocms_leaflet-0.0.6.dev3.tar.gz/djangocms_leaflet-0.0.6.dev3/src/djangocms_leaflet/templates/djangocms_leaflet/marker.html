@@ -1,0 +1,13 @@
+{% load sekizai_tags l10n %}
+{% localize off %} {# avoid decimal comma #}
+
+{% addtoblock "js" strip %}
+<script>
+    ready(function () {
+        L.marker([{{ instance.latitude }}, {{ instance.longitude }}]).addTo(map)
+            .bindPopup('{{ instance.name }}')
+    })
+</script>
+{% endaddtoblock %}
+
+{% endlocalize %}
