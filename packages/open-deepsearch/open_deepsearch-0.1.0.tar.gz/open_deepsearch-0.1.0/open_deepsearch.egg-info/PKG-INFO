@@ -1,0 +1,73 @@
+Metadata-Version: 2.2
+Name: open-deepsearch
+Version: 0.1.0
+Summary: Deep Research but Open-Sourced, called open-deepsearch
+Home-page: https://github.com/aidatatools/open-deepsearch
+Author: Jason Chuang
+Author-email: Jason Chuang <chuangtcee@gmail.com>
+Project-URL: Homepage, https://github.com/aidatatools/open-deepsearch
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: openai==1.63.2
+Requires-Dist: aiohttp>=3.9.0
+Requires-Dist: aiofiles>=23.2.1
+Requires-Dist: tiktoken>=0.5.0
+Requires-Dist: firecrawl-py>=1.12.0
+Requires-Dist: tavily-python==0.5.1
+Requires-Dist: Crawl4AI==0.4.248
+Requires-Dist: typer>=0.9.0
+Requires-Dist: prompt-toolkit>=3.0.0
+Requires-Dist: pydantic==2.10.6
+Requires-Dist: pypdf2==3.0.1
+Requires-Dist: html2text==2024.2.26
+Dynamic: author
+Dynamic: home-page
+Dynamic: requires-python
+
+# open-deepsearch
+
+open-deepsearch ( Deep Research but Open-Sourced )
+
+Q&A for more details, research, and report generation.
+
+## How to install in DEV environment after git clone
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+#modify .env file and put in OPENAI_KEY and FIRECRAWL_KEY
+cp .env.example .env
+pip install -r requirements.txt
+pip install -e .
+deepsearch
+```
+
+## How to install in PROD environment after pip install open-deepsearch
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+#modify .env file and put in OPENAI_KEY and FIRECRAWL_KEY
+cp .env.example .env
+pip install open-deepsearch
+deepsearch
+```
+
+## ⭐ A python port from node.js version
+
+<https://github.com/dzhng/deep-research>
+
+## It only uses OpenAI_KEY and FIRECRAWL_KEY to produce output.md
+
+## Future work
+
+Fix some minor bugs
