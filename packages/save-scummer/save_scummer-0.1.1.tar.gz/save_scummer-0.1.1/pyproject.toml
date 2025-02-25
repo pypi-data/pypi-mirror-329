@@ -1,0 +1,73 @@
+[project]
+name = 'save-scummer'
+version = '0.1.1'
+authors = [{name = 'Jordan Cook'}]
+description = 'A simple CLI utility to backup and restore game saves'
+readme = 'README.md'
+requires-python = '>=3.8'
+license = 'MIT'
+keywords = ['backup', 'restore', 'save', 'game', 'roguelike', 'roguelite']
+classifiers = [
+    'Development Status :: 3 - Alpha',
+    'Environment :: Console',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3',
+]
+dependencies = [
+    'click>=7.0',
+    'click-completion',
+    'halo',
+    'platformdirs',
+    'python-dateutil',
+    'python-slugify',
+    'pytimeparse',
+    'pyyaml>=5.0',
+    'tabulate',
+]
+
+[dependency-groups]
+dev = ['pytest', 'pre-commit']
+
+[project.urls]
+'Source code' = 'https://github.com/JWCook/save-scummer'
+
+[project.scripts]
+save-scummer = 'save_scummer.cli:ssc'
+ssc = 'save_scummer.cli:ssc'
+
+[tool.hatch.build.targets.sdist]
+include = [
+  '/save_scummer',
+  '/test',
+  'LICENSE',
+  'README.md'
+]
+
+[tool.hatch.build.targets.wheel]
+include = ['/save_scummer']
+
+[build-system]
+requires = ['hatchling']
+build-backend = 'hatchling.build'
+
+[tool.mypy]
+ignore_missing_imports = true
+exclude = 'dist|build'
+
+[tool.ruff]
+line-length = 100
+output-format = 'grouped'
+target-version = 'py38'
+
+[tool.ruff.format]
+quote-style = 'single'
+
+[tool.ruff.lint]
+select = ['B', 'C4','C90', 'E', 'F']
+ignore = ['B023', 'B027']
+
+[tool.ruff.lint.isort]
+known-first-party = ['test']
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
