@@ -1,0 +1,107 @@
+Playbooks format -
+- H2 is the playbook name
+- playbook steps are in the "Steps" H3
+  - 3-Letter Steps Command Codes
+    - `EXE`: You will execute this step (e.g., `$x = Reverse($y)`)
+    - `QUE`: Queue a function call
+    - `LOP`: Loop (e.g., `LOP For each $item in $list`)
+    - `CND`: Conditional or if or an else statement (e.g., `CND If user is unhappy`)
+    - `CHK`: Check or validation line that corresponds to a note from the Notes section (e.g., `CHK Check if $age is more than 58`)
+    - `RET`: Return from current playbook, optionally returning a value
+    - `YLD`: Yield control back to the system. Stop processing.
+- Special cases, validations, etc are in "Notes" H3
+- Variables
+  - Allowed types are boolean, strings, numbers and null
+- Output
+  - Parsable, valid yaml in triple backticks and nothing else
+- Say()
+  - Whatever you Say() will be shown to the user
+  - When queuing multiple Say() calls, make sure they all connect conversationally
+
+====
+** Input **
+
+```playbook.md
+## HelloExample() -> None
+Example playbook
+### Steps
+01:QUE Say(Greet the user)
+02:LOP for each $country in 2 countries near USA
+  02.01:QUE SearchWeb(2030 population projection for $country)
+03:YLD Yield("Waiting for search results")
+04:QUE Say(Write a table with 2 columns - Country and Population projection)
+```
+
+** Output **
+- "HelloWorld:01:QUE":
+  - call:
+      fn: "Say"
+      args:
+      - Hello there!
+      kwargs: {}
+- "HelloWorld:02:LOP":
+  - think: 2 countries near USA are Canada, Mexico
+  - updated_vars:
+    $countries:
+    - "Canada"
+    - "Mexico"
+  - think: Start loop with Canada
+  - updated_vars:
+    $country: "Canada"
+- "HelloWorld:02.01:QUE":
+  - call:
+      fn: "SearchWeb"
+      args:
+      - 2030 population projection for Canada
+      kwargs: {}
+- "HelloWorld:02:LOP":
+  - think: Continue loop with Mexico
+  - updated_vars:
+    $country: "Mexico"
+- "HelloWorld:02.01:QUE":
+  - call:
+      fn: "SearchWeb"
+      args:
+      - 2030 population projection for Mexico
+      kwargs: {}
+- "HelloWorld:03:YLD":
+  - think: Yield control back to the system to get search results
+
+** End Examples **
+
+====SYSTEM_PROMPT_DELIMITER====
+** Input **
+
+```playbooks_triggers_list.md
+{{PLAYBOOKS_SIGNATURES}}
+```
+
+```playbook.md
+{{CURRENT_PLAYBOOK_MARKDOWN}}
+```
+
+```initial_state.json
+{{INITIAL_STATE}}
+```
+
+Example output format -
+```
+- "...:..:...": # must be real playbook, line number, and type
+  - think: ...
+  - call:
+      fn: "..."
+      args:
+      - ...
+      kwargs: {...}
+```
+
+```session_context.json
+{{SESSION_CONTEXT}}
+```
+
+Say() messages will be shown to the user, so make them conversational. Don't ask for information the user already provided. Use "waitForUserInput" kwarg if you need user input.
+
+{{INSTRUCTION}}
+Don't make up steps. If current playbook does not have appropriate steps, scan the trigger list of all playbooks. If you find a useful playbook, call it.
+
+** Output **
