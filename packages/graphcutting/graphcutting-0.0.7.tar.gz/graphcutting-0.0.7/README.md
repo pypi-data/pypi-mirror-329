@@ -1,0 +1,159 @@
+# GraphCutting
+
+Graph partitioning is useful in parallel and distributed computing where nodes represent computations and edges represent communications. The goal of graph partitioning is to divide the graph into smaller partitions, with the following objectives:
+
+- **Workload balance**: Ensure that each partition has a balanced amount of node weights (i.e., fair workload among CPUs).
+- **Minimize communication**: Minimize the cut of edges between partitions (i.e., minimize the communication overhead).
+
+
+## Why this project ?
+
+Graph partitioning frameworks and algorithms are scattered across different libraries, each with its own API.
+This project provides:
+
+* An unified API for different graph partitioners.
+* Benchmarking on random graphs to compare the partitioning strategies.
+
+## Features
+
+Implemented algorithms, including:
+- **Node2Vec**
+- **Girvan-Newman**
+- **Louvain**
+- **Spectral**
+- **Metis**
+- **Zoltan framework** with calls to:
+    - **PHG** (Parallel Hypergraph and Graph)
+    - **ParMetis** 
+    - **SCOTCH**
+
+
+## Usage
+
+This project introduces a common interface to compare partitioning strategies easily. 
+
+The strategy follows the same API:
+* *Constructor*: Takes hyperparameters
+* The method `part` takes 5 parameters: node names, edges, edge weights, node weights, desired maximum number of partitions.
+
+
+Load all strategies:
+
+```python
+from graphcutting import EvolutionPart, MetisPart, ZoltanPart, SpectralPart, Node2VecPart, GirvanNewmanPart, StepWisePart
+
+strategies=[]
+strategies.append(EvolutionPart(init_mutation_rate=0.25, population_size=10, generations=10))
+strategies.append(MetisPart())
+strategies.append(ZoltanPart("PHG"))
+strategies.append(ZoltanPart("SCOTCH"))
+strategies.append(ZoltanPart("PARMETIS"))
+strategies.append(SpectralPart())
+strategies.append(Node2VecPart(dimensions=16, num_walks=100))
+strategies.append(GirvanNewmanPart())
+strategies.append(StepWisePart(max_neigh_per_step=20, max_steps=10))
+```
+
+Build a graph:
+```python
+nodes = ["n0", "n1", "n2", "n3"]
+edges = [("n0", "n1"), ("n1", "n2"), ("n2", "n3"), ("n1", "n3")]
+edges_weights = { ("n0", "n1"): 1, ("n1", "n2"): 1,
+    ("n2", "n3"): 1, ("n1", "n3"): 1}
+nodes_weights = {"n0": 100, "n1": 1, "n2": 1, "n3": 100}
+```
+
+Weights value are mandatory. If not provided, put '1' value everywhere.
+
+Run all strategies
+```python
+for strategy in strategies:
+    try:
+        partitioning = strategy.part(nodes, edges, edges_weights, nodes_weights, 2)
+        print(strategy.get_name(), "partitioning:", partitioning)
+    except Exception as e:
+        print(strategy.get_name(), "exception:" , e)
+```
+
+Output:
+```
+step_wise_neigh20_steps10 partitioning: [1, 0, 0, 0]
+evol_gen10_pop10_mut0.25 partitioning: [0, 1, 1, 1]
+metis partitioning: [0, 1, 1, 1]
+zoltan_PHG partitioning: [1, 0, 0, 1]
+zoltan_SCOTCH partitioning: [0, 0, 1, 1]
+zoltan_PARMETIS partitioning: [0, 0, 0, 0]
+spectral_partition partitioning: [1 1 1 1]
+node2vec_partition partitioning: [0 0 1 1]
+girvan_newman partitioning: [1, 1, 0, 0]
+```
+
+## Dependencies
+
+Recommended Python dependency:
+```
+pymetis # for metis
+networkx # for generating random graph, contains girvan_newman algorithm
+igraph # for fast generation of random graph
+python_community  # contains louvain algorithm
+numpy
+node2vec # node embedding
+scikit-learn # contains kmeans for spectral clustering
+scipy # eigenvectors computing for spectral clustering
+```
+
+We detail below the installation of Zoltan binaries.
+
+### Zoltan installation
+
+Zoltan is  library of parallel combinatorial algorithms dedicated to load balancing computing. Zoltan is the entry point of 3 algorithms: PHG (Parallel Hypergraph and Graph), Scotch, and ParMETIS. Before calling setup.py, it is needed to install Zoltan. The following script is an example of installation under Ubuntu 22.04.
+
+#### Installation of Parmetis (optional)
+
+```
+sudo apt-get install metis libmetis-dev
+sudo apt-get install libparmetis4.0  libparmetis-dev
+```
+
+#### Installation of Scotch (optional)
+
+```
+sudo apt-get install ptscotch libptscotch-dev 
+```
+
+#### Installation of Zoltan
+
+Official URL: https://sandialabs.github.io/Zoltan/ug_html/ug_usage.html
+```
+ZOLTAN= # <--- Set your environment locations
+cd $ZOLTAN
+../configure \
+  --prefix="${ZOLTAN}" \
+  --with-scotch \
+  --with-scotch-libdir="/lib/x86_64-linux-gnu/" \
+  --with-scotch-incdir="/usr/include/scotch/" \
+  --with-parmetis \
+  --with-parmetis-libdir="/lib/x86_64-linux-gnu/" \
+  --with-parmetis-incdir="/usr/include/" \
+
+make everything
+make install
+```
+
+Zoltan comes with the 'PHG' partitioning algorithm, PHG does not require external dependencies.
+
+### Dependency check
+
+Quick dependency check:
+
+```commandline
+python3 -c "from graphcutting import install_check; print(install_check())"
+```
+
+Example output:
+
+```commandline
+{'EvolutionPart': 1, 'MetisPart': 1, 'StepWisePart': 1, 'ZoltanPart': 1, 'Node2VecPart': 1, 'GirvanNewmanPart': 1, 'LouvainPart': 1, 'SpectralPart': 1}
+```
+
+`1` for proper installation and `0` if a dependency is missing.
