@@ -1,0 +1,16 @@
+rules:
+  quoted-strings:
+    quote-type: any
+    required: false
+    allow-quoted-quotes: true
+    check-keys: true
+
+  line-length:
+    max: 120
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: false
+    ignore:
+      # tests/test_lab_diff.py expects to fail on this file.
+      # All other basic yamllint runs should skip this file.
+      - /tests/testdata/invalid_yaml.yaml
+      - /.tox/*
