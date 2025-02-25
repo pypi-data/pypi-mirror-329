@@ -1,0 +1,79 @@
+Metadata-Version: 2.1
+Name: aboutcode.pipeline
+Version: 0.2.1
+Summary: AboutCode Pipeline library. Execute code in steps.
+Keywords: open source,pipeline,scancode
+Author-email: "nexB. Inc. and others" <info@aboutcode.org>
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Software Development
+Classifier: Topic :: Utilities
+Project-URL: Changelog, https://github.com/aboutcode-org/scancode.io/tree/main/aboutcode/pipeline/CHANGELOG.md
+Project-URL: Documentation, https://scancodeio.readthedocs.io/
+Project-URL: Homepage, https://github.com/aboutcode-org/scancode.io
+Project-URL: Issues, https://github.com/aboutcode-org/scancode.io/issues
+Project-URL: Repository, https://github.com/aboutcode-org/scancode.io/tree/main/aboutcode/pipeline
+
+# `aboutcode.pipeline`
+
+Define and run pipelines.
+
+### Install
+
+```bash
+pip install aboutcode.pipeline
+```
+
+### Define and execute a pipeline
+
+```python
+from aboutcode.pipeline import BasePipeline
+
+class PrintMessages(BasePipeline):
+    @classmethod
+    def steps(cls):
+        return (cls.step1,)
+
+    def step1(self):
+        print("Message from step1")
+
+PrintMessages().execute()
+```
+
+### Options and steps selection
+
+```python
+from aboutcode.pipeline import BasePipeline
+from aboutcode.pipeline import optional_step
+
+
+class PrintMessages(BasePipeline):
+    @classmethod
+    def steps(cls):
+        return (cls.step1, cls.step2)
+
+    def step1(self):
+        print("Message from step1")
+
+    @optional_step("foo")
+    def step2(self):
+        print("Message from step2")
+
+
+# Execute pipeline with group selection
+run = PrintMessages(selected_groups=["foo"])
+exitcode, error = run.execute()
+
+# Execute pipeline with steps selection
+run = PrintMessages(selected_steps=["step1"])
+exitcode, error = run.execute()
+```
+
