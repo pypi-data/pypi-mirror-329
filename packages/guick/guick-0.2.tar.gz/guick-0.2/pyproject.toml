@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "guick"
+dynamic = ["version"]
+description = "Graphical User Interface for Click"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "click>=8.1.0",
+    "platformdirs",
+    "tomlkit",
+    "wxpython",
+]
+
+
+[tool.setuptools]
+license-files = []
+
+[tool.setuptools_scm]
+version_file = "src/guick/_version.py"
+version_scheme = "no-guess-dev"
+local_scheme = 'no-local-version'
