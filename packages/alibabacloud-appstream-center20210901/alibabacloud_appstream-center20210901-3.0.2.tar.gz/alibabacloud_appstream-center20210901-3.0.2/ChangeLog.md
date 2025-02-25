@@ -1,0 +1,100 @@
+2025-02-18 Version: 3.0.1
+- Update API ListAppInstances: update response param.
+- Update API ModifyAppInstanceGroupAttribute: update param StoragePolicy.
+
+
+2025-01-17 Version: 3.0.0
+- Support API ListBindInfo.
+- Delete API AccessPageGetAcl.
+- Delete API AskSessionPackageRenewPrice.
+- Delete API CancelOtaTask.
+- Delete API CreateProject.
+- Delete API DeleteProject.
+- Delete API GetProjectPolicies.
+- Delete API ListProjects.
+- Delete API MigrateSessionPackage.
+- Delete API ModifyProjectPolicy.
+- Delete API RefreshAccessUrl.
+- Delete API RenewSessionPackage.
+- Delete API UpdateAccessPageState.
+- Update API AuthorizeInstanceGroup: update param AuthorizeUserIds.
+- Update API AuthorizeInstanceGroup: update param UnAuthorizeUserIds.
+- Update API CreateAppInstanceGroup: add param AppPolicyId.
+- Update API GetAppInstanceGroup: update response param.
+- Update API ListAppInstanceGroup: update response param.
+- Update API ModifyAppInstanceGroupAttribute: add param PerSessionPerApp.
+- Update API ModifyAppInstanceGroupAttribute: update param StoragePolicy.
+
+
+2024-10-22 Version: 2.0.4
+- Update API AuthorizeInstanceGroup: add param UserMeta.
+- Update API CreateAppInstanceGroup: update param AppInstanceGroupName.
+- Update API CreateAppInstanceGroup: update param Network.
+- Update API GetAppInstanceGroup: update response param.
+- Update API ListAppInstanceGroup: add param OfficeSiteId.
+- Update API ListAppInstanceGroup: update response param.
+- Update API ListNodeInstanceType: add param Cpu.
+- Update API ListNodeInstanceType: add param Gpu.
+- Update API ListNodeInstanceType: add param GpuMemory.
+- Update API ListNodeInstanceType: add param Memory.
+- Update API ListNodeInstanceType: add param NodeInstanceTypeFamily.
+- Update API ListNodeInstanceType: add param OrderBy.
+- Update API ListNodeInstanceType: add param SortType.
+- Update API ListNodeInstanceType: update response param.
+
+
+2024-09-12 Version: 2.0.3
+- Update API CreateAppInstanceGroup: update param NodePool.
+- Update API GetAppInstanceGroup: update response param.
+- Update API ListAppInstanceGroup: update response param.
+- Update API ModifyNodePoolAttribute: update param NodePoolStrategy.
+
+
+2024-08-02 Version: 2.0.2
+- Update API AuthorizeInstanceGroup: update param AuthorizeUserIds.
+- Update API AuthorizeInstanceGroup: update param UnAuthorizeUserIds.
+- Update API ListRegions: add param BizSource.
+
+
+2024-07-23 Version: 2.0.1
+- Generated python 2021-09-01 for appstream-center.
+
+2024-07-22 Version: 2.0.0
+- Support API ModifyAppPolicy.
+- Update API BuySessionPackage: add param AutoPay.
+- Update API CreateAppInstanceGroup: add param UserDefinePolicy.
+- Update API CreateAppInstanceGroup: add param VideoPolicy.
+- Update API ListAppInstanceGroup: add param RegionId.
+- Update API ListRegions: add param ProductType.
+
+
+2024-01-15 Version: 1.1.0
+- Generated python 2021-09-01 for appstream-center.
+
+2023-08-22 Version: 1.0.8
+- Generated python 2021-09-01 for appstream-center.
+
+2023-05-09 Version: 1.0.7
+- Modify ListAppInstance.
+
+2023-04-03 Version: 1.0.6
+- Add ListAppInstances Open API.
+
+2023-03-22 Version: 1.0.5
+- Add ListAppInstances Open API.
+
+2023-03-21 Version: 1.0.4
+- Add Unbind Open API.
+
+2023-03-10 Version: 1.0.3
+- Add Unbind Open API.
+
+2023-03-09 Version: 1.0.2
+- Add GetConnectionTicket Open API.
+
+2023-01-30 Version: 1.0.1
+- For new api version.
+
+2022-11-01 Version: 1.0.0
+- For new api version.
+
