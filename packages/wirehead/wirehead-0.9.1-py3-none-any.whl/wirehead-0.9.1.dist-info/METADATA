@@ -1,0 +1,69 @@
+Metadata-Version: 2.2
+Name: wirehead
+Version: 0.9.1
+Summary: Caching system for scaling of synthetic data generators using MongoDB
+Home-page: https://github.com/neuroneural/wirehead
+Author: Neuroneural Lab
+Author-email: mdoan4@gsu.edu
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pymongo
+Requires-Dist: torch
+Requires-Dist: numpy
+Requires-Dist: PyYaml
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Wirehead
+
+Caching system for scaling of synthetic data generators using MongoDB.
+
+## Features
+- Cache and efficiently serve synthetic data from generators
+- Scalable architecture using MongoDB for storage
+- Support for numpy and torch tensors
+- Configurable caching behavior
+
+## Quick Start
+```python
+# Generator example
+import numpy as np
+from wirehead import WireheadGenerator 
+
+def create_generator():
+    while True: 
+        img = np.random.rand(256,256,256)
+        lab = np.random.rand(256,256,256)
+        yield (img, lab)
+
+brain_generator = create_generator()
+wirehead_runtime = WireheadGenerator(
+    generator = brain_generator,
+    config_path = "config.yaml" 
+)
+wirehead_runtime.run_generator()
+
+# Dataset example
+from wirehead import MongoheadDataset
+dataset = MongoheadDataset(config_path = "config.yaml")
+data = dataset[[0]]
+```
+
+## MongoDB Setup Required
+Requires a running MongoDB instance.
+
+## Documentation
+For full documentation and examples, visit: https://github.com/neuroneural/wirehead
