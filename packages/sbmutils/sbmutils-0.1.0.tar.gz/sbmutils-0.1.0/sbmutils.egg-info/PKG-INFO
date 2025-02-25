@@ -1,0 +1,63 @@
+Metadata-Version: 2.2
+Name: sbmutils
+Version: 0.1.0
+Summary: A collection of utility functions for data analysis
+Home-page: https://github.com/dalee/sbmutils
+Author: dalee
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: scipy
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# sbmutils
+
+A collection of utility functions for data analysis.
+
+## Installation
+
+```bash
+pip install sbmutils
+```
+
+## Usage
+
+### Quantile Normalization
+
+```python
+import numpy as np
+from sbmutils.norm import quantilenorm
+
+# Create sample data
+data = np.random.rand(10, 3)  # 10 rows, 3 columns
+
+# Perform quantile normalization
+normalized_data = quantilenorm(data, average="mean")
+```
+
+## Features
+
+- `quantilenorm`: Performs 2D quantile normalization over columns
+  - Supports both mean and median averaging methods
+  - Handles missing values (NaN)
+  - Input validation and error handling
+
+## Requirements
+
+- Python >= 3.6
+- NumPy
+- SciPy
+
+## License
+
+This project is licensed under the MIT License. 
