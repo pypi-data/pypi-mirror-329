@@ -1,0 +1,89 @@
+==================
+echemdb-converters Change Log
+==================
+
+.. current developments
+
+v0.4.0
+====================
+
+**Fixed:**
+
+* Fixed creating documentation and uploading wheel.
+
+
+
+v0.3.0
+====================
+
+**Added:**
+
+* Added a new pytest task that runs CLI tests.
+* Added `gamryloader.Gamryloader` for loading Gamry Instruments Framework software `*.DTA` files.
+* Added `BaseLoader.metadata` which should contain the metadata inferred from the header as a dic.
+* Added `BaseLoader.column_headers`, `BaseLoader.column_header_lines`.
+* Added `BaseLoader.delimiter`, which uses `clevercsv` to determine the delimiter from the combined `BaseLoader.data` and `BaseLoader.column_header_lines`.
+* Added `BaseLoader.decimal` which determines the decimal separator from `BaseLoader.data`.
+* Added `BaseLoader.column_header_names`, which flattens the column header names found in `BaseLoader.column_headers`.
+* Added the helper method `BaseLoader._validate_digits` for `BaseLoader.decimal`.
+
+**Changed:**
+
+* Changed name `csvloader.CSVloader` to `baseloader.BaseLoader`.
+* Changed create `csvloader.BaseLoader.df` from various  `BaseLoader`` properties.
+* Changed packages for development to be provided by pixi instead of conda directly.
+
+**Deprecated:**
+
+* Deprecated `BaseLoader.augment`, `BaseLoader.column_names`, `EClabloader.df` and `EClabloader.decimal`.
+
+**Fixed:**
+
+* Fixed breaking tests on GitHub (tests should be more stable now since we switched to pixi for locked versions of dependencies.)
+
+
+
+v0.2.1
+====================
+
+**Added:**
+
+* Added more biologic header names for conversion of any kind of biologic files.
+* Added test for biologic CA and CP files.
+
+**Removed:**
+
+* Removed temporarily macos tests.
+
+
+
+v0.2.0
+====================
+
+
+
+v0.1.2
+====================
+
+**Added:**
+
+* Added installation instructions to the documentation and readme.
+
+**Changed:**
+
+* Changed inferring fields from metadata in the CLI from `figure_description.schema.fields` to `figure_description.fields`.
+
+
+
+v0.1.1
+====================
+
+**Fixed:**
+
+* Fixed inferring units from metadata of the CLI `csv`` command.
+
+
+v0.1.0
+====================
+
+

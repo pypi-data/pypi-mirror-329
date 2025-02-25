@@ -1,0 +1,30 @@
+name: Test
+on:
+  push: { branches: [ "main" ] }
+  pull_request: { branches: [ "main" ] }
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        environment: ["python-39", "python-310", "python-311", "python-312"]
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with: { submodules: recursive }
+      - uses: prefix-dev/setup-pixi@v0.8.3
+        with:
+          pixi-version: v0.40.1
+      - name: doctest
+        run: pixi run -e ${{ matrix.environment }} doctest
+      - name: pytest
+        run: pixi run -e ${{ matrix.environment }} pytest
+      - name: cli
+        # Check that invoking the CLI works in principle. The CLI itself is tested by pytest.
+        run: pixi run -e ${{ matrix.environment }} echemdbconverters csv test/data/default.csv
