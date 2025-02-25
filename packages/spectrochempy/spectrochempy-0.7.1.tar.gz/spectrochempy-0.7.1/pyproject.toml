@@ -1,0 +1,261 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools-scm>=8", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spectrochempy"
+description = "Processing, analysis and modelling Spectroscopic data for Chemistry with Python"
+readme = "README.md"
+dynamic = ["version"]
+requires-python = ">=3.10"
+license = { text = "CeCILL-B FREE SOFTWARE LICENSE AGREEMENT" }
+authors = [
+  { name = "Arnaud Travert", email = "contact@spectrochempy.fr" },
+  { name = "Christian Fernandez", email = "christian.fernandez@ensicaen.fr" },
+]
+keywords = ["spectroscopy", "chemistry", "data analysis"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Topic :: Utilities",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Software Development :: Libraries",
+  "Intended Audience :: Science/Research",
+  "License :: CeCILL-B Free Software License Agreement (CECILL-B)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+  "brukeropusreader",
+  "colorama",
+  "dill",
+  "docrep",
+  "ipython",
+  "jinja2",
+  "numpy",
+  "numpy-quaternion >= 2024.0.7",
+  "matplotlib",
+  "osqp",
+  "pint",
+  "pyyaml",
+  "requests",
+  "scikit-learn",
+  "scipy",
+  "setuptools-scm",
+  "tzlocal",
+  "xlrd",
+]
+
+[project.optional-dependencies]
+dev = [
+  # various
+  "toml",
+  "ruff",
+  "pre-commit",
+  # interactive
+  "jupyter",
+  "jupyterlab",
+  "ipykernel",
+  "ipyparallel",
+  "nodejs",
+  "jupyter_server",
+  # test
+  "coverage",
+  "ipywidgets",
+  "pyfakefs",
+  "pytest",
+  "pytest-cov",
+  "pytest-doctestplus",
+  "pytest-ruff",
+  "pytest-mock",
+  "numpydoc",
+]
+interactive = [
+  "jupyter",
+  "jupyterlab",
+  "ipykernel",
+  "ipyparallel",
+  "nodejs",
+  "jupyter_server",
+]
+test = [
+  "coverage",
+  "ipywidgets",
+  "pyfakefs",
+  "pytest",
+  "pytest-cov",
+  "pytest-doctestplus",
+  "pytest-ruff",
+  "pytest-mock",
+  "numpydoc",
+]
+docs = [
+  # "cffconvert @ git+https://github.com/citation-file-format/cffconvert@b6045d7",
+  "ipykernel",
+  "ipywidgets",
+  "jsonschema",
+  "jupyter",
+  "jupytext",
+  "nbformat",
+  "nbsphinx",
+  "numpydoc",
+  "pickleshare",
+  "pypandoc",             #_binary",
+  "sphinx",
+  "sphinx-tabs",
+  "sphinx-copybutton",
+  "sphinx-gallery",
+  "sphinx-rtd-theme",
+  "sphinxcontrib-bibtex",
+  "json5",
+]
+build = ["setuptools", "setuptools_scm", "toml", "jinja2", "anaconda-client"]
+cantera = ["cantera"]
+
+[project.urls]
+homepage = "https://www.spectrochempy.fr"
+repository = "https://github.com/spectrochempy/spectrochempy"
+documentation = "https://www.spectrochempy.fr/latest"
+issues = "https://github.com/spectrochempy/spectrochempy/issues"
+
+[project.scripts]
+show_versions = "spectrochempy.scripts.show_versions:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"spectrochempy.data" = [
+  "fonts/*",
+  "stylesheets/*",
+  "databases/*",
+  "*.json",
+  "*.cff",
+]
+
+[tool.setuptools_scm]
+local_scheme = "dirty-tag"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+# Enable specific rules
+select = [
+  "D",   # pydocstyle
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "I",   # isort
+  "N",   # pep8-naming
+  "UP",  # pyupgrade
+  "S",   # bandit
+  "B",   # flake8-bugbear
+  "C4",  # flake8-comprehensions
+  "T20", # flake8-print
+  "RET", # flake8-return
+  "SIM", # flake8-simplify
+  "W",   # pycodestyle warnings
+  # "PERF", # perflint
+  "PLC", # pylint conventions
+]
+ignore = [
+  "E402", # Module level import not at top of file
+  "E501", # Line too long
+  "E731", # Do not assign a lambda expression
+  "N801", # Class name should use CapWords convention
+  "N802", # Function name should be lowercase
+  "N803", # Argument name should be lowercase
+  "N805", # First argument of a method should be named 'self'
+  "N806", # Variable in function should be lowercase
+  "D100", # Missing docstring in public module
+  "D101", # Missing docstring in public class
+  "D102", # Missing docstring in public method
+  "D103", # Missing docstring in public function
+  "D104", # Missing doctring in public package
+  "D105", # Missing docstring in magic method
+  "D107", # Missing docstring in __init__
+  "D203", # Incorrect blank line before class
+  "D212", # Docstring should start on first line
+  "D413", # Missing blank line after last section
+  "D417", # Missing argument descriptions in the docstring
+
+]
+
+exclude = ["~*", "tests/**"] # Exclude files and directories.
+
+[tool.ruff.lint.per-file-ignores]
+"docs/sources/userguide/**/*" = [
+  "B018",
+  "T201",
+  "N816",
+] # accept "useless expression", "print", "mixed-case variables" in *.ipynb or py:percent files.
+"docs/sources/gettingstarted/*" = [
+  "B018",
+] # accept "useless expression" in *.ipynb or py:percent files.
+
+
+[tool.ruff.lint.isort]
+known-first-party = ["spectrochempy"]
+force-single-line = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.numpydoc_validation]
+checks = [
+  "all",  # report on all checks, except the below
+  "ES01",
+  "EX01",
+  "SA01",
+  "ES01",
+]
+# remember to use single quotes for regex in TOML
+exclude = [ # don't report on objects that match any of these regex
+  '\.undocumented_method$',
+  '\.__repr__$',
+]
+
+[tool.doc8]
+ignore = ["D001"]
+ignore_path = ["docs/_build"]
+max-line-length = 100
+verbose = 1
+
+[tool.pytest.ini_options]
+markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
+testpaths = ["tests"]
+addopts = ["--ignore=~*", "--doctest-plus", "-p no:warnings"]
+doctest_plus = "enabled"
+doctest_optionflags = [
+  "ELLIPSIS",
+  "NORMALIZE_WHITESPACE",
+  "IGNORE_EXCEPTION_DETAIL",
+  "ALLOW_UNICODE",
+  "ALLOW_BYTES",
+]
+
+[tool.coverage.run]
+source = ["src/spectrochempy/"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "'# '",
+  "if self.debug:",
+  "raise AssertionError",
+  "raise NotImplementedError",
+  "if 0:",
+  "if __name__ == .__main__.:",
+  "def __repr__",
+  "if settings.DEBUG",
+]
+ignore_errors = true
