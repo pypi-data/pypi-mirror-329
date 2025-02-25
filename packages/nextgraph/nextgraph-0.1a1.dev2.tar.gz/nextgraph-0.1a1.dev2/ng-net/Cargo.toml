@@ -1,0 +1,54 @@
+[package]
+name = "ng-net"
+# version = "0.1.0"
+description = "Network library of NextGraph, a decentralized, secure and local-first web 3.0 ecosystem based on Semantic Web and CRDTs"
+categories = ["network-programming"]
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+keywords = ["crdt","e2ee","local-first","p2p","self-hosted"]
+documentation.workspace = true
+rust-version.workspace = true
+readme = "README.md"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_bare = "0.5.0"
+serde_bytes = "0.11.7"
+serde_json = "1.0"
+lazy_static = "1.4.0"
+once_cell = "1.17.1"
+either = "1.8.1"
+futures = "0.3.24"
+async-trait = "0.1.64"
+async-recursion = "1.1.1"
+async-std = {  version = "1.12.0", features = ["attributes","unstable"] }
+unique_id = "0.1.5"
+noise-protocol = "0.2.0"
+noise-rust-crypto = "0.6.2"
+ed25519-dalek = "1.0.1"
+url = "2.4.0"
+regex = "1.8.4"
+base64-url = "2.0.0"
+web-time = "0.2.0"
+ng-repo = { path = "../ng-repo", version = "0.1.1-alpha" }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+reqwest = { version = "0.11.18", features = ["json","native-tls-vendored"] } 
+
+[target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
+version = "0.2.7"
+features = ["js"]
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+getrandom = "0.2.7"
+netdev = "0.26"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
+ng-async-tungstenite = { version = "0.22.2", git = "https://git.nextgraph.org/NextGraph/async-tungstenite.git", branch = "nextgraph",  features = ["async-std-runtime", "async-native-tls"] }
