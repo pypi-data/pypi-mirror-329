@@ -1,0 +1,9 @@
+class loaddata(object):
+    def vcf(vcf):
+        return vcf
+    def bed(bed):
+        return bed
+    def gff(gff):
+        return gff
+    def yaml(yaml):
+        return yaml
