@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  types:
+    name: "Typecheck"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.13"
+      - name: Install Hatch
+        run: pipx install hatch
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/hatch
+          key: ${{ runner.os }}-hatch
+          restore-keys: ${{ runner.os }}-hatch
+      - name: Install dependencies
+        run: |
+          hatch env create dev
+      - name: Run pyright
+        run: |
+          hatch run dev:pyright
+      - name: Ensure Hatch environment is in PATH
+        run: echo "$HOME/.cache/hatch/venv/bin" >> $GITHUB_PATH
+
+  style:
+    name: "Style check"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.13"
+      - name: Install Hatch
+        run: pipx install hatch
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/hatch
+          key: ${{ runner.os }}-hatch
+          restore-keys: ${{ runner.os }}-hatch
+      - name: Install dependencies
+        run: hatch env create dev
+      - name: Run ruff
+        run: |
+          hatch run dev:ruff check --output-format=github $(git ls-files '*.py')
+          hatch run dev:ruff format --diff $(git ls-files '*.py')
+      - name: Run spell-check
+        run: hatch run dev:codespell $(git ls-files)
