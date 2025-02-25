@@ -1,0 +1,477 @@
+# Output backends for sigmac
+# Copyright 2019 Jayden Zheng
+# Copyright 2020 Jonas Hagg
+# Copyright 2021 wagga (https://github.com/wagga40/)
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import re
+import sigma
+from sigma.backends.base import SingleTextQueryBackend
+from sigma.parser.condition import SigmaAggregationParser, NodeSubexpression, ConditionAND, ConditionOR, ConditionNOT
+from sigma.parser.exceptions import SigmaParseError
+class SQLBackend(SingleTextQueryBackend):
+    """Converts Sigma rule into SQL query"""
+    identifier = "sql"
+    active = True
+
+    andToken = " AND "                      # Token used for linking expressions with logical AND
+    orToken = " OR "                        # Same for OR
+    notToken = "NOT "                       # Same for NOT
+    subExpression = "(%s)"                  # Syntax for subexpressions, usually parenthesis around it. %s is inner expression
+    listExpression = "(%s)"                 # Syntax for lists, %s are list items separated with listSeparator
+    listSeparator = ", "                    # Character for separation of list items
+    valueExpression = "\"%s\""              # Expression of values, %s represents value
+    nullExpression = "-%s=*"                # Expression of queries for null values or non-existing fields. %s is field name
+    notNullExpression = "%s=*"              # Expression of queries for not null values. %s is field name
+    mapExpression = "%s ILIKE %s"               # Syntax for field/value conditions. First %s is fieldname, second is value
+    mapMulti = "%s ILIKE %s"                   # Syntax for field/value conditions. First %s is fieldname, second is value
+    mapWildcard = "%s ILIKE %s ESCAPE \'\\\'"# Syntax for swapping wildcard conditions: Adding \ as escape character
+    mapSource = "%sILIKE%s"                     # Syntax for sourcetype
+    mapListsSpecialHandling = False         # Same handling for map items with list values as for normal values (strings, integers) if True, generateMapItemListNode method is called with node
+    mapListValueExpression = "%s OR %s"     # Syntax for field/value condititons where map value is a list
+    mapLength = "(%s %s)"
+    mapEmptyString = "%s != \"\""
+
+    options = SingleTextQueryBackend.options + (
+        ("table", "eventlog", "Use this option to specify table name.", None),
+        ("select", "*", "Use this option to specify fields you want to select. Example: \"--backend-option select=xxx,yyy\"", None),
+        ("selection", False, "Use this option to enable fields selection from Sigma rules.", None),
+    )
+
+    selection_enabled = False
+    
+
+    def __init__(self, sigmaconfig, options):
+        super().__init__(sigmaconfig)
+        
+        if "table" in options:
+            self.table = options["table"]
+        else:
+            self.table = "eventlog"
+
+        if "select" in options and options["select"]:
+            self.select_fields = options["select"].split(',')
+        else:
+            self.select_fields = list()
+
+        if "selection" in options:
+            self.selection_enabled = True
+
+    def generateANDNode(self, node):
+        generated = [ self.generateNode(val) for val in node ]
+        filtered = [ g for g in generated if g is not None ]
+        if filtered:
+            return self.andToken.join(filtered)
+        else:
+            return None
+
+    def generateORNode(self, node):
+        generated = [ self.generateNode(val) for val in node ]
+        filtered = [ g for g in generated if g is not None ]
+        if filtered:
+            return self.orToken.join(filtered)
+        else:
+            return None
+
+    def generateNOTNode(self, node):
+        generated = self.generateNode(node.item)
+        if generated is not None:
+            return self.notToken + generated
+        else:
+            return None
+
+    def generateSubexpressionNode(self, node):
+        generated = self.generateNode(node.items)
+        if generated:
+            return self.subExpression % generated
+        else:
+            return None
+
+    def generateListNode(self, node):
+        if not set([type(value) for value in node]).issubset({str, int}):
+            raise TypeError("List values must be strings or numbers")
+        return self.listExpression % (self.listSeparator.join([self.generateNode(value) for value in node]))
+
+    def generateMapItemNode(self, node):
+        fieldname, value = node
+        transformed_fieldname = self.fieldNameMapping(fieldname, value)
+        generated_value = self.generateNode(value)
+
+        has_wildcard = re.search(r"((\\(\*|\?|\\))|\*|\?|_|%)", generated_value)
+        if generated_value == '""':
+            if "," in generated_value  and generated_value[0]=="(" and generated_value[-1]==")" and not has_wildcard:
+                return self.generateMapItemListNode(transformed_fieldname, value)
+            elif "LENGTH" in transformed_fieldname:
+                return self.mapLength % (transformed_fieldname, value.replace('"',r'\"'))
+            elif type(value) == list:
+                return self.generateMapItemListNode(transformed_fieldname, value)
+            elif self.mapListsSpecialHandling == False and type(value) in (str, int, list) or self.mapListsSpecialHandling == True and type(value) in (str, int):
+                if has_wildcard:
+                    return self.mapWildcard % (transformed_fieldname, generated_value.replace('"',r'\"'))
+                else:
+                    return self.mapExpression % (transformed_fieldname, generated_value.replace('"',r'\"'))
+            elif "sourcetype" in transformed_fieldname:
+                return self.mapSource % (transformed_fieldname, generated_value.replace('"',r'\"'))
+            elif has_wildcard:
+                return self.mapWildcard % (transformed_fieldname, generated_value.replace('"',r'\"'))
+            else:
+                raise TypeError("Backend does not support map values of type " + str(type(value)))
+        else:
+            if "," in generated_value  and generated_value[0]=="(" and generated_value[-1]==")" and not has_wildcard:
+                # updated for IN to ILIKE change
+                # return self.mapMulti % (transformed_fieldname, generated_value)
+                return self.generateMapItemListNode(transformed_fieldname, value, True)
+            elif "LENGTH" in transformed_fieldname:
+                return "(" + self.mapEmptyString % (transformed_fieldname) + " AND " +self.mapLength % (transformed_fieldname, value.replace('"',r'\"')) + ")"
+            elif type(value) == list:
+                return self.generateMapItemListNode(transformed_fieldname, value)
+            elif self.mapListsSpecialHandling == False and type(value) in (str, int, list) or self.mapListsSpecialHandling == True and type(value) in (str, int):
+                if has_wildcard:
+                    return "(" +self.mapEmptyString % (transformed_fieldname) + " AND " + self.mapWildcard % (transformed_fieldname, generated_value.replace('"',r'\"')) + ")"
+                else:
+                    return "(" +self.mapEmptyString % (transformed_fieldname) + " AND " + self.mapExpression % (transformed_fieldname, generated_value.replace('"',r'\"')) + ")"
+            elif "sourcetype" in transformed_fieldname:
+                return "(" +self.mapEmptyString % (transformed_fieldname) + " AND " + self.mapSource % (transformed_fieldname, generated_value.replace('"',r'\"')) + ")"
+            elif has_wildcard:
+                return "(" +self.mapEmptyString % (transformed_fieldname) + " AND " + self.mapWildcard % (transformed_fieldname, generated_value.replace('"',r'\"')) + ")"
+            else:
+                raise TypeError("Backend does not support map values of type " + str(type(value)))
+            
+
+    def generateMapItemListNode(self, key, value, in_flag=False):
+        # return "(" + (" OR ".join(["(" +self.mapEmptyString % (key) + " AND " +self.mapWildcard % (key, self.generateValueNode(item)) + ")" for item in value])) + ")"
+        # return "(" + (" OR ".join([self.mapEmptyString % (key)])) + ")"
+        if in_flag:
+            return "(" + (" OR ".join([
+                "(" + self.mapEmptyString % (key) + " AND " + self.mapMulti % (key, self.generateValueNode(item).replace('"',r'\"')) + ")" 
+                if item != ""
+                else self.mapMulti % (key, self.generateValueNode(item))
+                for item in value]
+            )) + ")"
+        else:
+            return "(" + (" OR ".join([
+                "(" + self.mapEmptyString % (key) + " AND " + self.mapWildcard % (key, self.generateValueNode(item).replace('"',r'\"')) + ")" 
+                if item != ""
+                else self.mapWildcard % (key, self.generateValueNode(item))
+                for item in value]
+            )) + ")"
+
+    def generateValueNode(self, node):
+        return self.valueExpression % (self.cleanValue(str(node)))
+
+    def generateNULLValueNode(self, node):
+        return self.nullExpression % (node.item)
+
+    def generateNotNULLValueNode(self, node):
+        return self.notNullExpression % (node.item)
+
+    def fieldNameMapping(self, fieldname, value):
+        """
+        Alter field names depending on the value(s). Backends may use this method to perform a final transformation of the field name
+        in addition to the field mapping defined in the conversion configuration. The field name passed to this method was already
+        transformed from the original name given in the Sigma rule.
+        """
+        return fieldname
+
+    def generate(self, sigmaparser):
+        """Method is called for each sigma rule and receives the parsed rule (SigmaParser)"""
+        fields = list()
+
+        # First add fields specified in the rule
+        try:
+            for field in sigmaparser.parsedyaml["fields"]:
+                mapped = sigmaparser.config.get_fieldmapping(field).resolve_fieldname(field, sigmaparser)
+                if type(mapped) == str:
+                    fields.append(mapped)
+                elif type(mapped) == list:
+                    fields.extend(mapped)
+                else:
+                    raise TypeError("Field mapping must return string or list")
+
+        except KeyError:    # no 'fields' attribute
+            pass
+
+        # Then add fields specified in the backend configuration
+        fields.extend(self.select_fields)
+
+        # In case select is specified in backend option, we want to enable selection
+        if len(self.select_fields) > 0:
+            self.selection_enabled = True
+
+        # Finally, in case fields is empty, add the default value
+        if not fields:
+            fields = list("*")
+
+        for parsed in sigmaparser.condparsed:
+            if self.selection_enabled:
+                query = self._generateQueryWithFields(parsed, fields)
+            else:
+                query = self.generateQuery(parsed)
+            before = self.generateBefore(parsed)
+            after = self.generateAfter(parsed)
+
+            result = ""
+            if before is not None:
+                result = before
+            if query is not None:
+                result += query
+            if after is not None:
+                result += after
+
+            return result
+
+    def cleanValue(self, val):
+        if not isinstance(val, str):
+            return str(val)
+
+        #Single backlashes which are not in front of * or ? are doulbed
+        val = re.sub(r"(?<!\\)\\(?!(\\|\*|\?))", r"\\\\", val)
+
+        #Replace _ with \_ because _ is a sql wildcard
+        val = re.sub(r'_', r'\_', val)
+
+        #Replace % with \% because % is a sql wildcard
+        val = re.sub(r'%', r'\%', val)
+
+        #Replace * with %, if even number of backslashes (or zero) in front of *
+        val = re.sub(r"(?<!\\)(\\\\)*(?!\\)\*", r"\1%", val)
+
+        #Replace ? with _, if even number of backsashes (or zero) in front of ?
+        val = re.sub(r"(?<!\\)(\\\\)*(?!\\)\?", r"\1_", val)
+        return val
+
+    def generateAggregation(self, agg, where_clausel):
+        if not agg:
+            return self.table, where_clausel
+
+        if  (agg.aggfunc == SigmaAggregationParser.AGGFUNC_COUNT or
+            agg.aggfunc == SigmaAggregationParser.AGGFUNC_MAX or
+            agg.aggfunc == SigmaAggregationParser.AGGFUNC_MIN or
+            agg.aggfunc == SigmaAggregationParser.AGGFUNC_SUM or
+            agg.aggfunc == SigmaAggregationParser.AGGFUNC_AVG):
+
+            if agg.groupfield:
+                group_by = " GROUP BY {0}".format(self.fieldNameMapping(agg.groupfield, None))
+            else:
+                group_by = ""
+
+            if agg.aggfield:
+                select = "*,{}({}) AS agg".format(agg.aggfunc_notrans, self.fieldNameMapping(agg.aggfield, None))
+            else:
+                if agg.aggfunc == SigmaAggregationParser.AGGFUNC_COUNT:
+                    select = "*,{}(*) AS agg".format(agg.aggfunc_notrans)
+                else:
+                    raise SigmaParseError("For {} aggregation a fieldname needs to be specified".format(agg.aggfunc_notrans))
+
+            temp_table = "(SELECT {} FROM {} WHERE {}{})".format(select, self.table, where_clausel, group_by)
+            agg_condition =  "agg {} {}".format(agg.cond_op, agg.condition)
+
+            return temp_table, agg_condition
+
+        raise NotImplementedError("{} aggregation not implemented in SQL Backend".format(agg.aggfunc_notrans))
+    
+    def generateQuery(self, parsed):
+        return self._generateQueryWithFields(parsed, list("*"))
+
+    def checkFTS(self, parsed, result):
+        if self._recursiveFtsSearch(parsed.parsedSearch):
+            raise NotImplementedError("FullTextSearch not implemented for SQL Backend.")
+
+    def _generateQueryWithFields(self, parsed, fields):
+        """
+        Return a SQL query with fields specified.
+        """
+
+        result = self.generateNode(parsed.parsedSearch)
+
+        self.checkFTS(parsed, result)
+
+        select = ", ".join(fields)
+
+        if parsed.parsedAgg:
+            #Handle aggregation
+            fro, whe = self.generateAggregation(parsed.parsedAgg, result)
+            return "SELECT {} FROM {} WHERE {}".format(select, fro, whe)
+
+        return "SELECT {} FROM {} WHERE {}".format(select, self.table, result)
+
+    def _recursiveFtsSearch(self, subexpression):
+        #True: found subexpression, where no fieldname is requested -> full text search
+        #False: no subexpression found, where a full text search is needed
+
+        def _evaluateCondition(condition):
+            #Helper function to evaluate conditions
+            if type(condition) not in  [ConditionAND, ConditionOR, ConditionNOT]:
+                raise NotImplementedError("Error in recursive Search logic")
+
+            results = []
+            for elem in condition.items:
+                if isinstance(elem, NodeSubexpression):
+                    results.append(self._recursiveFtsSearch(elem))
+                if isinstance(elem, ConditionNOT):
+                    results.append(_evaluateCondition(elem))
+                if isinstance(elem, tuple):
+                    results.append(False)
+                if type(elem) in (str, int, list):
+                    return True
+            return any(results)
+
+        if type(subexpression) in [str, int, list]:
+            return True
+        elif type(subexpression) in [tuple]:
+            return False
+
+        if not isinstance(subexpression, NodeSubexpression):
+            raise NotImplementedError("Error in recursive Search logic")
+
+        if isinstance(subexpression.items, NodeSubexpression):
+            return self._recursiveFtsSearch(subexpression.items)
+        elif type(subexpression.items) in [ConditionAND, ConditionOR, ConditionNOT]:
+            return _evaluateCondition(subexpression.items)
+
+
+
+
+from unittest.mock import patch
+from sigma.parser.collection import SigmaCollectionParser
+from sigma.config.mapping import FieldMapping
+from sigma.configuration import SigmaConfiguration
+config = SigmaConfiguration()
+
+basic_rule = {"title": "Test", "level": "testing"}
+table = "eventlog"
+        
+
+# detection = {"selection": {"fieldname": "test1"},
+#                      "condition": "selection"}
+
+detection = {"selection":{"EventID": "31017",
+             "UserName": "",
+             "ServerName|startswith": "\1"},
+             "condition": "selection"}
+
+detection = {"selection":{"EventID": "31017",
+             "UserName": ["", " ","\""],
+             "ServerName|startswith": "\1"},
+             "condition": "selection"}
+
+# detection = {"selection": {"fieldname": [
+#             "test1", "test2"]}, "condition": "selection"}
+
+# detection = {"selection": {"fieldname": 4}, "condition": "selection"}
+
+# detection = {"selection": {
+#             "fieldname": [3, 4]}, "condition": "selection"}
+# result: SELECT * FROM eventlog WHERE ((fieldname != "" OR fieldname ILIKE "3" ESCAPE '\') OR (fieldname != "" OR fieldname ILIKE "4" ESCAPE '\')
+
+# detection = {"selection": {"fieldname1": "test1", "fieldname2": [
+#             "test2", "test3"]}, "condition": "selection"}
+# result: SELECT * FROM eventlog WHERE ((fieldname1 != "" OR fieldname1 ILIKE "test1") AND ((fieldname2 != "" OR fieldname2 ILIKE "test2" ESCAPE '\') OR (fieldname2 != "" OR fieldname2 ILIKE "test3" ESCAPE '\')))
+
+# detection = {"selection": {"fieldname": "test1"}, "filter": {
+#             "fieldname2": "whatever"}, "condition": "selection and filter"}
+# result: SELECT * FROM eventlog WHERE ((fieldname != "" OR fieldname ILIKE "test1") AND (fieldname2 != "" OR fieldname2 ILIKE "whatever"))
+
+# detection = {"selection": {"fieldname": "test1"}, "filter": {
+#             "fieldname2": "whatever"}, "condition": "selection or filter"}
+# result: SELECT * FROM eventlog WHERE ((fieldname != "" OR fieldname ILIKE "test1") OR (fieldname2 != "" OR fieldname2 ILIKE "whatever"))
+
+# detection = {"selection": {"fieldname": "test1"}, "filter": {
+#             "fieldname2": "whatever"}, "condition": "selection and not filter"}
+# result: SELECT * FROM eventlog WHERE ((fieldname != "" OR fieldname ILIKE "test1") AND NOT ((fieldname2 != "" OR fieldname2 ILIKE "whatever")))
+
+# detection = {"selection": {"fieldname1": "test1"}, "filter": {
+#             "fieldname2": "test2"}, "condition": "1 of them"}
+# result: SELECT * FROM eventlog WHERE ((fieldname1 != "" OR fieldname1 ILIKE "test1") OR (fieldname2 != "" OR fieldname2 ILIKE "test2"))
+
+# detection = {"selection": {"fieldname1": "test1"}, "filter": {
+#             "fieldname2": "test2"}, "condition": "all of them"}
+# result: SELECT * FROM eventlog WHERE ((fieldname1 != "" OR fieldname1 ILIKE "test1") AND (fieldname2 != "" OR fieldname2 ILIKE "test2"))
+
+# detection = {"selection": {"fieldname|contains": "test"},
+#                      "condition": "selection"}
+# resutl: SELECT * FROM eventlog WHERE (fieldname != "" OR fieldname ILIKE "%test%" ESCAPE '\')
+
+# detection = {"selection": {"fieldname|all": [
+#             "test1", "test2"]}, "condition": "selection"}
+# result: SELECT * FROM eventlog WHERE ((fieldname != "" OR fieldname ILIKE "test1") AND (fieldname != "" OR fieldname ILIKE "test2"))
+
+# detection = {"selection": {"fieldname|endswith": "test"},
+#                      "condition": "selection"}
+# result: SELECT * FROM eventlog WHERE (fieldname != "" OR fieldname ILIKE "%test" ESCAPE '\')
+
+# detection = {"selection": {"fieldname|startswith": "test"},
+#                      "condition": "selection"}
+# result: SELECT * FROM eventlog WHERE (fieldname != "" OR fieldname ILIKE "test%" ESCAPE '\')
+
+# detection = {"selection": {"fieldname": "test"},
+#                      "condition": "selection | count() > 5"}
+# result: SELECT * FROM (SELECT *,count(*) AS agg FROM eventlog WHERE (fieldname != "" OR fieldname ILIKE "test")) WHERE agg > 5
+
+# detection = {"selection": {"fieldname1": "test"},
+#                      "condition": "selection | min(fieldname2) > 5"}
+# result: SELECT * FROM (SELECT *,min(fieldname2) AS agg FROM eventlog WHERE (fieldname1 != "" OR fieldname1 ILIKE "test")) WHERE agg > 5
+
+# detection = {"selection": {"fieldname1": "test"},
+#                      "condition": "selection | max(fieldname2) > 5"}
+# result: SELECT * FROM (SELECT *,max(fieldname2) AS agg FROM eventlog WHERE (fieldname1 != "" OR fieldname1 ILIKE "test")) WHERE agg > 5
+
+# detection = {"selection": {"fieldname1": "test"},
+#                      "condition": "selection | avg(fieldname2) > 5"}
+# result: SELECT * FROM (SELECT *,avg(fieldname2) AS agg FROM eventlog WHERE (fieldname1 != "" OR fieldname1 ILIKE "test")) WHERE agg > 5
+
+# detection = {"selection": {"fieldname1": "test"},
+#                      "condition": "selection | sum(fieldname2) > 5"}
+# result: SELECT * FROM (SELECT *,sum(fieldname2) AS agg FROM eventlog WHERE (fieldname1 != "" OR fieldname1 ILIKE "test")) WHERE agg > 5
+
+# detection = {"selection": {"fieldname1": "test"},
+#                      "condition": "selection | sum(fieldname2) < 5"}
+# result: SELECT * FROM (SELECT *,sum(fieldname2) AS agg FROM eventlog WHERE (fieldname1 != "" OR fieldname1 ILIKE "test")) WHERE agg < 5
+
+# detection = {"selection": {"fieldname1": "test"},
+#                      "condition": "selection | sum(fieldname2) == 5"}
+# result: SELECT * FROM (SELECT *,sum(fieldname2) AS agg FROM eventlog WHERE (fieldname1 != "" OR fieldname1 ILIKE "test")) WHERE agg == 5
+
+# detection = {"selection": {"fieldname1": "test"},
+#                      "condition": "selection | sum(fieldname2) by fieldname3 == 5"}
+# result:SELECT * FROM (SELECT *,sum(fieldname2) AS agg FROM eventlog WHERE (fieldname1 != "" OR fieldname1 ILIKE "test") GROUP BY fieldname3) WHERE agg == 5
+
+# detection = {"selection": {"fieldname1": "test"}, "filter": {
+#             "fieldname2": "tessst"}, "condition": "selection OR filter | sum(fieldname2) == 5"}
+# result: SELECT * FROM (SELECT *,sum(fieldname2) AS agg FROM eventlog WHERE ((fieldname1 != "" OR fieldname1 ILIKE "test") OR (fieldname2 != "" OR fieldname2 ILIKE "tessst"))) WHERE agg == 5
+
+# detection = {"selection": {"fieldname": "test*"},
+#                      "condition": "selection"}
+# result: SELECT * FROM eventlog WHERE (fieldname != "" OR fieldname ILIKE "test%" ESCAPE '\')
+
+# detection = {"selection": {"fieldname": "test?"},
+#                      "condition": "selection"}
+# result:SELECT * FROM eventlog WHERE (fieldname != "" OR fieldname ILIKE "test_" ESCAPE '\')
+
+# detection = {"selection": {"fieldname": r"test\?"},
+#                      "condition": "selection"}
+# result: SELECT * FROM eventlog WHERE (fieldname != "" OR fieldname ILIKE "test\?" ESCAPE '\')
+
+basic_rule["detection"] = detection
+    
+with patch("yaml.safe_load_all", return_value=[basic_rule]):
+    backend = SQLBackend(config, table)
+    parser = SigmaCollectionParser("any sigma io", None, None)
+
+backend = SQLBackend(config, table)
+
+for p in parser.parsers:
+    query = backend.generate(p)
+    print(query)
