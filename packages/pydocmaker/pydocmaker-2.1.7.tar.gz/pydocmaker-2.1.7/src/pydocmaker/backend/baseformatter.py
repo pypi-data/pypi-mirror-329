@@ -1,0 +1,110 @@
+import abc
+import traceback
+
+
+
+class BaseFormatter(abc.ABC):
+
+    default_linebreak = '\n\n'
+
+    def digest_iterator(self, **kwargs):
+        content = kwargs.get('content', kwargs.get('children'))
+        return f''.join([self.digest(c) for c in content])
+
+    def digest_str(self, el):
+        return str(el)
+
+    def digest_text(self, children='', **kwargs) -> list:
+        return self.digest(children) # will result in digest_str being called
+    
+    def digest_line(self, **kwargs):
+        return self.digest_text(**kwargs) 
+    
+    def digest_meta(self, **kwargs):
+        return '' # meta element will not influence the rendering and is just ignored
+    
+    @abc.abstractmethod
+    def digest_markdown(self, children='', **kwargs) -> str:
+        pass
+
+    @abc.abstractmethod
+    def digest_image(self, children='', width=0.8, caption='', imageblob='', **kwargs) -> str:
+        pass
+
+    @abc.abstractmethod
+    def digest_verbatim(self, children='', **kwargs) -> str:
+        pass
+
+    @abc.abstractmethod
+    def digest_latex(self, children:str, **kwargs):
+        pass
+
+    def digest(self, children, **kwargs) -> str:
+        try:
+            
+
+            if not children:
+                ret = ''
+            elif isinstance(children, str):
+                ret = self.digest_str(children)
+            elif isinstance(children, dict) and children.get('typ', None) == 'meta':
+                ret = self.digest_meta(children=children, **kwargs)
+            elif isinstance(children, dict) and children.get('typ', None) == 'iter':
+                ret = self.digest_iterator(children=children, **kwargs)
+            elif isinstance(children, list) and children:
+                ret = self.digest_iterator(children=children, **kwargs)
+            elif isinstance(children, dict) and children.get('typ', None) == 'image':
+                ret = self.digest_image(**children)
+            elif isinstance(children, dict) and children.get('typ', None) == 'text':
+                ret = self.digest_text(**children)
+            elif isinstance(children, dict) and children.get('typ', None) == 'latex':
+                ret = self.digest_latex(**children)
+            elif isinstance(children, dict) and children.get('typ', None) == 'line':
+                ret = self.digest_line(**children)
+            elif isinstance(children, dict) and 'typ' in children and children['typ'] == 'verbatim':
+                ret = self.digest_verbatim(**children)
+            elif isinstance(children, dict) and 'typ' in children and children['typ'] == 'markdown':
+                ret = self.digest_markdown(**children)
+            else:
+                ret = self.handle_error(f'the element of type {type(children)} {children=}, could not be parsed.')
+            
+            if isinstance(ret, str):
+                linebreak = self.default_linebreak
+                if isinstance(children, dict):
+                    tmp = children.get('end', None) 
+                    if not tmp is None:
+                        linebreak = tmp
+
+                tmp = kwargs.get('end', None) 
+                if not tmp is None:
+                    linebreak = tmp
+
+                ret += linebreak
+            return ret
+        
+        except Exception as err:
+            return self.handle_error(err, children)
+
+
+    def handle_error(self, err, el) -> list:
+        e = str(el)
+        if len(e) > 300:
+            e = e[:300] + f'... (n={len(e)-300} more chars hidden)'
+
+        txt = 'ERROR WHILE HANDLING ELEMENT:\n{}\n\n'.format(e)
+        if not isinstance(err, str):
+            txt += '\n'.join(traceback.format_exception(type(err), value=err, tb=err.__traceback__, limit=5))
+        else:
+            txt += err
+        return self.digest_verbatim(txt + '\n', color='red')
+    
+        
+    def format(self, doc:list) -> str:
+        if hasattr(doc, 'dump'):
+            doc = doc.dump()
+        if not isinstance(doc, list):
+            doc = [doc]
+        return ''.join([self.digest(p) for p in doc])
+    
+
+
