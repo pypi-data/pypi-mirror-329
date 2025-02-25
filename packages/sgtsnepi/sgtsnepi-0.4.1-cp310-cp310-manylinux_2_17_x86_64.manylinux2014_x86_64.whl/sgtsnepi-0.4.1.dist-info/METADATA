@@ -1,0 +1,99 @@
+Metadata-Version: 2.1
+Name: sgtsnepi
+Version: 0.4.1
+Summary: SG-t-SNE-Π wrapper for Python
+Author-Email: Alexandros Athanasiadis <athanasiadisalex2@gmail.com>
+License: GPLv3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Programming Language :: C
+Classifier: Programming Language :: C++
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Project-URL: Homepage, https://github.com/alex-unofficial/sgtsnepi-python
+Requires-Dist: numpy>=1.19.5
+Requires-Dist: scipy>=1.7.3
+Requires-Dist: nextprod>=1.0
+Provides-Extra: dev
+Requires-Dist: matplotlib>=3.5; extra == "dev"
+Requires-Dist: pylint>=2.17; extra == "dev"
+Requires-Dist: flake8>=6.0; extra == "dev"
+Description-Content-Type: text/markdown
+
+# SG-t-SNE-Π wrapper for Python
+
+This repository aims to provide a `Python` interface to 
+[SG-t-SNE-Π](http://t-sne-pi.cs.duke.edu), which is a high-performance 
+software for swift embedding of a large, sparse graph into
+a d-dimensional space (d=1,2,3) on a shared-memory computer.
+
+> :warning: **Warning!** This repository is still a work in progress and is not ready for general use.
+
+## Installation
+
+### Prerequisites
+
+`sgtsnepi` currently only supports Linux and MacOS.
+Windows support will be available in the near-future.
+
+Installation requires `Python 3.9` or higher.
+
+### Installing the Module
+
+To install the package run
+```sh
+pip install sgtsnepi
+```
+
+Then in your Python code run the following to import the library:
+```python
+import sgtsnepi
+
+# [ ... ]
+
+sgtsnepi.sgtsnepi(sparse_matrix, args)
+```
+
+Or to import the `sgtsnepi` function directly:
+```python
+from sgtsnepi import sgtsnepi
+
+# [ ... ]
+
+sgtsnepi(sparse_matrix, args)
+```
+
+## Running the Demo
+
+To use the demo you should install [matplotlib](https://matplotlib.org/) by running
+```sh
+pip install scipy matplotlib
+```
+
+Then from the source directory run
+```
+python tests/demo.py mm_file.mtx ndim
+```
+where `mm_file.mtx` is a file containing the input matrix which is in the
+[Matrix Market](https://math.nist.gov/MatrixMarket/index.html) file format,
+and `ndim` is the number of embedding dimensions.
+
+You can find some compressed `MatrixMarket` files in the `data/` subdirectory.
+
+## Citation
+
+If you use this software, pleace cite the following paper:
+
+```bibtex
+@inproceedings{pitsianis2019sgtsnepi,
+    author = {Pitsianis, Nikos and Iliopoulos, Alexandros-Stavros and Floros, Dimitris and Sun,        Xiaobai},
+    doi = {10.1109/HPEC.2019.8916505},
+    booktitle = {IEEE High Performance Extreme Computing Conference},
+    month = {11},
+    title = {{Spaceland Embedding of Sparse Stochastic Graphs}},
+    year = {2019}
+}
+```
