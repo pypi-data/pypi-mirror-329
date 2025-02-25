@@ -1,0 +1,33 @@
+[build-system]
+  build-backend = 'setuptools.build_meta'
+  requires = ['setuptools>=42', 'wheel', 'tomli']
+
+[project]
+  classifiers = ['Programming Language :: Python :: 3', 'License :: OSI Approved :: MIT License', 'Operating System :: OS Independent']
+  dependencies = ['click', 'configparser', 'dotenv', 'duckdb']
+  description = 'A simple migration tool for DuckDB databases.'
+  keywords = ['duckdb', 'migrations', 'database', 'schema']
+  name = 'quackup'
+  readme = 'README.md'
+  requires-python = '>=3.7'
+  version = '0.2.0'
+
+  [[project.authors]]
+    email = 'jayme.edwards@gmail.com'
+    name = 'Jayme Edwards'
+
+  [project.license]
+    file = 'LICENSE'
+
+  [project.optional-dependencies]
+    test = ['pytest', 'pytest-mock', 'pytest-cov']
+
+  [project.scripts]
+    quackup = 'quackup.cli:cli'
+
+[tool]
+  [tool.setuptools]
+    [tool.setuptools.packages]
+      [tool.setuptools.packages.find]
+        exclude = ['.venv', 'build', 'dist', 'migrations', 'node_modules', 'tests', '*.md', '*.toml', '*.ini', '*.json', '*.code-workspace', '.flake8', '.pylintrc', '.releasrc.json']
+        include = ['quackup']
