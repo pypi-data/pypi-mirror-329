@@ -1,0 +1,59 @@
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stock_catcher"
+version = "1.0.0"
+description = "Read the latest stock news"
+readme = "README.md"
+authors = [{ name = "Pengfei", email = "liu.pengfei@hotmail.fr" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["cac40", "stock", "finance"]
+dependencies = ["pandas", "yfinance", 'tomli; python_version < "3.13"']
+requires-python = ">=3.9"
+
+    [project.optional-dependencies]
+    build = ["build", "twine"]
+    dev = ["black", "bumpver", "isort", "mypy", "pytest"]
+
+    [project.scripts]
+    stock_catcher = "stock_catcher.__main__:main"
+
+    [project.urls]
+    repository    = "https://github.com/pengfei99/py-packaging"
+    documentation = "https://github.com/pengfei99/py-packaging/blob/main/docs/packaging_python_scripts.md"
+
+
+[tool.bumpver]
+current_version = "1.0.0"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message  = "bump version {old_version} -> {new_version}"
+commit          = true
+tag             = true
+push            = false
+
+    [tool.bumpver.file_patterns]
+    "pyproject.toml" = [
+        'current_version = "{version}"',
+        'version = "{version}"',
+    ]
+    "src/stock_catcher/__init__.py" = ["{version}"]
+
+[tool.isort]
+profile                   = "black"
+import_heading_stdlib     = "Standard library imports"
+import_heading_thirdparty = "Third party imports"
+import_heading_firstparty = "Reader imports"
+
+[tool.mypy]
+strict = true
+
+    [[tool.mypy.overrides]]
+    module                 = "stockcatcher"
+    ignore_missing_imports = true
