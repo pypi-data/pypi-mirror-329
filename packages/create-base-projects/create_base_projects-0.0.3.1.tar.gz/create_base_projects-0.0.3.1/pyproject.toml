@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "create-base-projects"
+version = "0.0.3.1"
+description = "This libraly i`am created just for self using if u want u can use it with me"
+authors = ["Арсений <workmailskr@mail.ru>"]
+readme = "README.md"
+packages = [{include = "project_init"}]
+
+[tool.poetry.dependencies]
+python = ">=3.12"
+typer = {version = ">=0.15.1,<0.16.0", extras = ["all"]} 
+inquirer = {version = "3.4.0"}
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+project = "project_init.main:app"
