@@ -1,0 +1,11 @@
+include CMakeLists.txt
+include pybind11_stubgen.py
+recursive-include cmake *
+recursive-include source *
+recursive-include third-party *
+prune test
+
+prune third-party/*/.github
+prune third-party/*/docs
+prune third-party/*/tests
+prune third-party/imgui/examples
