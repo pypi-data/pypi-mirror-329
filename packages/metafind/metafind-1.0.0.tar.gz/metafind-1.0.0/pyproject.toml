@@ -1,0 +1,30 @@
+[project]
+name = "metafind"
+version = "1.0.0"
+description = "Metadata analysis tool written for CSEC-473 - Penetration Testing"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "click>=8.1.8",
+    "pyexiftool>=0.5.6",
+    "rich>=13.9.4",
+]
+urls.Homepage = "https://docs.sapph2c.dev/metafind"
+urls.Source = "https://github.com/sapph2c/metafind"
+
+[project.scripts]
+metafind = "metafind.cli:cli"
+
+[tool.uv]
+package = true
+
+[dependency-groups]
+dev = [
+    "mkautodocs>=0.3.4.3",
+    "mkdocs-material>=9.6.5",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.9.7",
+]
+
+
