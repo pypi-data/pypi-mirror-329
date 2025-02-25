@@ -1,0 +1,74 @@
+Metadata-Version: 2.4
+Name: flight-mech
+Version: 1.0.8
+Summary: A package to compute the characteristics of an airplane using simple flight mechanics equations.
+Project-URL: Homepage, https://github.com/PaulCreusy/flight-mech
+Project-URL: Issues, https://github.com/PaulCreusy/flight-mech/issues
+Project-URL: Documentation, https://flight-mech.creusy.fr
+Author-email: PaulCreusy <paul.creusy@gmail.com>
+License-File: LICENSE
+Keywords: airfoil,airfoil-analysis,airplane,flight,flight mechanics,mechanics,plane,turbojet,wing
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3.10
+Requires-Dist: bs4
+Requires-Dist: matplotlib
+Requires-Dist: numpy>=2.0.0
+Requires-Dist: pandas
+Requires-Dist: scipy
+Requires-Dist: tqdm
+Description-Content-Type: text/markdown
+
+# Flight-mech
+
+![PyPI - Version](https://img.shields.io/pypi/v/flight-mech)![PyPI - Downloads](https://img.shields.io/pypi/dm/flight-mech)![Pylint Badge](https://github.com/PaulCreusy/flight-mech/actions/workflows/pylint.yml/badge.svg)![Pytest Badge](https://github.com/PaulCreusy/flight-mech/actions/workflows/pytest.yml/badge.svg)
+
+## License
+
+This software has been developed by Paul Creusy and is shared under the MIT License.
+
+## Getting started
+
+### Installation
+
+#### Pip installation
+
+To install this module with pip, please use:
+
+```bash
+pip install flight-mech
+```
+
+#### Manual installation
+
+For a manual installation, please clone the repository and install the required Python libraries using the command:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Documentation
+
+The documentation is available online [here](https://flight-mech.creusy.fr).
+
+Otherwise, if you decided to clone the repository, you can generate the documentation using the following commands:
+
+```bash
+cd docs
+make html
+```
+
+And open the file `docs/_build/html/index.html` in your browser. 
+
+### Functionalities
+
+This software includes various modules to build a numerical plane model and compute its characteristics. The modules implemented are the following:
+
+- `atmosphere` : defines several atmosphere models to compute density, temperature, pressure and other quantities.
+- `aerodynamics` : contains functions to compute quantities in the boundary layer of a fluid flow.
+- `airfoil` : allows to define the geometry of an airfoil and compute the lift and moment coefficients.
+- `wing` : allows to define the geometry of a wing and compute the lift and drag coefficients.
+- `fuel` : defines several types of broadly used fuels in aeronautics.
+- `turbine` : allows to define several types of turbine to compute their thrust and consumption at various operating conditions.
+- `plane` : allows to define a numerical plane model, binding the previous modules, to compute its flight characteristics. 
