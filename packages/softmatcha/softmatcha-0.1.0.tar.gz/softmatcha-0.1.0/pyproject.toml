@@ -1,0 +1,46 @@
+[project]
+name = "softmatcha"
+version = "0.1.0"
+description = "SoftMatcha"
+readme = "README.md"
+authors = [
+    { name = "Hiroyuki Deguchi", email = "deguchi.hiroyuki.db0@is.naist.jp" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "fasttext>=0.9.3",
+    "gensim>=4.3.3",
+    "h5py>=3.12.1",
+    "icu-tokenizer>=0.0.1",
+    "ipadic>=1.0.0",
+    "mecab-python3>=1.0.10",
+    "numba>=0.60.0",
+    "numpy>=1.26.4",
+    "pysimdjson>=6.0.2",
+    "sacremoses>=0.1.1",
+    "simple-parsing>=0.1.6",
+    "termcolor>=2.5.0",
+    "torch>=2.5.1",
+    "transformers>=4.47.0",
+]
+
+[project.scripts]
+softmatcha-grep = "softmatcha.cli.grep:cli_main"
+softmatcha-index = "softmatcha.cli.build_inverted_index:cli_main"
+softmatcha-search = "softmatcha.cli.search_inverted_index:cli_main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.13.0",
+    "pre-commit>=4.0.1",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.8.2",
+]
+
+[tool.ruff.lint]
+extend-select = ["I"]
