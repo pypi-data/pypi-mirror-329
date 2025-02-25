@@ -1,0 +1,65 @@
+Metadata-Version: 2.2
+Name: ally-ai-core
+Version: 0.7.0
+Summary: Core package for ally
+Author-email: Tugbay Atilla <tugbayatilla@gmail.com>
+Project-URL: Homepage, https://github.com/users/tugbayatilla/projects/3/
+Project-URL: Issues, https://github.com/users/tugbayatilla/projects/3/views/8
+Project-URL: Repository, https://github.com/tugbayatilla/ally_ai.git
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pyyaml
+
+# Ally AI Core
+
+## How to use
+
+### Config File
+
+```yaml
+llm:
+  api_key: '<private-key>'
+  api_version: "<api-version>"
+  endpoint: "<endpoint>"
+  model: "<model-name>"
+  deployment_name: '<deployment-name>'
+  temperature: 0.7
+  streaming: true
+
+embeddings:
+  api_key: '<private-key>'
+  api_version: "<api-version>"
+  endpoint: "<endpoint>"
+  model: "<model-name>"
+  deployment_name: '<deployment-name>'
+```
+
+
+
+### Use Custom Settings
+
+```yaml
+my_llm:
+  api_key: '<private-key>'
+  api_version: "<api-version>"
+```
+
+```python
+from ally_ai_core import Settings
+
+settings = Settings(section='my_llm')
+
+```
+
+### Override Settings
+
+```python
+from ally_ai_core import Settings
+
+settings = Settings(section='my_llm', api_key='<new-api-key>')
+```
+

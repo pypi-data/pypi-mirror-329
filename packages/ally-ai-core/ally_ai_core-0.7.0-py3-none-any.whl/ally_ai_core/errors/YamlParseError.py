@@ -1,0 +1,2 @@
+class YamlParseError(Exception):
+    pass
