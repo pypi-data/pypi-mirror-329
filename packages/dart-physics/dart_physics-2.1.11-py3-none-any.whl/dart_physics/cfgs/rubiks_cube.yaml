@@ -1,0 +1,62 @@
+name: rubiks_cube
+description: "Pick up a mug and hang it on a hanger."
+
+
+objects: 
+  - cube
+  # - hanger
+
+object_meshes: 
+  cube: ['pX',
+          'nX',
+          'pY',
+          'nY',
+          'pZ',
+          'nZ',
+          'pX_pY',
+          'nY_pX',
+          'pX_pZ',
+          'nZ_pX',
+          'nX_pY',
+          'nX_nY',
+          'nX_pZ',
+          'nX_nZ',
+          'pY_pZ',
+          'nZ_pY',
+          'nY_pZ',
+          'nY_nZ',
+          'pX_pY_pZ',
+          'nZ_pX_pY',
+          'nY_pX_pZ',
+          'nY_nZ_pX',
+          'nX_pY_pZ',
+          'nX_nZ_pY',
+          'nX_nY_pZ',
+          'nX_nY_nZ']
+  
+
+o_solref: ".0000000001 1"
+o_solimp: ".01 1"
+impratio: "10000.0"
+multiccd: "enable"
+override: "enable"
+
+task_description: "Manipulate the rubiks cube however you want."
+
+
+default_poses: 
+  # hanger:        [0.125, 0.5, 0.05, 0.70710678, 0.70710678, 0.0, 0.0]
+  cube: [0.15, 0.35, 0.3, 1, 0, 0.0, 0.0]
+  
+randomize_pos: 
+
+  # hanger: true 
+  cube: true
+  brown_basket: false 
+
+randomize_rot: 
+
+  # hanger: false 
+  cube: true
+
+randomize_range: 0.1

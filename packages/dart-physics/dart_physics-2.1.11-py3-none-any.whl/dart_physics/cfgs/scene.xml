@@ -1,0 +1,383 @@
+<mujoco model="unnamed_model">
+  <compiler autolimits="true" angle="radian"/>
+  <option timestep="0.002" impratio="10000" o_solref="1.0000000000000001e-09 1" o_solimp="0.001 1" cone="pyramidal" solver="Newton">
+    <flag override="enable" multiccd="enable"/>
+  </option>
+  <size memory="100M"/>
+  <visual>
+    <global azimuth="-120" elevation="-20"/>
+  </visual>
+  <statistic meansize="0.080000000000000002"/>
+  <default>
+    <default class="/"/>
+    <default class="robot/">
+      <default class="robot/vx300s">
+        <joint axis="0 1 0" actuatorfrcrange="-35 35"/>
+        <site group="4"/>
+        <default class="robot/waist">
+          <joint axis="0 0 1" range="-3.1415799999999998 3.1415799999999998" damping="5.7599999999999998"/>
+          <position ctrlrange="-3.1415799999999998 3.1415799999999998" kp="43"/>
+        </default>
+        <default class="robot/shoulder">
+          <joint range="-1.85005 1.25664" actuatorfrcrange="-144 144" armature="0.39500000000000002" damping="20" frictionloss="2"/>
+          <position ctrlrange="-1.85005 1.25664" kp="265"/>
+        </default>
+        <default class="robot/elbow">
+          <joint range="-1.76278 1.6056999999999999" actuatorfrcrange="-59 59" armature="0.38300000000000001" damping="18.489999999999998" frictionloss="1.1499999999999999"/>
+          <position ctrlrange="-1.76278 1.6056999999999999" kp="227"/>
+        </default>
+        <default class="robot/forearm_roll">
+          <joint axis="1 0 0" range="-3.1415799999999998 3.1415799999999998" actuatorfrcrange="-22 22" armature="0.14000000000000001" damping="6.7800000000000002"/>
+          <position ctrlrange="-3.1415799999999998 3.1415799999999998" kp="78"/>
+        </default>
+        <default class="robot/wrist_angle">
+          <joint range="-1.8674999999999999 2.2340200000000001" armature="0.0080000000000000002" damping="6.2800000000000002"/>
+          <position ctrlrange="-1.8674999999999999 2.2340200000000001" kp="37"/>
+        </default>
+        <default class="robot/wrist_rotate">
+          <joint axis="1 0 0" range="-3.1415799999999998 3.1415799999999998" damping="1.2"/>
+          <position ctrlrange="-3.1415799999999998 3.1415799999999998" kp="10.4"/>
+        </default>
+        <default class="robot/finger">
+          <joint type="slide" armature="0.24299999999999999" damping="40"/>
+          <position ctrlrange="0.002 0.036999999999999998" kp="2000" kv="124"/>
+          <default class="robot/left_finger">
+            <joint axis="0 0 -1" range="0 0.041000000000000002"/>
+          </default>
+          <default class="robot/right_finger">
+            <joint axis="0 0 -1" range="0 0.041000000000000002"/>
+          </default>
+        </default>
+        <default class="robot/visual">
+          <geom type="mesh" contype="0" conaffinity="0" group="2" material="robot/black" mass="0"/>
+        </default>
+        <default class="robot/collision">
+          <geom type="mesh" condim="6" group="3" friction="1 0.0050000000000000001 0.00050000000000000001" solref="0.01 1"/>
+          <default class="robot/sphere_collision">
+            <geom type="sphere" size="0.00059999999999999995" rgba="1 0 0 1"/>
+          </default>
+        </default>
+      </default>
+    </default>
+    <default class="tennis_racket_resized_proper/">
+      <default class="tennis_racket_resized_proper/visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+      </default>
+      <default class="tennis_racket_resized_proper/collision">
+        <geom type="mesh" condim="4" group="3" friction="10 10 10"/>
+      </default>
+    </default>
+    <default class="tennis_ball_resized_proper/">
+      <default class="tennis_ball_resized_proper/visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+      </default>
+      <default class="tennis_ball_resized_proper/collision">
+        <geom type="mesh" condim="4" group="3" friction="10 10 10"/>
+      </default>
+    </default>
+  </default>
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0 0 0" rgb2="0 0 0" mark="cross" markrgb="0 0 0" width="128" height="128"/>
+    <material name="grid" class="/" texture="grid" texrepeat="1 1" texuniform="true"/>
+    <material name="robot/black" class="robot/" rgba="0.14999999999999999 0.14999999999999999 0.14999999999999999 1"/>
+    <mesh name="robot/vx300s_1_base" class="robot/" file="vx300s_1_base-8911efddeb54716caf91218e0beee848e0083aad.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="robot/vx300s_2_shoulder" class="robot/" file="vx300s_2_shoulder-5dee3af162e071b59ae35b1b7279fe257c375ffb.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="robot/vx300s_3_upper_arm" class="robot/" file="vx300s_3_upper_arm-f0b3692a22ad52ba9b3c439033c552c51222ed28.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="robot/vx300s_4_upper_forearm" class="robot/" file="vx300s_4_upper_forearm-6d4b69653fd0cc02e83bb7d65ba3e7ec1604b71c.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="robot/vx300s_5_lower_forearm" class="robot/" file="vx300s_5_lower_forearm-8555d345ad2564df22bcbd24557f5a69d362ef68.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="robot/vx300s_6_wrist" class="robot/" file="vx300s_6_wrist-b3facdc0498ab0119fb164f573de994a27c7401e.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="robot/vx300s_7_gripper_prop" class="robot/" file="vx300s_7_gripper_prop-fb8e61f159d0594d74deb8fabda682e9971dc2b5.stl"/>
+    <mesh name="robot/vx300s_7_gripper_bar" class="robot/" file="vx300s_7_gripper_bar-c5f4b35b626deb7894668277f953fc4143ad9898.stl"/>
+    <mesh name="robot/vx300s_7_gripper_wrist_mount" class="robot/" file="vx300s_7_gripper_wrist_mount-61d29471843d7ca6e0e8a970bdc9256a822c8b15.stl"/>
+    <mesh name="robot/vx300s_8_custom_finger_left" class="robot/" file="vx300s_8_custom_finger_left-bf982864f8591ef106a4b771fc7502c724ef3d7c.stl"/>
+    <mesh name="robot/vx300s_8_custom_finger_right" class="robot/" file="vx300s_8_custom_finger_right-41349941da5624f43b137273d462f62ab9605c36.stl"/>
+    <mesh name="robot/d405_solid" class="robot/" file="d405_solid-a35f08a7e5e7488eb120fc62c3e6458e6be0f956.stl"/>
+    <material name="tennis_racket_resized_proper/Materiale_002" class="tennis_racket_resized_proper/" specular="0.5" shininess="0.5" rgba="0 0.0023423900000000002 0.066416699999999995 1"/>
+    <material name="tennis_racket_resized_proper/Materiale_007" class="tennis_racket_resized_proper/" specular="0.5" shininess="0.5" rgba="0 0 0 1"/>
+    <mesh name="tennis_racket_resized_proper/tennis_racket_resized_proper_0" class="tennis_racket_resized_proper/" file="tennis_racket_resized_proper_0-82c887a45e3c977078abf78abf9a4623cac364c3.obj"/>
+    <mesh name="tennis_racket_resized_proper/tennis_racket_resized_proper_1" class="tennis_racket_resized_proper/" file="tennis_racket_resized_proper_1-d5ec82f7445b4dbcd29daf6dd8f59f5ea41c32bd.obj"/>
+    <mesh name="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_0" class="tennis_racket_resized_proper/" file="tennis_racket_resized_proper_collision_0-1a30c9a7e94f3355770b54ba2448c60ff6154dc4.obj"/>
+    <mesh name="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_1" class="tennis_racket_resized_proper/" file="tennis_racket_resized_proper_collision_1-c91481d83f21fa25d52d46d1b43c7e61325fb388.obj"/>
+    <mesh name="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_2" class="tennis_racket_resized_proper/" file="tennis_racket_resized_proper_collision_2-54db59d27b3e3f0712437c9a72e37e93a67b2781.obj"/>
+    <mesh name="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_3" class="tennis_racket_resized_proper/" file="tennis_racket_resized_proper_collision_3-cf6edab03fdb99c54562667348d341706fe75588.obj"/>
+    <mesh name="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_4" class="tennis_racket_resized_proper/" file="tennis_racket_resized_proper_collision_4-adf7948650da444abb325b57d8ef162d525bb6fa.obj"/>
+    <mesh name="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_5" class="tennis_racket_resized_proper/" file="tennis_racket_resized_proper_collision_5-0b45a8b85e4d703046731672b0404721eff165be.obj"/>
+    <mesh name="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_6" class="tennis_racket_resized_proper/" file="tennis_racket_resized_proper_collision_6-69ba3570dbc2410c77f73ad9919d481c096a1bc1.obj"/>
+    <mesh name="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_7" class="tennis_racket_resized_proper/" file="tennis_racket_resized_proper_collision_7-20561eac2da68112b4b4e6687e21bb6220c96f82.obj"/>
+    <material name="tennis_ball_resized_proper/Material_001" class="tennis_ball_resized_proper/" specular="0.5" shininess="0.5" rgba="0.6866854 0.76815129999999998 0.078187409999999999 1"/>
+    <mesh name="tennis_ball_resized_proper/tennis_ball_resized_proper" class="tennis_ball_resized_proper/" file="tennis_ball_resized_proper-4d090831ec6a117eddcbf1f78981ca6dd85bc835.obj"/>
+    <mesh name="tennis_ball_resized_proper/tennis_ball_resized_proper_collision_0" class="tennis_ball_resized_proper/" file="tennis_ball_resized_proper_collision_0-aeabcd828d45660cb9b788dc6755b758405f75b6.obj"/>
+  </asset>
+  <worldbody>
+    <light name="//unnamed_light_0" class="/" directional="true" pos="0 0 1.5"/>
+    <geom name="floor" class="/" type="plane" size="10 10 0.01" material="grid"/>
+    <site name="robot_site" class="/" pos="0 -0 0" quat="1 0 0 0"/>
+    <body pos="0 -0 0" quat="1 0 0 0" name="robot/">
+      <light name="robot//unnamed_light_0" class="robot/" mode="targetbodycom" target="robot/left_gripper_link" pos="-0.5 0.69999999999999996 2.5" cutoff="55"/>
+      <light name="robot//unnamed_light_1" class="robot/" mode="targetbodycom" target="robot/right_gripper_link" pos="0.5 0.69999999999999996 2.5" cutoff="55"/>
+      <camera name="robot/teleoperator_pov" class="robot/" pos="0 -1.3540000000000001 0.68500000000000005" xyaxes="1 0 0 0 0.20000000000000001 0.80000000000000004"/>
+      <camera name="robot/collaborator_pov" class="robot/" pos="0 1.5 0.80000000000000004" xyaxes="-1 0 0 0 -0.20000000000000001 0.80000000000000004"/>
+      <body name="robot/left_base_link" childclass="robot/vx300s" pos="-0.46899999999999997 -0.019 0.02">
+        <inertial pos="-0.053477400000000001 -0.00056257500000000005 0.020596099999999999" quat="-0.0029232400000000001 0.71251699999999996 0.00480387 0.70163299999999995" mass="0.96903399999999995" diaginertia="0.0071633 0.0060245100000000003 0.00169819"/>
+        <geom name="robot//unnamed_geom_0" class="robot/visual" quat="1 0 0 1" mesh="robot/vx300s_1_base"/>
+        <geom name="robot//unnamed_geom_1" class="robot/collision" quat="1 0 0 1" mesh="robot/vx300s_1_base"/>
+        <body name="robot/left_shoulder_link" pos="0 0 0.079000000000000001">
+          <inertial pos="0.00025923299999999999 -3.3552000000000001e-06 0.011612900000000001" quat="-0.47611900000000001 0.47608299999999998 0.52278999999999998 0.52282600000000001" mass="0.79861400000000005" diaginertia="0.00120156 0.00113744 0.00093880000000000005"/>
+          <joint name="robot/left_waist" class="robot/waist"/>
+          <geom name="robot//unnamed_geom_2" class="robot/visual" pos="0 0 -0.0030000000000000001" quat="1 0 0 1" mesh="robot/vx300s_2_shoulder"/>
+          <geom name="robot//unnamed_geom_3" class="robot/collision" pos="0 0 -0.0030000000000000001" quat="1 0 0 1" mesh="robot/vx300s_2_shoulder"/>
+          <body name="robot/left_upper_arm_link" pos="0 0 0.048050000000000002">
+            <inertial pos="0.020694899999999999 4.0000000000000001e-10 0.22645899999999999" quat="0 0.072845800000000002 0 0.99734299999999998" mass="0.79259199999999996" diaginertia="0.0091133800000000008 0.0089250000000000006 0.00075931700000000002"/>
+            <joint name="robot/left_shoulder" class="robot/shoulder"/>
+            <geom name="robot//unnamed_geom_4" class="robot/visual" quat="1 0 0 1" mesh="robot/vx300s_3_upper_arm"/>
+            <geom name="robot//unnamed_geom_5" class="robot/collision" quat="1 0 0 1" mesh="robot/vx300s_3_upper_arm"/>
+            <body name="robot/left_upper_forearm_link" pos="0.059549999999999999 0 0.29999999999999999">
+              <inertial pos="0.105723 0 0" quat="-0.00062163099999999998 0.70472400000000002 0.010529200000000001 0.70940300000000001" mass="0.32222800000000001" diaginertia="0.00144107 0.0013422799999999999 0.00015204699999999999"/>
+              <joint name="robot/left_elbow" class="robot/elbow"/>
+              <geom name="robot//unnamed_geom_6" class="robot/visual" mesh="robot/vx300s_4_upper_forearm"/>
+              <geom name="robot//unnamed_geom_7" class="robot/collision" mesh="robot/vx300s_4_upper_forearm"/>
+              <body name="robot/left_lower_forearm_link" pos="0.20000000000000001 0 0">
+                <inertial pos="0.051347700000000003 0.0068046199999999999 0" quat="-0.70260400000000001 -0.079672400000000004 -0.70260400000000001 0.079672400000000004" mass="0.414823" diaginertia="0.0005911 0.000546493 0.00015570699999999999"/>
+                <joint name="robot/left_forearm_roll" class="robot/forearm_roll"/>
+                <geom name="robot//unnamed_geom_8" class="robot/visual" quat="0 1 0 0" mesh="robot/vx300s_5_lower_forearm"/>
+                <geom name="robot//unnamed_geom_9" class="robot/collision" quat="0 1 0 0" mesh="robot/vx300s_5_lower_forearm"/>
+                <body name="robot/left_wrist_link" pos="0.10000000000000001 0 0">
+                  <inertial pos="0.046743 -7.6652000000000007e-06 0.010565" quat="-0.00100191 0.54458600000000001 0.0026583000000000002 0.8387" mass="0.115395" diaginertia="5.4570700000000003e-05 4.6310100000000002e-05 4.3269200000000002e-05"/>
+                  <joint name="robot/left_wrist_angle" class="robot/wrist_angle"/>
+                  <geom name="robot//unnamed_geom_10" class="robot/visual" quat="1 0 0 1" mesh="robot/vx300s_6_wrist"/>
+                  <geom name="robot//unnamed_geom_11" class="robot/collision" quat="1 0 0 1" mesh="robot/vx300s_6_wrist"/>
+                  <body name="robot/left_gripper_link" pos="0.069744 0 0">
+                    <inertial pos="0.039566200000000003 -2.5631100000000002e-07 0.0040064899999999997" quat="0.62033000000000005 0.61991600000000002 -0.33968199999999998 0.33986899999999998" mass="0.25165199999999999" diaginertia="0.00068954599999999997 0.00065031599999999996 0.000468142"/>
+                    <joint name="robot/left_wrist_rotate" class="robot/wrist_rotate"/>
+                    <site name="robot/left_gripper" group="5" pos="0.13 0 -0.0030000000000000001"/>
+                    <body name="robot/left_gripper_base" pos="0.035000000000000003 0 0" euler="0 1.5700000000000001 -1.5700000000000001">
+                      <inertial pos="0.00018215399999999999 -0.034158899999999999 -0.0106026" quat="0.43528600000000001 0.55707399999999996 -0.551539 0.442718" mass="0.42158000000000001" diaginertia="0.0011043800000000001 0.00079053700000000001 0.00046972700000000002"/>
+                      <geom name="robot//unnamed_geom_12" class="robot/visual" mesh="robot/vx300s_7_gripper_prop"/>
+                      <geom name="robot//unnamed_geom_13" class="robot/collision" mesh="robot/vx300s_7_gripper_prop"/>
+                      <geom name="robot//unnamed_geom_14" class="robot/visual" mesh="robot/vx300s_7_gripper_bar"/>
+                      <geom name="robot//unnamed_geom_15" class="robot/collision" mesh="robot/vx300s_7_gripper_bar"/>
+                      <geom name="robot//unnamed_geom_16" class="robot/visual" type="mesh" pos="0 -0.035249999999999997 -0.022700000000000001" quat="0 -1 0 -1" mesh="robot/vx300s_7_gripper_wrist_mount"/>
+                      <geom name="robot//unnamed_geom_17" class="robot/collision" type="mesh" pos="0 -0.035249999999999997 -0.022700000000000001" quat="0 -1 0 -1" mesh="robot/vx300s_7_gripper_wrist_mount"/>
+                      <geom name="robot//unnamed_geom_18" class="robot/visual" type="mesh" pos="0 -0.082474800000000001 -0.0095954999999999999" quat="0 0 -0.21643999999999999 -0.97629600000000005" mesh="robot/d405_solid"/>
+                      <geom name="robot//unnamed_geom_19" class="robot/collision" type="mesh" pos="0 -0.082474800000000001 -0.0095954999999999999" quat="0 0 -0.21643999999999999 -0.97629600000000005" mesh="robot/d405_solid"/>
+                      <camera name="robot/wrist_cam_left" mode="fixed" pos="0 -0.082474800000000001 -0.0095954999999999999" euler="2.7052595535899999 0 0" resolution="1280 720" focal="0.0019300000000000001 0.0019300000000000001" sensorsize="0.0038960000000000002 0.00214"/>
+                      <body name="robot/left_left_finger_link" pos="0.019099999999999999 -0.0141637 0.021172699999999999" quat="1 -1 -1 1">
+                        <inertial pos="0.014347800000000001 -0.0284791 0.012289700000000001" quat="0.53548600000000002 0.45876600000000001 -0.450407 0.547651" mass="0.086293700000000001" diaginertia="5.8684799999999998e-05 4.4688699999999998e-05 1.8397e-05"/>
+                        <joint name="robot/left_left_finger" class="robot/left_finger"/>
+                        <geom name="robot//unnamed_geom_20" class="robot/visual" type="mesh" pos="0.0141637 0.021172699999999999 0.059999999999999998" quat="1 1 1 -1" mesh="robot/vx300s_8_custom_finger_left"/>
+                        <geom name="robot//unnamed_geom_21" class="robot/collision" type="mesh" pos="0.0141637 0.021172699999999999 0.059999999999999998" quat="1 1 1 -1" mesh="robot/vx300s_8_custom_finger_left"/>
+                        <geom name="robot/left_left_g0" class="robot/sphere_collision" pos="0.012999999999999999 -0.089200000000000002 0.026800000000000001"/>
+                        <geom name="robot/left_left_g1" class="robot/sphere_collision" pos="0.022200000000000001 -0.089200000000000002 0.026800000000000001"/>
+                        <geom name="robot/left_left_g2" class="robot/sphere_collision" pos="0.018200000000000001 -0.084500000000000006 0.026599999999999999"/>
+                        <site name="robot/left_left_finger" pos="0.014999999999999999 -0.059999999999999998 0.02"/>
+                        <body name="robot/leftarm_left_finger_base" pos="0 0 0" quat="1 0 0 0"/>
+                        <body name="robot/leftarm_left_finger_tip" pos="0 -0.050000000000000003 0.02" quat="1 0 0 0"/>
+                      </body>
+                      <body name="robot/left_right_finger_link" pos="-0.019099999999999999 -0.0141637 0.021172699999999999" quat="1 1 1 1">
+                        <inertial pos="0.014371099999999999 0.0284792 0.012142099999999999" quat="0.46131699999999998 0.53761499999999995 -0.54547800000000002 0.44789400000000001" mass="0.0862932" diaginertia="5.86828e-05 4.4688699999999998e-05 1.8394899999999999e-05"/>
+                        <joint name="robot/left_right_finger" class="robot/right_finger"/>
+                        <geom name="robot//unnamed_geom_25" class="robot/visual" type="mesh" pos="0.0141637 -0.021172699999999999 0.059706700000000001" quat="1 -1 -1 -1" mesh="robot/vx300s_8_custom_finger_right"/>
+                        <geom name="robot//unnamed_geom_26" class="robot/collision" type="mesh" pos="0.0141637 -0.021172699999999999 0.059706700000000001" quat="1 -1 -1 -1" mesh="robot/vx300s_8_custom_finger_right"/>
+                        <geom name="robot/left_right_g0" class="robot/sphere_collision" pos="0.012999999999999999 0.089200000000000002 0.026800000000000001"/>
+                        <geom name="robot/left_right_g1" class="robot/sphere_collision" pos="0.022200000000000001 0.089200000000000002 0.026800000000000001"/>
+                        <geom name="robot/left_right_g2" class="robot/sphere_collision" pos="0.018200000000000001 0.084500000000000006 0.026599999999999999"/>
+                        <site name="robot/left_right_finger" pos="0.014999999999999999 0.059999999999999998 0.02"/>
+                        <body name="robot/leftarm_right_finger_base" pos="0 0 0" quat="1 0 0 0"/>
+                        <body name="robot/leftarm_right_finger_tip" pos="0 0.050000000000000003 0.02" quat="1 0 0 0"/>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="robot/right_base_link" childclass="robot/vx300s" pos="0.46899999999999997 -0.019 0.02" quat="0 0 0 1">
+        <inertial pos="-0.053477400000000001 -0.00056257500000000005 0.020596099999999999" quat="-0.0029232400000000001 0.71251699999999996 0.00480387 0.70163299999999995" mass="0.96903399999999995" diaginertia="0.0071633 0.0060245100000000003 0.00169819"/>
+        <geom name="robot//unnamed_geom_30" class="robot/visual" quat="1 0 0 1" mesh="robot/vx300s_1_base"/>
+        <geom name="robot//unnamed_geom_31" class="robot/collision" quat="1 0 0 1" mesh="robot/vx300s_1_base"/>
+        <body name="robot/right_shoulder_link" pos="0 0 0.079000000000000001">
+          <inertial pos="0.00025923299999999999 -3.3552000000000001e-06 0.011612900000000001" quat="-0.47611900000000001 0.47608299999999998 0.52278999999999998 0.52282600000000001" mass="0.79861400000000005" diaginertia="0.00120156 0.00113744 0.00093880000000000005"/>
+          <joint name="robot/right_waist" class="robot/waist"/>
+          <geom name="robot//unnamed_geom_32" class="robot/visual" pos="0 0 -0.0030000000000000001" quat="1 0 0 1" mesh="robot/vx300s_2_shoulder"/>
+          <geom name="robot//unnamed_geom_33" class="robot/collision" pos="0 0 -0.0030000000000000001" quat="1 0 0 1" mesh="robot/vx300s_2_shoulder"/>
+          <body name="robot/right_upper_arm_link" pos="0 0 0.048050000000000002">
+            <inertial pos="0.020694899999999999 4.0000000000000001e-10 0.22645899999999999" quat="0 0.072845800000000002 0 0.99734299999999998" mass="0.79259199999999996" diaginertia="0.0091133800000000008 0.0089250000000000006 0.00075931700000000002"/>
+            <joint name="robot/right_shoulder" class="robot/shoulder"/>
+            <geom name="robot//unnamed_geom_34" class="robot/visual" quat="1 0 0 1" mesh="robot/vx300s_3_upper_arm"/>
+            <geom name="robot//unnamed_geom_35" class="robot/collision" quat="1 0 0 1" mesh="robot/vx300s_3_upper_arm"/>
+            <body name="robot/right_upper_forearm_link" pos="0.059549999999999999 0 0.29999999999999999">
+              <inertial pos="0.105723 0 0" quat="-0.00062163099999999998 0.70472400000000002 0.010529200000000001 0.70940300000000001" mass="0.32222800000000001" diaginertia="0.00144107 0.0013422799999999999 0.00015204699999999999"/>
+              <joint name="robot/right_elbow" class="robot/elbow"/>
+              <geom name="robot//unnamed_geom_36" class="robot/visual" mesh="robot/vx300s_4_upper_forearm"/>
+              <geom name="robot//unnamed_geom_37" class="robot/collision" mesh="robot/vx300s_4_upper_forearm"/>
+              <body name="robot/right_lower_forearm_link" pos="0.20000000000000001 0 0">
+                <inertial pos="0.051347700000000003 0.0068046199999999999 0" quat="-0.70260400000000001 -0.079672400000000004 -0.70260400000000001 0.079672400000000004" mass="0.414823" diaginertia="0.0005911 0.000546493 0.00015570699999999999"/>
+                <joint name="robot/right_forearm_roll" class="robot/forearm_roll"/>
+                <geom name="robot//unnamed_geom_38" class="robot/visual" quat="0 1 0 0" mesh="robot/vx300s_5_lower_forearm"/>
+                <geom name="robot//unnamed_geom_39" class="robot/collision" quat="0 1 0 0" mesh="robot/vx300s_5_lower_forearm"/>
+                <body name="robot/right_wrist_link" pos="0.10000000000000001 0 0">
+                  <inertial pos="0.046743 -7.6652000000000007e-06 0.010565" quat="-0.00100191 0.54458600000000001 0.0026583000000000002 0.8387" mass="0.115395" diaginertia="5.4570700000000003e-05 4.6310100000000002e-05 4.3269200000000002e-05"/>
+                  <joint name="robot/right_wrist_angle" class="robot/wrist_angle"/>
+                  <geom name="robot//unnamed_geom_40" class="robot/visual" quat="1 0 0 1" mesh="robot/vx300s_6_wrist"/>
+                  <geom name="robot//unnamed_geom_41" class="robot/collision" quat="1 0 0 1" mesh="robot/vx300s_6_wrist"/>
+                  <body name="robot/right_gripper_link" pos="0.069744 0 0">
+                    <inertial pos="0.039566200000000003 -2.5631100000000002e-07 0.0040064899999999997" quat="0.62033000000000005 0.61991600000000002 -0.33968199999999998 0.33986899999999998" mass="0.25165199999999999" diaginertia="0.00068954599999999997 0.00065031599999999996 0.000468142"/>
+                    <joint name="robot/right_wrist_rotate" class="robot/wrist_rotate"/>
+                    <site name="robot/right_gripper" group="5" pos="0.13 0 -0.0030000000000000001"/>
+                    <body name="robot/right_gripper_base" pos="0.035000000000000003 0 0" euler="0 1.5700000000000001 -1.5700000000000001">
+                      <inertial pos="0.00018215399999999999 -0.034158899999999999 -0.0106026" quat="0.43528600000000001 0.55707399999999996 -0.551539 0.442718" mass="0.42158000000000001" diaginertia="0.0011043800000000001 0.00079053700000000001 0.00046972700000000002"/>
+                      <geom name="robot//unnamed_geom_42" class="robot/visual" mesh="robot/vx300s_7_gripper_prop"/>
+                      <geom name="robot//unnamed_geom_43" class="robot/collision" mesh="robot/vx300s_7_gripper_prop"/>
+                      <geom name="robot//unnamed_geom_44" class="robot/visual" mesh="robot/vx300s_7_gripper_bar"/>
+                      <geom name="robot//unnamed_geom_45" class="robot/collision" mesh="robot/vx300s_7_gripper_bar"/>
+                      <geom name="robot//unnamed_geom_46" class="robot/visual" type="mesh" pos="0 -0.035249999999999997 -0.022700000000000001" quat="0 -0.70710700000000004 0 -0.70710700000000004" mesh="robot/vx300s_7_gripper_wrist_mount"/>
+                      <geom name="robot//unnamed_geom_47" class="robot/collision" type="mesh" pos="0 -0.035249999999999997 -0.022700000000000001" quat="0 -0.70710700000000004 0 -0.70710700000000004" mesh="robot/vx300s_7_gripper_wrist_mount"/>
+                      <geom name="robot//unnamed_geom_48" class="robot/visual" type="mesh" pos="0 -0.082474800000000001 -0.0095954999999999999" quat="0 0 -0.21643999999999999 -0.97629600000000005" mesh="robot/d405_solid"/>
+                      <geom name="robot//unnamed_geom_49" class="robot/collision" type="mesh" pos="0 -0.082474800000000001 -0.0095954999999999999" quat="0 0 -0.21643999999999999 -0.97629600000000005" mesh="robot/d405_solid"/>
+                      <camera name="robot/wrist_cam_right" mode="fixed" pos="0 -0.082474800000000001 -0.0095954999999999999" euler="2.7052595535899999 0 0" resolution="1280 720" focal="0.0019300000000000001 0.0019300000000000001" sensorsize="0.0038960000000000002 0.00214"/>
+                      <body name="robot/right_left_finger_link" pos="0.019099999999999999 -0.0141637 0.021172699999999999" quat="1 -1 -1 1">
+                        <inertial pos="0.014347800000000001 -0.0284791 0.012289700000000001" quat="0.53548600000000002 0.45876600000000001 -0.450407 0.547651" mass="0.086293700000000001" diaginertia="5.8684799999999998e-05 4.4688699999999998e-05 1.8397e-05"/>
+                        <joint name="robot/right_left_finger" class="robot/left_finger"/>
+                        <geom name="robot//unnamed_geom_50" class="robot/visual" type="mesh" pos="0.0141637 0.021172699999999999 0.059999999999999998" quat="1 1 1 -1" mesh="robot/vx300s_8_custom_finger_left"/>
+                        <geom name="robot//unnamed_geom_51" class="robot/collision" type="mesh" pos="0.0141637 0.021172699999999999 0.059999999999999998" quat="1 1 1 -1" mesh="robot/vx300s_8_custom_finger_left"/>
+                        <geom name="robot/right_left_g0" class="robot/sphere_collision" pos="0.012999999999999999 -0.089200000000000002 0.026800000000000001"/>
+                        <geom name="robot/right_left_g1" class="robot/sphere_collision" pos="0.022200000000000001 -0.089200000000000002 0.026800000000000001"/>
+                        <geom name="robot/right_left_g2" class="robot/sphere_collision" pos="0.018200000000000001 -0.084500000000000006 0.026599999999999999"/>
+                        <site name="robot/right_left_finger" pos="0.014999999999999999 -0.059999999999999998 0.02"/>
+                        <body name="robot/rightarm_left_finger_base" pos="0 0 0" quat="1 0 0 0"/>
+                        <body name="robot/rightarm_left_finger_tip" pos="0 -0.050000000000000003 0.02" quat="1 0 0 0"/>
+                      </body>
+                      <body name="robot/right_right_finger_link" pos="-0.019099999999999999 -0.0141637 0.021172699999999999" quat="1 1 1 1">
+                        <inertial pos="0.014371099999999999 0.0284792 0.012142099999999999" quat="0.46131699999999998 0.53761499999999995 -0.54547800000000002 0.44789400000000001" mass="0.0862932" diaginertia="5.86828e-05 4.4688699999999998e-05 1.8394899999999999e-05"/>
+                        <joint name="robot/right_right_finger" class="robot/right_finger"/>
+                        <geom name="robot//unnamed_geom_55" class="robot/visual" type="mesh" pos="0.0141637 -0.021172699999999999 0.059706700000000001" quat="1 -1 -1 -1" mesh="robot/vx300s_8_custom_finger_right"/>
+                        <geom name="robot//unnamed_geom_56" class="robot/collision" type="mesh" pos="0.0141637 -0.021172699999999999 0.059706700000000001" quat="1 -1 -1 -1" mesh="robot/vx300s_8_custom_finger_right"/>
+                        <geom name="robot/right_right_g0" class="robot/sphere_collision" pos="0.012999999999999999 0.089200000000000002 0.026800000000000001"/>
+                        <geom name="robot/right_right_g1" class="robot/sphere_collision" pos="0.022200000000000001 0.089200000000000002 0.026800000000000001"/>
+                        <geom name="robot/right_right_g2" class="robot/sphere_collision" pos="0.018200000000000001 0.084500000000000006 0.026599999999999999"/>
+                        <site name="robot/right_right_finger" pos="0.014999999999999999 0.059999999999999998 0.02"/>
+                        <body name="robot/rightarm_right_finger_base" pos="0 0 0" quat="1 0 0 0"/>
+                        <body name="robot/rightarm_right_finger_tip" pos="0 0.050000000000000003 0.02" quat="1 0 0 0"/>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="left_lb_target" mocap="true">
+      <geom name="//unnamed_geom_1" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.01 0.01" rgba="0.29999999999999999 0.59999999999999998 0.29999999999999999 0.90000000000000002"/>
+      <geom name="//unnamed_geom_2" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.002 0.002" rgba="1 0 0 1" pos="0.01 0 0"/>
+      <geom name="//unnamed_geom_3" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.01 0.002" rgba="0 1 0 1" pos="0 0.01 0"/>
+      <geom name="//unnamed_geom_4" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.002 0.01" rgba="0 0 1 1" pos="0 0 0.01"/>
+    </body>
+    <body name="left_lf_target" mocap="true">
+      <geom name="//unnamed_geom_5" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.01 0.01" rgba="0.29999999999999999 0.59999999999999998 0.29999999999999999 0.90000000000000002"/>
+      <geom name="//unnamed_geom_6" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.002 0.002" rgba="1 0 0 1" pos="0.01 0 0"/>
+      <geom name="//unnamed_geom_7" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.01 0.002" rgba="0 1 0 1" pos="0 0.01 0"/>
+      <geom name="//unnamed_geom_8" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.002 0.01" rgba="0 0 1 1" pos="0 0 0.01"/>
+    </body>
+    <body name="left_rb_target" mocap="true">
+      <geom name="//unnamed_geom_9" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.01 0.01" rgba="0.29999999999999999 0.59999999999999998 0.29999999999999999 0.90000000000000002"/>
+      <geom name="//unnamed_geom_10" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.002 0.002" rgba="1 0 0 1" pos="0.01 0 0"/>
+      <geom name="//unnamed_geom_11" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.01 0.002" rgba="0 1 0 1" pos="0 0.01 0"/>
+      <geom name="//unnamed_geom_12" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.002 0.01" rgba="0 0 1 1" pos="0 0 0.01"/>
+    </body>
+    <body name="left_rf_target" mocap="true">
+      <geom name="//unnamed_geom_13" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.01 0.01" rgba="0.29999999999999999 0.59999999999999998 0.29999999999999999 0.90000000000000002"/>
+      <geom name="//unnamed_geom_14" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.002 0.002" rgba="1 0 0 1" pos="0.01 0 0"/>
+      <geom name="//unnamed_geom_15" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.01 0.002" rgba="0 1 0 1" pos="0 0.01 0"/>
+      <geom name="//unnamed_geom_16" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.002 0.01" rgba="0 0 1 1" pos="0 0 0.01"/>
+    </body>
+    <body name="right_lb_target" mocap="true">
+      <geom name="//unnamed_geom_17" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.01 0.01" rgba="0.29999999999999999 0.59999999999999998 0.29999999999999999 0.90000000000000002"/>
+      <geom name="//unnamed_geom_18" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.002 0.002" rgba="1 0 0 1" pos="0.01 0 0"/>
+      <geom name="//unnamed_geom_19" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.01 0.002" rgba="0 1 0 1" pos="0 0.01 0"/>
+      <geom name="//unnamed_geom_20" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.002 0.01" rgba="0 0 1 1" pos="0 0 0.01"/>
+    </body>
+    <body name="right_lf_target" mocap="true">
+      <geom name="//unnamed_geom_21" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.01 0.01" rgba="0.29999999999999999 0.59999999999999998 0.29999999999999999 0.90000000000000002"/>
+      <geom name="//unnamed_geom_22" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.002 0.002" rgba="1 0 0 1" pos="0.01 0 0"/>
+      <geom name="//unnamed_geom_23" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.01 0.002" rgba="0 1 0 1" pos="0 0.01 0"/>
+      <geom name="//unnamed_geom_24" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.002 0.01" rgba="0 0 1 1" pos="0 0 0.01"/>
+    </body>
+    <body name="right_rb_target" mocap="true">
+      <geom name="//unnamed_geom_25" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.01 0.01" rgba="0.29999999999999999 0.59999999999999998 0.29999999999999999 0.90000000000000002"/>
+      <geom name="//unnamed_geom_26" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.002 0.002" rgba="1 0 0 1" pos="0.01 0 0"/>
+      <geom name="//unnamed_geom_27" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.01 0.002" rgba="0 1 0 1" pos="0 0.01 0"/>
+      <geom name="//unnamed_geom_28" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.002 0.01" rgba="0 0 1 1" pos="0 0 0.01"/>
+    </body>
+    <body name="right_rf_target" mocap="true">
+      <geom name="//unnamed_geom_29" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.01 0.01" rgba="0.29999999999999999 0.59999999999999998 0.29999999999999999 0.90000000000000002"/>
+      <geom name="//unnamed_geom_30" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.01 0.002 0.002" rgba="1 0 0 1" pos="0.01 0 0"/>
+      <geom name="//unnamed_geom_31" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.01 0.002" rgba="0 1 0 1" pos="0 0.01 0"/>
+      <geom name="//unnamed_geom_32" class="/" type="box" contype="0" conaffinity="0" group="4" size="0.002 0.002 0.01" rgba="0 0 1 1" pos="0 0 0.01"/>
+    </body>
+    <body name="tennis_racket_resized_proper/">
+      <freejoint name="tennis_racket_resized_proper/"/>
+      <body name="tennis_racket_resized_proper/tennis_racket_resized_proper">
+        <geom name="tennis_racket_resized_proper//unnamed_geom_0" class="tennis_racket_resized_proper/visual" material="tennis_racket_resized_proper/Materiale_007" mesh="tennis_racket_resized_proper/tennis_racket_resized_proper_0"/>
+        <geom name="tennis_racket_resized_proper//unnamed_geom_1" class="tennis_racket_resized_proper/visual" material="tennis_racket_resized_proper/Materiale_002" mesh="tennis_racket_resized_proper/tennis_racket_resized_proper_1"/>
+        <geom name="tennis_racket_resized_proper//unnamed_geom_2" class="tennis_racket_resized_proper/collision" rgba="0.4179616823839839 0.92544834004383081 0.28307369003977645 1" mesh="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_0"/>
+        <geom name="tennis_racket_resized_proper//unnamed_geom_3" class="tennis_racket_resized_proper/collision" rgba="0.7088454903978022 0.056447136971574774 0.040468951157067945 1" mesh="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_1"/>
+        <geom name="tennis_racket_resized_proper//unnamed_geom_4" class="tennis_racket_resized_proper/collision" rgba="0.80813648967683049 0.90780840134802121 0.36572075449495167 1" mesh="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_2"/>
+        <geom name="tennis_racket_resized_proper//unnamed_geom_5" class="tennis_racket_resized_proper/collision" rgba="0.68765986277878643 0.25318298102660841 0.89624934740924356 1" mesh="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_3"/>
+        <geom name="tennis_racket_resized_proper//unnamed_geom_6" class="tennis_racket_resized_proper/collision" rgba="0.18421846244347506 0.045436307515928975 0.11906512024184135 1" mesh="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_4"/>
+        <geom name="tennis_racket_resized_proper//unnamed_geom_7" class="tennis_racket_resized_proper/collision" rgba="0.8836821364713866 0.43950692246903833 0.79016917778504547 1" mesh="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_5"/>
+        <geom name="tennis_racket_resized_proper//unnamed_geom_8" class="tennis_racket_resized_proper/collision" rgba="0.5599120176789053 0.079519618260461833 0.48515174405644723 1" mesh="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_6"/>
+        <geom name="tennis_racket_resized_proper//unnamed_geom_9" class="tennis_racket_resized_proper/collision" rgba="0.24441986121500403 0.52043839989351703 0.28836366970882688 1" mesh="tennis_racket_resized_proper/tennis_racket_resized_proper_collision_7"/>
+        <body name="tennis_racket_resized_proper/tennis_racket_resized_proper_axis" pos="0 0 0">
+          <geom name="tennis_racket_resized_proper//unnamed_geom_10" class="tennis_racket_resized_proper/" type="box" contype="0" conaffinity="0" group="5" size="0.029999999999999999 0.029999999999999999 0.029999999999999999" rgba="0.59999999999999998 0.29999999999999999 0.29999999999999999 0.5"/>
+          <geom name="tennis_racket_resized_proper//unnamed_geom_11" class="tennis_racket_resized_proper/" type="box" contype="0" conaffinity="0" group="5" size="0.059999999999999998 0.002 0.002" rgba="1 0 0 0.5" pos="0.059999999999999998 0 0"/>
+          <geom name="tennis_racket_resized_proper//unnamed_geom_12" class="tennis_racket_resized_proper/" type="box" contype="0" conaffinity="0" group="5" size="0.002 0.059999999999999998 0.002" rgba="0 1 0 0.5" pos="0 0.059999999999999998 0"/>
+          <geom name="tennis_racket_resized_proper//unnamed_geom_13" class="tennis_racket_resized_proper/" type="box" contype="0" conaffinity="0" group="5" size="0.002 0.002 0.059999999999999998" rgba="0 0 1 0.5" pos="0 0 0.059999999999999998"/>
+        </body>
+      </body>
+    </body>
+    <body name="tennis_ball_resized_proper/">
+      <freejoint name="tennis_ball_resized_proper/"/>
+      <body name="tennis_ball_resized_proper/tennis_ball_resized_proper">
+        <geom name="tennis_ball_resized_proper//unnamed_geom_0" class="tennis_ball_resized_proper/visual" material="tennis_ball_resized_proper/Material_001" mesh="tennis_ball_resized_proper/tennis_ball_resized_proper"/>
+        <geom name="tennis_ball_resized_proper//unnamed_geom_1" class="tennis_ball_resized_proper/collision" rgba="0.31029278308889996 0.39295954404791267 0.30031121778955261 1" mesh="tennis_ball_resized_proper/tennis_ball_resized_proper_collision_0"/>
+        <body name="tennis_ball_resized_proper/tennis_ball_resized_proper_axis" pos="0 0 0">
+          <geom name="tennis_ball_resized_proper//unnamed_geom_2" class="tennis_ball_resized_proper/" type="box" contype="0" conaffinity="0" group="5" size="0.029999999999999999 0.029999999999999999 0.029999999999999999" rgba="0.59999999999999998 0.29999999999999999 0.29999999999999999 0.5"/>
+          <geom name="tennis_ball_resized_proper//unnamed_geom_3" class="tennis_ball_resized_proper/" type="box" contype="0" conaffinity="0" group="5" size="0.059999999999999998 0.002 0.002" rgba="1 0 0 0.5" pos="0.059999999999999998 0 0"/>
+          <geom name="tennis_ball_resized_proper//unnamed_geom_4" class="tennis_ball_resized_proper/" type="box" contype="0" conaffinity="0" group="5" size="0.002 0.059999999999999998 0.002" rgba="0 1 0 0.5" pos="0 0.059999999999999998 0"/>
+          <geom name="tennis_ball_resized_proper//unnamed_geom_5" class="tennis_ball_resized_proper/" type="box" contype="0" conaffinity="0" group="5" size="0.002 0.002 0.059999999999999998" rgba="0 0 1 0.5" pos="0 0 0.059999999999999998"/>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+  <contact>
+    <exclude name="robot//unnamed_contact_0" body1="robot/left_base_link" body2="robot/left_shoulder_link"/>
+    <exclude name="robot//unnamed_contact_1" body1="robot/right_base_link" body2="robot/right_shoulder_link"/>
+  </contact>
+  <equality>
+    <joint name="robot//unnamed_equality_0" class="robot/" joint1="robot/left_left_finger" joint2="robot/left_right_finger" polycoef="0 1 0 0 0"/>
+    <joint name="robot//unnamed_equality_1" class="robot/" joint1="robot/right_left_finger" joint2="robot/right_right_finger" polycoef="0 1 0 0 0"/>
+  </equality>
+  <actuator>
+    <position name="robot/left_waist" class="robot/waist" joint="robot/left_waist"/>
+    <position name="robot/left_shoulder" class="robot/shoulder" joint="robot/left_shoulder"/>
+    <position name="robot/left_elbow" class="robot/elbow" joint="robot/left_elbow"/>
+    <position name="robot/left_forearm_roll" class="robot/forearm_roll" joint="robot/left_forearm_roll"/>
+    <position name="robot/left_wrist_angle" class="robot/wrist_angle" joint="robot/left_wrist_angle"/>
+    <position name="robot/left_wrist_rotate" class="robot/wrist_rotate" joint="robot/left_wrist_rotate"/>
+    <position name="robot/left_gripper" class="robot/finger" joint="robot/left_left_finger"/>
+    <position name="robot/right_waist" class="robot/waist" joint="robot/right_waist"/>
+    <position name="robot/right_shoulder" class="robot/shoulder" joint="robot/right_shoulder"/>
+    <position name="robot/right_elbow" class="robot/elbow" joint="robot/right_elbow"/>
+    <position name="robot/right_forearm_roll" class="robot/forearm_roll" joint="robot/right_forearm_roll"/>
+    <position name="robot/right_wrist_angle" class="robot/wrist_angle" joint="robot/right_wrist_angle"/>
+    <position name="robot/right_wrist_rotate" class="robot/wrist_rotate" joint="robot/right_wrist_rotate"/>
+    <position name="robot/right_gripper" class="robot/finger" joint="robot/right_left_finger"/>
+  </actuator>
+  <keyframe>
+    <key name="home" time="0" qpos="0 -0.95999999999999996 1.1599999999999999 0 -0.29999999999999999 0 0.0083999999999999995 0.0083999999999999995 0 -0.95999999999999996 1.1599999999999999 0 -0.29999999999999999 0 0.0083999999999999995 0.0083999999999999995 -0.10000000000000001 0.34999999999999998 0.5 1 0 0 0 -0.10000000000000001 0.34999999999999998 0.29999999999999999 1 0 0 0"/>
+  </keyframe>
+</mujoco>
