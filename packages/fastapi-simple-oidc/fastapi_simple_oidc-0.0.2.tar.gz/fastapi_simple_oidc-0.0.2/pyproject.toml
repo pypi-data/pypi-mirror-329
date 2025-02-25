@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+Homepage = "https://github.com/levy42/fastapi-simple-oidc"
+Repository = "https://github.com/levy42/fastapi-simple-oidc"
+
+[project]
+name = "fastapi_simple_oidc"
+version = "0.0.2"
+description = "OIDC for FastAPI"
+readme = "README.md"
+keywords = ["fastapi", "sso"]
+dependencies = [
+    "authlib>=1.4.1",
+    "fastapi",
+    "itsdangerous>=2.2.0",
+    "pydantic>=2",
+    "pydantic-settings",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "uvicorn"
+]
