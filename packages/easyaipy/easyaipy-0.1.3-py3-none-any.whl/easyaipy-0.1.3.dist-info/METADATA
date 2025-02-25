@@ -1,0 +1,76 @@
+Metadata-Version: 2.2
+Name: easyaipy
+Version: 0.1.3
+Summary: EasyAIPy allows extracting precise variables from AI API responses.
+Home-page: https://github.com/martinyanev94/easyaipy
+Author: Martin Yanev
+Author-email: mpyanev@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: openai
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# easyaipy
+
+EasyAIPy allows extracting precise variables from AI API responses. It is designed to interact with 
+OpenAI and Gemini developer APIs. It allows programmers to specify the amount and the datatypes of variables
+they want to receive in their API response. 
+
+## Installation
+
+```bash
+pip install easyaipy
+```
+
+## A Simple Example with OpenAI API
+
+```python
+from easyaipy import openai_easy_prompt
+
+# Define or import your API key
+api_key = "YOUR_API_KEY"
+
+# Define the input prompt
+prompt = "Generate a brief summary of the importance of AI in education."
+
+# Specify an output schema (optional)
+output_schema = {
+    "summary": str,
+    "word_count": int
+}
+
+
+response = openai_easy_prompt(
+    prompt=prompt,
+    model="gpt-4o-mini",
+    output_schema=output_schema,
+    max_retries=3,
+    api_key=api_key
+)
+
+# Print the validated response
+print("Response:", response)
+```
+
+## Expected Output
+If the OpenAI API responds correctly and matches the schema, the output will look like this:
+
+
+```json
+{
+    "summary": "AI in education enhances personalized learning, streamlines administrative tasks, and fosters innovation in teaching.",
+    "word_count": 15
+}
+```
