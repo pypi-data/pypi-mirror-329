@@ -1,0 +1,129 @@
+---
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+jobs:
+  lint-and-format:
+    name: Lint and Format
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install uv --group
+      run: pip install uv==0.5.8
+
+    - name: Sync dependencies with uv
+      run: uv sync --all-extras
+
+    - name: Run ruff for linting
+      run: uv run ruff check .
+
+    - name: Run Pre-commit hooks
+      uses: pre-commit/action@v3.0.0
+      with:
+        extra_args: --verbose --all-files --config=.pre-commit-config.yaml
+
+  type-checking:
+    name: Type Checking
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ['3.9', '3.10', '3.11', '3.12']
+        folder: [.]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.version }}
+
+    - name: Install uv
+      run: pip install uv==0.5.8
+
+    - name: Sync dependencies with uv
+      run: uv sync --all-extras
+
+    - name: Run mypy
+      run: uv run mypy --config-file=./mypy.ini --warn-unused-ignores --python-version ${{ matrix.version }} .
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.9', '3.10', '3.11', '3.12']
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python }}
+
+    - name: Install uv
+      run: pip install uv==0.5.8
+
+    - name: Sync dependencies with uv
+      run: uv sync --all-extras
+
+    - name: Run Unit Tests
+      run: make run_unit_tests
+
+  build-and-publish:
+    name: Build and Publish Package
+    if: startsWith(github.ref, 'refs/tags')
+    needs: [lint-and-format, type-checking, unit-tests]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install uv
+      run: pip install uv==0.5.8
+
+    - name: Sync dependencies with uv
+      run: uv sync --all-extras
+
+    - name: Verify version matches
+      run: |
+        PYPROJECT_VERSION=$(uv run python -c "import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['version'])")
+        GIT_TAG=${GITHUB_REF#refs/tags/}
+        GIT_TAG=${GIT_TAG#v}
+
+        if [ "$PYPROJECT_VERSION" != "$GIT_TAG" ]; then
+          echo "Version mismatch!"
+          echo "pyproject.toml version: $PYPROJECT_VERSION"
+          echo "Git tag version: $GIT_TAG"
+          exit 1
+        fi
+        echo "Versions match: $PYPROJECT_VERSION"
+
+    - name: Build package with uv
+      run: uv build
+
+    - name: Publish package to PyPI
+      env:
+        PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+      run: uv publish --token $PYPI_API_TOKEN
