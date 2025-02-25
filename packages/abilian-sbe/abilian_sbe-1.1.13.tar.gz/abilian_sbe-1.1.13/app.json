@@ -1,0 +1,25 @@
+{
+  "name": "Abilian SBE demo",
+  "description": "Abilian SBE demo",
+  "keywords": [
+    "social network",
+    "extranet",
+    "digital workplace"
+  ],
+  "addons": [
+    "heroku-postgresql:mini",
+    "heroku-redis:mini"
+  ],
+  "env": {
+    "FLASK_SECRET_KEY": {
+      "description": "Secret key (some random string)",
+      "required": true
+    },
+    "PYTHONPATH": {
+      "value": "src"
+    }
+  },
+  "scripts": {
+    "postdeploy": "ls ; pip list ; flask db upgrade"
+  }
+}
