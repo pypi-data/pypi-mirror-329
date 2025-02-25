@@ -1,0 +1,34 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "bilbyai-source-label-map"
+readme = "README.md"
+version = "0.2.8"
+description = "Converts news sources into human-friendly labels" 
+authors = [
+    "David Lee <leetdavidu@gmail.com>"
+]
+packages = [
+  { include = "bilbyai" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.4.2"
+pyright = "^1.1.360"
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.2.0"
+
+[tool.ruff]
+line-length = 99
