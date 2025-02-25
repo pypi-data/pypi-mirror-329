@@ -1,0 +1,51 @@
+# Build system requirements
+[build-system]
+requires = ["setuptools>=42", "wheel"]  # Tools needed to build the package
+build-backend = "setuptools.build_meta"  # Backend used for building
+
+# Project metadata
+[project]
+name = "hjimi_tools"  # Package name
+version = "0.1.2"  # Current version of the package
+authors = [
+    { name = "wenquanshan", email = "wenquanshan@sximi.com" },  # Author information
+]
+description = "hjimi_tools is a versatile utility package for Python and C project setup, file management, and encoding conversion."  # Brief description of the package
+readme = "README.md"  # Path to the README file
+requires-python = ">=3.9"  # Minimum Python version required
+license = { text = "MIT" }  # License type
+keywords = ["Python packaging", "C project setup", "file management", "encoding conversion", "utilities"]  # Keywords for the package
+
+# Classifiers help users find your project by categorizing it
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Build Tools",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+# Runtime dependencies
+dependencies = [
+    # List runtime dependencies here
+    # Example: "requests>=2.25.1",
+]
+
+# Optional dependencies for development
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",  # Testing framework
+    "twine>=4.0",  # Tool for publishing packages
+]
+
+# URLs related to the project
+[project.urls]
+Homepage = "https://github.com/zidanewenqsh/hjimi_utils"  # Project homepage
+Documentation = "https://github.com/zidanewenqsh/hjimi_utils/wiki"  # Documentation URL
+Bug_Tracker = "https://github.com/zidanewenqsh/hjimi_utils/issues"  # Issue tracker URL
+Source = "https://github.com/zidanewenqsh/hjimi_utils"  # Source code URL
+
+# [project.scripts]
+# hjimi-tools = "hjimi_tools.__main__:main"  # Command line script entry point (commented out)
+
