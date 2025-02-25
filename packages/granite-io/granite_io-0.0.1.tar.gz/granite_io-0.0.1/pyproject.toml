@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: Apache-2.0
+
+[build-system]
+requires = ["setuptools>=70.1.0", "setuptools_scm>=8", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "granite-io"
+version = "0.0.1"
+authors = [
+]
+description = "Input and output processing for IBM granite models"
+readme = "README.md"
+requires-python = ">=3.10,<3.12"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+[project.urls]
+homepage = "https://github.com/ibm-granite/granite-io"
+source = "https://github.com/ibm-granite/granite-io"
+issues = "https://github.com/ibm-granite/granite-io/issues"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["granite_io", "granite_io*"]
+
