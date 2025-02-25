@@ -1,0 +1,39 @@
+# This is a TOML document
+
+title = "TOML Example"
+
+[owner]
+
+[owner.info]
+name = "Tom Preston-Werner"
+dob = 1979-05-27T07:32:00-08:00
+nb_of_days_per_month = 30
+nb_of_months = 3
+nb_of_days = "=nb_of_months * nb_of_days_per_month"
+calculated_value = "= nb_of_days^3 * database.nb_of_ports + 2 / database.data[1][0]^2 * 2.32e-3 * _input_parts - cos(2*nb_of_days)"
+
+[owner.database]
+enabled = true
+nb_of_ports = 3
+ports = [8000, 8001, 8002]
+data = [["delta", "phi"], [3.14]]
+temp_targets = { cpu = 79.5, case = 72.0 }
+
+[servers]
+
+[servers.alpha]
+ip = "10.0.0.1"
+role = "frontend"
+test_list_of_dict = [{ a = "a_val", b = "b_val" }, { c = "c_val" }]
+
+[servers.beta]
+
+role = "backend"
+
+[servers.beta.test]
+ip = "10.0.0.2"
+role = "backend_test"
+
+[servers.beta.prod]
+ip = "10.0.0.3"
+role = "backend_prod"
