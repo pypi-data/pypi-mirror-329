@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "whichprovides"
+description = "Module which provides 'yum provides' functionality across many package managers"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+dynamic = ["version"]
+
+[project.urls]
+"Home Page" = "https://codeberg.org/sethmlarson/whichprovides"
+"Documentation" = "https://codeberg.org/sethmlarson/whichprovides"
+"Source Code" = "https://codeberg.org/sethmlarson/whichprovides"
+
+[tool.hatch.version]
+path = "src/whichprovides/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/whichprovides/",
+  "tests/"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/whichprovides"]
