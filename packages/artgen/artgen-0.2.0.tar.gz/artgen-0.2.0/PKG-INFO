@@ -1,0 +1,87 @@
+Metadata-Version: 2.3
+Name: artgen
+Version: 0.2.0
+Summary: A CLI tool that generates ASCII art based on a brief description.
+License: MIT
+Keywords: ascii,cli,art,art,generate
+Author: dattatele
+Author-email: datta.tele@gmail.com
+Requires-Python: >=3.12,<4.0.0
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.12
+Requires-Dist: ascii-magic (>=2.3.0)
+Requires-Dist: click (>=8.1.8,<9.0.0)
+Requires-Dist: duckduckgo-search (>=7.4.4)
+Requires-Dist: flask (>=3.1.0,<4.0.0)
+Requires-Dist: fpdf (>=1.7.2,<2.0.0)
+Requires-Dist: pyfiglet (>=1.0.2)
+Requires-Dist: pytest (>=8.3.4,<9.0.0)
+Requires-Dist: requests (>=2.32.3)
+Requires-Dist: textual (>=2.1.1,<3.0.0)
+Project-URL: Documentation, https://github.com/dattatele/artgen/wiki
+Project-URL: Homepage, https://github.com/dattatele/artgen
+Project-URL: Issue Tracker, https://github.com/dattatele/artgen/issues
+Project-URL: Source, https://github.com/dattatele/artgen
+Description-Content-Type: text/markdown
+
+## ArtGen
+
+ArtGen is a CLI tool that generates ASCII art from images and text. This project was created out of an interest in building something fun using existing Python packages. It is free, open-source, and designed to convert images into ASCII art. Additional features and changes are being explored and will be updated in upcoming versions.
+
+## Features
+
+Two New features
+- **interactive web** mode to allow more control and support for local image upload
+- **interactive cli** mode to allow run within terminal.
+
+- Fetches images using DuckDuckGo
+- Converts images to ASCII art
+- Shows fallback stylized text with `pyfiglet`
+
+## Installation
+
+You can install ArtGen from [PyPI](https://pypi.org):
+
+```bash
+  pip install artgen --upgrade
+```
+
+## Usage
+
+To generate ASCII art, use the following command:
+
+```bash
+
+  artgen generate_art "Cat"
+
+  artgen generate_word "Sunflower"
+
+  artgen generate_img "ASCII"
+
+```
+
+### For interactive
+
+For web interface:
+```bash
+   artgen interactive
+
+```
+That will open on [localhost or ](http://localhost:5000/)
+
+For cli interactive interface:
+```bash
+   artgen interactive_cli
+```
+
+That will launch in terminal. Known issue for terminal mode for some windows user had permission issue saving file but works on linux or osx
+
+
+## Contributing
+
+Contributions are welcome! Please open an issue or PR on GitHub.
+
+
