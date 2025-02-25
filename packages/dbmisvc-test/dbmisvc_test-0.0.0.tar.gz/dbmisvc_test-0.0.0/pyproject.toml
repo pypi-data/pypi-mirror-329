@@ -1,0 +1,65 @@
+[project]
+name = "dbmisvc-test"
+version = "0.0.0"
+dependencies = [
+    "django",
+    "django-dbmi-client",
+    "pyjwt",
+    "requests",
+    "responses",
+]
+requires-python = ">= 3.11"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+[project.optional-dependencies]
+dev = [
+    "pre-commit"
+]
+
+[build-system]
+requires = ["setuptools>=75.8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = [
+    "dbmisvc_test",
+]
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.flake8]
+max-line-length = 120
+extend-ignore = [
+  "E402",
+  "D100",
+  "D101",
+  "D104",
+  "D200",
+  "D400",
+  "F401",
+  "D401",
+  "D205"
+]
+exclude = [".git", "__pycache__", "dist"]
+max-complexity = 10
