@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" class="uk-height-1-1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TinyTicker - Log Files</title>
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="img/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="img/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="img/favicon-16x16.png"
+    />
+    <!-- CSS FILES -->
+    <link rel="stylesheet" type="text/css" href="css/uikit.min.css" />
+    <!-- JS FILES -->
+    <script src="js/uikit.min.js"></script>
+    <script src="js/uikit-icons.min.js"></script>
+    <script>
+      // update the content of the log file
+      function updateLogFileContent(log_file) {
+        fetch(`/get-log/${log_file}`)
+          .then((response) => response.text())
+          .then((content) => {
+            document.getElementById(`content-${log_file}`).textContent =
+              content;
+          });
+      }
+      // update the content of all log files every 60s
+      function updateAllLogFileContent() {
+        {% for log_file in log_files %}
+          updateLogFileContent('{{ log_file }}');
+        {% endfor %}
+        setTimeout(updateAllLogFileContent, 10000);
+      }
+      // start updating the content of all log files
+      updateAllLogFileContent();
+    </script>
+  </head>
+  <body class="uk-background-muted uk-height-1-1 uk-padding-small">
+    <div class="uk-text-center uk-margin">
+      <h3>🚀 TinyTicker Log Files 🚀</h3>
+      <div class="uk-flex uk-flex-center">
+        <ul class="uk-subnav uk-subnav-divider uk-margin">
+          <li><a href="/" target="_self">Home</a></li>
+          <li class="uk-active"><a href="#">Log Files</a></li>
+          <li><a href="/startup" target="_self">Startup scripts</a></li>
+        </ul>
+      </div>
+    </div>
+    <ul uk-accordion="multiple: true">
+      {% for log_file in log_files %}
+        <li>
+          <a class="uk-accordion-title uk-inline" href> {{ log_file }} </a>
+          <a
+            href="/get-log/{{ log_file }}"
+            class="uk-icon-link"
+            uk-icon="download"
+          ></a>
+          <pre
+            id="content-{{ log_file }}"
+            class="uk-height-large uk-accordion-content"
+          ></pre>
+        </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
