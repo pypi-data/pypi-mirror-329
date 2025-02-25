@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling==1.26.3", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ultra-rest-client"
+dynamic = ["version"]
+description = "A sample Python client for communicating with the UltraDNS REST API"
+readme = "README.md"
+license-files = ["LICENSE"]
+authors = [
+    { name = "ultradns", email = "ultrassp-oss@vercara.com" },
+]
+keywords = [
+    "ultra_rest_client",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "requests",
+]
+
+[project.urls]
+Homepage = "https://github.com/ultradns/python_rest_api_client"
+
+[tool.hatch.version]
+path = "src/ultra_rest_client/about.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/ultra_rest_client",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ultra_rest_client"]
