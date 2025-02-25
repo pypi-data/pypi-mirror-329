@@ -1,0 +1,103 @@
+[build-system]
+requires = ["hatchling>=1.18.0,<2.0.0","hatch-vcs>=0.4.0,<1.0.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dayone-to-obsidian"
+description = "Convert a JSON export from Day One into individual notes for Obsidian."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    { name = "Taras Drapalyuk", email = "taras@drapalyuk.com" },
+]
+classifiers = [
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "click>=8.1.7,<9.0.0",
+    "python-dateutil>=2.8.2,<3.0.0",
+    "pydantic>=2.5.2,<3.0.0",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/kulapard/dayone-to-obsidian"
+Documentation = "https://github.com/kulapard/dayone-to-obsidian"
+Repository = "https://github.com/kulapard/dayone-to-obsidian"
+
+[project.scripts]
+dayone-to-obsidian = "dayone_to_obsidian.cli:main"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "dayone_to_obsidian/version.py"
+
+[tool.mypy]
+strict = true
+install_types = true
+non_interactive = true
+
+[tool.black]
+line-length = 99
+
+[tool.ruff]
+target-version = "py39"
+line-length = 99
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "C", # flake8-comprehensions
+    "B", # flake8-bugbear
+    "G", # flake8-logging-format
+    "T20", # flake8-print
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501", # line too long, handled by black
+]
+
+[tool.ruff.isort]
+known-third-party = ["click", "dateutil", "pydantic"]
+
+[tool.vulture]
+exclude = ["conftest.py", "models.py", "version.py"]
+ignore_decorators = ["@pytest.fixture", "@model_validator", "@main.command"]
+ignore_names = []
+min_confidence = 60
+sort_by_size = true
+
+[tool.coverage.report]
+exclude_also = [
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
