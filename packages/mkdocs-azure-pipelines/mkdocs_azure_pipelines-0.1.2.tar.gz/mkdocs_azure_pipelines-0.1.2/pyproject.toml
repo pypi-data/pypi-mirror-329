@@ -1,0 +1,86 @@
+[project]
+name = "mkdocs-azure-pipelines"
+requires-python = ">=3.10"
+version = "0.1.2" # This is replaced in release workflow
+description = "MkDocs plugin to generate documentation for Azure Pipelines/Templates"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Carl Westman", email = "carl.westman91@gmail.com" }]
+dependencies = ["mkdocs~=1.6.1", "ruamel-yaml>=0.18.10"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "semver"
+
+[project.entry-points."mkdocs.plugins"]
+mkdocs-azure-pipelines = "mkdocs_azure_pipelines.plugin:AzurePipelinesPlugin"
+
+[project.scripts]
+mkdocs-azure-pipelines = "mkdocs_azure_pipelines.cli:main"
+
+[project.urls]
+Repository = "https://github.com/Wesztman/mkdocs-azure-pipelines"
+
+[tool.uv]
+package = true
+
+[dependency-groups]
+dev = [
+  "pre-commit~=4.1.0",
+  "pyright~=1.1.394",
+  "ruff~=0.9.7",
+  "pytest~=8.3.4",
+  "pytest-sugar>=1.0.0",
+  "mkdocs-material>=9.6.5",
+]
+
+[tool.ruff]
+src = ["src"]
+extend-exclude = ["conf.py"]
+
+[tool.ruff.lint]
+select = [
+  # pycodestyle
+  "E",
+  # Pyflakes
+  "F",
+  # pyupgrade
+  "UP",
+  # flake8-bugbear
+  "B",
+  # flake8-simplify
+  "SIM",
+  # isort
+  "I",
+]
+
+[tool.ruff.lint.extend-per-file-ignores]
+"tests/**" = [
+  "S101", # Use of `assert` detected
+  "D103", # Missing docstring in public function
+  "E501", # Line too long
+]
+"**/__init__.py" = [
+  "F401", # Imported but unused
+  "F403", # Wildcard imports
+]
+"docs/**" = [
+  "INP001", # Requires __init__.py but docs folder is not a package.
+]
+
+[tool.mypy]
+disallow_untyped_defs = true
+warn_unused_ignores = true
+exclude = [".venv/", "build/", "dist/", "tests/"]
+
+[tool.coverage.run]
+omit = ["*tests*"]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
