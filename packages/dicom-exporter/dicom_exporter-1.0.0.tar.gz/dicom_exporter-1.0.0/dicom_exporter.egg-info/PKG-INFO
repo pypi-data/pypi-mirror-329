@@ -1,0 +1,47 @@
+Metadata-Version: 2.1
+Name: dicom_exporter
+Version: 1.0.0
+Summary: Program to export dicom files to .vti or .vtkjs
+Home-page: https://github.com/KitwareMedical/dicom-exporter
+Author: Julien Finet
+Author-email: julien.finet@kitware.com
+Keywords: dicom exporter medical
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: itk
+Requires-Dist: vtk
+Requires-Dist: numpy
+
+# DICOM-exporter
+
+The DICOM-exporter is used to export DICOM files into VTK.JS or VTI files.
+
+## Install
+
+```sh
+pip install .
+```
+
+## Usage
+
+```sh
+dicom-exporter <path/to/dicom/folder> <path/to/output.vti>
+```
+
+or for faster loading in VTK.JS:
+
+```sh
+dicom-exporter <path/to/dicom/folder> <path/to/output.vtkjs>
+```
+
+Setting the `--convert-12-bits`-flag will convert the resulting VTK file using 12 bits instead of 16 bits per block. This is only applied if the input DICOM files are encoded in 12 bits instead of 16 bits (i.e. BitsStored is 12 in the DICOM metadata).
+
+The output file is compressed using gzip for VTK.JS files and ZLib for VTI files, unless the `--no-compress` flag is set.
+
+Use `--resample` flag to resample the volume using the closest axis aligned direction matrix. This resampling will set the direction matrix to identity (legacy behavior).
