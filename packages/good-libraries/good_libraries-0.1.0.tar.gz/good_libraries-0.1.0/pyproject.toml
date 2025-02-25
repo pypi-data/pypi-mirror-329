@@ -1,0 +1,31 @@
+[project]
+name = "good-libraries"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Chris Goddard", email = "chris@goodkiwi.llc" }
+]
+requires-python = ">=3.12.3"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+managed = true
+
+[tool.uv.workspace]
+members = [
+    "libs/good-*",
+] 
+
+[tool.uv.sources]
+good-common = { workspace = true }
+good-redis = { workspace = true }
+good-valueserp = { workspace = true }
+good-object-storage = { workspace = true }
+good-clickhouse = { workspace = true }
+good-supabase = { workspace = true }
+good-dev = { workspace = true }
