@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "v6e"
+description = "A simple, type-safe, and extensible Python parsing and validation framework"
+readme = "README.md"
+version = "0.1.12"
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+requires-python = "~=3.11,<3.13"
+authors = [
+  {name = "Daniel Melchor", email = "dmelchor@pm.me"},
+]
+keywords = ["validation", "validate", "parser", "data", "check"]
+dependencies = [
+    "python-dateutil>=2.9.0",
+    "typing-extensions>=4.12.2",
+]
+
+[project.urls]
+Documentation = "https://github.com/danimelchor/v6e"
+Homepage = "https://github.com/danimelchor/v6e"
+Repository = "https://github.com/danimelchor/v6e"
+Issues = "https://github.com/danimelchor/v6e/issues"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.4",
+  "ruff>=0.9.7",
+  "pyright>=1.1.394",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+
+[tool.pyright]
+exclude = [
+    "**/__pycache__",
+]
+reportMissingTypeStubs = false
+
+[tool.bandit]
+skips = ["B101"]
