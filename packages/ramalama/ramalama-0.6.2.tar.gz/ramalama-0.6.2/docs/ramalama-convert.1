@@ -1,0 +1,74 @@
+.TH "ramalama-convert 1" 
+.nh
+.ad l
+
+.SH NAME
+.PP
+ramalama\-convert \- convert AI Models from local storage to OCI Image
+
+.SH SYNOPSIS
+.PP
+\fBramalama convert\fP [\fIoptions\fP] \fImodel\fP [\fItarget\fP]
+
+.SH DESCRIPTION
+.PP
+Convert specified AI Model to an OCI Formatted AI Model
+
+.PP
+The model can be from RamaLama model storage in Huggingface, Ollama, or local model stored on disk.
+
+.SH OPTIONS
+.SS \fB\-\-help\fP, \fB\-h\fP
+.PP
+Print usage message
+
+.SS \fB\-\-network\fP=\fInone\fP
+.PP
+sets the configuration for network namespaces when handling RUN instructions
+
+.SS \fB\-\-type\fP=\fIraw\fP | \fIcar\fP
+.PP
+type of OCI Model Image to convert.
+
+.TS
+allbox;
+l l 
+l l .
+\fB\fCType\fR	\fB\fCDescription\fR
+car	T{
+Includes base image with the model stored in a /models subdir
+T}
+raw	T{
+Only the model and a link file model.file to it stored at /
+T}
+.TE
+
+.SH EXAMPLE
+.PP
+Generate an oci model out of an Ollama model.
+
+.PP
+.RS
+
+.nf
+$ ramalama convert ollama://tinyllama:latest oci://quay.io/rhatdan/tiny:latest
+Building quay.io/rhatdan/tiny:latest...
+STEP 1/2: FROM scratch
+STEP 2/2: COPY sha256:2af3b81862c6be03c769683af18efdadb2c33f60ff32ab6f83e42c043d6c7816 /model
+\-\-> Using cache 69db4a10191c976d2c3c24da972a2a909adec45135a69dbb9daeaaf2a3a36344
+COMMIT quay.io/rhatdan/tiny:latest
+\-\-> 69db4a10191c
+Successfully tagged quay.io/rhatdan/tiny:latest
+69db4a10191c976d2c3c24da972a2a909adec45135a69dbb9daeaaf2a3a36344
+
+.fi
+.RE
+
+.SH SEE ALSO
+.PP
+\fBramalama(1)\fP, \fBramalama\-push(1)\fP
+
+.SH HISTORY
+.PP
+Aug 2024, Originally compiled by Eric Curtin 
+\[la]ecurtin@redhat.com\[ra]

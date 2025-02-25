@@ -1,0 +1,75 @@
+.TH "ramalama-bench 1" 
+.nh
+.ad l
+
+.SH NAME
+.PP
+ramalama\-bench \- benchmark specified AI Model
+
+.SH SYNOPSIS
+.PP
+\fBramalama bench\fP [\fIoptions\fP] \fImodel\fP [arg ...]
+
+.SH MODEL TRANSPORTS
+.TS
+allbox;
+l l l 
+l l l .
+\fB\fCTransports\fR	\fB\fCPrefix\fR	\fB\fCWeb Site\fR
+URL based	https://, http://, file://	T{
+\fB\fChttps://web.site/ai.model\fR, \fB\fCfile://tmp/ai.model\fR
+T}
+HuggingFace	huggingface://, hf://, hf.co/	\fB\fChuggingface.co\fR
+Ollama	ollama://	\fB\fCollama.com\fR
+OCI Container Registries	oci://	\fB\fCopencontainers.org\fR
+ 	 	T{
+Examples: \fB\fCquay.io\fR,  \fB\fCDocker Hub\fR,\fB\fCArtifactory\fR
+T}
+.TE
+
+.PP
+RamaLama defaults to the Ollama registry transport. This default can be overridden in the \fB\fCramalama.conf\fR file or via the RAMALAMA\_TRANSPORTS
+environment. \fB\fCexport RAMALAMA\_TRANSPORT=huggingface\fR Changes RamaLama to use huggingface transport.
+
+.PP
+Modify individual model transports by specifying the \fB\fChuggingface://\fR, \fB\fCoci://\fR, \fB\fCollama://\fR, \fB\fChttps://\fR, \fB\fChttp://\fR, \fB\fCfile://\fR prefix to the model.
+
+.PP
+URL support means if a model is on a web site or even on your local system, you can run it directly.
+
+.SH OPTIONS
+.SS \fB\-\-help\fP, \fB\-h\fP
+.PP
+show this help message and exit
+
+.SS \fB\-\-network\fP=\fInone\fP
+.PP
+set the network mode for the container
+
+.SS \fB\-\-ngl\fP
+.PP
+number of gpu layers, 0 means CPU inferencing, 999 means use max layers (default: \-1)
+The default \-1, means use whatever is automatically deemed appropriate (0 or 999)
+
+.SH DESCRIPTION
+.PP
+Benchmark specified AI Model.
+
+.SH EXAMPLES
+.PP
+.RS
+
+.nf
+ramalama bench granite\-moe3
+
+.fi
+.RE
+
+.SH SEE ALSO
+.PP
+\fBramalama(1)\fP
+
+.SH HISTORY
+.PP
+Jan 2025, Originally compiled by Eric Curtin 
+\[la]ecurtin@redhat.com\[ra]
