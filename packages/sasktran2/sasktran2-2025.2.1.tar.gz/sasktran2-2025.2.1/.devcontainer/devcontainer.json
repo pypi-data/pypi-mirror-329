@@ -1,0 +1,33 @@
+{
+    // More info about Features: https://containers.dev/features
+    "image": "mcr.microsoft.com/devcontainers/cpp:ubuntu-24.04",
+    "features": {},
+    "forwardPorts": [8086],
+    "runArgs": ["--network=host"],
+
+    "onCreateCommand": ".devcontainer/setup.sh",
+    "postCreateCommand": "",
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools",
+                "ms-vscode.cpptools-extension-pack",
+                "matepek.vscode-catch2-test-adapter",
+                "cschlosser.doxdocgen",
+                "vadimcn.vscode-lldb",
+                "twxs.cmake",
+                "llvm-vs-code-extensions.vscode-clangd",
+                "xaver.clang-format",
+                "ms-python.python",
+                "charliermarsh.ruff",
+                "ms-toolsai.jupyter",
+                "github.vscode-github-actions",
+                "elagil.pre-commit-helper",
+                "njpwerner.autodocstring"
+            ],
+            "settings": {}
+        }
+    }
+}
