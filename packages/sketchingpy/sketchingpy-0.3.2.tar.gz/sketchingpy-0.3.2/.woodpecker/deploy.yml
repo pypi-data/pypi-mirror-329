@@ -1,0 +1,65 @@
+steps:
+  - name: pypi
+    image: sampottingersketching/sketchingci:v1.2
+    commands:
+      - apt update
+      - apt install -y python3.10-venv
+      - pip install build twine
+      - pip install .[dev]
+      - python3 -m build
+      - twine check dist/*
+      - python3 support/make_twine_config.py
+      - twine upload --skip-existing --config-file ./pypirc dist/*
+    environment:
+      PYPI_TOKEN:
+        from_secret: pypi_token
+    when:
+      - branch: main
+  - name: web
+    image: sampottingersketching/sketchingci:v1.2
+    commands:
+      - pip install .[dev]
+      - bash support/move_to_remote_domain.sh
+      - bash support/update_web_dist.sh
+      - bash support/check_website.sh
+      - bash support/run_all_static.sh
+      - echo $SFTP_PASS > PASSWORD
+      - mv website_build sketchingpy.org
+      - sshpass -f "PASSWORD" scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -prq sketchingpy.org $SFTP_USER@$SFTP_HOST:/$SFTP_DIR
+    environment:
+      SFTP_HOST:
+        from_secret: sftp_host
+      SFTP_USER:
+        from_secret: sftp_user
+      SFTP_DIR:
+        from_secret: sftp_dir
+      SFTP_PASS:
+        from_secret: sftp_pass
+    when:
+      - branch: main
+  - name: editor
+    image: sampottingersketching/sketchingci:v1.2
+    commands:
+      - pip install .[dev]
+      - bash support/move_to_remote_domain.sh
+      - bash support/update_web_dist.sh
+      - bash support/check_website.sh
+      - bash support/run_all_static.sh
+      - echo $SFTP_PASS > PASSWORD
+      - cp -r website_build/dist editor_src/dist
+      - mv editor_src editor.sketchingpy.org
+      - sshpass -f "PASSWORD" scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -prq editor.sketchingpy.org $SFTP_USER@$SFTP_HOST:/$SFTP_DIR
+    environment:
+      SFTP_HOST:
+        from_secret: sftp_host
+      SFTP_USER:
+        from_secret: sftp_user
+      SFTP_DIR:
+        from_secret: sftp_dir
+      SFTP_PASS:
+        from_secret: sftp_pass
+    when:
+      - branch: main
+
+depends_on:
+  - build

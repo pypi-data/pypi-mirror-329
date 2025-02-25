@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head lang="en_US">
+    <meta charset="UTF-8">
+    <title>Sketchingpy Sketchbook</title>
+    <link rel="stylesheet" href="/css/sketchbook.css?v=0.2.1">
+
+    <link rel="stylesheet" href="/third_party/pyscript/core.css">
+    <link rel="stylesheet" href="fonts.css">
+    <script type="module" src="/third_party/pyscript/core.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+    <header>
+        <h1>Sketch: <span id="sketch-label"></span></h1>
+    </header>
+    <main class="sketch-main" id="sketch-main">
+        <div id="sketch-load-message">
+            Loading... 
+            <progress id="sketch-load-progress" max="20" value="0"></progress>
+
+            <div class="sketch-fonts-holder" id="sketch-fonts-holder">
+                <ul>
+                    {{{ fontPreloads }}}
+                </ul>
+            </div>
+            <div class="sketch-image-holder" id="sketch-image-holder">
+                <ul>
+                    {{{ imagePreloads }}}
+                </ul>
+            </div>
+        </div>
+        <div>
+            <canvas id="sketch-canvas"></canvas>
+            <details class="sketch-console-holder">
+                <summary>Sketch console</summary>
+                <ul id="sketch-canvas-console">
+                </ul>
+            </details>
+        </div>
+    </main>
+
+    <script src="/js/sketch.js"></script>
+
+    <py-config>{{{ config }}}</py-config>
+    <input type="hidden" id="sketch-file" value="{{{ sketchFile }}}">
+    <div id="sketch-inject"></div>
+
+</body>
+</html>

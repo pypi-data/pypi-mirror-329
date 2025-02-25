@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head lang="en_US">
+    <meta charset="UTF-8">
+    <title>Sketchingpy Sketchbook</title>
+    <link rel="stylesheet" href="/css/sketchbook.css?v=0.2.1">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="Sketchingpy Sketchbook" />
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content="Online editor. Use Sketchingpy and Python from your browser in a private open source sketchbook.">
+    <meta property="og:url" content="https://editor.sketchingpy.org/" />
+    <meta property="og:image" content="https://editor.sketchingpy.org/img/card.png" />
+
+    <meta name="twitter:title" content="Sketchingpy Sketchbook">
+    <meta name="twitter:description" content="Online editor. Use Sketchingpy and Python from your browser in a private open source sketchbook.">
+    <meta name="twitter:image" content="https://editor.sketchingpy.org/img/card.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="description" content="Online editor. Use Sketchingpy and Python from your browser in a private open source sketchbook.">
+    <meta name="keywords" content="open source, open science, interactive science, data visualization, creative coding, game design, editor, cloud, IDE">
+</head>
+<body>
+    <header>
+        <a href="#main" class="skip-link">Skip to content</a>
+        <h1>Sketchbook</h1>
+        <div class="subtitle">
+        Small autosaving cloud environment where you can use Python and <a href="https://sketchingpy.org">Sketchingpy</a> privately without leaving your browser. It even works without an internet connection!
+
+        <details id="intro-details">
+            <summary>More information about the sketchbook</summary>
+            <p>
+                This tiny editor gives you a small space within your browser to use Sketchingpy. None of your work goes back to us so you can code creatively in private. Things are autosaved to your browser as you work but you can export and import projects through save and open buttons. These project files can be saved / backed up on other machines or shared! Speaking of, since all of the files and data stay on your own computer, the sketchbook is lost if your machine fails or you clear your browser data. So, be sure to back up periodically. Finally, this small application also saves a copy of itself in your browser so you can run it even if you don't have access to the internet. Code on a train, on a tablet, on a phone, on a plane!
+            </p>
+        </details>
+    </div>
+    </header>
+    <main id="main">
+        <div class="split-view">
+            <section class="files-holder">
+                <div class="files">
+                    <div class="controls">
+                        <div class="aligned-buttons">
+                            <a id="new-button" role="button" href="#new-file" class="button">New File</a>
+                            <a id="upload-button" role="button" href="#upload-file" class="button">Upload File</a>
+                        </div>
+                        <div class="aligned-buttons">
+                            <a id="export-button" role="button" href="#open-project" class="button">Save Project</a>
+                            <a id="import-button" role="button" href="#save-project" class="button">Open Project</a>
+                        </div>
+                        <div class="storage-panel">
+                            <span id="current-usage"></span>MB of 100MB used: <progress id="storage-bar" value="0" max="100"></progress>
+                        </div>
+                    </div>
+                    <div class="subsection" id="sources">
+                        <h3>Code</h3>
+                        <div class="selection-list" id="source-list"></div>
+                    </div>
+                    <div class="subsection" id="assets">
+                        <h3>Assets</h3>
+                        <div class="selection-list" id="assets-list"></div>
+                    </div>
+                </div>
+            </section>
+            <section class="editor-holder" id="editor-holder">
+                <div class="controls">
+                    <a id="run-button" role="button" href="#result" class="button" target="_blank">Run</a>
+                    <a id="search-button" role="button" href="#search" class="button-invert" target="_blank">Find</a>
+                    <a id="goto-button" role="button" href="#goto" class="button-invert" target="_blank">Goto</a>
+                    <a id="undo-button" role="button" href="#undo" class="button-invert" target="_blank">Undo</a>
+                    <a id="redo-button" role="button" href="#redo" class="button-invert" target="_blank">Redo</a>
+                </div>
+                <div>
+                    <div id="editor"></div>
+                </div>
+            </section>
+        </div>
+        <input type="hidden" id="version" value="0.0.2">
+    </main>
+
+    <footer>
+        <a href="https://codeberg.org/sketchingpy/Sketchingpy">Open Source</a> /
+        <a href="https://codeberg.org/sketchingpy/Sketchingpy/src/branch/main/LICENSE.md">License</a> /
+        <a href="https://sketchingpy.org/privacy.html">Privacy</a> /
+        <a href="https://sketchingpy.org/toc.html">Contents</a> /
+        <a href="mailto:hello@sketchingpy.org">Contact</a>
+    </footer>
+
+    <input type="file" id="hidden-file-chooser" />
+
+    <script src="/third_party/ace.js?v=0.2.1"></script>
+    <script src="/third_party/ext-config.js?v=0.2.1"></script>
+    <script src="/third_party/ext-searchbox.js?v=0.2.1"></script>
+    <script src="/third_party/theme-textmate.js?v=0.2.1"></script>
+    <script src="/third_party/theme-textmate-css.js?v=0.2.1"></script>
+    <script src="/js/sketchbook.js?v=0.2.1"></script>
+
+</body>
+</html>
