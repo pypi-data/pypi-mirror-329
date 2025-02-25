@@ -1,0 +1,116 @@
+Metadata-Version: 2.2
+Name: wabt
+Version: 0.1.1
+Summary: A Python wrapper for the WebAssembly Binary Toolkit (WABT)
+Home-page: https://github.com/c7a2d9e/wabt-py
+Author: c7a2d9e (dropout)
+Author-email: c7a2d9e@sys32.dev
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: requests>=2.32.3
+Requires-Dist: appdirs>=1.4.4
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# wabt.py
+`wabt.py` is a Python wrapper for the [WebAssembly Binary Toolkit (WABT)](https://github.com/WebAssembly/wabt). It allows you to interact with WABT tools programmatically, making it easy to work with WebAssembly binaries and text formats in Python.
+
+## Features
+- Run WABT tools programmatically: Includes support for tools like `wat2wasm`, `wasm2wat`, `wasm-validate`, `wasm-decompile`, and more.
+- Cross-platform support: Works on Windows, macOS, and Linux.
+- Automatic updates: Automatically downloads and updates the latest WABT binaries.
+- Simple API: Provides a Pythonic interface for interacting with WABT tools.
+
+## Installation
+You can install `wabt` via pip:
+```sh
+pip install wabt
+```
+
+## Usage
+### Initialize WABT
+To use the library, first initialize the `Wabt` class. This will ensure the latest WABT binaries are downloaded and ready to use.
+```py
+from wabt import Wabt
+```
+
+# Initialize WABT
+```py
+wabt = Wabt()
+```
+
+### Convert WAT to WASM
+Convert a WebAssembly text file (`.wat`) to a binary file (`.wasm`).
+```py
+wabt.wat_to_wasm("example.wat", output="example.wasm")
+```
+
+### Convert WASM to WAT
+Convert a WebAssembly binary file (`.wasm`) to a text file (`.wat`).
+```py
+wabt.wasm_to_wat("example.wasm", output="example.wat")
+```
+
+### Validate a WASM File
+Validate a WebAssembly binary file.
+```py
+output = wabt.wasm_validate("example.wasm")
+print(output)
+```
+
+### Decompile a WASM File
+Decompile a WebAssembly binary file into a human-readable format.
+```py
+wabt.wasm_decompile("example.wasm", output="example.dcmp")
+```
+
+### Run Spectest Interpreter
+Run a Spectest JSON file in the interpreter.
+```py
+wabt.spectest_interp("test.json")
+```
+
+### List of Supported Tools
+The following WABT tools are supported:
+- `wat2wasm`: Convert WAT (WebAssembly Text) to WASM (WebAssembly Binary).
+- `wasm2wat`: Convert WASM to WAT.
+- `wasm-validate`: Validate a WebAssembly binary file.
+- `wasm-decompile`: Decompile a WebAssembly binary file.
+- `wasm-interp`: Run a WebAssembly binary in a stack-based interpreter.
+- `wasm-objdump`: Print information about the contents of WebAssembly binaries.
+- `wasm-stats`: Output statistics about a WebAssembly binary.
+- `wasm-strip`: Remove sections from a WebAssembly binary file.
+- `wast2json`: Convert a WAST (WebAssembly Spec Test) file to JSON.
+- `wat-desugar`: Format a WAT file.
+- `wasm2c`: Convert a WebAssembly binary to C code.
+
+## Advanced Usag
+### Custom Options
+Most methods accept additional options to customize the behavior of the WABT tools. For example, you can validate a WASM file with verbose output by passing the `--verbose` option.
+```py
+wabt.wasm_validate("example.wasm", options=["--verbose"])
+```
+
+### Skip Updates
+If you want to skip the automatic update process (e.g., for offline use), you can initialize the `Wabt` class with the `skip_update` parameter set to `True`.
+```py
+wabt = Wabt(skip_update=True)
+```
+
+## Requirements
+- Python 3.6 or higher
+- Internet connection (for downloading WABT binaries)
+
+
+## Acknowledgments
+This library is built on top of the [WebAssembly Binary Toolkit (WABT)](https://github.com/WebAssembly/wabt).
