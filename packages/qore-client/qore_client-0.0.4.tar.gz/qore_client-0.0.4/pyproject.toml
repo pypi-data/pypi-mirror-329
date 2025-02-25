@@ -1,0 +1,47 @@
+[build-system]
+requires = [
+    "hatchling",
+    "hatch-vcs"
+]
+build-backend = "hatchling.build"
+
+[project]
+name = "qore-client"
+dynamic = ["version"]
+description = "Qore Client"
+authors = [
+    { name = "dhlee", email = "dhlee@quantit.com" }
+]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "requests>=2.28.0",
+    "types-requests>=2.28.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "mypy>=1.0",
+    "ruff>=0.1.0",
+    "ipython>=8.0",
+]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build]
+include = [
+    "qore_client/**",
+    "README.md",
+]
+exclude = [
+    "tests/**",
+    "**/__pycache__",
+]
+force-include = { "qore_client/version.py" = "qore_client/version.py" }
