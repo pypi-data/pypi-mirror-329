@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "fastapi-standalone-docs"
+version = "0.2.0"
+description = "Host FastAPI Swagger UI and ReDoc without third party CDNs"
+authors = ["IOXIO Ltd"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/ioxiocom/fastapi-standalone-docs"
+packages = [{include = "fastapi_standalone_docs"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = ">=0.109.1,<1"
+
+[tool.poetry.scripts]
+update-fastapi-standalone-docs = { callable = "fastapi_standalone_docs.scripts:update_docs", extras = ["scripts"] }
+
+[tool.poetry.extras]
+scripts = []
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+mypy = "^1.15.0"
+httpx = "^0.28.1"
+invoke = "^2.2.0"
+flake8 = "^7.1.2"
+
+[tool.skjold]
+report_only = false
+sources = ["pyup", "gemnasium"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
