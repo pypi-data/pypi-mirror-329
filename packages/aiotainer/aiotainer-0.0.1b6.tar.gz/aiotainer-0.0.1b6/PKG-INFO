@@ -1,0 +1,88 @@
+Metadata-Version: 2.3
+Name: aiotainer
+Version: 0.0.1b6
+Summary: MPython module to talk to a Portainer.
+License: MIT
+Keywords: Portainer,Docker,api,async,client
+Author: Thomas Peter Protzner
+Author-email: thomas.protzner@gmail.com
+Requires-Python: >=3.11,<4.0
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Framework :: AsyncIO
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: aiohttp (>=3.9.3,<4.0.0)
+Requires-Dist: mashumaro (>=3.12,<4.0)
+Project-URL: Documentation, https://github.com/Thomas55555/aiotainer
+Project-URL: Homepage, https://github.com/Thomas55555/aiotainer
+Project-URL: Issues, https://github.com/Thomas55555/aiotainer/issues
+Project-URL: Repository, https://github.com/Thomas55555/aiotainer
+Description-Content-Type: text/markdown
+
+# aiotainer
+
+[![codecov](https://codecov.io/gh/Thomas55555/aiotainer/graph/badge.svg?token=Hn1Qp8ZvOt)](https://codecov.io/gh/Thomas55555/aiotainer)
+[![Python Versions](https://img.shields.io/pypi/pyversions/aiotainer)](https://pypi.org/project/aiotainer/)
+[![License](https://img.shields.io/github/license/Thomas55555/aiotainer.svg)](LICENSE.md)
+
+Asynchronous library to communicate with the Portainer API
+
+## Quickstart
+
+In order to use the library, you'll need to do some work yourself to get authentication
+credentials. This depends a lot on the context (e.g. redirecting to use OAuth via web)
+but should be easy to incorporate using Portainers's authentication examples. See
+Portainers's [Authentication](https://docs.portainer.io/admin/settings/authentication) for details.
+
+You will implement `AbstractAuth` to provide an access token. Your implementation
+will handle any necessary refreshes. You can invoke the service with your auth implementation
+to access the API.
+
+You need at least:
+
+- Python 3.11+
+- [Poetry][poetry-install]
+
+For a first start you can run the `example.py`, by doing the following steps
+
+- `git clone https://github.com/Thomas55555/aiotainer.git`
+- `cd aiotainer`
+- `poetry install`
+- Enter your personal `client_id` and `client_secret` in the `_secrets.yaml` and rename it to `secrets.yaml`
+- Run with `poetry run ./example.py`
+
+## Contributing
+
+This is an active open-source project. We are always open to people who want to use the code or contribute to it.
+This Python project is fully managed using the [Poetry][poetry] dependency manager.
+
+As this repository uses the [pre-commit][pre-commit] framework, all changes
+are linted and tested with each commit. You can run all checks and tests
+manually, using the following command:
+
+```bash
+poetry run pre-commit run --all-files
+```
+
+To run just the Python tests:
+
+```bash
+poetry run pytest
+```
+
+To update snapshots:
+
+```bash
+poetry run pytest --snapshot-update
+```
+
+[poetry-install]: https://python-poetry.org/docs/#installation
+[poetry]: https://python-poetry.org
+[pre-commit]: https://pre-commit.com/
+
