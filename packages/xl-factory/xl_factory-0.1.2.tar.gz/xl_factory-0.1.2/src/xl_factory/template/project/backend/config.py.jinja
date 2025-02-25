@@ -1,0 +1,34 @@
+from celery.schedules import timedelta, crontab
+
+
+host = '{{ host }}'
+
+REDIS_CONFIG = {
+    'host': host,
+    'port': 6379,
+    'password': '',
+    'db': '0'
+}
+
+MYSQL_CONFIG = {
+    'host': host,
+    'port': 3306,
+    'user': 'root',
+    'password': '',
+    'db': '{{ project }}'
+}
+
+MINIO_CONFIG = {
+    'endpoint': f'{host}:18937',
+    'access_key': '',
+    'secret_key': '',
+}
+
+APP_CONFIG = dict(
+    CACHE_TYPE = 'redis',
+    CACHE_REDIS_URL = 'redis://:{password}@{host}:{port}/0'.format(**REDIS_CONFIG),
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{user}:{password}@{host}:{port}/{db}?charset=utf8mb4'.format(
+        **MYSQL_CONFIG),
+    SQLALCHEMY_TRACK_MODIFICATIONS = False,
+    SQLALCHEMY_POOL_RECYCLE = 3600 
+)
