@@ -1,0 +1,101 @@
+# File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+from __future__ import annotations
+
+from typing import Union, Iterable, Optional
+from typing_extensions import Literal, TypeAlias, TypedDict
+
+__all__ = [
+    "SessionUpdateParams",
+    "RecallOptions",
+    "RecallOptionsVectorDocSearchUpdate",
+    "RecallOptionsTextOnlyDocSearchUpdate",
+    "RecallOptionsHybridDocSearchUpdate",
+]
+
+
+class SessionUpdateParams(TypedDict, total=False):
+    auto_run_tools: bool
+
+    context_overflow: Optional[Literal["truncate", "adaptive"]]
+
+    forward_tool_calls: bool
+
+    metadata: Optional[object]
+
+    recall_options: Optional[RecallOptions]
+
+    render_templates: bool
+
+    situation: Optional[str]
+
+    system_template: Optional[str]
+
+    token_budget: Optional[int]
+
+
+class RecallOptionsVectorDocSearchUpdate(TypedDict, total=False):
+    confidence: float
+
+    lang: Literal["en-US"]
+
+    limit: int
+
+    max_query_length: int
+
+    metadata_filter: object
+
+    mmr_strength: float
+
+    mode: str
+
+    num_search_messages: int
+
+    text: Optional[str]
+
+    vector: Optional[Iterable[float]]
+
+
+class RecallOptionsTextOnlyDocSearchUpdate(TypedDict, total=False):
+    lang: Literal["en-US"]
+
+    limit: int
+
+    max_query_length: int
+
+    metadata_filter: object
+
+    mode: str
+
+    num_search_messages: int
+
+    text: Optional[str]
+
+
+class RecallOptionsHybridDocSearchUpdate(TypedDict, total=False):
+    alpha: float
+
+    confidence: float
+
+    lang: Literal["en-US"]
+
+    limit: int
+
+    max_query_length: int
+
+    metadata_filter: object
+
+    mmr_strength: float
+
+    mode: str
+
+    num_search_messages: int
+
+    text: Optional[str]
+
+    vector: Optional[Iterable[float]]
+
+
+RecallOptions: TypeAlias = Union[
+    RecallOptionsVectorDocSearchUpdate, RecallOptionsTextOnlyDocSearchUpdate, RecallOptionsHybridDocSearchUpdate
+]
