@@ -1,0 +1,130 @@
+[build-system]
+requires = ["ase", "numpy", "scipy", "setuptools", "spglib", "versioneer[toml]==0.29"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "atomistics"
+description = "Interfaces for atomistic simulation codes and workflows"
+authors = [
+    { name = "Jan Janssen", email = "janssen@mpie.de" },
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["pyiron"]
+requires-python = ">=3.9, <3.13"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Topic :: Scientific/Engineering :: Physics",
+    "License :: OSI Approved :: BSD License",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "ase>=3.22.1,<=3.24.0",
+    "numpy>=1.26.0,<=1.26.4",
+    "scipy>=1.11.1,<=1.15.2",
+    "spglib>=2.0.2,<=2.5.0",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/pyiron/atomistics"
+Documentation = "https://atomistics.readthedocs.io"
+Repository = "https://github.com/pyiron/atomistics"
+
+[project.optional-dependencies]
+phonopy = [
+    "phonopy>=2.20.0,<=2.37.0",
+    "seekpath>=1.9.0,<=2.1.0",
+    "structuretoolkit>=0.0.10,<=0.0.31",
+]
+gpaw = [
+    "gpaw>=20.1.0,<=24.6.0",
+]
+lammps = [
+    "pylammpsmpi>=0.2.1,<=0.2.31",
+    "jinja2>=2.11.3,<=3.1.5",
+    "pandas>=2.0.3,<=2.2.3",
+    "pyiron_lammps==0.3.2",
+]
+lammps_phonons = [
+    "pylammpsmpi>=0.2.1,<=0.2.31",
+    "jinja2>=2.11.3,<=3.1.5",
+    "pandas>=2.0.3,<=2.2.3",
+    "dynaphopy>=1.17.5,<=1.17.16",
+    "pyiron_lammps==0.3.2",
+]
+experimental = [
+    "lxml>=4.9.1,<=5.3.1",
+    "mendeleev>=0.12.0,<=0.19.0",
+    "pandas>=2.0.3,<=2.2.3",
+    "requests>=2.24.0,<=2.32.3",
+]
+qe = [
+    "pwtools==1.2.3"
+]
+tqdm = [
+    "tqdm==4.67.1"
+]
+
+[tool.setuptools.packages.find]
+include = ["atomistics*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "atomistics.__version__"}
+
+[tool.ruff]
+exclude = [".ci_support", "docs", "notebooks", "tests", "setup.py", "_version.py"]
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # flake8-comprehensions
+    "C4",
+    # eradicate
+    "ERA",
+    # pylint
+    "PL",
+]
+ignore = [
+    # ignore function call in argument defaults
+    "B008",
+    # ignore cache
+    "B019",
+    # ignore star-arg unpacking after a keyword argument
+    "B026",
+    # ignore line-length violations
+    "E501",
+    # Too many arguments in function definition
+    "PLR0913",
+    # Magic value used in comparison
+    "PLR2004",
+    # Too many statements
+    "PLR0915",
+    # ignore overwritten variables in for-loop
+    "PLW2901",
+    # ignore key in type
+    "SIM118",
+]
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440-pre"
+versionfile_source = "atomistics/_version.py"
+parentdir_prefix = "atomistics"
+tag_prefix = "atomistics-"
