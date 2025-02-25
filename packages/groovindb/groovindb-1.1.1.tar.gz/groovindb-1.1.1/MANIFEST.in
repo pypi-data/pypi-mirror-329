@@ -1,0 +1,29 @@
+# Archivos principales
+include README.md
+include LICENSE
+include requirements.txt
+include CHANGELOG.md
+include pyproject.toml
+include groovindb.json.example
+
+# Código fuente
+recursive-include groovindb *.py
+recursive-include groovindb/core *.py
+recursive-include groovindb/drivers *.py
+recursive-include groovindb/utils *.py
+
+# Tests
+recursive-include tests *.py
+
+# Documentación
+recursive-include docs *.md
+recursive-include docs *.rst
+recursive-include examples *.py
+recursive-include examples *.md
+
+# Excluir archivos innecesarios
+global-exclude *.pyc
+global-exclude __pycache__
+global-exclude *.pyo
+global-exclude .git*
+global-exclude .DS_Store 
