@@ -1,0 +1,78 @@
+{% load i18n %}
+{% load ui %}
+
+<div class="" x-data="{open: false, shouldClose(event) {return event.relatedTarget == $refs.dropdownContent || $refs.dropdownContent.contains(event.relatedTarget);} }"
+     @click.outside="open = false" style="width: 100%;" hx-disinherit="*"
+>
+    <select multiple id="{{ widget.attrs.id }}" hidden="hidden" name="{{ widget.name }}" aria-label="{{ widget.name }}" x-ref="inputValue">
+        {% for obj in selected %}
+            <option selected value="{{ obj.pk }}"></option>
+        {% endfor %}
+    </select>
+    <div id="{{ widget.attrs.id }}_display" class="input select py-1 pl-1" tabindex="0" x-ref="inputDisplay" aria-label="inputDisplay"
+         style="padding-right: 30px; border-radius: 0; border-top: 0; border-right:0; border-left: 0; min-height: var(--bulma-control-height); height: fit-content; width: 100%"
+         x-on:focus="open = true;"
+         x-on:keydown="if ($event.keyCode == 27) {document.activeElement.blur()} else if ($event.keyCode != 9) {$refs.searchInput.focus();}"
+         x-on:focusout="open = shouldClose($event)"
+    >
+        <div class="tags" x-ref="inputDisplayTags" 
+             @click="
+                if ($event.target.classList.contains('delete')) {
+                    let val = $event.target.getAttribute('data-value');
+                    $refs.inputValue.querySelector(`option[value=${CSS.escape(val)}]`).remove(); 
+                    $event.target.parentElement.remove();
+                    $dispatch('change');
+                }
+             "
+        >
+            {% for obj in selected %}
+                <span class="tag has-text-weight-normal is-medium">
+                    {{ obj }}
+                    <button class="delete" type="button" data-value="{{ obj.pk }}"></button>
+                </span>
+            {% endfor %}
+        </div>
+    </div>
+    <div style="position: relative; top: 10px; z-index: 9">
+        <div x-show="open" class="box pt-1 mb-2" x-ref="dropdownContent" x-cloak="" tabindex="-1" x-transition style="position: absolute; width: 100%;">
+            <input id="id_{{ widget.uuid }}_search" type="search" autocomplete="off" class="input" x-ref="searchInput" aria-label="search"
+                   name="{{ widget.search_parameter }}"
+                   placeholder="{% translate 'Type to search' %}"
+                   x-on:keydown="if ($event.keyCode == 27) {document.activeElement.blur()}"
+                   x-on:focusout="open = shouldClose($event)"
+                   hx-get="{{ widget.search_url }}"
+                   hx-trigger="input changed delay:300ms, search"
+                   hx-target="#id_{{ widget.uuid }}_dropdown_items"
+                   hx-swap="innerHTML"
+                   @change.stop=""
+            >
+            <div id="id_{{ widget.uuid }}_dropdown_items" class="hoverable" style="max-height: 200px; width: 100%; overflow-y: auto;"
+                 x-on:click="
+                    if (! $refs.inputValue.querySelectorAll(`option[value=${CSS.escape($event.target.value)}]`).length) {
+                        let option = document.createElement('option');
+                        let tag = document.createElement('span');
+                        let delButton = document.createElement('button');
+                        option.setAttribute('selected', '');
+                        option.value = $event.target.value;
+                        tag.classList.add('tag', 'has-text-weight-normal', 'is-medium');
+                        tag.innerText = $event.target.innerText;
+                        delButton.classList.add('delete');
+                        delButton.type = 'button';
+                        delButton.setAttribute('data-value', $event.target.value);
+                        tag.appendChild(delButton);
+                        $refs.inputValue.appendChild(option);
+                        $refs.inputDisplayTags.appendChild(tag);
+                        $dispatch('change');
+                    };
+                    {% if widget.hx_trigger_on_change %}htmx.trigger('#{{ widget.attrs.id }}_value', 'change');{% endif %}
+                 "
+                 x-on:keydown="
+                    if ($event.keyCode == 27) {document.activeElement.blur()} 
+                    else if ($event.keyCode != 9 && $event.keyCode != 13) {$refs.searchInput.focus();}
+                 "
+            >
+                {% include 'ui/widgets/model_search_select_options.html' %}
+            </div>
+        </div>
+    </div>
+</div>
