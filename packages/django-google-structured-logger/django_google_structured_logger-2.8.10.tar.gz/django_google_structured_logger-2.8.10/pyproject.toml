@@ -1,0 +1,60 @@
+[tool.poetry]
+name = "django-google-structured-logger"
+version = "2.8.10"
+description = "Plugin for django to support  Google Structured Logger"
+authors = ["Farruh Sheripov <sheripov.farruh@gmail.com>"]
+readme = "README.md"
+packages = [{include = "django_google_structured_logger"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+python-json-logger = "^2.0.7"
+contextvars = "^2.4"
+django = ">=3,<6"
+setuptools-scm = "^7.1.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+mypy_path = "./src"
+python_version = "3.8"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_no_return = false
+pretty = true
+
+[tool.isort]
+profile = "black"
+line_length = 120
+skip_glob = ["**/migrations/*.py"]
+
+[tool.black]
+line-length = 120
+target-version = ['py38']
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | venv
+    | migrations
+    | \.exports
+  )/
+)
+'''
