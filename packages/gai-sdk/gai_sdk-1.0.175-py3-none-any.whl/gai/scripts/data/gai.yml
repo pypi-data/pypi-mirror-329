@@ -1,0 +1,305 @@
+version: "1.0"
+gai_url: http://localhost:12033
+logging:
+    level: INFO
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+    filename: ""
+    filemode: a
+    stream: stdout
+    loggers:
+        gai.ttt: DEBUG
+        gai.common.http_utils: DEBUG
+clients:
+    ttt:
+        type: ttt
+        engine: llamacpp
+        model: dolphin
+        name: ttt-llamacpp-dolphin
+        client_type: gai
+        url: http://gai-ttt-svr:12031/gen/v1/chat/completions
+    ttt-llamacpp-dolphin:
+        type: ttt
+        engine: llamacpp
+        model: dolphin
+        name: ttt-llamacpp-dolphin
+        client_type: gai
+        url: http://gai-ttt-svr:12031/gen/v1/chat/completions
+    ttt-exllamav2-dolphin:
+        type: ttt
+        engine: exllamav2
+        model: dolphin
+        name: ttt-exllamav2-dolphin
+        client_type: gai
+        url: http://gai-ttt-svr:12031/gen/v1/chat/completions
+    llama3.1:
+        type: ttt
+        engine: ollama
+        model: llama3.1
+        name: llama3.1
+        client_type: ollama
+        extra:
+            num_ctx: 4096
+    phi4:
+        type: ttt
+        engine: ollama
+        model: phi4
+        name: phi4
+        client_type: ollama
+        extra:
+            num_ctx: 4096
+    gpt-4o:
+        type: ttt
+        engine: openai
+        model: gpt-4o
+        name: gpt-4o
+        client_type: openai
+        env:
+            OPENAI_API_KEY: ${OPENAI_API_KEY}
+    rag:
+        type: rag
+        engine: sentencepiece
+        model: instructor
+        name: rag-sentencepiece-instructor
+        client_type: gai
+        url: http://gai-rag-svr:12036/gen/v1/rag
+        extra:
+            ws_url: ws://gai-rag-svr:12036/gen/v1/rag/index-file/ws
+    rag-sentencepiece-instructor:
+        type: rag
+        engine: sentencepiece
+        model: instructor
+        name: rag-sentencepiece-instructor
+        client_type: gai
+        url: http://gai-rag-svr:12036/gen/v1/rag
+        extra:
+            ws_url: ws://gai-rag-svr:12036/gen/v1/rag/index-file/ws
+    gai-selenium:
+        type: scraper
+        engine: selenium
+        model: selenium
+        name: gai-selenium
+        client_type: gai
+        url: http://gai-selenium:12028/api/v1
+    tti:
+        type: tti
+        engine: sd1.5
+        model: runwayml
+        name: tti-sd1.5-runwayml
+        client_type: gai
+        url: http://gai-tti-svr:12035/sdapi/v1/txt2img
+    tti-sd1.5-runwayml:
+        type: tti
+        engine: sd1.5
+        model: runwayml
+        name: tti-sd1.5-runwayml
+        client_type: gai
+        url: http://gai-tti-svr:12035/sdapi/v1/txt2img
+    tts:
+        type: tts
+        engine: coqui
+        model: xttsv2
+        name: tts-coqui-xttsv2
+        client_type: gai
+        url: http://gai-tts-svr:12032/gen/v1/audio/speech
+    tts-coqui-xttsv2:
+        type: tts
+        engine: coqui
+        model: xttsv2
+        name: tts-coqui-xttsv2
+        client_type: gai
+        url: http://gai-tts-svr:12032/gen/v1/audio/speech
+    stt:
+        type: stt
+        engine: huggingface
+        model: whisperv3
+        name: stt-huggingface-whisperv3
+        client_type: gai
+        url: http://gai-stt-svr:12033/gen/v1/audio/transcriptions
+    stt-whisperv3-huggingface:
+        type: stt
+        engine: huggingface
+        model: whisperv3
+        name: stt-huggingface-whisperv3
+        client_type: gai
+        url: http://gai-stt-svr:12033/gen/v1/audio/transcriptions
+    itt:
+        type: itt
+        engine: vicuna7b
+        model: llavav1.6
+        name: itt-vicuna7b-llavav1.6
+        client_type: gai
+        url: http://gai-itt-svr:12034/gen/v1/vision/completions
+    itt-vicuna7b-llavav1.6:
+        type: itt
+        engine: vicuna7b
+        model: llavav1.6
+        name: itt-vicuna7b-llavav1.6
+        client_type: gai
+        url: http://gai-itt-svr:12034/gen/v1/vision/completions
+    ttc:
+        type: ttc
+        engine: exllamav2
+        model: deepseek
+        name: ttc-exllamav2-deepseek
+        client_type: gai
+    ttc-exllamav2-deepseek:
+        type: ttc
+        engine: exllamav2
+        model: deepseek
+        name: ttc-exllamav2-deepseek
+        client_type: gai
+generators:
+    ttt-llamacpp-dolphin:
+        type: ttt
+        engine: llamacpp
+        model: dolphin
+        name: ttt-llamacpp-dolphin
+        model_filepath: models/llamacpp-dolphin/dolphin-2.9.3-mistral-7B-32k-Q4_K_M.gguf
+        max_seq_len: 4096
+        prompt_format: mistral
+        hyperparameters:
+            temperature: 0.85
+            top_p: 0.8
+            top_k: 50
+            max_tokens: 1000
+            tool_choice: auto
+            max_retries: 5
+            stop:
+                - <|im_end|>
+                - </s>
+                - "[/INST]"
+        module:
+            name: gai.ttt.server.gai_llamacpp
+            class: GaiLlamaCpp
+    ttt-llamacpp-mistral7b:
+        type: ttt
+        engine: llamacpp
+        model: mistral7b
+        name: ttt-llamacpp-mistral7b
+        model_filepath: models/llamacpp-mistral7b/Mistral-7B-Instruct-v0.3-Q4_K_M.gguf
+        max_seq_len: 4096
+        prompt_format: mistral
+        hyperparameters:
+            temperature: 0.85
+            top_p: 0.8
+            top_k: 50
+            max_tokens: 1000
+            tool_choice: auto
+            max_retries: 5
+            stop:
+                - <|im_end|>
+                - </s>
+                - "[/INST]"
+        module:
+            name: gai.ttt.server.gai_llamacpp
+            class: GaiLlamaCpp
+    ttt-exllamav2-dolphin:
+        type: ttt
+        engine: exllamav2
+        model: dolphin
+        name: ttt-exllamav2-dolphin
+        extra:
+            model_path: models/exllamav2-dolphin
+            max_seq_len: 8192
+            prompt_format: mistral
+            no_flash_attn: true
+            seed: null
+            decode_special_tokens: false
+        hyperparameters:
+            temperature: 0.85
+            top_p: 0.8
+            top_k: 50
+            max_tokens: 1000
+            tool_choice: auto
+            max_retries: 5
+            stop:
+                - <|im_end|>
+                - </s>
+                - "[/INST]"
+        module:
+            name: gai.ttt.server.gai_exllamav2
+            class: GaiExLlamav2
+    ttt-exllamav2-mistral7b:
+        type: ttt
+        engine: exllamav2
+        model: mistral7b
+        name: ttt-exllamav2-mistral7b
+        extra:
+            model_path: models/exllamav2-mistral7b
+            model_basename: model
+            max_seq_len: 8192
+            prompt_format: mistral
+            no_flash_attn: true
+            seed: null
+            decode_special_tokens: false
+        hyperparameters:
+            temperature: 0.85
+            top_p: 0.8
+            top_k: 50
+            max_tokens: 1000
+            tool_choice: auto
+            max_retries: 5
+            stop:
+                - <|im_end|>
+                - </s>
+                - "[/INST]"
+        module:
+            name: gai.ttt.server.gai_exllamav2
+            class: GaiExLlamav2
+    rag-sentencepiece-instructor:
+        type: rag
+        engine: sentencepiece
+        model: instructor
+        name: rag-sentencepiece-instructor
+        extra:
+            chromadb:
+                path: rag/chromadb
+                n_results: 3
+            sqlite:
+                path: rag/gai-rag.db
+            model_path: models/instructor-large
+            device: cuda
+            chunks:
+                size: 1000
+                overlap: 100
+                path: chunks
+        module:
+            name: gai.rag.server.gai_rag
+            class: RAG
+    stt-whisperv3-huggingface:
+        type: stt
+        engine: whisperv3
+        model: huggingface
+        name: stt-whisperv3-huggingface
+        extra:
+            model_path: models/whisper-large-v3
+            max_seq_len: 128
+            chunk_length_s: 30
+            batch_size: 16
+        hyperparameters:
+            max_new_tokens: 128
+            stop: []
+        module:
+            name: gai.stt.server.gai_stt
+            class: GaiSTT
+    tts-coqui-xttsv2:
+        type: tts
+        engine: coqui
+        model: xttsv2
+        name: tts-coqui-xttsv2
+        extra:
+            model_path: models/coqui-xttsv2/tts_models--multilingual--multi-dataset--xtts_v2
+        module:
+            name: gai.tts.server.gai_xtts
+            class: GaiXTTS
+    tts-kokoro-kokoro:
+        type: "tts"
+        engine: "kokoro"
+        model: "kokoro"
+        name: "tts-kokoro-kokoro"
+        extra:
+            model_filepath: "models/kokoro/kokoro-v0_19.pth"
+        module:
+            name: "gai.tts.server.gai_kokoro"
+            class: "GaiKokoro"

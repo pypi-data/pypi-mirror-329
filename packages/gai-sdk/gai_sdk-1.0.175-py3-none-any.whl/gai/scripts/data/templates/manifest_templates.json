@@ -1,0 +1,199 @@
+{
+    "Conversation Manifest": {
+        "Id": "00000000-0000-0000-0000-000000000000",
+        "Name": "Conversation Manifest",
+        "Desc": "This is a standard manifest for Conversation Flow. Make a copy of this manifest to customize it for your own agent.",
+        "Content": {
+            "INIT": {
+                "module_path": "gai.agent.states.InitializeState",
+                "class_name": "InitializeState",
+                "input_data": {
+                    "initializer": {
+                        "type": "state_machine",
+                        "dependency": "get_initializer"
+                    }
+                }
+            },
+            "CRAFT_PROMPT": {
+                "module_path": "gai.agent.states.CraftPromptState",
+                "class_name": "CraftPromptState",
+                "input_data": {
+                    "persona_name": {
+                        "type": "state_machine",
+                        "dependency": "get_persona_name"
+                    },
+                    "dialogue_messages": {
+                        "type": "state_machine",
+                        "dependency": "get_dialogue_messages"
+                    },
+                    "custom_message": {
+                        "type": "state_machine",
+                        "dependency": "get_job_description"
+                    },
+                    "user_message": {
+                        "type": "state_machine",
+                        "dependency": "get_user_message"
+                    },
+                    "tool_name": "text"
+                },
+                "output_data": ["step", "monologue_messages"]
+            },
+            "GENERATE": {
+                "module_path": "gai.agent.states.GenerateState",
+                "class_name": "GenerateState",
+                "input_data": {
+                    "llm_config": {
+                        "type": "state_machine",
+                        "dependency": "get_llm_config"
+                    },
+                    "monologue_messages": {
+                        "type": "prev_state",
+                        "dependency": "monologue_messages"
+                    }
+                },
+                "output_data": [
+                    "step",
+                    "monologue_messages",
+                    "streamer",
+                    "assistant_message"
+                ]
+            },
+            "FINAL": {
+                "module_path": "gai.agent.states.FinalizeState",
+                "class_name": "FinalizeState",
+                "input_data": {
+                    "finalizer": {
+                        "type": "state_machine",
+                        "dependency": "get_finalizer"
+                    }
+                }
+            }
+        },
+        "CreatorId": "00000000-0000-0000-0000-000000000000",
+        "UsageType": "public",
+        "AgentClassTypeId": "00000000-0000-0000-0000-000000000000"
+    },
+    "Tool Use Manifest": {
+        "Id": "00000000-0000-0000-0000-000000000001",
+        "Name": "Tool Use Manifest",
+        "Desc": "This is a standard manifest for Tool Use Flow. Make a copy of this manifest to customize it for your own agent.",
+        "Content": {
+            "TOOL_CHOICE": {
+                "module_path": "gai.agent.states.ToolChoiceState",
+                "class_name": "ToolChoiceState",
+                "input_data": {
+                    "llm_config": {
+                        "type": "state_machine",
+                        "dependency": "get_llm_config"
+                    },
+                    "dialogue_messages": {
+                        "type": "state_machine",
+                        "dependency": "get_dialogue_messages"
+                    },
+                    "user_message": {
+                        "type": "state_machine",
+                        "dependency": "get_user_message"
+                    },
+                    "job_description": {
+                        "type": "state_machine",
+                        "dependency": "get_job_description"
+                    },
+                    "tools_dict": {
+                        "type": "state_machine",
+                        "dependency": "get_tools_dict"
+                    }
+                },
+                "output_data": ["step", "tool_name"],
+                "conditions": ["condition_use_tool", "condition_use_text"]
+            },
+            "CRAFT_PROMPT": {
+                "module_path": "gai.agent.states.CraftPromptState",
+                "class_name": "CraftPromptState",
+                "input_data": {
+                    "persona_name": {
+                        "type": "state_machine",
+                        "dependency": "get_persona_name"
+                    },
+                    "dialogue_messages": {
+                        "type": "state_machine",
+                        "dependency": "get_dialogue_messages"
+                    },
+                    "custom_message": "",
+                    "user_message": {
+                        "type": "state_machine",
+                        "dependency": "get_user_message"
+                    },
+                    "tool_name": {
+                        "type": "prev_state",
+                        "dependency": "tool_name"
+                    }
+                },
+                "output_data": ["step", "monologue_messages"]
+            },
+            "GENERATE": {
+                "module_path": "gai.agent.states.GenerateState",
+                "class_name": "GenerateState",
+                "input_data": {
+                    "llm_config": {
+                        "type": "state_machine",
+                        "dependency": "get_llm_config"
+                    },
+                    "monologue_messages": {
+                        "type": "prev_state",
+                        "dependency": "monologue_messages"
+                    }
+                }
+            },
+            "TOOL_CALL": {
+                "module_path": "gai.agent.states.ToolCallState",
+                "class_name": "ToolCallState",
+                "input_data": {
+                    "llm_config": {
+                        "type": "state_machine",
+                        "dependency": "get_llm_config"
+                    },
+                    "dialogue_messages": {
+                        "type": "state_machine",
+                        "dependency": "get_dialogue_messages"
+                    },
+                    "user_message": {
+                        "type": "state_machine",
+                        "dependency": "get_user_message"
+                    },
+                    "tools_dict": {
+                        "type": "state_machine",
+                        "dependency": "get_tools_dict"
+                    },
+                    "tool_name": {
+                        "type": "state_bag",
+                        "dependency": "tool_name"
+                    }
+                },
+                "output_data": ["step", "tool_call"]
+            },
+            "GOOGLE": {
+                "module_path": "gai.agent.states.GoogleState",
+                "class_name": "GoogleState",
+                "input_data": {
+                    "n_search": 5,
+                    "tool_call": {
+                        "type": "prev_state",
+                        "dependency": "tool_call"
+                    },
+                    "dialogue_messages": {
+                        "type": "state_machine",
+                        "dependency": "get_dialogue_messages"
+                    },
+                    "user_message": {
+                        "type": "state_machine",
+                        "dependency": "get_user_message"
+                    }
+                },
+                "output_data": ["step", "monologue_messages"]
+            }
+        },
+        "CreatorId": "00000000-0000-0000-0000-000000000000",
+        "UsageType": "public",
+        "AgentClassTypeId": "00000000-0000-0000-0000-000000000000"
+    }
+}
