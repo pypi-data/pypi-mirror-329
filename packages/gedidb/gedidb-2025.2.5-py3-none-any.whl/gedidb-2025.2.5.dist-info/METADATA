@@ -1,0 +1,426 @@
+Metadata-Version: 2.2
+Name: gedidb
+Version: 2025.2.5
+Summary: A toolbox to download, process, store and visualise Global Ecosystem Dynamics Investigation (GEDI) L2A-B and L4A-C data
+Author-email: Simon Besnard <besnard@gfz.de>, Felix Dombrowski <felix.dombrowski@uni-potsdam.de>, Amelia Holcomb <amelia.holcomb@gmail.com>
+License:                       EUROPEAN UNION PUBLIC LICENCE v. 1.2
+                              EUPL © the European Union 2007, 2016
+        
+        This European Union Public Licence (the ‘EUPL’) applies to the Work (as defined
+        below) which is provided under the terms of this Licence. Any use of the Work,
+        other than as authorised under this Licence is prohibited (to the extent such
+        use is covered by a right of the copyright holder of the Work).
+        
+        The Work is provided under the terms of this Licence when the Licensor (as
+        defined below) has placed the following notice immediately following the
+        copyright notice for the Work:
+        
+                Licensed under the EUPL
+        
+        or has expressed by any other means his willingness to license under the EUPL.
+        
+        1. Definitions
+        
+        In this Licence, the following terms have the following meaning:
+        
+        - ‘The Licence’: this Licence.
+        
+        - ‘The Original Work’: the work or software distributed or communicated by the
+          Licensor under this Licence, available as Source Code and also as Executable
+          Code as the case may be.
+        
+        - ‘Derivative Works’: the works or software that could be created by the
+          Licensee, based upon the Original Work or modifications thereof. This Licence
+          does not define the extent of modification or dependence on the Original Work
+          required in order to classify a work as a Derivative Work; this extent is
+          determined by copyright law applicable in the country mentioned in Article 15.
+        
+        - ‘The Work’: the Original Work or its Derivative Works.
+        
+        - ‘The Source Code’: the human-readable form of the Work which is the most
+          convenient for people to study and modify.
+        
+        - ‘The Executable Code’: any code which has generally been compiled and which is
+          meant to be interpreted by a computer as a program.
+        
+        - ‘The Licensor’: the natural or legal person that distributes or communicates
+          the Work under the Licence.
+        
+        - ‘Contributor(s)’: any natural or legal person who modifies the Work under the
+          Licence, or otherwise contributes to the creation of a Derivative Work.
+        
+        - ‘The Licensee’ or ‘You’: any natural or legal person who makes any usage of
+          the Work under the terms of the Licence.
+        
+        - ‘Distribution’ or ‘Communication’: any act of selling, giving, lending,
+          renting, distributing, communicating, transmitting, or otherwise making
+          available, online or offline, copies of the Work or providing access to its
+          essential functionalities at the disposal of any other natural or legal
+          person.
+        
+        2. Scope of the rights granted by the Licence
+        
+        The Licensor hereby grants You a worldwide, royalty-free, non-exclusive,
+        sublicensable licence to do the following, for the duration of copyright vested
+        in the Original Work:
+        
+        - use the Work in any circumstance and for all usage,
+        - reproduce the Work,
+        - modify the Work, and make Derivative Works based upon the Work,
+        - communicate to the public, including the right to make available or display
+          the Work or copies thereof to the public and perform publicly, as the case may
+          be, the Work,
+        - distribute the Work or copies thereof,
+        - lend and rent the Work or copies thereof,
+        - sublicense rights in the Work or copies thereof.
+        
+        Those rights can be exercised on any media, supports and formats, whether now
+        known or later invented, as far as the applicable law permits so.
+        
+        In the countries where moral rights apply, the Licensor waives his right to
+        exercise his moral right to the extent allowed by law in order to make effective
+        the licence of the economic rights here above listed.
+        
+        The Licensor grants to the Licensee royalty-free, non-exclusive usage rights to
+        any patents held by the Licensor, to the extent necessary to make use of the
+        rights granted on the Work under this Licence.
+        
+        3. Communication of the Source Code
+        
+        The Licensor may provide the Work either in its Source Code form, or as
+        Executable Code. If the Work is provided as Executable Code, the Licensor
+        provides in addition a machine-readable copy of the Source Code of the Work
+        along with each copy of the Work that the Licensor distributes or indicates, in
+        a notice following the copyright notice attached to the Work, a repository where
+        the Source Code is easily and freely accessible for as long as the Licensor
+        continues to distribute or communicate the Work.
+        
+        4. Limitations on copyright
+        
+        Nothing in this Licence is intended to deprive the Licensee of the benefits from
+        any exception or limitation to the exclusive rights of the rights owners in the
+        Work, of the exhaustion of those rights or of other applicable limitations
+        thereto.
+        
+        5. Obligations of the Licensee
+        
+        The grant of the rights mentioned above is subject to some restrictions and
+        obligations imposed on the Licensee. Those obligations are the following:
+        
+        Attribution right: The Licensee shall keep intact all copyright, patent or
+        trademarks notices and all notices that refer to the Licence and to the
+        disclaimer of warranties. The Licensee must include a copy of such notices and a
+        copy of the Licence with every copy of the Work he/she distributes or
+        communicates. The Licensee must cause any Derivative Work to carry prominent
+        notices stating that the Work has been modified and the date of modification.
+        
+        Copyleft clause: If the Licensee distributes or communicates copies of the
+        Original Works or Derivative Works, this Distribution or Communication will be
+        done under the terms of this Licence or of a later version of this Licence
+        unless the Original Work is expressly distributed only under this version of the
+        Licence — for example by communicating ‘EUPL v. 1.2 only’. The Licensee
+        (becoming Licensor) cannot offer or impose any additional terms or conditions on
+        the Work or Derivative Work that alter or restrict the terms of the Licence.
+        
+        Compatibility clause: If the Licensee Distributes or Communicates Derivative
+        Works or copies thereof based upon both the Work and another work licensed under
+        a Compatible Licence, this Distribution or Communication can be done under the
+        terms of this Compatible Licence. For the sake of this clause, ‘Compatible
+        Licence’ refers to the licences listed in the appendix attached to this Licence.
+        Should the Licensee's obligations under the Compatible Licence conflict with
+        his/her obligations under this Licence, the obligations of the Compatible
+        Licence shall prevail.
+        
+        Provision of Source Code: When distributing or communicating copies of the Work,
+        the Licensee will provide a machine-readable copy of the Source Code or indicate
+        a repository where this Source will be easily and freely available for as long
+        as the Licensee continues to distribute or communicate the Work.
+        
+        Legal Protection: This Licence does not grant permission to use the trade names,
+        trademarks, service marks, or names of the Licensor, except as required for
+        reasonable and customary use in describing the origin of the Work and
+        reproducing the content of the copyright notice.
+        
+        6. Chain of Authorship
+        
+        The original Licensor warrants that the copyright in the Original Work granted
+        hereunder is owned by him/her or licensed to him/her and that he/she has the
+        power and authority to grant the Licence.
+        
+        Each Contributor warrants that the copyright in the modifications he/she brings
+        to the Work are owned by him/her or licensed to him/her and that he/she has the
+        power and authority to grant the Licence.
+        
+        Each time You accept the Licence, the original Licensor and subsequent
+        Contributors grant You a licence to their contributions to the Work, under the
+        terms of this Licence.
+        
+        7. Disclaimer of Warranty
+        
+        The Work is a work in progress, which is continuously improved by numerous
+        Contributors. It is not a finished work and may therefore contain defects or
+        ‘bugs’ inherent to this type of development.
+        
+        For the above reason, the Work is provided under the Licence on an ‘as is’ basis
+        and without warranties of any kind concerning the Work, including without
+        limitation merchantability, fitness for a particular purpose, absence of defects
+        or errors, accuracy, non-infringement of intellectual property rights other than
+        copyright as stated in Article 6 of this Licence.
+        
+        This disclaimer of warranty is an essential part of the Licence and a condition
+        for the grant of any rights to the Work.
+        
+        8. Disclaimer of Liability
+        
+        Except in the cases of wilful misconduct or damages directly caused to natural
+        persons, the Licensor will in no event be liable for any direct or indirect,
+        material or moral, damages of any kind, arising out of the Licence or of the use
+        of the Work, including without limitation, damages for loss of goodwill, work
+        stoppage, computer failure or malfunction, loss of data or any commercial
+        damage, even if the Licensor has been advised of the possibility of such damage.
+        However, the Licensor will be liable under statutory product liability laws as
+        far such laws apply to the Work.
+        
+        9. Additional agreements
+        
+        While distributing the Work, You may choose to conclude an additional agreement,
+        defining obligations or services consistent with this Licence. However, if
+        accepting obligations, You may act only on your own behalf and on your sole
+        responsibility, not on behalf of the original Licensor or any other Contributor,
+        and only if You agree to indemnify, defend, and hold each Contributor harmless
+        for any liability incurred by, or claims asserted against such Contributor by
+        the fact You have accepted any warranty or additional liability.
+        
+        10. Acceptance of the Licence
+        
+        The provisions of this Licence can be accepted by clicking on an icon ‘I agree’
+        placed under the bottom of a window displaying the text of this Licence or by
+        affirming consent in any other similar way, in accordance with the rules of
+        applicable law. Clicking on that icon indicates your clear and irrevocable
+        acceptance of this Licence and all of its terms and conditions.
+        
+        Similarly, you irrevocably accept this Licence and all of its terms and
+        conditions by exercising any rights granted to You by Article 2 of this Licence,
+        such as the use of the Work, the creation by You of a Derivative Work or the
+        Distribution or Communication by You of the Work or copies thereof.
+        
+        11. Information to the public
+        
+        In case of any Distribution or Communication of the Work by means of electronic
+        communication by You (for example, by offering to download the Work from a
+        remote location) the distribution channel or media (for example, a website) must
+        at least provide to the public the information requested by the applicable law
+        regarding the Licensor, the Licence and the way it may be accessible, concluded,
+        stored and reproduced by the Licensee.
+        
+        12. Termination of the Licence
+        
+        The Licence and the rights granted hereunder will terminate automatically upon
+        any breach by the Licensee of the terms of the Licence.
+        
+        Such a termination will not terminate the licences of any person who has
+        received the Work from the Licensee under the Licence, provided such persons
+        remain in full compliance with the Licence.
+        
+        13. Miscellaneous
+        
+        Without prejudice of Article 9 above, the Licence represents the complete
+        agreement between the Parties as to the Work.
+        
+        If any provision of the Licence is invalid or unenforceable under applicable
+        law, this will not affect the validity or enforceability of the Licence as a
+        whole. Such provision will be construed or reformed so as necessary to make it
+        valid and enforceable.
+        
+        The European Commission may publish other linguistic versions or new versions of
+        this Licence or updated versions of the Appendix, so far this is required and
+        reasonable, without reducing the scope of the rights granted by the Licence. New
+        versions of the Licence will be published with a unique version number.
+        
+        All linguistic versions of this Licence, approved by the European Commission,
+        have identical value. Parties can take advantage of the linguistic version of
+        their choice.
+        
+        14. Jurisdiction
+        
+        Without prejudice to specific agreement between parties,
+        
+        - any litigation resulting from the interpretation of this License, arising
+          between the European Union institutions, bodies, offices or agencies, as a
+          Licensor, and any Licensee, will be subject to the jurisdiction of the Court
+          of Justice of the European Union, as laid down in article 272 of the Treaty on
+          the Functioning of the European Union,
+        
+        - any litigation arising between other parties and resulting from the
+          interpretation of this License, will be subject to the exclusive jurisdiction
+          of the competent court where the Licensor resides or conducts its primary
+          business.
+        
+        15. Applicable Law
+        
+        Without prejudice to specific agreement between parties,
+        
+        - this Licence shall be governed by the law of the European Union Member State
+          where the Licensor has his seat, resides or has his registered office,
+        
+        - this licence shall be governed by Belgian law if the Licensor has no seat,
+          residence or registered office inside a European Union Member State.
+        
+        Appendix
+        
+        ‘Compatible Licences’ according to Article 5 EUPL are:
+        
+        - GNU General Public License (GPL) v. 2, v. 3
+        - GNU Affero General Public License (AGPL) v. 3
+        - Open Software License (OSL) v. 2.1, v. 3.0
+        - Eclipse Public License (EPL) v. 1.0
+        - CeCILL v. 2.0, v. 2.1
+        - Mozilla Public Licence (MPL) v. 2
+        - GNU Lesser General Public Licence (LGPL) v. 2.1, v. 3
+        - Creative Commons Attribution-ShareAlike v. 3.0 Unported (CC BY-SA 3.0) for
+          works other than software
+        - European Union Public Licence (EUPL) v. 1.1, v. 1.2
+        - Québec Free and Open-Source Licence — Reciprocity (LiLiQ-R) or Strong
+          Reciprocity (LiLiQ-R+).
+        
+        The European Commission may update this Appendix to later versions of the above
+        licences without producing a new version of the EUPL, as long as they provide
+        the rights granted in Article 2 of this Licence and protect the covered Source
+        Code from exclusive appropriation.
+        
+        All other changes or additions to this Appendix require the production of a new
+        EUPL version.
+Project-URL: homepage, https://github.com/simonbesnard1/gedidb
+Project-URL: documentation, https://gedidb.readthedocs.io/en/latest/
+Project-URL: source, https://github.com/simonbesnard1/gedidb
+Project-URL: tracker, https://github.com/simonbesnard1/gedidb/issues
+Keywords: geospatial,GEDI,database
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: License :: OSI Approved :: European Union Public Licence 1.2 (EUPL 1.2)
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: dask
+Requires-Dist: distributed
+Requires-Dist: geopandas
+Requires-Dist: h5py
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: requests
+Requires-Dist: retry
+Requires-Dist: scipy
+Requires-Dist: tiledb
+Requires-Dist: xarray
+Provides-Extra: accel
+Requires-Dist: bottleneck; extra == "accel"
+Requires-Dist: numbagg; extra == "accel"
+Requires-Dist: flox; extra == "accel"
+Requires-Dist: opt_einsum; extra == "accel"
+Requires-Dist: numba; extra == "accel"
+Requires-Dist: cython; extra == "accel"
+Provides-Extra: dev
+Requires-Dist: hypothesis; extra == "dev"
+Requires-Dist: mypy; extra == "dev"
+Requires-Dist: pre-commit; extra == "dev"
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: pytest-cov; extra == "dev"
+Requires-Dist: pytest-env; extra == "dev"
+Requires-Dist: pytest-xdist; extra == "dev"
+Requires-Dist: pytest-timeout; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
+Requires-Dist: gedidb[complete]; extra == "dev"
+Requires-Dist: black; extra == "dev"
+Requires-Dist: isort; extra == "dev"
+Provides-Extra: io
+Requires-Dist: boto3; extra == "io"
+Requires-Dist: netCDF4; extra == "io"
+Requires-Dist: h5netcdf; extra == "io"
+Requires-Dist: pydap; python_version < "3.10" and extra == "io"
+Requires-Dist: zarr; extra == "io"
+Requires-Dist: fsspec; extra == "io"
+Requires-Dist: cftime; extra == "io"
+Requires-Dist: pooch; extra == "io"
+Requires-Dist: rasterio; extra == "io"
+Requires-Dist: pyproj; extra == "io"
+Provides-Extra: viz
+Requires-Dist: cartopy; extra == "viz"
+Requires-Dist: matplotlib; extra == "viz"
+Requires-Dist: seaborn; extra == "viz"
+Requires-Dist: nc-time-axis; extra == "viz"
+Requires-Dist: plotly; extra == "viz"
+Requires-Dist: holoviews; extra == "viz"
+Provides-Extra: debug
+Requires-Dist: rich; extra == "debug"
+Requires-Dist: loguru; extra == "debug"
+
+<p align="center">
+<a href="https://github.com/simonbesnard1/gedidb.git">
+    <img src="https://github.com/simonbesnard1/gedidb/blob/main/doc/_static/logos/gediDB_logo.svg" 
+         alt="gediDB Logo" height="200px" hspace="0px" vspace="30px" align="left">
+</a>
+</p>
+
+
+# gediDB: A toolbox for Global Ecosystem Dynamics Investigation (GEDI) L2A-B and L4A-C data
+
+[![Pipelines](https://github.com/simonbesnard1/gedidb/actions/workflows/ci.yaml/badge.svg)](https://github.com/simonbesnard1/gedidb/actions?query=workflow%3ACI)
+[![Code coverage](https://codecov.io/gh/simonbesnard1/gedidb/branch/main/graph/badge.svg?flag=unittests)](https://codecov.io/gh/simonbesnard1/gedidb)
+[![Docs](https://readthedocs.org/projects/gedidb/badge/?version=latest)](https://gedidb.readthedocs.io/en/latest/)
+[![Available on PyPI](https://img.shields.io/pypi/v/gedidb.svg)](https://pypi.python.org/pypi/gedidb/)
+[![PyPI Downloads](https://static.pepy.tech/badge/gedidb)](https://pepy.tech/projects/gedidb)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13885229.svg)](https://doi.org/10.5281/zenodo.13885228)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+**gediDB** is an open-source Python package designed to streamline the processing, analysis, and management of GEDI L2A-B and L4A-C data. This toolbox enables efficient and flexible data querying and management of large GEDI datasets stored with [TileDB](https://tiledb.com/), a high-performance, multi-dimensional array database.
+
+**gediDB** integrates key functionalities such as structured data querying, multi-dimensional data processing, and metadata management. With built-in support for parallel engines (e.g. Dask), the toolbox ensures scalability for large datasets, allowing efficient parallel processing on local machines or clusters.
+
+## Key Features of gediDB
+
+- **TileDB-Based Storage**: GEDI data is stored and managed in TileDB arrays, providing efficient, scalable, multi-dimensional data storage, enabling fast and flexible access to large volumes of data.
+- **Flexible Data Querying**: Easily query GEDI data across spatial, temporal, and variable dimensions. Access data within bounding boxes, or retrieve the nearest shots to a specific location, using intuitive filtering options for precision.
+- **Parallel Processing**: Process large GEDI datasets in parallel, enabling concurrent downloading, processing, and TileDB insertion of GEDI products. The number of concurrent processes can be easily controlled based on available system resources.
+- **Metadata-Driven**: Maintain and manage metadata for each dataset, ensuring that important contextual information like units, descriptions, and source details are stored and accessible.
+- **Geospatial Data Management**: Integrate seamlessly with tileDB to enable spatial queries, transformations, and geospatial analyses.
+
+## Why gediDB?
+**gediDB** simplifies and automates the workflow for GEDI data processing, making it easier to retrieve, filter, and analyze complex datasets in an efficient, scalable manner. Whether you're investigating biomass distribution, monitoring forest dynamics, or conducting large-scale ecological studies, **gediDB** supports users with tools to handle and analyze large GEDI datasets with ease.
+
+## Documentation
+
+Learn more about gediDB in its official documentation at
+<https://gedidb.readthedocs.io/en/latest/>.
+
+## Contributing
+
+You can find information about contributing to gediDB on our
+[Contributing page](https://gedidb.readthedocs.io/en/latest/user/contributing.html).
+
+## History
+
+The development of the gediDB package began during the PhD of Amelia Holcomb, who initially created part of this toolset to analyze and manage GEDI data for her research. Recognizing the potential of her work to benefit the broader scientific community, the [Global Land Monitoring](https://www.gfz-potsdam.de/en/section/remote-sensing-and-geoinformatics/topics/global-land-monitoring) team collaborated with Amelia in March 2024 to expand and optimize her code, transforming it into a scalable and versatile Python package named gediDB. This collaboration refined the toolbox to handle large-scale datasets with TileDB, integrate parallel processing, and incorporate a robust querying and metadata management system. Today, gediDB is designed to help researchers in ecological and environmental sciences by making GEDI data processing more efficient and accessible.
+
+## About the authors
+
+Simon Besnard, a senior researcher in the Global Land Monitoring Group at GFZ Helmholtz Centre Potsdam, studies terrestrial ecosystems' dynamics and their feedback on environmental conditions. He specializes in developing methods to analyze large EO and climate datasets to understand ecosystem functioning in a changing climate. His current research focuses on forest structure changes over the past decade and their links to the carbon cycle. 
+
+Felix Dombrowski is a Bachelor’s student in Computer Science at the University of Potsdam and a research intern in the Global Land Monitoring Group at GFZ Helmholtz Centre Potsdam. At GFZ, his work has focused on developing toolboxes to process Earth Observation data efficiently.
+
+Amelia Holcomb is a PhD candidate in Computer Science at the University of Cambridge, researching remote sensing and machine learning to study carbon sequestration and forest regrowth. Previously, she worked as a site reliability engineer at Google on Bigtable. She holds an MMath from the University of Waterloo and a B.A. in Mathematics from Yale.
+
+## Contact
+
+For any questions or inquiries, please contact:
+- Simon Besnard (besnard@gfz.de)
+- Felix Dombrowski (fdombrowski@uni-potsdam.de)
+- Amelia Holcomb (ah2174@cam.ac.uk)
+
+## Acknowledgments
+We acknowledge funding support by the European Union through the [FORWARDS](https://forwards-project.eu/) and [OpenEarthMonitor](https://earthmonitor.org/) projects. We would also like to thank the R2D2 Workshop (March 2024, GFZ Potsdam) for providing the opportunity to meet and discuss GEDI data processing.
+
+## License
+This project is licensed under the EUROPEAN UNION PUBLIC LICENCE v.1.2 License - see the LICENSE file for details.
