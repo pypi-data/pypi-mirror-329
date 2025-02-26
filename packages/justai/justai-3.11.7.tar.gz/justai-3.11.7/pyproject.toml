@@ -1,0 +1,41 @@
+[build-system]
+requires      = ["setuptools>=69", "wheel>=0.42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "justai"
+version = "3.11.7"
+description = "Makes working with LLMs like OpenAI GPT, Anthropic Claude, Google Gemini and Open source models super easy"
+readme = "README.md"
+authors = [{ name = "HP Harmsen", email = "hp@harmsen.nl" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["ChatGPT", "GPT4o", "GPT4", "api", "Claude", "Anthropic", "Lllama", "Gemini"]
+requires-python = ">=3.11"
+
+
+dependencies = [
+    "absl-py",
+    "anthropic",
+    "google-generativeai",
+    "httpx",
+    "justdays",
+    "lxml",
+    "openai",
+    "pillow",
+    "pydantic",
+    "python-dateutil",
+    "python-dotenv",
+    "rich",
+    "tiktoken"
+]
+
+[project.optional-dependencies]
+dev = ["black", "pytest", "build", "twine", "nox"]
+llama = ["llama-cpp-python"]
+
+[project.urls]
+Homepage = "https://github.com/hpharmsen/justai"
