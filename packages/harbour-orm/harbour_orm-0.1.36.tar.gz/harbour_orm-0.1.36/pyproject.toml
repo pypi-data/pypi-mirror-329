@@ -1,0 +1,43 @@
+[project]
+name = "harbour-orm"
+version = "0.1.36"
+authors = [{ name = "Harbour", email = "developers@harbourshare.com" }]
+description = "The best and the first ORM for Google Spanner (Google SQL)"
+requires-python = ">=3.10"
+dependencies = [
+  "pydantic <= 1.10.17",
+  "google-cloud-spanner <= 3.48.0",
+  "google-auth <= 2.38.0",
+]
+keywords = ["ORM", "Google Spanner", "Google SQL"]
+classifiers = ["Programming Language :: Python :: 3"]
+
+[project.urls]
+Homepage = "https://github.com/Harbour-Enterprises/Harbour-ORM"
+Issues = "https://github.com/Harbour-Enterprises/Harbour-ORM/issues"
+
+[tool.setuptools.packages.find]
+namespaces = false
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 120
+skip-magic-trailing-comma = true
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py310, py311, py312
+isolated_build = True
+
+[testenv]
+deps =
+    -r ../requirements.txt
+    -r ../requirements-test.txt
+    python-dotenv
+commands =
+    pytest ../tests --cov=../tests --disable-warnings -o log_cli=true --log-cli-level=INFO
+"""
