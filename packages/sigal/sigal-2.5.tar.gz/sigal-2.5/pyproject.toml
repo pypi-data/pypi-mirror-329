@@ -1,0 +1,93 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm[toml]>=3.4"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sigal"
+description = "Simple static gallery generator"
+readme = "README.rst"
+authors = [{name = "Simon Conseil", email = "contact@saimon.org"}]
+keywords = ["gallery", "static", "generator", "image", "video", "galleria"]
+license = {text = "MIT License"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Multimedia :: Graphics :: Viewers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "blinker",
+    "click",
+    "Jinja2>=2.7",
+    "Markdown",
+    "Pillow>=8.0.0",
+    "pilkit",
+    "natsort",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+all = ["brotli", "feedgenerator", "zopfli", "cryptography", "pillow-heif"]
+tests = ["pytest", "pytest-cov"]
+docs = ["Sphinx>=4.1.0", "furo", "cryptography"]
+
+[project.scripts]
+sigal = "sigal.__main__:main"
+
+[project.urls]
+repository = "https://github.com/saimn/sigal"
+documentation = "http://sigal.saimon.org/en/latest/"
+
+[tool.setuptools]
+include-package-data = true
+license-files = ["LICENSE"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = true
+
+[tool.setuptools.package-data]
+sigal = [
+    "plugins/encrypt/static/*",
+    "themes/**",
+]
+
+[tool.setuptools_scm]
+write_to = "src/sigal/version.py"
+
+[tool.ruff.lint]
+select = [
+  "E", "F", "W", # flake8
+  "I",           # isort
+  "UP",          # pyupgrade
+]
+ignore = ["E731"]
+unfixable = [
+  "F841", # Removes unused variables
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["sigal"]
+
+[tool.coverage.run]
+source = ["sigal"]
+omit = ["/tmp/*", "tests/*"]
+
+[tool.coverage.paths]
+source = ["src", "*/site-packages"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "except KeyboardInterrupt",
+    "except ImportError",
+]
