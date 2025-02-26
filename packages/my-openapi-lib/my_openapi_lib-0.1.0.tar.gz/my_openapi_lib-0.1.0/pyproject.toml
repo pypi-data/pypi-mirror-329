@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[project]
+name = "my_openapi_lib"
+version = "0.1.0"
+authors = [
+    { name = "Lior Trachtman", email = "lior.trachtman@gmail.com" }
+]
+description = "A library to generate OpenAPI specs from Python FastAPI projects."
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "openapi-specgen",
+    "fastapi",
+    "pydantic",
+    "pyyaml",
+    "jsonschema"
+]
+
+
+[project.scripts]
+openapi-gen = "my_openapi_lib.openapi_generator:main"
