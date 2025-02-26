@@ -1,0 +1,72 @@
+Metadata-Version: 2.3
+Name: pytex-lib
+Version: 0.1.7
+Summary: Allows you to output your python functions directly to a LaTeX file.
+Author: XPS-13
+Author-email: gavin.kerr@dal.ca
+Requires-Python: >=3.10
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Dist: click (>=8.1.8,<9.0.0)
+Requires-Dist: numpy (>=2.2.2,<3.0.0)
+Project-URL: Repository, https://github.com/gkerr708/pytex-lib
+Description-Content-Type: text/markdown
+
+# pytex-lib
+
+Allows you to output your python functions directly to a LaTeX file.
+
+# TODO
+
+- [ ] Figure out out how to core file allows you to import it easier
+
+# Example Usage
+
+Import with
+```python
+from pytex_lib import write_to_latex
+```
+
+Then you can use the `write_to_latex` decorator to output your functions to a LaTeX file.
+
+```python
+@write_to_latex
+def f(x):
+    return x**2
+```
+
+You call the function with the `directory` and the `keyword` like this
+
+```python
+file_path = "Path/to/latex/doc"
+keyword = "keyword in latex doc"
+f(file_path=file_path, keyword=keyword)
+```
+
+Then your latex doc should look like this
+
+```latex
+\documentclass{article}
+\begin{document}
+
+The answer is 
+% keyword in latex doc
+(answer form f(x) = x^2)
+
+\end{document}
+```
+
+# Installation
+
+```bash
+pip install pytex-lib
+```
+
+
+
+
+
+
