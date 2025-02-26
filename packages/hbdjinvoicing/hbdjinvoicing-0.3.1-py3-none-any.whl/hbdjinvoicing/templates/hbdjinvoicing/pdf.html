@@ -1,0 +1,98 @@
+{% load static %}
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="{% static "hbdjinvoicing/invoice.css" %}" rel="stylesheet">
+    <title>Invoice</title>
+    <meta name="description" content="Invoice demo sample">
+  </head>
+
+  <body>
+
+    <aside>
+      
+      <address id="from">
+	      <div id="logo_container" ><img src="{{ object.organisation.logo.url }}" /></div>
+	<b>{{ object.organisation.name }}</b>
+        {{ object.organisation.street}}
+        {{ object.organisation.zipcode }} {{ object.organisation.city }}
+        {% if object.organisation.country != object.country %}{{object.organisation.get_country_display}}{% endif %}
+
+	    {{ object.organisation.email }}
+      </address>
+
+      <address id="to">
+	      <b>{{ object.name }}</b>
+              {{ object.street }}
+	      {{ object.zipcode }} {{ object.city }}
+        {% if object.organisation.country != object.country %}{{object.get_country_display}}{% endif %}
+           </address>
+
+    </aside>
+
+    <h1>Facture {{ object.number }}</h1>
+
+    <dl id="informations">
+      <dt>Date</dt>
+      <dd>{{ object.date|date:"d/m/Y" }}</dd>
+      <dt>Conditions de paiement</dt>
+      <dd>{{ object.payment_mode }}</dd>
+    </dl>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Quantité</th>
+          <th>Prix unitaire HT</th>
+          <th>TVA</th>
+          <th>Montant HT</th>
+        </tr>
+      </thead>
+      <tbody>
+	{% for row in object.invoiceline_set.all %}
+        <tr>
+          <td>{{ row.title }}</td>
+	  <td>{{ row.quantity }} {{ row.unit }}</td>
+	  <td>{{ row.unit_price|floatformat:2 }} €</td>
+          <td>{{ row.vat_rate }} %</td>
+          <td>{{ row.price_vat_excl|floatformat:2 }} €</td>
+        </tr>
+	<tr class="description">
+		<td colspan="5">{{ row.descritiption }}</td>
+        </tr>
+	{% endfor %}
+      </tbody>
+      <tfoot>
+	<tr>
+		<td colspan="4">Total HT</td>
+		<td>{{ object.total_vat_excl|floatformat:2 }} €</td>
+	</tr>
+    {% for vat in object.invoicevat_set.all %}
+	<tr>
+		<td colspan="4">TVA {{ vat.vat_rate }} %</td>
+		<td>{{ vat.price|floatformat:2 }} €</td>
+	</tr>
+    {% endfor %}
+	<tr>
+		<td colspan="4">Total TTC</td>
+		<td>{{ object.total_vat_incl|floatformat:2 }} €</td>
+	</tr>
+      </tfoot>
+    </table>
+
+    <p>
+        {{ object.organisation.bottom_comment|linebreaks }}
+    </p>
+
+    <footer>
+	    <b>{{ object.organisation.name}}</b><br/>
+{{ object.organisation.legal_status}}<br/>
+{{ object.organisation.street }} - {{ object.organisation.zipcode }} {{ object.organisation.city }}<br/>
+{{ object.organisation.siren }} - 
+SIRET {{ object.organisation.siret }} -
+TVA {{ object.organisation.vat_id }}
+    </footer>
+  </body>
+</html>
