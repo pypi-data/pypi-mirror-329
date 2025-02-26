@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "oh-my-git-agent"
+version = "1.0.7"
+homepage = "https://github.com/LinXueyuanStdio/GitAgent"
+description = "A simple git agent for managing git repositories"
+authors = ["Xueyuan Lin <linxy59@mail2.sysu.eud.cn>"]
+readme = "README.md"
+packages = [ { include = "git_agent", from = "." } ]
+
+license = "MIT"
+
+# Only include the out directory of the frontend
+# The order of the include/exclude lists is important!
+include = []
+exclude = []
+
+[tool.poetry.dependencies]
+GitPython = "*"
+xlin = "*"
+loguru = "*"
+typer = "*"
+
+[tool.poetry.scripts]
+gcli = "git_agent.cli:cli"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
