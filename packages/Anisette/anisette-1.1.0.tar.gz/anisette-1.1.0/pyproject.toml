@@ -1,0 +1,82 @@
+[project]
+name = "Anisette"
+version = "1.1.0"
+description = "Anisette provider"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "fs>=2.4.16",
+    "httpx>=0.28.1",
+    "pyelftools>=0.31",
+    "typer>=0.15.1",
+    "typing-extensions>=4.12.2",
+    "unicorn>=2.1.1",
+]
+
+[project.scripts]
+ani = "anisette.cli:app"
+anisette = "anisette.cli:app"
+
+[dependency-groups]
+dev = [
+    "furo>=2024.8.6",
+    "myst-parser>=3.0.1",
+    "packaging>=24.2",
+    "pre-commit>=4.1.0",
+    "pyright>=1.1.392.post0",
+    "pytest>=8.3.4",
+    "ruff>=0.9.3",
+    "sphinx>=7.4.7",
+    "sphinx-autoapi>=3.6.0",
+    "tomli>=2.2.1",
+]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
+typeCheckingMode = "standard"
+reportImplicitOverride = true
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "ALL",
+]
+ignore = [
+    "FIX002", # resolving TODOs
+
+    "ERA001", # commented out code
+
+    "D203", # one blank line before class docstring
+    "D212", # multi-line docstring start at first line
+    "D105", # docstrings in magic methods
+
+    "S101", # assert statements
+    "S603", # false-positive subprocess call (https://github.com/astral-sh/ruff/issues/4045)
+
+    "PLR2004", # "magic" values >.>
+    "FBT", # boolean "traps"
+
+    "TD",
+    "FIX",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"docs/*" = ["ALL"]
+"tests/*" = ["D", "T", "ANN", "INP", "SLF"]
+"scripts/*" = ["T201"]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
+
+[tool.setuptools]
+license-files = []
+
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
