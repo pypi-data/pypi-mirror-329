@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Femtum SDK</title>
+    <link rel="stylesheet" href="static/mystyles.css" />
+    <script src="static/fontawesome.js"></script>
+    <script src="static/lunr.js"></script>
+    <script src="static/theme.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="level pt-6 mb-5 pb-2 bottom-border">
+        <div class="level-left">
+          <p class="level-item has-text-centered is-size-3 has-text-weight-medium">
+            <a class="link is-info" href="index.html">
+              Femtum SDK
+            </a>
+          </p>
+        </div>
+
+        <div class="level-right">
+          
+          <form action="search.html" class="mr-2 has-text-centered">
+            <input type="text" name="query" class="input mr-3 navbar-search-query-input" placeholder="Search">
+            <input type="submit" class="button is-primary mr-5" value="Search" />
+          </form>
+          
+
+          <p class="level-item has-text-centered is-size-5">
+            <a href="https://github.com/Femtum/femtum" class="link is-info mr-5" target="_blank">
+              
+              <span class="icon">
+                <i class="fa-brands fa-github"></i>
+              </span>
+              
+              <span>Source</span>
+            </a>
+
+            <button class="theme-toggle" id="theme-toggle" title="Toggles light & dark" aria-label="auto" aria-live="polite" type="button">
+              <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                <mask class="moon" id="moon-mask">
+                  <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                  <circle cx="24" cy="10" r="6" fill="black" />
+                </mask>
+                <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
+                <g class="sun-beams" stroke="currentColor">
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </g>
+              </svg>
+            </button>
+          </p>
+        </div>
+      </nav>
+    </div>
+
+    <div id="main-content" class="container mb-6">
+<script>
+    const searchDocuments =  {"Trimming": {"package": "Trimming", "url": "Trimming.html", "content": "Trimming\n\nTrimming\nAttachmentService\n\nDelete\n\nTrimming\nDeleteAttachmentRequest\nTrimming\nOptionalAttachment\nTrimming\nWaferService\n\nListByPage\n\nTrimming\nListByPageWafersRequest\nTrimming\nWafersPage\nFindById\n\nTrimming\nFindWaferByIdRequest\nTrimming\nOptionalWafer\nUpdate\n\nTrimming\nUpdateWaferRequest\nTrimming\nWafer\nDelete\n\nTrimming\nFindWaferByIdRequest\nTrimming\nOptionalWafer\nTrimming\nReticleService\n\nListByPage\n\nTrimming\nListByPageReticlesRequest\nTrimming\nReticlesPage\nFindById\n\nTrimming\nFindReticleByIdRequest\nTrimming\nOptionalReticle\nUpdate\n\nTrimming\nUpdateReticleRequest\nTrimming\nReticle\nDelete\n\nTrimming\nFindReticleByIdRequest\nTrimming\nOptionalReticle\nTrimming\nDieService\n\nListByPage\n\nTrimming\nListByPageDiesRequest\nTrimming\nDiesPage\nFindById\n\nTrimming\nFindDieByIdRequest\nTrimming\nOptionalDie\nUpdate\n\nTrimming\nUpdateDieRequest\nTrimming\nDie\nDelete\n\nTrimming\nFindDieByIdRequest\nTrimming\nOptionalDie\nTrimming\nCircuitService\n\nListByPage\n\nTrimming\nListByPageCircuitsRequest\nTrimming\nCircuitsPage\nFindById\n\nTrimming\nFindCircuitByIdRequest\nTrimming\nOptionalCircuit\nUpdate\n\nTrimming\nUpdateCircuitRequest\nTrimming\nCircuit\nDelete\n\nTrimming\nFindCircuitByIdRequest\nTrimming\nOptionalCircuit\nTrimming\nFunctionService\n\nListByPage\n\nTrimming\nListByPageFunctionRequest\nTrimming\nFunctionsPage\nFindBy\n\nTrimming\nFindFunctionByIdRequest\nTrimming\nOptionalFunction\nUpdate\n\nTrimming\nUpdateFunctionRequest\nTrimming\nFunction\nDelete\n\nTrimming\nFindFunctionByIdRequest\nTrimming\nOptionalFunction\nTrimming\nResultService\n\nFindSweepById\n\nTrimming\nFindResultByIdRequest\nTrimming\nOptionalSpectrumResult\nFindSpectrumById\n\nTrimming\nFindResultByIdRequest\nTrimming\nOptionalSpectrumResult\nFindSingleSpectrumBy\n\nTrimming\nFindResultByRequest\nTrimming\nOptionalSpectrumResult\nFindSingleNumberBy\n\nTrimming\nFindResultByRequest\nTrimming\nOptionalSingleNumberResult\nFindById\n\nTrimming\nFindResultByIdRequest\nTrimming\nOptionalSingleResult\nListByPage\n\nTrimming\nListByPageResultsRequest\nTrimming\nResultsPage\nDelete\n\nTrimming\nFindResultByIdRequest\nTrimming\nOptionalSingleResult\nBatchDelete\n\nTrimming\nBatchDeleteResultRequest\nTrimming\nResultsArray\nStoreSingleNumber\n\nTrimming\nStoreSingleNumberRequest\nTrimming\nSingleNumberResult\nTrimming\nProcessedCircuitService\n\nListByPage\n\nTrimming\nListByPageProcessedCircuitRequest\nTrimming\nProcessedCircuitPage\nFindById\n\nTrimming\nFindProcessedCircuitByIdRequest\nTrimming\nOptionalProcessedCircuit\nAddImage\n\nTrimming\nAddProcessedCircuitImageRequest\nTrimming\nOptionalAttachment\nGetImages\n\nTrimming\nFindProcessedCircuitByIdRequest\nTrimming\nAttachmentsArray\nDelete\n\nTrimming\nFindProcessedCircuitByIdRequest\nTrimming\nOptionalProcessedCircuit\nTrimming\nSweepService\n\nSweepReference\n\nTrimming\nSweepRequest\nTrimming\nSweepOutput\nSweepAfterShot\n\nTrimming\nSweepRequest\nTrimming\nSweepOutput\nStoreSweepReferenceShot\n\nTrimming\nStoreSweepRequest\nTrimming\nSweepOutput\nStoreSweepAfterShot\n\nTrimming\nStoreSweepAfterShotRequest\nTrimming\nSweepOutput\nTrimming\nNewAttachment\nName\n\nMimeType\n\nBlobData\n\nTrimming\nAttachment\nId\n\nCreatedAt\n\nUpdatedAt\n\nName\n\nMimeType\n\nBlobData\n\nTrimming\nOptionalAttachment\nAttachment\n\nTrimming\nAttachmentsArray\nAttachments\n\nTrimming\nDeleteAttachmentRequest\nId\n\nTrimming\nTag\nKey\n\nValue\n\nTrimming\nWafer\nId\n\nCreatedAt\n\nUpdatedAt\n\nName\n\nTags\n\nTrimming\nUpdateWaferRequest\nId\n\nName\n\nTrimming\nWafersFilterRequest\nName\n\nTags\n\nTrimming\nListByPageWafersRequest\nPageNumber\n\nPageSize\n\nFilters\n\nTrimming\nWafersPage\nItems\n\nTotal\n\nIndex\n\nSize\n\nTrimming\nFindWaferByIdRequest\nId\n\nTrimming\nOptionalWafer\nWafer\n\nTrimming\nReticle\nId\n\nCreatedAt\n\nUpdatedAt\n\nName\n\nTags\n\nWafer\n\nTrimming\nUpdateReticleRequest\nId\n\nName\n\nTrimming\nReticlesFilterRequest\nName\n\nWaferId\n\nTags\n\nTrimming\nListByPageReticlesRequest\nPageNumber\n\nPageSize\n\nFilters\n\nTrimming\nReticlesPage\nItems\n\nTotal\n\nIndex\n\nSize\n\nTrimming\nFindReticleByIdRequest\nId\n\nTrimming\nOptionalReticle\nReticle\n\nTrimming\nDie\nId\n\nCreatedAt\n\nUpdatedAt\n\nName\n\nTags\n\nReticle\n\nWafer\n\nTrimming\nUpdateDieRequest\nId\n\nName\n\nTrimming\nDiesFilterRequest\nName\n\nReticleId\n\nTags\n\nTrimming\nListByPageDiesRequest\nPageNumber\n\nPageSize\n\nFilters\n\nTrimming\nDiesPage\nItems\n\nTotal\n\nIndex\n\nSize\n\nTrimming\nFindDieByIdRequest\nId\n\nTrimming\nOptionalDie\nDie\n\nTrimming\nCircuit\nId\n\nCreatedAt\n\nUpdatedAt\n\nName\n\nTags\n\nDie\n\nReticle\n\nWafer\n\nTrimming\nUpdateCircuitRequest\nId\n\nName\n\nTrimming\nCircuitsFilterRequest\nName\n\nDieId\n\nTags\n\nTrimming\nListByPageCircuitsRequest\nPageNumber\n\nPageSize\n\nFilters\n\nTrimming\nCircuitsPage\nItems\n\nTotal\n\nIndex\n\nSize\n\nTrimming\nFindCircuitByIdRequest\nId\n\nTrimming\nOptionalCircuit\nCircuit\n\nTrimming\nFunction\nId\n\nCreatedAt\n\nUpdatedAt\n\nName\n\nVersion\n\nLanguage\n\nAuthor\n\nEntrypoint\n\nTrimming\nUpdateFunctionRequest\nId\n\nEntrypoint\n\nTrimming\nListByPageFunctionRequest\nPageNumber\n\nPageSize\n\nTrimming\nFunctionsPage\nItems\n\nTotal\n\nIndex\n\nSize\n\nTrimming\nFindFunctionByIdRequest\nId\n\nTrimming\nOptionalFunction\nFunction\n\nTrimming\nResult\nId\n\nCreatedAt\n\nUpdatedAt\n\nName\n\nType\n\nTags\n\nWafer\n\nReticle\n\nDie\n\nCircuit\n\nDataJson\n\nTrimming\nOptionalSpectrumResult\nResult\n\nTrimming\nOptionalSingleNumberResult\nResult\n\nTrimming\nSpectrumResult\nWavelengthsArray\n\nPowersArray\n\nName\n\nTags\n\nWaferName\n\nReticleName\n\nDieName\n\nCircuitName\n\nId\n\nTrimming\nSingleNumberResult\nValue\n\nUnit\n\nName\n\nTags\n\nWaferName\n\nReticleName\n\nDieName\n\nCircuitName\n\nId\n\nTrimming\nResultsFilterRequest\nResultName\n\nWaferName\n\nReticleName\n\nDieName\n\nCircuitName\n\nTags\n\nWaferId\n\nReticleId\n\nDieId\n\nCircuitId\n\nType\n\nProcessedCircuitId\n\nTrimming\nListByPageResultsRequest\nPageNumber\n\nPageSize\n\nFilters\n\nIncludeData\n\nTrimming\nResultsPage\nItems\n\nTotal\n\nIndex\n\nSize\n\nTrimming\nFindResultByIdRequest\nId\n\nTrimming\nOptionalSingleResult\nResult\n\nTrimming\nFindResultByRequest\nWaferName\n\nReticleName\n\nDieName\n\nCircuitName\n\nResultName\n\nShotNumber\n\nTrimming\nStoreSingleNumberRequest\nValue\n\nUnit\n\nName\n\nWaferName\n\nReticleName\n\nDieName\n\nCircuitName\n\nShotNumber\n\nTags\n\nTrimming\nBatchDeleteResultRequest\nIds\n\nTrimming\nResultsArray\nItems\n\nTrimming\nProcessedCircuit\nId\n\nCreatedAt\n\nUpdatedAt\n\nWafer\n\nReticle\n\nDie\n\nCircuit\n\nResults\n\nTags\n\nTrimming\nProcessedCircuitFilterRequest\nWaferId\n\nReticleId\n\nDieId\n\nCircuitId\n\nWaferName\n\nReticleName\n\nDieName\n\nCircuitName\n\nTrimming\nListByPageProcessedCircuitRequest\nPageNumber\n\nPageSize\n\nFilters\n\nTrimming\nProcessedCircuitPage\nItems\n\nTotal\n\nIndex\n\nSize\n\nTrimming\nFindProcessedCircuitByIdRequest\nId\n\nTrimming\nOptionalProcessedCircuit\nCircuit\n\nTrimming\nAddProcessedCircuitImageRequest\nId\n\nAttachment\n\nTrimming\nSweepRequest\nWaferName\n\nReticleName\n\nDieName\n\nCircuitName\n\nResultName\n\nTags\n\nSweepInput\n\nTrimming\nSweepOutput\nId\n\nWavelengthsArray\n\nPowersArray\n\nTags\n\nTrimming\nSweepInput\nWavelengthStart_nm\n\nWavelengthStop_nm\n\nSampling_pm\n\nLaserSpeed_nm_per_s\n\nLaserPower_dbm\n\nTrimming\nStoreSweepRequest\nSweep\n\nData\n\nTrimming\nStoreSweepAfterShotRequest\nSweep\n\nData\n\nShotNumber\n\nTrimming\nSpectrumData\nWavelengthsArray\n\nPowersArray\n\n"}, "Health": {"package": "Health", "url": "Health.html", "content": "Health\n\nHealth\nHealthService\n\nGetHealth\n\ngoogle\nprotobuf\nEmpty\nHealth\nHealthDto\nHealth\nHealthDto\nstatus\n\nversion\n\n"}};
+    const searchIndex = {"version": "2.3.9", "fields": ["content", "url"], "fieldVectors": [["content/Trimming", [0, 1.505, 1, 0.498, 2, 1.213, 3, 0.751, 4, 0.904, 5, 0.498, 6, 1.178, 7, 0.751, 8, 0.751, 9, 1.135, 10, 0.904, 11, 0.904, 12, 1.08, 13, 0.751, 14, 1.213, 15, 0.498, 16, 0.751, 17, 0.751, 18, 0.904, 19, 0.904, 20, 0.751, 21, 1.178, 22, 0.498, 23, 0.751, 24, 0.751, 25, 0.904, 26, 0.904, 27, 0.751, 28, 1.135, 29, 0.498, 30, 0.751, 31, 0.751, 32, 0.904, 33, 0.904, 34, 0.751, 35, 1.135, 36, 0.498, 37, 0.751, 38, 0.751, 39, 0.498, 40, 0.904, 41, 0.904, 42, 0.751, 43, 0.904, 44, 0.498, 45, 0.498, 46, 1.08, 47, 1.006, 48, 0.498, 49, 0.498, 50, 0.904, 51, 0.498, 52, 0.751, 53, 0.904, 54, 0.751, 55, 0.751, 56, 0.498, 57, 0.751, 58, 0.751, 59, 0.498, 60, 0.751, 61, 0.751, 62, 0.498, 63, 0.751, 64, 0.751, 65, 1.006, 66, 0.904, 67, 0.498, 68, 0.751, 69, 0.498, 70, 0.751, 71, 0.498, 72, 0.498, 73, 0.904, 74, 1.08, 75, 0.498, 76, 0.498, 77, 0.751, 78, 0.498, 79, 0.751, 80, 0.498, 81, 1.376, 82, 0.751, 83, 0.751, 84, 1.006, 85, 1.413, 86, 1.213, 87, 1.213, 88, 1.36, 89, 0.498, 90, 0.904, 91, 0.498, 92, 1.178, 93, 1.178, 94, 1.135, 95, 1.213, 96, 1.178, 97, 1.178, 98, 1.178, 99, 0.498, 100, 0.904, 101, 0.498, 102, 0.904, 103, 0.498, 104, 0.904, 105, 0.131, 106, 0.498, 107, 0.498, 108, 0.751, 109, 1.08, 110, 0.751, 111, 0.498, 112, 0.498, 113, 0.904, 114, 0.904, 115, 1.178, 116, 1.178, 117, 1.178, 118, 1.178, 119, 0.751, 120, 0.498, 121, 0.904, 122, 0.751, 123, 0.498, 124, 0.498, 125, 0.904, 126, 0.498, 127, 0.498, 128, 0.751, 129, 0.498, 130, 0.498, 131, 0.498, 132, 0.498, 133, 0.498, 134, 0.751, 135, 0.751, 136, 0.498]], ["url/Trimming", [137, 0.693]], ["content/Health", [105, 0.299, 138, 1.406, 139, 1.139, 140, 1.139, 141, 1.139, 142, 1.139, 143, 1.139, 144, 1.304, 145, 1.139]], ["url/Health", [146, 0.693]]], "invertedIndex": [["addimag", {"content": {"Trimming": {}}, "url": {}, "_index": 67}], ["addprocessedcircuitimagerequest", {"content": {"Trimming": {}}, "url": {}, "_index": 68}], ["attach", {"content": {"Trimming": {}}, "url": {}, "_index": 84}], ["attachmentsarrai", {"content": {"Trimming": {}}, "url": {}, "_index": 70}], ["attachmentservic", {"content": {"Trimming": {}}, "url": {}, "_index": 1}], ["author", {"content": {"Trimming": {}}, "url": {}, "_index": 107}], ["batchdelet", {"content": {"Trimming": {}}, "url": {}, "_index": 56}], ["batchdeleteresultrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 57}], ["blobdata", {"content": {"Trimming": {}}, "url": {}, "_index": 83}], ["circuit", {"content": {"Trimming": {}}, "url": {}, "_index": 35}], ["circuitid", {"content": {"Trimming": {}}, "url": {}, "_index": 122}], ["circuitnam", {"content": {"Trimming": {}}, "url": {}, "_index": 118}], ["circuitservic", {"content": {"Trimming": {}}, "url": {}, "_index": 29}], ["circuitsfilterrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 103}], ["circuitspag", {"content": {"Trimming": {}}, "url": {}, "_index": 31}], ["createdat", {"content": {"Trimming": {}}, "url": {}, "_index": 86}], ["data", {"content": {"Trimming": {}}, "url": {}, "_index": 135}], ["datajson", {"content": {"Trimming": {}}, "url": {}, "_index": 111}], ["delet", {"content": {"Trimming": {}}, "url": {}, "_index": 2}], ["deleteattachmentrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 3}], ["die", {"content": {"Trimming": {}}, "url": {}, "_index": 28}], ["dieid", {"content": {"Trimming": {}}, "url": {}, "_index": 104}], ["dienam", {"content": {"Trimming": {}}, "url": {}, "_index": 117}], ["dieservic", {"content": {"Trimming": {}}, "url": {}, "_index": 22}], ["diesfilterrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 101}], ["diespag", {"content": {"Trimming": {}}, "url": {}, "_index": 24}], ["empti", {"content": {"Health": {}}, "url": {}, "_index": 143}], ["entrypoint", {"content": {"Trimming": {}}, "url": {}, "_index": 108}], ["filter", {"content": {"Trimming": {}}, "url": {}, "_index": 94}], ["findbi", {"content": {"Trimming": {}}, "url": {}, "_index": 39}], ["findbyid", {"content": {"Trimming": {}}, "url": {}, "_index": 9}], ["findcircuitbyidrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 32}], ["finddiebyidrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 25}], ["findfunctionbyidrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 40}], ["findprocessedcircuitbyidrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 65}], ["findresultbyidrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 46}], ["findresultbyrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 50}], ["findreticlebyidrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 18}], ["findsinglenumberbi", {"content": {"Trimming": {}}, "url": {}, "_index": 51}], ["findsinglespectrumbi", {"content": {"Trimming": {}}, "url": {}, "_index": 49}], ["findspectrumbyid", {"content": {"Trimming": {}}, "url": {}, "_index": 48}], ["findsweepbyid", {"content": {"Trimming": {}}, "url": {}, "_index": 45}], ["findwaferbyidrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 10}], ["function", {"content": {"Trimming": {}}, "url": {}, "_index": 43}], ["functionservic", {"content": {"Trimming": {}}, "url": {}, "_index": 36}], ["functionspag", {"content": {"Trimming": {}}, "url": {}, "_index": 38}], ["gethealth", {"content": {"Health": {}}, "url": {}, "_index": 140}], ["getimag", {"content": {"Trimming": {}}, "url": {}, "_index": 69}], ["googl", {"content": {"Health": {}}, "url": {}, "_index": 141}], ["health", {"content": {"Health": {}}, "url": {}, "_index": 138}], ["health.html", {"content": {}, "url": {"Health": {}}, "_index": 146}], ["healthdto", {"content": {"Health": {}}, "url": {}, "_index": 144}], ["healthservic", {"content": {"Health": {}}, "url": {}, "_index": 139}], ["id", {"content": {"Trimming": {}}, "url": {}, "_index": 85}], ["includedata", {"content": {"Trimming": {}}, "url": {}, "_index": 124}], ["index", {"content": {"Trimming": {}}, "url": {}, "_index": 97}], ["item", {"content": {"Trimming": {}}, "url": {}, "_index": 95}], ["kei", {"content": {"Trimming": {}}, "url": {}, "_index": 89}], ["languag", {"content": {"Trimming": {}}, "url": {}, "_index": 106}], ["laserpower_dbm", {"content": {"Trimming": {}}, "url": {}, "_index": 133}], ["laserspeed_nm_per_", {"content": {"Trimming": {}}, "url": {}, "_index": 132}], ["listbypag", {"content": {"Trimming": {}}, "url": {}, "_index": 6}], ["listbypagecircuitsrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 30}], ["listbypagediesrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 23}], ["listbypagefunctionrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 37}], ["listbypageprocessedcircuitrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 63}], ["listbypageresultsrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 54}], ["listbypagereticlesrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 16}], ["listbypagewafersrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 7}], ["mimetyp", {"content": {"Trimming": {}}, "url": {}, "_index": 82}], ["name", {"content": {"Trimming": {}}, "url": {}, "_index": 81}], ["newattach", {"content": {"Trimming": {}}, "url": {}, "_index": 80}], ["optionalattach", {"content": {"Trimming": {}}, "url": {}, "_index": 4}], ["optionalcircuit", {"content": {"Trimming": {}}, "url": {}, "_index": 33}], ["optionaldi", {"content": {"Trimming": {}}, "url": {}, "_index": 26}], ["optionalfunct", {"content": {"Trimming": {}}, "url": {}, "_index": 41}], ["optionalprocessedcircuit", {"content": {"Trimming": {}}, "url": {}, "_index": 66}], ["optionalreticl", {"content": {"Trimming": {}}, "url": {}, "_index": 19}], ["optionalsinglenumberresult", {"content": {"Trimming": {}}, "url": {}, "_index": 52}], ["optionalsingleresult", {"content": {"Trimming": {}}, "url": {}, "_index": 53}], ["optionalspectrumresult", {"content": {"Trimming": {}}, "url": {}, "_index": 47}], ["optionalwaf", {"content": {"Trimming": {}}, "url": {}, "_index": 11}], ["pagenumb", {"content": {"Trimming": {}}, "url": {}, "_index": 92}], ["pages", {"content": {"Trimming": {}}, "url": {}, "_index": 93}], ["powersarrai", {"content": {"Trimming": {}}, "url": {}, "_index": 114}], ["processedcircuit", {"content": {"Trimming": {}}, "url": {}, "_index": 126}], ["processedcircuitfilterrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 127}], ["processedcircuitid", {"content": {"Trimming": {}}, "url": {}, "_index": 123}], ["processedcircuitpag", {"content": {"Trimming": {}}, "url": {}, "_index": 64}], ["processedcircuitservic", {"content": {"Trimming": {}}, "url": {}, "_index": 62}], ["protobuf", {"content": {"Health": {}}, "url": {}, "_index": 142}], ["result", {"content": {"Trimming": {}}, "url": {}, "_index": 109}], ["resultnam", {"content": {"Trimming": {}}, "url": {}, "_index": 121}], ["resultsarrai", {"content": {"Trimming": {}}, "url": {}, "_index": 58}], ["resultservic", {"content": {"Trimming": {}}, "url": {}, "_index": 44}], ["resultsfilterrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 120}], ["resultspag", {"content": {"Trimming": {}}, "url": {}, "_index": 55}], ["reticl", {"content": {"Trimming": {}}, "url": {}, "_index": 21}], ["reticleid", {"content": {"Trimming": {}}, "url": {}, "_index": 102}], ["reticlenam", {"content": {"Trimming": {}}, "url": {}, "_index": 116}], ["reticleservic", {"content": {"Trimming": {}}, "url": {}, "_index": 15}], ["reticlesfilterrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 99}], ["reticlespag", {"content": {"Trimming": {}}, "url": {}, "_index": 17}], ["sampling_pm", {"content": {"Trimming": {}}, "url": {}, "_index": 131}], ["shotnumb", {"content": {"Trimming": {}}, "url": {}, "_index": 125}], ["singlenumberresult", {"content": {"Trimming": {}}, "url": {}, "_index": 61}], ["size", {"content": {"Trimming": {}}, "url": {}, "_index": 98}], ["spectrumdata", {"content": {"Trimming": {}}, "url": {}, "_index": 136}], ["spectrumresult", {"content": {"Trimming": {}}, "url": {}, "_index": 112}], ["statu", {"content": {"Health": {}}, "url": {}, "_index": 145}], ["storesinglenumb", {"content": {"Trimming": {}}, "url": {}, "_index": 59}], ["storesinglenumberrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 60}], ["storesweepaftershot", {"content": {"Trimming": {}}, "url": {}, "_index": 78}], ["storesweepaftershotrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 79}], ["storesweepreferenceshot", {"content": {"Trimming": {}}, "url": {}, "_index": 76}], ["storesweeprequest", {"content": {"Trimming": {}}, "url": {}, "_index": 77}], ["sweep", {"content": {"Trimming": {}}, "url": {}, "_index": 134}], ["sweepaftershot", {"content": {"Trimming": {}}, "url": {}, "_index": 75}], ["sweepinput", {"content": {"Trimming": {}}, "url": {}, "_index": 128}], ["sweepoutput", {"content": {"Trimming": {}}, "url": {}, "_index": 74}], ["sweeprefer", {"content": {"Trimming": {}}, "url": {}, "_index": 72}], ["sweeprequest", {"content": {"Trimming": {}}, "url": {}, "_index": 73}], ["sweepservic", {"content": {"Trimming": {}}, "url": {}, "_index": 71}], ["tag", {"content": {"Trimming": {}}, "url": {}, "_index": 88}], ["total", {"content": {"Trimming": {}}, "url": {}, "_index": 96}], ["trim", {"content": {"Trimming": {}}, "url": {}, "_index": 0}], ["trimming.html", {"content": {}, "url": {"Trimming": {}}, "_index": 137}], ["type", {"content": {"Trimming": {}}, "url": {}, "_index": 110}], ["unit", {"content": {"Trimming": {}}, "url": {}, "_index": 119}], ["updat", {"content": {"Trimming": {}}, "url": {}, "_index": 12}], ["updatecircuitrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 34}], ["updatedat", {"content": {"Trimming": {}}, "url": {}, "_index": 87}], ["updatedierequest", {"content": {"Trimming": {}}, "url": {}, "_index": 27}], ["updatefunctionrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 42}], ["updatereticlerequest", {"content": {"Trimming": {}}, "url": {}, "_index": 20}], ["updatewaferrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 13}], ["valu", {"content": {"Trimming": {}}, "url": {}, "_index": 90}], ["version", {"content": {"Trimming": {}, "Health": {}}, "url": {}, "_index": 105}], ["wafer", {"content": {"Trimming": {}}, "url": {}, "_index": 14}], ["waferid", {"content": {"Trimming": {}}, "url": {}, "_index": 100}], ["wafernam", {"content": {"Trimming": {}}, "url": {}, "_index": 115}], ["waferservic", {"content": {"Trimming": {}}, "url": {}, "_index": 5}], ["wafersfilterrequest", {"content": {"Trimming": {}}, "url": {}, "_index": 91}], ["waferspag", {"content": {"Trimming": {}}, "url": {}, "_index": 8}], ["wavelengthsarrai", {"content": {"Trimming": {}}, "url": {}, "_index": 113}], ["wavelengthstart_nm", {"content": {"Trimming": {}}, "url": {}, "_index": 129}], ["wavelengthstop_nm", {"content": {"Trimming": {}}, "url": {}, "_index": 130}]], "pipeline": ["stemmer"]};
+
+    const idx = lunr.Index.load(searchIndex);
+
+    function displaySearchResults() {
+        const query = new URLSearchParams(window.location.search).get('query');
+
+        if (query) {
+            document.getElementById('mainInputQuery').value = query;
+
+            const results = idx.query(function (q) {
+              words = query.toLowerCase().split(" "); // toLowerCase() is needed to make the search case insensitive.
+              for (n in words) {
+                const word = words[n];
+
+                if (!word) {
+                  continue;
+                }
+
+                // look for an exact match and apply a large positive boost
+                q.term(word, { usePipeline: true, boost: 100 })
+
+                // look for terms that match the beginning of this queryTerm and apply a medium boost
+                q.term(word + "*", { usePipeline: false, boost: 10 })
+              }
+            });
+
+            const searchResults = document.getElementById('searchResults');
+
+            if (results.length > 0) {
+                let resultList = ''
+                for (const n in results) {
+                    // Use the unique ref from the results list to get the full item
+                    // so you can build its <li>
+                    const doc = searchDocuments[results[n].ref]
+                    resultList += '<h5 class="title is-5 mt-3"><a href="' + doc.url + '">' + doc.package + '</a></h5>'
+                    // Add a short clip of the content
+                    resultList += '<p>' + doc.content.substring(0, 150) + '...</p><hr />'
+                }
+                searchResults.innerHTML = resultList
+            } else {
+                searchResults.innerHTML = '<p>No search results.</p>';
+            }
+        }
+    }
+
+    window.addEventListener("load", displaySearchResults);
+</script>
+
+  <div>
+    <p class="block">
+      Enter a query to search this documentation.
+    </p>
+    <div class="field is-horizontal">
+      <form class="field-body">
+        <div class="field">
+          <p class="control is-expanded">
+            <input id="mainInputQuery" type="text" name="query" class="input" placeholder="Search query">
+          </p>
+        </div>
+        <div class="field">
+          <p class="control is-expanded">
+            <input type="submit" class="button is-primary" value="Search" />
+          </p>
+        </div>
+      </form>
+    </div>
+    <div class="block mt-6">
+      <div id="searchResults"></div>
+    </div>
+  </div>
+</div>
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        
+          <p>© 2025 Femtum. All rights reserved.</p>
+        
+        <p>Built with <strong><a href="https://github.com/markvincze/sabledocs" target="_blank">sabledocs</a></strong>.</p>
+      </div>
+    </footer>
+  </body>
+</html>
