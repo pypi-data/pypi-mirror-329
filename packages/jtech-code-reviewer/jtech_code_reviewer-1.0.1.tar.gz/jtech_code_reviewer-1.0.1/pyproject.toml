@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "jtech-code-reviewer"
+version = "1.0.1"
+description = ""
+authors = ["Angelo Vicente Filho <angelo.vicente@veolia.com>"]
+readme = "README.md"
+packages = [
+    { include = "src" }
+]
+
+[tool.poetry.scripts]
+jtech-code-reviewer = "src.cli:run_server"
+ 
+[tool.poetry.urls]
+repository = "https://github.com/your-username/jtech-code-review"
+documentation = "https://github.com/your-username/jtech-code-review#readme"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv = "^1.0.1"
+fastapi = "^0.115.4"
+uvicorn = "^0.32.0"
+langchain = "^0.3.6"
+langchain-google-genai = "^2.0.3"
+langchain-community = "^0.3.4"
+langchain-google-vertexai = "^2.0.7"
+colorlog = "^6.9.0"
+pyyaml = "^6.0.2"
+twine = "^4.0.2"
+build = "^1.0.3"
+wheel = "^0.42.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
