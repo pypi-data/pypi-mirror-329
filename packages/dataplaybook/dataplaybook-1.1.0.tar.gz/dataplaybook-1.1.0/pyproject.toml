@@ -1,0 +1,162 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+# requires = ["uv-build"] # >=0.5.15,<0.6
+# build-backend = "uv_build"
+
+[project]
+name = "dataplaybook"
+version = "1.1.0"
+description = "Playbooks for data. Open, process and save table based data."
+authors = [{ name = "Johann Kellerman", email = "kellerza@gmail.com" }]
+readme = "README.md"
+# license = "Apache-2.0"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+keywords = ["data", "tables", "excel", "mongodb", "generators"]
+requires-python = ">=3.11"
+dependencies = [
+    "office365-rest-python-client>2,<3",
+    "attrs==25.1.0",
+    "cattrs==24.1.2",
+    "colordict>=1.2.6",
+    "colorlog",
+    "jinja2>=3,<4",
+    "openpyxl==3.1.5",
+    "beartype==0.20.0",
+    "icecream",
+    "fuzzywuzzy",
+    "python-Levenshtein",
+    "requests>=2.0.0",
+    "whenever>=0.7.1",
+]
+
+[dependency-groups]
+dev = [
+    "mypy",
+    "pylint",
+    "pytest-aiohttp",
+    "pytest-cov",
+    "pytest-github-actions-annotate-failures",
+    "pytest",
+    "python-semantic-release",
+    "types-lxml",
+    "types-requests",
+    # Optional
+    "lxml>=5.3.0",
+    "pymongo",
+    "python-pptx",
+]
+
+[project.urls]
+Homepage = "https://github.com/kellerza/data-playbook"
+Repository = "https://github.com/kellerza/data-playbook"
+
+[project.optional-dependencies]
+mongodb = ["pymongo"]
+lxml = ["lxml>=5.3.0", "types-lxml"]
+all = ["pymongo", "python-pptx", "lxml>=5.3.0"]
+
+[project.scripts]
+dataplaybook = "dataplaybook.__main__:main"
+
+[tool.semantic_release]
+commit = true
+tag = true
+vcs_release = true
+commit_parser = "emoji"
+# https://python-semantic-release.readthedocs.io/en/latest/configuration.html#version-toml
+# version_variables = ["dataplaybook/const.py:VERSION"]
+version_toml = ["pyproject.toml:project.version"]
+build_command = "pip install uv && uv sync --frozen --all-extras && uv build"
+commit_version_number = true
+
+# https://python-semantic-release.readthedocs.io/en/latest/multibranch_releases.html#configuring-multibranch-releases
+[tool.semantic_release.branches.main]
+#match = 'v\d+\.\d+\.\d+'
+match = "master"
+
+[tool.semantic_release.commit_parser_options]
+major_tags = [":boom:"]
+minor_tags = [":rocket:"]
+patch_tags = [":ambulance:", ":lock:", ":bug:", ":dolphin:"]
+
+[tool.ruff]
+target-version = "py312"
+src = ["src", "test"]
+include = ["tests/*.py", "src/**/*.py"]
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "I001"]
+ignore = ["E203", "E501"]
+
+[tool.ruff.lint.flake8-import-conventions]
+banned-from = ["typing"]
+
+[tool.ruff.lint.isort]
+no-lines-before = ["future", "standard-library"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+
+[tool.mypy]
+disallow_untyped_defs = true
+ignore_missing_imports = true
+exclude = ["src/dataplaybook/tasks/fnb.py", "build"]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[tool.pylint.MASTER]
+ignore-paths = ['build']
+
+# https://stackoverflow.com/questions/64162504/settings-for-pylint-in-setup-cfg-are-not-getting-used
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length = 120
+good-names = ["db", "fr", "cr", "k", "i"]
+disable = '''line-too-long,
+    unsubscriptable-object,
+    unused-argument,
+    too-many-branches,
+    too-many-locals,
+    too-many-statements,
+    too-many-instance-attributes,
+    too-few-public-methods,
+    R0401,
+    R0801,
+    wrong-import-order,
+    R0917,
+    too-many-positional-arguments,
+'''
+
+[tool.pylint.design]
+# limiting the number of returns might discourage
+# the use of guard clauses. So we increase the
+# allowed number of returns from 6 to 8
+max-returns = 8
+
+[tool.pytest.ini_options]
+pythonpath = ["src/dataplaybook"]
+testpaths = ["tests"]                                #, "tests"]
+filterwarnings = "ignore:.+@coroutine.+deprecated.+"
+norecursedirs = [".git", "modules"]
+log_cli = true
+log_cli_level = "DEBUG"
+asyncio_mode = "auto"
+
+[tool.setuptools]
+license-files = [] # https://github.com/astral-sh/uv/issues/9513
