@@ -1,0 +1,50 @@
+apiVersion: v1
+schemas:
+  # document
+  # image
+  # video
+  # industry: media
+  - domain: media.nfl-game-state
+    schema: vlmrun.hub.schemas.contrib.media.nfl_game_state.NFLGameState
+    prompt: "You are a detail-oriented NFL Game Analyst. Extract all the relevant game state information from the video feed or screenshot as accurately as possible."
+    description: "NFL game state extraction system that processes game footage or screenshots to extract structured information including teams, scores, game clock, possession, and other relevant game state details."
+    sample_data: "https://storage.googleapis.com/vlm-data-public-prod/hub/examples/media.nfl-game-state/packers_cardinals_screenshot.png"
+    metadata:
+      supported_inputs: ["image", "video"]
+      tags: ["media", "sports"]
+
+  - domain: media.nba-game-state
+    schema: vlmrun.hub.schemas.contrib.media.nba_game_state.NBAGameState
+    prompt: "You are a detail-oriented NBA Game Analyst. Extract all the relevant game state information from the video feed or screenshot as accurately as possible."
+    description: "NBA game state extraction system that processes game footage or screenshots to extract structured information including teams, scores, game clock, shot clock, and other relevant game state details."
+    sample_data: "https://storage.googleapis.com/vlm-data-public-prod/hub/examples/media.nba-game-state/heats_spurs.png"
+    metadata:
+      supported_inputs: ["image", "video"]
+      tags: ["media", "sports"]
+
+  - domain: healthcare.pathology-report
+    schema: vlmrun.hub.schemas.contrib.healthcare.pathology_report.PathologyReport
+    prompt: "You are a detail-oriented Pathology Analyst. Extract all the relevant pathology report information from the pathology report as accurately as possible."
+    description: "Pathology report extraction system that processes pathology reports to extract structured information including patient information, facility information, specimens, gross and microscopic examinations, immunohistochemistry results, molecular studies, integrated diagnosis, clinical notes, and other relevant pathology report details."
+    sample_data: "https://storage.googleapis.com/sample-hub-data/healthcare.pathology_report/sample_report_5.pdf"
+    metadata:
+      supported_inputs: ["image", "document"]
+      tags: ["healthcare", "laboratory", "pathology"]
+
+  - domain: document.aadhaar-card
+    schema: vlmrun.hub.schemas.contrib.document.aadhaar_card.AadhaarCard
+    prompt: "You are a detail-oriented identity document analyst. Extract all the relevant information from the Aadhaar card as accurately as possible. Determine whether you're seeing the front side (with photo, name, DOB, etc) or back side (with address, etc) and extract accordingly."
+    description: "Aadhaar card information extraction system that processes images of India's national identity document to extract structured information including personal details, address information, and security features."
+    sample_data: "https://storage.googleapis.com/vlm-data-public-prod/hub/examples/document.aadhaar-card/aadhaar_card_sample.jpg"
+    metadata:
+      supported_inputs: ["image", "document"]
+      tags: ["identity", "document", "india"]
+
+  - domain: document.pan-card
+    schema: vlmrun.hub.schemas.contrib.document.pan_card.PANCard
+    prompt: "You are a detail-oriented identity document analyst. Extract all the relevant information from the PAN card as accurately as possible. Focus on the PAN number, name, father's name, and date of birth. Also note if a photo, signature, and Income Tax Department logo are present."
+    description: "PAN card information extraction system that processes images of India's tax identity document to extract structured information including PAN number, personal details, and security features."
+    sample_data: "https://storage.googleapis.com/vlm-data-public-prod/hub/examples/document.pan-card/pan_card_sample.jpg"
+    metadata:
+      supported_inputs: ["image", "document"]
+      tags: ["identity", "document", "india", "tax"]
