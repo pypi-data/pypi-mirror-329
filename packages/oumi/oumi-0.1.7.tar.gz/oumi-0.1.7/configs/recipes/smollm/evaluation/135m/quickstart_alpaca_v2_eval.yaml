@@ -1,0 +1,32 @@
+# Quickstart Alpaca v2 eval config for SmolLM 135M Instruct.
+#
+# Requirements:
+#   - Run `pip install oumi[evaluation]` or `pip install alpaca_eval`
+#   - Set the env var `OPENAI_API_KEY` to your OpenAI API key.
+#
+# Usage:
+#   oumi evaluate -c configs/recipes/smollm/evaluation/135m/quickstart_alpaca_v2_eval.yaml
+#
+# See Also:
+#   - Documentation: https://oumi.ai/docs/en/latest/user_guides/evaluate/evaluate.html
+#   - Config class: oumi.core.configs.EvaluationConfig
+#   - Config source: https://github.com/oumi-ai/oumi/blob/main/src/oumi/core/configs/evaluation_config.py
+#   - Other eval configs: configs/**/evaluation/
+
+model:
+  model_name: "HuggingFaceTB/SmolLM2-135M-Instruct"
+  model_max_length: 2048
+  torch_dtype_str: "bfloat16"
+  attn_implementation: "sdpa"
+  load_pretrained_weights: True
+  trust_remote_code: True
+
+generation:
+  batch_size: 4
+
+tasks:
+  - evaluation_platform: alpaca_eval
+    eval_kwargs:
+      version: 2.0
+
+# engine: VLLM # Uncomment if you're running on a CUDA GPU.
