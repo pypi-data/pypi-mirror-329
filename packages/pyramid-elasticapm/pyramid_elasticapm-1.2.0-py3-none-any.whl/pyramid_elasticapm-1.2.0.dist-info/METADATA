@@ -1,0 +1,128 @@
+Metadata-Version: 2.1
+Name: pyramid-elasticapm
+Version: 1.2.0
+Summary: elastic-apm integration for the Pyramid framework
+Home-page: https://github.com/risclog-solution/pyramid-elasticapm
+Author: Sebastian Wehrmann (riscLOG Solution GmbH)
+Author-email: sebastian@risclog.com
+License: BSD
+Keywords: elastic apm pyramid
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3 :: Only
+License-File: LICENSE
+Requires-Dist: elastic-apm
+Requires-Dist: pyramid
+Provides-Extra: test
+Requires-Dist: pytest ; extra == 'test'
+Requires-Dist: pytest-cache ; extra == 'test'
+Requires-Dist: pytest-cov ; extra == 'test'
+Requires-Dist: pytest-rerunfailures ; extra == 'test'
+Requires-Dist: pytest-sugar ; extra == 'test'
+Requires-Dist: webtest ; extra == 'test'
+Requires-Dist: pytest-localserver ; extra == 'test'
+Requires-Dist: elastic-apm <6.8 ; extra == 'test'
+
+.. contents::
+
+==================
+pyramid-elasticapm
+==================
+
+elastic-apm integration for the Pyramid framework
+
+This package is inspired by https://www.elastic.co/de/blog/creating-custom-framework-integrations-with-the-elastic-apm-python-agent.
+
+
+Installation
+============
+
+Install with pip::
+
+    $ pip install pyramid_elasticapm
+
+
+Then include it in your pyramid application via config::
+
+    [app:main]
+    ...
+    pyramid.includes = pyramid_elasticapm
+
+or programmatically in your application::
+
+    config.include('pyramid_elasticapm')
+
+
+Settings
+========
+
+
+Settings for the elasticapm client can be specified via the `elasticapm`
+namespace:
+
+* `elasticapm.server_url`: Specify the apm server url.
+* `elasticapm.secret_token`: Your secret authentication token for the server.
+* `elasticapm.service_name`: The service name
+* `elasticapm.environment`: The environment (e.g. testing, production, …)
+* `elasticapm.service_distribution`: The name of the package your are
+  deploying. `pyramid_elasticapm` will retrieve the version number of this
+  package and put it into the metadata of every transaction.
+* `elasticapm.transactions_ignore_patterns`: Whitespace separated list of
+  ignore patterns.
+
+
+=================================
+Change log for pyramid-elasticapm
+=================================
+
+
+1.2.0 (2025-02-25)
+==================
+
+- fix: Compatability to newest elastic-apm package.
+
+
+1.1.0 (2024-10-09)
+==================
+
+- feat: Update to Python 3.10.
+
+
+1.0.5 (2024-01-16)
+==================
+
+- fix: `response` variable was used before assignment in error handler.
+
+
+1.0.4 (2022-08-31)
+==================
+
+- Request body was not added due to a bug, that is fixed now.
+
+
+1.0.3 (2022-08-31)
+==================
+
+- Improve adding request body for requests and responses.
+
+
+1.0.2 (2022-08-30)
+==================
+
+- Add request body for POST requests.
+
+
+1.0.1 (2021-04-22)
+==================
+
+- Be more compatible with retrieving user data from request.
+
+
+1.0.0 (2021-04-21)
+==================
+
+- Initial release.
