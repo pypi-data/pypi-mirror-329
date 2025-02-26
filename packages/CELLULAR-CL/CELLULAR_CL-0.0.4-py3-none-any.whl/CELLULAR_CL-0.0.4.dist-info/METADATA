@@ -1,0 +1,180 @@
+Metadata-Version: 2.1
+Name: CELLULAR-CL
+Version: 0.0.4
+Summary: A package for generating an embedding space from scRNA-Seq. This space can be used for cell type annotation, novel cell type detection, cell type representations, and visualization.
+Home-page: https://github.com/LeoAnd00/CELLULAR
+Author: Leo Andrekson, Rocío Mercado
+Author-email: leo.andrekson@gmail.com, rocom@chalmers.se
+License: MIT
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Requires-Python: >=3.10.5
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: alembic==1.13.1
+Requires-Dist: anndata==0.10.5.post1
+Requires-Dist: array-api-compat==1.5
+Requires-Dist: asttokens==2.4.1
+Requires-Dist: colorama==0.4.6
+Requires-Dist: colorlog==6.8.2
+Requires-Dist: comm==0.2.1
+Requires-Dist: contourpy==1.2.0
+Requires-Dist: cycler==0.12.1
+Requires-Dist: debugpy==1.8.1
+Requires-Dist: decorator==5.1.1
+Requires-Dist: exceptiongroup==1.2.0
+Requires-Dist: executing==2.0.1
+Requires-Dist: filelock==3.13.1
+Requires-Dist: fonttools==4.49.0
+Requires-Dist: fsspec==2024.2.0
+Requires-Dist: greenlet==3.0.3
+Requires-Dist: h5py==3.10.0
+Requires-Dist: ipykernel==6.29.3
+Requires-Dist: ipython==8.22.2
+Requires-Dist: jedi==0.19.1
+Requires-Dist: Jinja2==3.1.3
+Requires-Dist: joblib==1.3.2
+Requires-Dist: jupyter-client==8.6.0
+Requires-Dist: jupyter-core==5.7.1
+Requires-Dist: kiwisolver==1.4.5
+Requires-Dist: llvmlite==0.42.0
+Requires-Dist: Mako==1.3.2
+Requires-Dist: MarkupSafe==2.1.5
+Requires-Dist: matplotlib==3.8.3
+Requires-Dist: matplotlib-inline==0.1.6
+Requires-Dist: mpmath==1.3.0
+Requires-Dist: natsort==8.4.0
+Requires-Dist: nest-asyncio==1.6.0
+Requires-Dist: networkx==3.2.1
+Requires-Dist: numba==0.59.0
+Requires-Dist: numpy==1.26.4
+Requires-Dist: optuna==3.5.0
+Requires-Dist: packaging==23.2
+Requires-Dist: pandas==2.2.1
+Requires-Dist: parso==0.8.3
+Requires-Dist: patsy==0.5.6
+Requires-Dist: pillow==10.2.0
+Requires-Dist: platformdirs==4.2.0
+Requires-Dist: prompt-toolkit==3.0.43
+Requires-Dist: psutil==5.9.8
+Requires-Dist: pure-eval==0.2.2
+Requires-Dist: Pygments==2.17.2
+Requires-Dist: pynndescent==0.5.11
+Requires-Dist: pyparsing==3.1.2
+Requires-Dist: python-dateutil==2.9.0.post0
+Requires-Dist: pytz==2024.1
+Requires-Dist: PyYAML==6.0.1
+Requires-Dist: pyzmq==25.1.2
+Requires-Dist: scanpy==1.9.8
+Requires-Dist: scikit-learn==1.4.1.post1
+Requires-Dist: scipy==1.12.0
+Requires-Dist: seaborn==0.13.2
+Requires-Dist: session-info==1.0.0
+Requires-Dist: six==1.16.0
+Requires-Dist: SQLAlchemy==2.0.28
+Requires-Dist: stack-data==0.6.3
+Requires-Dist: statsmodels==0.14.1
+Requires-Dist: stdlib-list==0.10.0
+Requires-Dist: sympy==1.12
+Requires-Dist: threadpoolctl==3.3.0
+Requires-Dist: tornado==6.4
+Requires-Dist: tqdm==4.66.2
+Requires-Dist: traitlets==5.14.1
+Requires-Dist: typing-extensions==4.10.0
+Requires-Dist: tzdata==2024.1
+Requires-Dist: umap-learn==0.5.5
+Requires-Dist: wcwidth==0.2.13
+
+# CELLULAR: CELLUlar contrastive Learning for Annotation and Representation
+
+## Summary
+Batch effects are a significant concern in single-cell RNA sequencing (scRNA-Seq) data analysis, where variations in the data can be attributed to factors unrelated to cell types. This can make downstream analysis a challenging task. In this study, we present a novel deep learning approach using contrastive learning and a carefully designed loss function for learning an generalizable embedding space from scRNA-Seq data. We call this model CELLULAR: CELLUlar contrastive Learning for Annotation and Representation. When benchmarked against multiple established methods for scRNA-Seq integration, CELLULAR outperforms existing methods in learning a generalizable embedding space on multiple datasets. Cell annotation was also explored as a downstream application for the learned embedding space. When compared against multiple well-established methods, CELLULAR demonstrates competitive performance with top cell classification methods in terms of accuracy, balanced accuracy, and F1 score. CELLULAR is also capable of performing novel cell type detection. These findings aim to quantify the *meaningfulness* of the embedding space learned by the model by highlighting the robust performance of our learned cell representations in various applications. The model has been structured into an open-source Python package, specifically designed to simplify and streamline its usage for bioinformaticians and other scientists interested in cell representation learning.
+
+## Necessary Python version
+- Python version >= 3.10.5
+
+## Setup
+```
+pip install --extra-index-url https://download.pytorch.org/whl/cu118 torch==2.2.1
+pip install CELLULAR-CL
+```
+
+## Functionality
+The following functions have been included:
+* Training function for the embedding space model.
+* Training function for the classifier model.
+* Predict function for generating an embedding space.
+* Predict function for performing cell type annotation.
+* Function for novel cell type detection.
+* Function for creating cell type representation vectors.
+* Function for applying the same normalization strategy as was used in this study, giving the end user the option of using the same strategy or implementing their own.
+* Function for automatic preprocessing, although it is still recommended for end users to use their own preprocessing pipeline to make sure it is appropriate for their data.
+
+## Data
+Data for the tutorials is available to download from [Zenodo](https://doi.org/10.5281/zenodo.10959788).
+
+You will need to unpack the data. You can do that as follows:
+```
+tar -`vf data.rar  # Data for reproducing the work
+tar -xvf tutorial.rar  # Data for the tutorials
+```
+
+## Usage
+Before using the model one first needs to obtain data to use as input. An example on how to divide data into training and test data can be found in the tutorial folder. In the code examples below it is assumed that the user has already created training data ("train_data.h5ad") and testing data ("test_data.h5ad").
+
+### For creating a learned embedding space
+```
+import scanpy as sc
+import CELLULAR_CL as CELLULAR
+
+adata_train = sc.read("train_data.h5ad", cache=True)
+CELLULAR.train(adata=adata_train, target_key="cell_type", batch_key="batch")
+
+adata_test = sc.read("test_data.h5ad", cache=True)
+predictions = CELLULAR.predict(adata=adata_test)
+```
+### For cell type annotation
+```
+import scanpy as sc
+import CELLULAR_CL as CELLULAR
+
+adata_train = sc.read("train_data.h5ad", cache=True)
+CELLULAR.train(adata=adata_train, train_classifier=True, target_key="cell_type", batch_key="batch")
+
+adata_test = sc.read("test_data.h5ad", cache=True)
+predictions = CELLULAR.predict(adata=adata_test, use_classifier=True)
+```
+### For novel cell type detection
+```
+import scanpy as sc
+import CELLULAR_CL as CELLULAR
+
+adata_train = sc.read("train_data.h5ad", cache=True)
+CELLULAR.train(adata=adata_train, target_key="cell_type", batch_key="batch")
+
+adata_test = sc.read("test_data.h5ad", cache=True)
+CELLULAR.novel_cell_type_detection(adata=adata_test)
+```
+### For making cell type representations
+```
+import scanpy as sc
+import CELLULAR_CL as CELLULAR
+
+adata_train = sc.read("train_data.h5ad", cache=True)
+CELLULAR.train(adata=adata_train, target_key="cell_type", batch_key="batch")
+
+adata_test = sc.read("test_data.h5ad", cache=True)
+representations = CELLULAR.generate_representations(adata=adata_test, target_key="cell_type")
+```
+
+## Tutorials
+See the following tutorials, structureed as Python notebooks:
+* [Tutorial/embedding_space_tutorial.ipynb](Tutorial/embedding_space_tutorial.ipynb)
+* [Tutorial/classification_tutorial.ipynb](Tutorial/classification_tutorial.ipynb)
+* [Tutorial/pre_process_tutorial.ipynb](Tutorial/pre_process_tutorial.ipynb)
+
+## Citation
+Coming soon!
+
+
