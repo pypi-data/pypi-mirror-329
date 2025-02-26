@@ -1,0 +1,12 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="collective.formsupport.counter"
+    >
+
+  <subscriber
+      for="Products.CMFCore.interfaces.IContentish
+           collective.volto.formsupport.interfaces.IFormSubmittedEvent"
+      handler=".add_counter"
+      />
+
+</configure>

@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
+
+  <plone:service
+      method="GET"
+      factory=".csv.FormDataExportGetCounter"
+      for="plone.restapi.behaviors.IBlocks"
+      permission="cmf.ModifyPortalContent"
+      layer="collective.formsupport.counter.interfaces.ICollectiveFormsupportCounterLayer"
+      name="@form-data-export"
+      />
+
+</configure>
