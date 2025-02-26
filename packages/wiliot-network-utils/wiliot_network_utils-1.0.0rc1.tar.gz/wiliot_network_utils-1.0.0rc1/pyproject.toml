@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wiliot_network_utils"
+version = "1.0.0rc1"
+authors = [
+  { name="Wiliot", email="support@wiliot.com" }
+]
+description = "A library containing wiliot network utility scripts"
+readme = "README.md"
+requires-python = ">=3.9,<3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+license = { file = "LICENSE" }
+
+dependencies = [
+    "wiliot_deployment_tools",
+]
+
+[project.urls]
+Wiliot = "https://www.wiliot.com"
+
+[project.scripts]
+wlt-brg-ota-location = "network_utils.wlt_brg_ota_location:main"
