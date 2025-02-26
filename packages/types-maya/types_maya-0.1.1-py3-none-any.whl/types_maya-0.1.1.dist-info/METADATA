@@ -1,0 +1,100 @@
+Metadata-Version: 2.2
+Name: types-maya
+Version: 0.1.1
+Summary: External type annotations for Autodesk Maya Python API
+Author: Thibaud Gambier
+License: MIT License
+        
+        Copyright (c) 2025 Thibaud Gambier
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Repository, https://github.com/tahv/types-maya
+Project-URL: PyPI, https://pypi.org/project/types-maya
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Typing :: Stubs Only
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# types-maya
+
+[![Typed](https://img.shields.io/pypi/types/types-maya?logo=python&logoColor=white)](https://pypi.org/project/types-maya/)
+[![Version](https://img.shields.io/pypi/v/types-maya?logo=pypi&logoColor=white)](https://pypi.org/project/types-maya/)
+[![License](https://img.shields.io/github/license/tahv/types-maya)](https://github.com/tahv/types-maya/blob/main/LICENSE)
+[![CI Tests](https://img.shields.io/github/actions/workflow/status/tahv/types-maya/tests.yml?logo=github&logoColor=white&label=tests)](https://github.com/tahv/types-maya/actions/workflows/tests.yml)
+
+External type annotations for Autodesk Maya Python API.
+
+The goal is to provide helper for [Pyright](https://github.com/microsoft/pyright)
+language server to offer better autocompletion.
+
+## Installation
+
+Install with [pip](https://pip.pypa.io/en/stable/topics/vcs-support/#git)
+or [uv pip](https://docs.astral.sh/uv/pip/packages/#installing-a-package).
+
+```bash
+pip install types-maya
+```
+
+<!--
+Install from vcs with [pip](https://pip.pypa.io/en/stable/topics/vcs-support/#git)
+or [uv pip](https://docs.astral.sh/uv/pip/packages/#installing-a-package).
+
+```bash
+pip install git+https://github.com/tahv/types-maya@main
+```
+-->
+
+## Available stubs
+
+The stubs are maintained manually.
+This means they will likely remains incomplete for some time.
+
+I update the stubs based on the needs of my projects
+and i mostly focus on Maya Python API 2.0 (`maya.api`).
+
+| Import name               | Status               |
+|---------------------------|----------------------|
+| `maya.api.OpenMaya`       | 🟠 Incomplete (~20%) |
+| `maya.api.OpenMayaAnim`   | 🔴 Not Covered       |
+| `maya.api.OpenMayaRender` | 🔴 Not Covered       |
+| `maya.api.OpenMayaUI`     | 🔴 Not Covered       |
+| `maya.cmds`               | 🔴 Not Covered       |
+| `maya.mel`                | 🟢 Complete          |
+| `maya.standalone`         | 🟢 Complete          |
+| `maya.OpenMaya`           | 🔴 Not Covered       |
+| `maya.OpenMayaAnim`       | 🔴 Not Covered       |
+| `maya.OpenMayaFX`         | 🔴 Not Covered       |
+| `maya.OpenMayaMPx`        | 🔴 Not Covered       |
+| `maya.OpenMayaRender`     | 🔴 Not Covered       |
+| `maya.OpenMayaUI`         | 🔴 Not Covered       |
+
+The stubs are written from the
+[Maya 2025 Reference](https://help.autodesk.com/view/MAYADEV/2025/ENU/).
+
+## Contributing
+
+Contributions of any kind are welcome.
+Please open an issue or a submit pull request.
