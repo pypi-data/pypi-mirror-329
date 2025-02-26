@@ -1,0 +1,42 @@
+[
+ {
+  "op": "add",
+  "path": "/requiredXor",
+  "value": [
+   "CidrBlock",
+   "Ipv4IpamPoolId",
+   "Ipv6IpamPoolId",
+   "Ipv6CidrBlock"
+  ]
+ },
+ {
+  "op": "add",
+  "path": "/dependentExcluded",
+  "value": {
+   "AvailabilityZone": [
+    "AvailabilityZoneId"
+   ],
+   "AvailabilityZoneId": [
+    "AvailabilityZone"
+   ]
+  }
+ },
+ {
+  "op": "add",
+  "path": "/dependentRequired",
+  "value": {
+   "Ipv4IpamPoolId": [
+    "Ipv4NetmaskLength"
+   ],
+   "Ipv4NetmaskLength": [
+    "Ipv4IpamPoolId"
+   ],
+   "Ipv6IpamPoolId": [
+    "Ipv6NetmaskLength"
+   ],
+   "Ipv6NetmaskLength": [
+    "Ipv6IpamPoolId"
+   ]
+  }
+ }
+]
