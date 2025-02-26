@@ -1,0 +1,104 @@
+Metadata-Version: 2.2
+Name: py-troya-connect
+Version: 0.1.29
+Summary: A Python interface for Attachmate Extra Terminal sessions
+Home-page: https://github.com/tolgakurtuluss/py-troya-connect
+Author: Tolga Kurtulus
+Author-email: tolgakurtulus95@gmail.com
+Project-URL: Bug Tracker, https://github.com/tolgakurtuluss/py-troya-connect/issues
+Project-URL: Documentation, https://github.com/tolgakurtuluss/py-troya-connect/wiki
+Project-URL: Source Code, https://github.com/tolgakurtuluss/py-troya-connect
+Keywords: terminal,attachmate,extra,automation,thy,turkish airlines
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: System :: Hardware :: Hardware Drivers
+Classifier: Topic :: System :: Networking
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Microsoft :: Windows
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pywin32>=223
+Requires-Dist: typing-extensions>=4.0.0; python_version < "3.8"
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0.0; extra == "dev"
+Requires-Dist: coverage>=7.0.0; extra == "dev"
+Requires-Dist: black>=22.0.0; extra == "dev"
+Requires-Dist: isort>=5.0.0; extra == "dev"
+Requires-Dist: flake8>=4.0.0; extra == "dev"
+Requires-Dist: mypy>=0.900; extra == "dev"
+Requires-Dist: twine>=4.0.0; extra == "dev"
+Provides-Extra: test
+Requires-Dist: pytest>=7.0.0; extra == "test"
+Requires-Dist: pytest-cov>=4.0.0; extra == "test"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: project-url
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# py-troya-connect
+
+A Python interface for Attachmate Extra Terminal sessions.
+
+## Installation
+
+```bash
+pip install py-troya-connect
+```
+
+## Usage
+
+```python
+from py_troya_connect import ExtraTerminal
+
+# Try basic operations
+# Connect to a session
+with ExtraTerminal("1") as terminal:
+    # Send a command
+    terminal.send_command("your command")
+    
+    # Read screen content
+    screen_content = terminal.read_screen()
+    for line in screen_content:
+        print(line)
+        
+    # Wait for specific text
+    if terminal.wait_for_text("Expected text", timeout=30):
+        print("Text found!")
+```
+
+## Features
+
+- Connect to Extra Terminal sessions
+- Send commands
+- Read screen content
+- Wait for specific text to appear
+- List available sessions
+
+## Requirements
+
+- Windows OS
+- Attachmate Extra! Terminal
+- Python 3.6+
+- pywin32
+
+## License
+
+MIT License
