@@ -1,0 +1,58 @@
+[project]
+name = "rustycalc"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Deependu Jha", email = "deependujha21@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "maturin>=1.8.2",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+[tool.maturin]
+module-name = "rustycalc._core"
+python-packages = ["rustycalc"]
+python-source = "src"
+
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+]
+
+# taken from lightning-ai/litdata (Apache License)
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+norecursedirs = [
+    ".git",
+    ".github",
+    ".venv",
+    "dist",
+    "target",
+]
+addopts = [
+    "--strict-markers",
+    "--doctest-modules",
+    "--color=yes",
+    "--disable-pytest-warnings",
+    "--ignore=legacy/checkpoints",
+]
+markers = [
+    "cloud: Run the cloud tests for example",
+]
+filterwarnings = [
+    "error::FutureWarning",
+]
+xfail_strict = true
+junit_duration_report = "call"
