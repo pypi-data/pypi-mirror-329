@@ -1,0 +1,56 @@
+[project]
+name = "splore-sdk"
+version = "0.1.12"
+description = "splore sdk to interact with splore services"
+authors = [
+    { name = "DilipCoder", email = "dilips.ven@splore.com" },
+]
+homepage = "https://splore.com/"
+repository = "https://github.com/splorehq/splore-sdk-py"
+documentation = "https://docs.splore.com/"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.32.3",
+    "pydantic>=2.9.2",
+    "tuspy>=1.1.0",
+]
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+Changelog = "https://github.com/splorehq/splore-sdk-py/blob/main/CHANGELOG.md"
+Issues = "https://github.com/splorehq/splore-sdk-py/issues"
+Releases = "https://github.com/splorehq/splore-sdk-py/releases"
+
+[project.optional-dependencies]
+examples = [
+    "boto3",
+]
+test = [
+    "pytest>=8.3.4",
+    "pytest-mock>=3.14.0",
+]
+
+[tool.pdm.scripts]
+test = "pytest"
+
+[tool.pdm.build]
+includes = [
+    "splore_sdk",
+    "README.md",
+    "CHANGELOG.md",
+]
+excludes = [
+    "tests",
+    "examples",
+]
+distribution = true
+wheel = true
+
+[build-system]
+requires = [
+    "pdm-backend",
+]
+build-backend = "pdm.backend"
