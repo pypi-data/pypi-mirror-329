@@ -1,0 +1,32 @@
+@tickler +ui outright copy the newest release of GTG's UI because it's great https://www.youtube.com/watch?v=cR7ARrJ9q5s https://fortintam.com/blog/2020-06-gtg-status-update/ https://fortintam.com/gtg/screenshots/main%20window%20-%20all%20tasks%20-%20with%20open%20task%20editor.png https://fortintam.com/blog/gtg-0-4-released/
+@tickler +ui ensure that libhandy and libgtk are available, show error message otherwise.
+@tickler +ui filter side pane needs to gain custom filters, and @contexts +topics CustomFilters should gain their own subpanes
+@tickler +ui investigate the HdyLeaflet stuff for resizable app
+@tickler +feature GtkApplication unique instance w/ autoremembered multiple views with different settings, still need to decide how we will handle restoring when the app loads / when a todo is opened (need to describe the desired behavior in text in a design doc)
+@tickler +ui Stronger data model for tasks (required for better display of tasks)
+@tickler +ui Improve display of task count (requires stronger data model for tasks)
+@tickler +ui how to handle the menu https://wiki.gnome.org/HowDoI/GMenu
+@tickler +releases use GtkApplication or GApplication with app ids https://wiki.gnome.org/HowDoI/ChooseApplicationID
+@next +robustness single-app model with remote-open, to prevent overwriting of the list of opened files by two separate copies of the app
+@tickler +feature support todo.txt / done.txt (moving done tasks to a done.txt file, like Thunderbird's GTD)
+@tickler +ui dynamic toolbar -- show which buttons on the toolbar based on which pane is focused.
+@tickler +ui toolbar actions: add / remove tasks when focused on task view.  open question: should add task keyboard shortcut work when task view is not in focus?
+@tickler +ui improve how things look when they are highlighted, and make which pane is focused more obvious
+@next +ui mark selected task(s) as complete with keyboard (F12 to toggle, figure out if a checkbox is also worth trying)
+* more toolbar actions (activatable via hotkeys) that apply to selection: add remove tags / lists with a popover menu / possibly typeahead find
+* context menus to do all the above
+* custom filters with filter language (implement task objects)
+* custom sorting
+* grouping
+* fast data entry (possibly with autocomplete tags and lists)
+  * this may require moving away from the simple text box we use for entry right now
+  * this is gonna look awesome, we will overlay a widget that will display +tags and @cats and other metadata with nice boxes
+* automatic creation date addition
+* undo capability
++robustness @next ensure that trying to load invalid non-utf-8 files actually displays an error instead of silently failing and leaving half-initialized stuff (requires error dialog box in libwhiz)
+It runs now, thanks. It's not very intuitive, though. The buttons do not have tooltips so it's hard to tell what they do. The "new" (?) button just spawns an identical window. The quit button is a bit redundant since the window has a close button like any other. The Insert key adds a new editable line, but it's not obvious what it's doing. I created a new file in my home directory, closed the program, opened it again and it only lists the new one, not the default todo.txt.
+x search filter box
+x exit app toolbar button and key combo
+x multi-window: allow new window to be created with key combo and toolbar button
+x multi-window: open a file to create an entirely new window
+x configure where todo.txt / done.txt are saved
