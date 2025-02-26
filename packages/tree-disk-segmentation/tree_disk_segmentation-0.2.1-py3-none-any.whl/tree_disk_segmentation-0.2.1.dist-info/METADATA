@@ -1,0 +1,98 @@
+Metadata-Version: 2.3
+Name: tree-disk-segmentation
+Version: 0.2.1
+Summary: A package for tree disk segmentation in images
+License: MIT
+Keywords: tree,segmentation,image processing
+Author: Tony
+Author-email: tonymeissner70@gmail.com
+Requires-Python: >=3.10
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Dist: numpy (>=1.23.0,<2.0.0)
+Requires-Dist: opencv-python (>=4.10.0.84,<5.0.0.0)
+Requires-Dist: torch (>=2.5.1,<3.0.0)
+Requires-Dist: torchvision (>=0.20.1,<0.21.0)
+Requires-Dist: ultralytics (>=8.3.78,<9.0.0)
+Project-URL: Homepage, https://github.com/tuke307/tree-disk-analyzer
+Project-URL: Repository, https://github.com/tuke307/tree-disk-analyzer
+Description-Content-Type: text/markdown
+
+# Tree Disk Segmentation
+
+[![PyPI - Version](https://img.shields.io/pypi/v/tree-disk-segmentation)](https://pypi.org/project/tree-disk-segmentation/)
+
+A Python package for analyzing tree rings in cross-sectional images.
+
+## Installation
+
+```bash
+pip install tree-disk-segmentation
+```
+
+## Usage
+
+### Python API
+
+```python
+import treedisksegmentation
+
+# Configure the analyzer
+treedisksegmentation.configure(
+    input_image="input/tree-disk4.png",
+    save_results=True,
+)
+
+# Run the segmentation
+(
+    result_image,   # Image with detected tree disks
+    masks,          # List of masks for each detected tree disk
+) = treedisksegmentation.run()
+```
+
+### Command Line Interface (CLI)
+
+Basic usage:
+```bash
+tree-disk-segmentation --input_image ./input/baumscheibe.jpg --output_dir ./output
+```
+
+Save intermediate results:
+```bash
+tree-disk-segmentation --input_image ./input/baumscheibe.jpg --output_dir ./output --model_path ./models/yolo11s-seg-tree.pt --save_results
+```
+
+## CLI Arguments
+
+| Argument | Type | Required | Default | Description |
+|----------|------|----------|---------|-------------|
+| `--input_image` | str | Yes | - | Path to input image |
+| `--output_dir` | str | No | `./output` | Output directory path |
+| `--model_path` | str | No | `./models/yolo11s-seg-tree.pt` | Path to the pre-trained model weights |
+| `--debug` | flag | No | False | Enable debug mode |
+| `--save_results` | flag | No | False | Save intermediate images, labelme and config file |
+
+## Development
+
+### Setting up Development Environment
+
+1. Create and activate virtual environment:
+```bash
+poetry config virtualenvs.in-project true
+poetry env use python
+```
+
+```bash
+poetry install
+eval $(poetry env activate)
+```
+
+2. Running tests:
+```bash
+poetry run pytest
+```
+
