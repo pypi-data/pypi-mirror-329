@@ -1,0 +1,183 @@
+[build-system]
+build-backend = "pdm.backend"
+requires = [
+    "pdm-backend",
+]
+
+[project]
+authors = [
+    { name = "Michael Ho", email = "michael.ho@ieee.org" },
+]
+dependencies = [
+    "markdown>=3.7",
+]
+description = "A library to creates markdown documents programatically"
+name = "markdownsausagemachine"
+readme = "README.md"
+requires-python = ">=3.11"
+version = "0.2.0"
+
+[project.license]
+text = "MIT"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.scripts]
+integration-test = "pytest -m 'integration'"
+lint-check = "ruff check --config ./pyproject.toml ."
+lint-fix = "ruff check --config ./pyproject.toml . --fix"
+security-scan = "bandit -rc pyproject.toml src/ tests/"
+test = "pytest"
+type-check = "mypy --config-file ./pyproject.toml src/"
+unit-test = "pytest -m 'not integration and not e2e'"
+
+[tool.pdm.scripts.check-formatting]
+composite = [
+    "black --check src/ tests/",
+    "isort --check --settings-path ./pyproject.toml src/ tests/",
+    "toml-sort --check ./pyproject.toml",
+]
+
+[tool.pdm.scripts.format]
+composite = [
+    "black src/ tests/",
+    "isort --settings-path ./pyproject.toml src/ tests/",
+    "toml-sort -i ./pyproject.toml",
+]
+
+[tool.bandit]
+exclude_dirs = [
+    ".*_cache",
+    ".gitlab",
+    ".pdm-build",
+    ".venv",
+    "docs",
+    "htmlcov",
+]
+
+[tool.bandit.assert_used]
+skips = [
+    "*_test.py",
+    "*test_*.py",
+]
+
+[tool.coverage.report]
+exclude_also = [
+    "\\.\\.\\.",
+]
+
+[tool.isort]
+profile = "black"
+py_version = 312
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_defs = false
+exclude = "\\.venv\\.*"
+no_implicit_optional = true
+python_version = "3.12"
+show_traceback = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_unreachable = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+addopts = [
+    "--cov-branch",
+    "--cov-report=html",
+    "--cov-report=term",
+    "--cov-report=xml",
+    "--junitxml=junit.xml",
+]
+markers = [
+    "integration: Marks a test as an integration test. Integration tests may run slowly and use real I/O resources e.g. network.",
+]
+pythonpath = [
+    "src",
+]
+testpaths = [
+    "tests",
+]
+
+[tool.ruff]
+exclude = [
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "build",
+    "dist",
+    "site-packages",
+    "venv",
+]
+indent-width = 4
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+extend-select = [
+    "B",
+    "C4",
+    "F",
+    "FA",
+    "G",
+    "N",
+    "PGH",
+    "PIE",
+    "PTH",
+    "RET",
+    "RUF",
+    "SIM",
+    "T20",
+    "UP",
+    "W",
+    "YTT",
+]
+fixable = [
+    "ALL",
+]
+ignore = [
+    "N818",
+]
+
+[tool.tomlsort]
+all = false
+ignore_case = true
+in_place = false
+no_block_comments = false
+no_comments = false
+no_footer_comments = false
+no_header_comments = false
+no_inline_comments = false
+no_sort_tables = true
+sort_inline_arrays = true
+sort_table_keys = true
+spaces_before_inline_comment = 2
+spaces_indent_inline_array = 4
+trailing_comma_inline_array = true
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "isort>=6.0.0",
+    "mypy>=1.15.0",
+    "pyhamcrest>=2.1.0",
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.4",
+    "ruff>=0.9.4",
+    "toml-sort>=0.24.2",
+]
