@@ -1,0 +1,1 @@
+uv run pytest tests -s --capture=tee-sys  
