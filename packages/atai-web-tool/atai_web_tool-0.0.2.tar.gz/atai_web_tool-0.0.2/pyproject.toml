@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "atai-web-tool"
+version = "0.0.2"
+description = "Extract the main content from a webpage using zendriver, readability-lxml, and BeautifulSoup."
+readme = "README.md"
+authors = [
+  { name = "AtomGradient", email = "alex@atomgradient.com" }
+]
+urls = { Homepage = "https://github.com/AtomGradient/atai-web-tool" }
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent"
+]
+requires-python = ">=3.6"
+dependencies = [
+  "zendriver",
+  "readability-lxml",
+  "beautifulsoup4",
+  "lxml[html_clean]"
+]
+
+[project.scripts]
+atai-web-tool = "atai_web_tool.cli:main"
