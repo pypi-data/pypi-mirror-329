@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "akumasubtitler"
+version = "0.1.2"
+description = "A tool for automatic subtitling"
+authors = [{ name = "akumanomi1988", email = "akumanomi1988@example.com" }]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "moviepy==1.0.3",
+    "openai-whisper==20231117",
+    "ffmpeg-python==0.2.0",
+    "torch==2.4.1",
+    "tqdm==4.66.5"
+]
+
+[project.urls]
+Homepage = "https://github.com/akumanomi1988/AkumaSubtitler"
+Repository = "https://github.com/akumanomi1988/AkumaSubtitler"
+
+[tool.hatch.build.targets.sdist]
+include = ["src/akumasubtitler", "README.md", "LICENSE"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/akumasubtitler"]
