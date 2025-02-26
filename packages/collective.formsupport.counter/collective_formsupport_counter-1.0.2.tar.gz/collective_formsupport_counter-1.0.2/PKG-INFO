@@ -1,0 +1,274 @@
+Metadata-Version: 2.2
+Name: collective.formsupport.counter
+Version: 1.0.2
+Summary: Counter integration for collective.volto.formsupport
+Home-page: https://github.com/collective/collective.formsupport.counter
+Author: RedTurtle
+Author-email: info@redturtle.it
+License: GPL version 2
+Project-URL: PyPI, https://pypi.org/project/collective.formsupport.counter/
+Project-URL: Source, https://github.com/collective/collective.formsupport.counter
+Project-URL: Tracker, https://github.com/collective/collective.formsupport.counter/issues
+Keywords: Python Plone CMS
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Plone
+Classifier: Framework :: Plone :: Addon
+Classifier: Framework :: Plone :: 6.0
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Operating System :: OS Independent
+Classifier: License :: OSI Approved :: GNU General Public License v2 (GPLv2)
+Requires-Python: >=3.8
+License-File: LICENSE.GPL
+License-File: LICENSE.rst
+Requires-Dist: setuptools
+Requires-Dist: z3c.jbot
+Requires-Dist: plone.api>=1.8.4
+Requires-Dist: plone.app.dexterity
+Requires-Dist: collective.volto.formsupport>=3.2.0.dev0
+Provides-Extra: test
+Requires-Dist: plone.app.testing; extra == "test"
+Requires-Dist: plone.testing>=5.0.0; extra == "test"
+Requires-Dist: plone.app.contenttypes; extra == "test"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: project-url
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+.. image:: https://img.shields.io/pypi/v/collective.formsupport.counter.svg
+    :target: https://pypi.python.org/pypi/collective.formsupport.counter/
+    :alt: Latest Version
+
+.. image:: https://img.shields.io/pypi/status/collective.formsupport.counter.svg
+    :target: https://pypi.python.org/pypi/collective.formsupport.counter
+    :alt: Egg Status
+
+.. image:: https://img.shields.io/pypi/pyversions/collective.formsupport.counter.svg?style=plastic
+    :target: https://pypi.python.org/pypi/collective.formsupport.counter/
+    :alt: Supported - Python Versions
+
+.. image:: https://img.shields.io/pypi/l/collective.formsupport.counter.svg
+    :target: https://pypi.python.org/pypi/collective.formsupport.counter/
+    :alt: License
+
+.. image:: https://coveralls.io/repos/github/collective/collective.formsupport.counter/badge.svg
+    :target: https://coveralls.io/github/collective/collective.formsupport.counter
+    :alt: Coverage
+
+
+==============================
+collective.formsupport.counter
+==============================
+
+Counter integration for `collective.volto.formsupport <https://github.com/collective/collective.volto.formsupport>`_
+
+Features
+--------
+
+- Form counter for `collective.volto.formsupport <https://github.com/collective/collective.volto.formsupport>`_ >= 3.2
+
+
+Installation
+------------
+
+Install collective.formsupport.counter by adding it to your buildout::
+
+    [buildout]
+
+    ...
+
+    eggs =
+        collective.formsupport.counter
+
+
+and then running ``bin/buildout``
+
+REST API
+========
+-------------------------------------------
+🔄 Reset Form Counter
+-------------------------------------------
+
+Reset the counter for a specific form block.
+
+**Endpoint:**
+
+.. code-block:: text
+
+    /<document>/@counter
+
+**Method:**
+
+``PATCH``
+
+**Parameters:**
+
+- ``block_id`` *(optional)* — The identifier of the form block, if not passed, the first available formblock selected.
+- ``counter_value`` *(optional)* — The value to set the counter to (default: 0).
+
+**Description:**
+
+This endpoint resets the form counter to a specified value.
+
+**Request Example:**
+
+.. code-block:: http
+
+    PATCH /my-document/@counter
+    Content-Type: application/json
+
+    {
+        "block_id": "form_block_123",
+        "counter_value": 5
+    }
+
+**Response:**
+
+- **Status Code:** ``204 No Content``
+
+  The response indicates that the counter has been successfully reset. No response body is returned.
+
+-------------------------------------------
+📊 Get Counter Value
+-------------------------------------------
+
+Retrieve the current counter value for a specific form block.
+
+**Endpoint:**
+
+.. code-block:: text
+
+    /<document>/@counter
+
+**Method:**
+
+``GET``
+
+**Parameters:**
+
+- ``block_id`` *(optional)* — The identifier of the form block. The first available is being selected if not passed.
+
+**Description:**
+
+This endpoint retrieves the current value of the form counter.
+
+**Request Example:**
+
+.. code-block:: http
+
+    GET /my-document/@counter?block_id=form_block_123
+    Accept: application/json
+
+**Response:**
+
+- **Status Code:** ``200 OK``
+
+- **Response Body:**
+
+.. code-block:: json
+
+    {
+        "counter_value": 5
+    }
+
+
+Authors
+-------
+
+RedTurtle
+
+
+Contributors
+------------
+
+- folix-01
+
+Contribute
+----------
+
+- Issue Tracker: https://github.com/collective/collective.formsupport.counter/issues
+- Source Code: https://github.com/collective/collective.formsupport.counter
+- Documentation: https://docs.plone.org/foo/bar
+
+
+Support
+-------
+
+If you are having issues, please let us know.
+We have a mailing list located at: info@redturtle.it
+
+
+License
+-------
+
+The project is licensed under the GPLv2.
+
+
+Contributors
+============
+
+- RedTurtle, info@redturtle.it
+
+
+Changelog
+=========
+
+
+1.0.2 (2025-02-25)
+------------------
+
+- Nothing changed yet.
+
+
+1.0.1 (2025-01-10)
+------------------
+
+- Fix counter value persistence problem.
+  [folix-01]
+
+
+1.0.0 (2025-01-09)
+------------------
+
+- Allignments with collective.volto.formsupport.
+  [folix-01]
+
+
+1.0.0rc4 (2024-11-22)
+---------------------
+
+- Label translated
+  [mamico]
+
+
+1.0.0rc3 (2024-11-19)
+---------------------
+
+- Fix counter
+  [mamico]
+
+
+1.0.0rc2 (2024-11-15)
+---------------------
+
+- Fix manifest
+  [mamico]
+
+
+1.0.0rc1 (2024-11-13)
+---------------------
+
+- Initial release.
+  [RedTurtle]
