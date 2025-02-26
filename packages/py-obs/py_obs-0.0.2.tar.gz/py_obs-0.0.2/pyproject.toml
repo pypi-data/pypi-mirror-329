@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "py-obs"
+version = "0.0.2"
+description = "Asynchronous API wrapper for the Open Build Service"
+authors = ["Dan Čermák <dcermak@suse.com>"]
+license = "GPL-2.0-or-later"
+readme = "README.rst"
+packages = [{include = "py_obs", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiohttp = ">=3.9"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.4.0"
+black = ">=23.7.0"
+pytest-asyncio = ">=0.21.1"
+ruff = ">=0.0.277"
+mypy = ">=1.4.1"
+pytest-recording = ">=0.13.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+markers = [
+    "local_obs: marks tests requiring a local obs instance for testing",
+]
