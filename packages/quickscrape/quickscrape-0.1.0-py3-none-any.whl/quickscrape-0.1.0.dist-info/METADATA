@@ -1,0 +1,66 @@
+Metadata-Version: 2.2
+Name: quickscrape
+Version: 0.1.0
+Summary: A simple library for extracting common data types from web pages
+Author-email: Utku Ayaz Akkas <akkas@ieee.org>
+Project-URL: Homepage, https://github.com/akkasayaz/quickscrape
+Project-URL: Bug Tracker, https://github.com/akkasayaz/quickscrape/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: beautifulsoup4>=4.9.0
+Requires-Dist: requests>=2.25.0
+Requires-Dist: pandas>=1.2.0
+
+# QuickScrape
+
+A simple Python library for extracting common data types from web pages.
+
+## Installation
+
+#### Not available yet
+
+```bash
+pip install quickscrape
+```
+
+## Usage
+
+```python-repl
+import quickscrape
+
+# Extract emails from a webpage
+emails = quickscrape.extract("email", "https://example.com/contact")
+
+# Extract tables
+tables = quickscrape.extract("table", "https://example.com/data")
+# Get tables as pandas DataFrames
+tables_df = quickscrape.extract("table", "https://example.com/data", output_format="dataframe")
+
+# Extract multiple data types at once
+results = quickscrape.extract(["email", "table"], "https://example.com")email", "https://example.com/contact")
+
+# Extract tables
+tables = quickscrape.extract("table", "https://example.com/data")
+```
+
+## License
+
+MIT
+
+### Development Workflow
+
+1. **Local Development**: Install your package in development mode:
+
+   ```bash
+   pip install -e .
+   ```
+2. **Testing** : Use pytest for writing and running tests.
+
+   ```bash
+   pip install pytest
+   pytest
+   ```
