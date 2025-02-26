@@ -1,0 +1,178 @@
+name: zizmor wheel builds for PyPI
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ${{ matrix.platform.runner }}
+    strategy:
+      matrix:
+        platform:
+          - runner: ubuntu-24.04
+            target: x86_64
+            manylinux: auto
+          - runner: ubuntu-24.04
+            target: x86
+            manylinux: auto
+          - runner: ubuntu-24.04
+            target: aarch64
+            manylinux: "2_24"
+          - runner: ubuntu-24.04
+            target: armv7
+            manylinux: auto
+          - runner: ubuntu-24.04
+            target: s390x
+            manylinux: auto
+          - runner: ubuntu-24.04
+            target: ppc64le
+            manylinux: auto
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+      - name: Build wheels
+        uses: PyO3/maturin-action@53965ae436bfa278197425c78ac1e3eeebc7cc33 # v1
+        with:
+          target: ${{ matrix.platform.target }}
+          args: --release --out dist
+          sccache: ${{ !startsWith(github.ref, 'refs/tags/') }} # zizmor: ignore[cache-poisoning]
+          manylinux: ${{ matrix.platform.manylinux }}
+      - name: Upload wheels
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+        with:
+          name: wheels-linux-${{ matrix.platform.target }}
+          path: dist
+
+  musllinux:
+    runs-on: ${{ matrix.platform.runner }}
+    strategy:
+      matrix:
+        platform:
+          - runner: ubuntu-24.04
+            target: x86_64
+          - runner: ubuntu-24.04
+            target: x86
+          - runner: ubuntu-24.04
+            target: aarch64
+          - runner: ubuntu-24.04
+            target: armv7
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+      - name: Build wheels
+        uses: PyO3/maturin-action@53965ae436bfa278197425c78ac1e3eeebc7cc33 # v1
+        with:
+          target: ${{ matrix.platform.target }}
+          args: --release --out dist
+          sccache: ${{ !startsWith(github.ref, 'refs/tags/') }} # zizmor: ignore[cache-poisoning]
+          manylinux: musllinux_1_2
+      - name: Upload wheels
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+        with:
+          name: wheels-musllinux-${{ matrix.platform.target }}
+          path: dist
+
+  windows:
+    runs-on: ${{ matrix.platform.runner }}
+    strategy:
+      matrix:
+        platform:
+          - runner: windows-latest
+            target: x64
+          - runner: windows-latest
+            target: x86
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+      - name: Build wheels
+        uses: PyO3/maturin-action@53965ae436bfa278197425c78ac1e3eeebc7cc33 # v1
+        with:
+          target: ${{ matrix.platform.target }}
+          args: --release --out dist
+          sccache: ${{ !startsWith(github.ref, 'refs/tags/') }} # zizmor: ignore[cache-poisoning]
+      - name: Upload wheels
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+        with:
+          name: wheels-windows-${{ matrix.platform.target }}
+          path: dist
+
+  macos:
+    runs-on: ${{ matrix.platform.runner }}
+    strategy:
+      matrix:
+        platform:
+          - runner: macos-13
+            target: x86_64
+          - runner: macos-14
+            target: aarch64
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+      - name: Build wheels
+        uses: PyO3/maturin-action@53965ae436bfa278197425c78ac1e3eeebc7cc33 # v1
+        with:
+          target: ${{ matrix.platform.target }}
+          args: --release --out dist
+          sccache: ${{ !startsWith(github.ref, 'refs/tags/') }} # zizmor: ignore[cache-poisoning]
+      - name: Upload wheels
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+        with:
+          name: wheels-macos-${{ matrix.platform.target }}
+          path: dist
+
+  sdist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+      - name: Build sdist
+        uses: PyO3/maturin-action@53965ae436bfa278197425c78ac1e3eeebc7cc33 # v1
+        with:
+          command: sdist
+          args: --out dist
+      - name: Upload sdist
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+        with:
+          name: wheels-sdist
+          path: dist
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/zizmor
+    if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' }}
+    needs: [linux, musllinux, windows, macos, sdist]
+    permissions:
+      # Use to sign the release artifacts
+      id-token: write
+      # Used to upload release artifacts
+      contents: write
+      # Used to generate artifact attestation
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@520d128f165991a6c774bcb264f323e3d70747f4 # v2
+        with:
+          subject-path: 'wheels-*/*'
+      - name: Publish to PyPI
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        uses: PyO3/maturin-action@53965ae436bfa278197425c78ac1e3eeebc7cc33 # v1
+        with:
+          command: upload
+          args: --non-interactive --skip-existing wheels-*/*
