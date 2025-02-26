@@ -1,0 +1,120 @@
+Metadata-Version: 2.2
+Name: termai-cli
+Version: 1.0.0
+Summary: AI-powered CLI for generating and executing shell commands
+Home-page: https://github.com/ayushgupta4002/termai
+Author: Ayush Gupta
+Author-email: ayush4002gupta@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Environment :: Console
+Classifier: Topic :: System :: Systems Administration
+Classifier: Topic :: Utilities
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: typer[all]
+Requires-Dist: rich
+Requires-Dist: pydantic
+Requires-Dist: google-generativeai
+Requires-Dist: python-dotenv
+Requires-Dist: langchain
+Requires-Dist: langchain-google-genai
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Termai - AI-Powered Command Line Assistant
+
+## Overview
+Termai is a command-line tool specially designed for beginners,it translates natural language instructions into shell commands and executes them. It streamlines terminal interactions by automating command generation, reducing the need to memorize complex syntax.
+
+## Features
+- **Natural Language to Shell Command Conversion** â€“ Converts plain English instructions into executable shell commands using the Gemini language model.
+- **Command Review** â€“ Allows users to review generated commands before execution to ensure accuracy.
+- **Command Execution** â€“ Runs commands directly and presents output in a user-friendly format.
+- **Shell Detection** â€“ Identifies the active shell environment (bash, zsh, PowerShell, etc.) for compatibility.
+- **Command Validation** â€“ Implements security measures to prevent execution of potentially harmful commands.
+
+## Installation
+
+### Using pip (Recommended)
+```sh
+pip install termai-cli
+```
+
+### From Source
+```sh
+git clone https://github.com/ayushgupta4002/Termai
+cd termai
+pip install .
+```
+
+## Usage
+
+### Basic Usage
+```sh
+termai "Your instruction here" -e
+```
+
+### Example Commands
+#### Create a Next.js project and spin up a PostgreSQL container in Docker:
+```sh
+termai "Make a Next.js project and spin up a PostgreSQL image in Docker" -e
+```
+
+#### List all running Docker containers:
+```sh
+termai "Show all running Docker containers" -e
+```
+
+#### Find and delete all `.log` files in the current directory:
+```sh
+termai "Find and delete all .log files in this folder" -e
+```
+
+## Architecture
+Termai's core logic is in `cli.py`, which:
+1. Receives a natural language instruction.
+2. Uses `get_shell_command` (via `langchain_google_genai`) to generate shell commands.
+3. Validates commands using `validate_command` in `utils.py`.
+4. Executes commands securely and displays results.
+
+## Project Structure
+```
+termai/
+â”œâ”€â”€ src/
+â”‚   â”œâ”€â”€ cli.py       # Command-line interface logic
+â”‚   â”œâ”€â”€ utils.py     # Utility functions (validation, shell detection)
+â”‚   â””â”€â”€ __init__.py
+â”œâ”€â”€ setup.py       # Build script for packaging
+â””â”€â”€ README.md
+```
+
+## Dependencies
+- **Python** â€“ Primary language
+- **Typer** â€“ CLI framework
+- **Pydantic** â€“ Data validation
+- **Rich** â€“ Enhanced terminal output
+- **google-generativeai & langchain-google-genai** â€“ AI model integration
+- **python-dotenv** â€“ Environment variable management
+- **setuptools** â€“ Packaging and distribution
+- **subprocess** â€“ Command execution
+
+## Configuration
+Before using Termai, set up your Gemini API key:
+```sh
+echo "GOOGLE_API_KEY=your_api_key" > .env
+```
+
+## Contributing
+Contributions are welcome! Please submit a pull request or open an issue.
+
+## Support
+For any issues or feature requests, please open an issue on GitHub.
