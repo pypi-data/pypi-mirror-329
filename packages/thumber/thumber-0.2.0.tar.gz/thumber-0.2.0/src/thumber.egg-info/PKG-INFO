@@ -1,0 +1,75 @@
+Metadata-Version: 2.2
+Name: thumber
+Version: 0.2.0
+Summary: Create thumbnails. Specify dimensions or aspect ratio.
+Author: lvxvvv
+Maintainer: lvxvvv
+Project-URL: Homepage, https://github.com/lvxvvv/thumber
+Project-URL: Repository, https://github.com/lvxvvv/thumber.git
+Project-URL: Issues, https://github.com/lvxvvv/thumber/issues
+Project-URL: Mastodon, https://mastodon.social/@lvxvvv
+Project-URL: Twitter, https://x.com/lvxvvv
+Project-URL: Changelog, https://github.com/lvxvvv/thumber/blob/main/CHANGELOG.md
+Keywords: thumbnail,image,filter,ratio,aspect ratio
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
+Classifier: Programming Language :: Python
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pillow<12.0,>=11.1.0
+
+# Thumber
+
+This Python script takes an image and creates a composite image with the original one centered, while the background is filled with a blurred and faded version, if dimensions or aspect ratio are altered. If it follows the same aspect ratio, but dimensions are smaller, it only downscales the image. The final output will have dimensions specified by command-line arguments.
+
+Install using pip:
+
+```
+pip install thumber
+```
+
+## Usage
+
+```
+thumber <mode> <input_image> <final_width> <final_height> [blur_radius]
+```
+
+Examples:
+
+To produce a 1920x1080 image:
+
+```
+thumber dimensions square.jpg 1920 1080 --blur=30
+```
+
+To produce an image whose width is 1.778x the height:
+
+```
+thumber aspect square.jpg 1.778 --blur=30
+```
+
+The closer to 0, the lower is the blur effect
+
+
+## Gallery Examples
+
+
+| `babel.webp` (1024x1024)| `babel-dimensions-1920x1080.webp` | `babel-aspect-0.5.webp` | `babel-aspect-2.webp`
+|:----:|:----:|:-----:|:----:| 
+| ![](assets/babel.webp)| ![](assets/babel-dimensions-1920x1080.webp) | ![](assets/babel-aspect-0.5.webp) | ![](assets/babel-aspect-2.webp)
+
+
+## License 
+
+This project is licensed under the MIT License.
