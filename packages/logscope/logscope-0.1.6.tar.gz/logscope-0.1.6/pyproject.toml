@@ -1,0 +1,30 @@
+[project]
+name = "logscope"
+version = "0.1.6"
+description = "Fancy logging with local SQLite storage."
+authors = [
+    { name = "Samuel S. Watson", email = "samuel.s.watson@gmail.com" }
+]
+dependencies = []
+readme = "README.md"
+requires-python = ">= 3.11"
+license = { text = "MIT" }
+
+[project.scripts]
+logscope = "logscope.cli:main"
+
+[build-system]
+requires = ["hatchling==1.26.3"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "pytest>=8.3.4",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/logscope"]
