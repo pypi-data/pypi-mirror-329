@@ -1,0 +1,65 @@
+[project]
+name = "hbdjinvoicing"
+dynamic = ["version"]
+authors = [{name = "Hashbang", email = "contact@hashbang.coop"}]
+readme = "README.md"
+license = {file = "LICENSE"}
+dependencies = [
+    "django",
+    "psycopg2-binary",
+    "django-weasyprint",
+    "django-countries",
+]
+
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["hbdjinvoicing"]
+
+[tool.setuptools_scm]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "django-query-counter",
+    "pytest-ruff",
+    "pytest-django",
+    "pytest-cov",
+    "diff-cover",
+    "pytest-xdist",
+    "ruff",
+    "pytest-factoryboy",
+    "pip-tools",
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "devproject.settings"
+addopts = "--ruff --reuse-db --cov-report xml --cov-report term-missing --cov=hbdjinvoicing -p no:warnings"
+
+[tool.ruff.lint]
+exclude = ["**/migrations/*.py"]
+ignore = ["E501"]
+select = ["I", "F", "E", "DJ", "C90"]
+
+[tool.coverage.run]
+omit = [
+    "*/wsgi.py",
+    "*/asgi.py",
+    "manage.py",
+    "*/migrations/*",
+    "*/admin/*",
+    "*/admin.py",
+    "*/settings.py",
+    "*/urls.py",
+    "*/api_urls.py",
+    "*/apps.py",
+    "*/conftest.py",
+    "*/static/*",
+    "*/__init__.py",
+    "*/tests/*",
+]
+
+[tool.coverage.report]
+fail_under = "90"
