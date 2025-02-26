@@ -1,0 +1,58 @@
+Metadata-Version: 2.2
+Name: thumber
+Version: 0.1.0
+Summary: Parse ebooks, extracts chapters and contents.
+Author: lvxvvv
+Maintainer: lvxvvv
+Project-URL: Homepage, https://github.com/lvxvvv/thumber
+Project-URL: Repository, https://github.com/lvxvvv/thumber.git
+Project-URL: Issues, https://github.com/lvxvvv/thumber/issues
+Project-URL: Mastodon, https://mastodon.social/@lvxvvv
+Project-URL: Twitter, https://x.com/lvxvvv
+Project-URL: Changelog, https://github.com/lvxvvv/thumber/blob/main/CHANGELOG.md
+Keywords: thumbnail,image,filter
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
+Classifier: Programming Language :: Python
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pillow<12.0,>=11.1.0
+
+# Thumber
+
+This Python script takes an image and creates a composite image with the original one centered, while the background is filled with a blurred and faded version, if dimensions or aspect ratio are altered. If it follows the same aspect ratio, but dimensions are smaller, it only downscales the image. The final output will have dimensions specified by command-line arguments.
+
+Install using pip:
+
+```
+pip install thumber
+```
+
+## Usage
+
+```
+thumber <input_image> <final_width> <final_height> [blur_radius]
+```
+
+Example:
+
+```
+thumber square.jpg 1920 1080 30
+```
+
+The closer to 0, the lower is the blur effect
+
+## License 
+
+This project is licensed under the MIT License.
