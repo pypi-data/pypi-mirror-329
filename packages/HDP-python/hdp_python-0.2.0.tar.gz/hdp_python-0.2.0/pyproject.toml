@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm", "numpy", "dask", "netCDF4", "cftime", "cartopy"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "HDP_python"
+version = "0.2.0"
+description = "Heatwave Diagnostics Package (HDP) for computing heatwave metrics over gridded timeseries data."
+authors = [
+  { name = "Cameron Cummins", email = "cameron.cummins@utexas.edu" },
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.12.3"
+dependencies = [
+  "numpy",
+  "xarray >= 2025.1.1",
+  "cartopy",
+  "numba >= 0.60.0",
+  "nc_time_axis",
+  "dask[complete]",
+  "zarr",
+  "netCDF4",
+  "tqdm",
+  "ipywidgets",
+  "nbformat"
+]
+keywords = ["HDP", "heat", "heatwave", "heatwave diagnostics package", "climate", "climate model", "timeseries", "heatwave metrics", "diagnostics"]
+
+
+[project.urls]
+Homepage = "https://github.com/AgentOxygen/HDP"
+Issues = "https://github.com/AgentOxygen/HDP"
+
+[project.scripts]
+hdp = "hdp.cli:main"
+
+[tool.setuptools]
+packages = ["hdp"]
+
+[tool.setuptools.package-data]
+hdp = [
+    "graphics/pacl.mplstyle"
+]
