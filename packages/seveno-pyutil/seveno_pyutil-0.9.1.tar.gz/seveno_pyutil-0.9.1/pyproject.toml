@@ -1,0 +1,162 @@
+[build-system]
+requires = ["setuptools>=65", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "seveno-pyutil"
+version = "0.9.1"
+description = "Various unsorted Python utilities"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+	"Development Status :: 4 - Beta",
+	"Intended Audience :: Developers",
+	"License :: OSI Approved :: MIT License",
+	"Programming Language :: Python",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3.11",
+	"Programming Language :: Python :: 3.12",
+	"Programming Language :: Python :: 3.13",
+	"Programming Language :: Python :: 3 :: Only",
+	"Operating System :: OS Independent",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = ["utilities"]
+license = { text = "MIT" }
+authors = [{ name = "Tomislav Adamic", email = "tomislav.adamic@gmail.com" }]
+
+dependencies = [
+	"colorlog",
+	"holidays",
+	"pretty-traceback",
+	"pygments",
+	"python-dateutil>=2.6.0",
+	"sqlglot[rs]",
+	"tzlocal",
+]
+
+
+[project.urls]
+Source = "https://github.com/tadams42/seveno_pyutil"
+Documentation = "https://seveno-pyutil.readthedocs.io/en/latest/"
+
+
+[project.optional-dependencies]
+dev = ["black", "bump2version", "ipython", "rich", "pre-commit", "ruff"]
+docs = ["furo", "myst-parser", "sphinx", "sphinx-copybutton"]
+tests = [
+	"check-manifest",
+	"pytest",
+	"coverage",
+	"factory-boy",
+	"faker",
+	"pytest-spec",
+]
+
+
+[tool.setuptools]
+zip-safe = false
+platforms = ["any"]
+include-package-data = true
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["tests"]
+
+
+[tool.isort]
+profile = "black"
+skip_gitignore = true
+
+
+[tool.ruff]
+exclude = [".git", ".venv", "build", "dist"]
+line-length = 88 # Same as Black.
+target-version = "py310"
+cache-dir = "~/.cache/ruff"
+src = ["src"]
+ignore = [
+	"E501",   # line-too-long (E501)
+	"TRY003", # Avoid specifying long messages outside the exception class
+	"RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+]
+select = [
+	"E",
+	"F",
+	"I",   # isort (I)
+	"C90", # mccabe (C90)
+	"UP",  # pyupgrade (UP)
+	"S",   # flake8-bandit (S)
+	"FBT", # flake8-boolean-trap (FBT)
+	"B",   # flake8-bugbear (B)
+	"C4",  # flake8-comprehensions (C4)
+	"DTZ", # flake8-datetimez (DTZ)
+	"FA",  # flake8-future-annotations (FA)
+	"G",   # flake8-logging-format (G)
+	"PIE", # flake8-pie (PIE)
+	"PT",  # flake8-pytest-style (PT)
+	"RET", # flake8-return (RET)
+	"SIM", # flake8-simplify (SIM)
+	"TCH", # flake8-type-checking (TCH)
+	"PTH", # flake8-use-pathlib (PTH)
+	"PL",  # Pylint (PL)
+	"TRY", # tryceratops (TRY)
+	"RUF", # Ruff-specific rules (RUF)
+]
+[tool.ruff.isort]
+known-local-folder = ["src"]
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"] # unused-import (F401)
+"tests/**/__init__.py" = ["F403"] # undefined-local-with-import-star (F403)
+"tests/conftest.py" = ["F401", "F403"] # undefined-local-with-import-star (F403)
+"tests/*" = [
+	"S101",    # Use of `assert` detected
+	"S311",    # Standard pseudo-random generators are not suitable for cryptographic ...
+	"S108",    # Probable insecure usage of temporary file
+	"PLR0913", # Too many arguments to function call (6 > 5)
+	"PLR2004", # Magic value used in comparison
+	"S105",    # Possible hardcoded password
+]
+
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+norecursedirs = [".git", "tmp*", ".hg", ".venv", ".tox", ".eggs"]
+# Enabling doctest modules on src/ rises all kinds of import errors
+# on "pip install -e ." repo and in tox
+# Part of the problem is here:
+# https://github.com/pytest-dev/pytest/issues/2042
+# Untill there is a better way to run doctests over installed package code
+# we disable them
+addopts = [
+	"-rxEfsw",
+	"--strict-markers",
+	"--tb=short",
+	"--doctest-modules",
+	"--doctest-glob=*.rst",
+	"--doctest-glob=*.py",
+	"--ignore=bin",
+	"--ignore=build",
+	"--ignore=docs/conf.py",
+	"--ignore=src",
+]
+python_classes = ["Describe*", "When_*", "describe_*"]
+python_functions = ["it_*", "test_*", "then_*", "when_*"]
+python_files = ["test_*", "*_spec.py", "*_test.py"]
+spec_header_format = "{test_case}"
+
+
+[tool.coverage.paths]
+source = ["src"]
+
+
+[tool.coverage.run]
+source = ["src", "tests"]
+
+
+[tool.coverage.report]
+show_missing = true
+precision = 2
