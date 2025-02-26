@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "datetimecoords"
+description = "A package to provide tools to handle computations with datetime-like data."
+requires_python = ">=3.9"
+dynamic = ["version"]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "numpy>=1.20",
+    "pandas>=1.1.5",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Software Development :: Libraries",
+    "Operating System :: OS Independent"
+]
+authors = [
+    { name="Conrado", email="souza.conrado@gmail.com"},
+]
+
+[project.urls]
+repository = "https://github.com/C0nrado/dtcoords"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dtcoords"]
+
+[tool.hatch.metadata.hooks.custom]
+path = "version.py"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = [
+    "-v",
+    "--import-mode=importlib"
+]
+
+[tool.black]
+target-version = ["py39"]
+line-length = 88
+
+[tool.isord]
+profile = "black"
+py_version = 39
