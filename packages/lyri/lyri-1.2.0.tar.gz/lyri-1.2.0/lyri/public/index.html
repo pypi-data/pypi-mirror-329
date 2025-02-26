@@ -1,0 +1,105 @@
+<!doctype html>
+<!-- https://dev.webonomic.nl/fixing-the-iphone-css-hover-problem-on-ios -->
+<html ontouchmove>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lyri</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+  </head>
+
+  <body>
+    <div id="bg-image" class="bg-image"></div>
+    <div id="lyrics-panel" class="lyrics-panel hidden">
+      <p id="lyrics"></p>
+    </div>
+    <div class="bottom-panel">
+      <div id="track-info" class="track-info">
+        <img id="album-art" class="album-art" src="" />
+        <div class="track-text">
+          <h1 id="title"></h1>
+          <h3 id="album"></h3>
+          <h3 id="artist"></h3>
+        </div>
+      </div>
+      <div class="media-controls-container">
+        <div id="media-controls" class="media-controls">
+          <div class="media-controls-row">
+            <p id="position-label">00:00</p>
+            <progress
+              id="position-bar"
+              class="position-bar"
+              value="0"
+              max="100"
+            ></progress>
+            <p id="length-label">00:00</p>
+          </div>
+          <div class="media-controls-row">
+            <div class="media-controls-group flex-start">
+              <a
+                id="track-url"
+                class="media-controls-btn media-controls-btn-icon"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class="bi-box-arrow-up-right"></i>
+              </a>
+            </div>
+            <div class="media-controls-group">
+              <button
+                id="shuffle-btn"
+                class="media-controls-btn media-controls-btn-icon max-width"
+              >
+                <i class="bi-shuffle"></i>
+              </button>
+              <button
+                id="previous-btn"
+                class="media-controls-btn media-controls-btn-icon"
+              >
+                <i class="bi-skip-start-fill"></i>
+              </button>
+              <button id="playback-btn" class="media-controls-btn">
+                <i id="playback-icon" class="bi-play-fill"></i>
+              </button>
+              <button
+                id="next-btn"
+                class="media-controls-btn media-controls-btn-icon"
+              >
+                <i class="bi-skip-end-fill"></i>
+              </button>
+              <button
+                id="loop-status-btn"
+                class="media-controls-btn media-controls-btn-icon max-width"
+              >
+                <i id="loop-status-icon" class="bi-repeat"></i>
+              </button>
+            </div>
+            <div class="media-controls-group flex-end">
+              <button
+                id="lyrics-btn"
+                class="media-controls-btn media-controls-btn-icon"
+              >
+                <i class="bi-music-note-list"></i>
+              </button>
+              <button
+                id="mute-btn"
+                class="media-controls-btn media-controls-btn-icon"
+              >
+                <i id="mute-icon" class="bi-volume-up"></i>
+              </button>
+              <progress id="volume-bar" value="0" max="1"></progress>
+              <button
+                id="fullscreen-btn"
+                class="media-controls-btn media-controls-btn-icon max-width"
+              >
+                <i id="fullscreen-icon" class="bi-fullscreen"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/player.js"></script>
+  </body>
+</html>
