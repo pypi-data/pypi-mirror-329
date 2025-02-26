@@ -1,0 +1,68 @@
+Metadata-Version: 2.1
+Name: tlse2109
+Version: 0.1.0
+Summary: TL-SE2109 is a switch, and its brand is TP-Link
+Home-page: https://github.com/JerryZheng89/tlse2109_whl
+Author: Jerry Zheng
+Author-email: JerryZheng2018@outlook.com
+License: CC BY-NC 4.0
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: Microsoft :: Windows :: Windows 10
+Classifier: Operating System :: Microsoft :: Windows :: Windows 11
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: bs4
+
+# TLSE2109
+![](https://badge.fury.io/py/license.svg)
+![LICENSE](https://licensebuttons.net/l/by-nc/4.0/88x31.png)
+
+## TLSE2109 lib
+This package is the library for device tlse2109
+[TL-SE2109 Product Main Page](https://www.tp-link.com.cn/product_2840.html)
+
+## Product Overview
+This library is designed to provide an efficient automation management interface for the TP-LINK TL-SE2109 cloud-managed switch. It supports remote configuration, status monitoring, and data collection through Python, making it suitable for enterprise network operations, lab testing, and other scenarios.
+
+### 1. Core Device Parameter Support
+
+Hardware Interfaces
+8 x 10/100/1000/2500Mbps Ethernet ports, 1 x 1/2.5/10Gbps SFP+ fiber port, supporting line-speed forwarding.
+Chipset: Based on the RTL8373 (integrated with 4 x 2.5G PHY) and RTL8224 (extended with 4 x 2.5G PHY) public solution, featuring low power consumption.
+Power Management
+Measured idle power consumption: ~1.94W; full load (8 Ethernet ports + 10G fiber port) power consumption: ≤12W.
+### 2. Library Features
+- [x] API open_web(): login in website
+- [x] API get get_lan_statistics(): lan statistics of all ports
+- [x] API get_port_statistics(port): detail stattics of the port
+- [ ] set_port_rate_limit
+- [ ] create_vlan
+
+## Basic Usage
+```python
+    form tlse2109 import TLSE2109
+
+    net_switch = TLSE2109('resnics', 'resnics')
+    net_switch.open_web()
+    result = net_switch.get_lan_statistics()
+    print(result)
+
+    net_switch.get_port_statistics(1)
+    net_switch.get_port_statistics(9)
+    time.sleep(1)
+
+    net_switch.clear_statistics()
+    result = net_switch.get_lan_statistics()
+    print(result)
+
+    net_switch.close()
+```
