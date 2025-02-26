@@ -1,0 +1,53 @@
+{% include '_head.html' %}
+<link rel="stylesheet" href="/static/home.css" />
+
+</head>
+<body>
+    {% include '_menu.html' %}
+    </header>
+    <main class="home">
+        <h1>Welcome at CPNITS Monze, {{ props.alias() }}</h1>
+        {% if bericht is not none %}
+            <div style="margin: 1em; border: 2px solid var(--signaal);padding: 1em;">{{ bericht|safe }}</div>
+        {% endif %}
+        {% if props.magda(['docent']) %}
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <div style="width: 100%">
+                    <h2>My todo's</h2>
+                    <ul>
+                        {% for s in mijn %}
+                            {% set groep = groepen[s._try('s_group')] %}
+                            <li class="liggend"><a class="asbutton valop" href="/studenten/single/{{ s._id() }}">{{ s._id()|vier }}</a> <a class="asbutton" href="/groepen/{{ groep._try('id') }}" style="background-color: {{ groep._try('color') }};">{{ groep._try('name') }}</a> {{ s._try('firstname') }} {{ s._try('lastname') }} </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+
+                <div style="width: 100%">
+                    <h2>Other todo's</h2>
+                    <ul>
+                        {% for s in dijn %}
+                            {% set groep = groepen[s._try('s_group')] %}
+                            <li class="liggend"><a class="asbutton valop" href="/studenten/single/{{ s._id() }}">{{ s._id()|vier }}</a> <a class="asbutton" href="/groepen/{{ groep._try('id') }}" style="background-color: {{ groep._try('color') }};">{{ groep._try('name') }}</a> {{ s._try('firstname') }} {{ s._try('lastname') }} </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+        <hr>
+        <p>The path to your OneDrive is: <strong>{{ props.odpad() }}</strong></p>
+        <p>The path to your Settings is: <strong>{{ props.settingspad() }}</strong></p>
+        <!-- <p>Logging is {{ 'on' if logging else 'off' }}</p> -->
+    </main>
+<script>
+    $(function(){
+        $('.contrast').each(function(){
+            let kleur = $(this).css('background-color');
+            let contra = calc_contra_color(kleur)
+            $(this).css('color', contra);
+        });
+    });
+</script>
+</body>
+</html>
