@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+echo Running ruff src
+uvx ruff check --fix src --exclude src/aicode/aider-install
+echo Running ruff tests
+uvx ruff check --fix tests
+echo Running black src tests
+uvx black src tests --exclude src/aicode/aider-install
+echo Running isort src tests
+uvx isort --profile black src tests --skip src/aicode/aider-install
+echo Running flake8 src tests
+uvx flake8 src tests --exclude src/aicode/aider-install
+echo Running mypy src
+uvx mypy src tests --exclude src/aicode/aider-install
+echo Linting complete!
+exit 0
