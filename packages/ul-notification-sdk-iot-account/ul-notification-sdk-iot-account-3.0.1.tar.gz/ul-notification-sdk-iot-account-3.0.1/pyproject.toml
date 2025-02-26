@@ -1,0 +1,130 @@
+[tool.pytest.ini_options]
+addopts = """
+    --cov src \
+    --no-cov-on-fail \
+    --cov-report term-missing \
+    --cov-report html:./.tmp/coverage \
+    --maxfail=1 \
+    --tb=short \
+    -vvv \
+    -ra \
+    -q \
+    --showlocals \
+    -p pytest_cov"""
+log_cli = true
+cache_dir = "./.tmp/pytest-cache"
+testpaths = [
+    "__tests__",
+]
+norecursedirs = [
+    ".*",
+    ".git",
+    ".tmp",
+    "srv",
+    "node_modules",
+]
+
+[tool.pytest_env]
+APPLICATION__DB_SCHEMA = "postgresql"
+APPLICATION__DB_ADDRESS = "notification__db"
+APPLICATION__DB_PORT = "5432"
+APPLICATION__DB_USER = "admin"
+APPLICATION__DB_PASSWORD = "admin"
+APPLICATION__DB_DATABASE = "notification_db"
+NOTIFICATION__AMQP_BROKER__URI = "amqp://admin:admin@localhost:32826"
+NOTIFICATION__SYS_USER_ID = "d88f576d-0f3a-4333-94c5-c6b54791ff6a"
+INTERNAL_API_ENDPOINT = "http://localhost:32714"
+APPLICATION_DIR = {value = "{PWD}/src/notification__api", transform = true}
+INTERNAL_JWT_ACCESS_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhMSI6WyJsb2NhbCIsIncmd0R2ezk4cDl5YGVTeFVaWSooIiwiKnBGOWo0PzA2TGwqUHVpTjBJKygiLCIiLDUyNjk5OTY4MCwiMTUwMDEnMSJdfQ.OlcQyRXu0wiDxB54xpfR6Wc0kxKhevFOS3Eiq4eFLx7QczlJrLn21OYwtDLFnM7qXIvViPaJN9Jv4pocYzfIJxrbR_ydgrX_x4dsYM-ImL6NvCjh-xQ-jId83Umv0b_tMbpksk7wRM_Kf-hjD54_CCY8yLC1GyxIBEfxsC45aDGwB_iQwFsZa8ylSZ-qvSR3b2NlzFUMXgD8m5-vqJ54IyNU0DR2ciQA5oRYzyFZQEz_Tk6Y4zP0W7I1-Ea5eX3ZIhRfbyweq4hQVz5vT9qmAZr1WQ7wcuapRGer4OYYlqOIWztNtRp7mnww5NZ2UN6WSRL-FxeeHpa6ZTBAyps36cpy1Nq8_adV6lPxVcpZYfh8S-ztHU8tV5GWTYSxiEekhX-HBs6JqNn72zhl_IxSp4cYXuXUbhVh0-e0bUQHQK1nLPxI-JES9d4Rxs2s8w0idF1NKhRO8Ec8WcBabzCWBgyDi4IOT_l9sj1s3GHF60Q6LQ758sKbzssPY2pxye3x4CZWP-8NBSnDYJ8Ol-U1APaqJ1E4sy7mRX_l49IHqGVF1iYVOZbscMNegD2T0WD8ikH94hJlgNACrDqkk55oK21GX9bBiGQ3yig7J1kxAtlP43xQx1lmIInxtLNqLTEnGfohGoyYkvrZSBQelJgRO-ClD2dGItgmXbY0EXjS1og"
+APPLICATION_JWT_PUBLIC_KEY = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQ0lqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FnOEFNSUlDQ2dLQ0FnRUFvdSs5OGtoM3A2dURTZHZURW5ZVApyNVBSTHJzQ3JVRFRVWU1LanFPTGFTbnFWMmRuWjZLNDhERnhHWFJUcVoycXkyWmpTam5EdmJWazRUeWlhQTZkCjUwbTYvZzQ1OGxFN2ZxYjZtV0d6ajNpVW5HZm5yV2ZsT1VDQnhuMy9pYkRqbUExb21YbkFvdVV0QUtRQ0tvSTYKS2VGc2pvaWVSTzNVYVdNYnYwc0RheUtjOEFOUUFWOGFBY1Z6RTdtNjJYc2xUMHJ2TzBEQnByMHp0dFFXVkc0dApXYWZMbGhhdm43WFdxMzVpQWE5L1A0Rm45SUhOUkRMTHVGODc3SjN2c0NFOUxEdUxCS1Fkd0dZQ3ViNGpqRzVDCjR1RjlhTWoxa1pKSzAzWWVaVTVZZnBKSC9oOUV6MEFKRzI2ZTNMTWltQlBGT3NINUdjSXBFWGVFMCtXd3oxT1AKZVJzZXZ3Qzh4bWNPdEM2QkI1TkRNcS9nRmcvUitlVnpTYjBNUVJVRTgyYlJweTRhcmhwazllK3dBWDQ2TzgxNQpxa0VXQk8xSHJNajVpNmRIL2w2aDFONUVhZ0tLZXFBbU10YXorbDNxMzYwMThEY2V0dTNkZzV2Q3lBOGpRbVNFCm1TZ2tsL3pianV2QkNvS1k5Z0xBdzJRUDY3VDRCb0pOdUg3b25mL0RRa01yQTBuaCt6VWhROHdJNy9DemFDRWEKa0EvczVFemtLVFZqcXhTRXl2RGZqZUNlaHc2S01kbFl1YTVzS1Q5cXdrRDNxSnc3STZQK2hHd3padXNnQ1AvSQp0L1JDcTN5cG9LZjd1TWJ4WVJUU3ovaVhsaUh1a3VQRlh3T0Y5MTlBWWhSUFlRWlZjeG05WGVJOG9xYk92OG9sCm5sTGE5US9YWkxlSEtMWG05ZEU5VzJNQ0F3RUFBUT09Ci0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQ=="
+NOTIFICATION__MAIL_SERVER = "mail.server.su"
+NOTIFICATION__MAIL_USERNAME = "mail.username"
+NOTIFICATION__MAIL_PASSWORD = "mail.password"
+NOTIFICATION__MAIL_SENDER_NAME = "mail.sender.name"
+NOTIFICATION__MAIL_SENDER_ADDRESS = "mail.sender.address"
+NOTIFICATION__MAIL_SSL = "1"
+NOTIFICATION__MAIL_START_TLS = "1"
+NOTIFICATION__MAIL_PORT = "8888"
+
+[tool.mypy]
+plugins = [
+    "sqlmypy",
+    "sqlalchemy.ext.mypy.plugin",
+    "pydantic.mypy"
+]
+#packages = [
+#    "src",
+#    "__tests__",
+#]
+exclude = ["migrations"]
+cache_dir = "./.tmp/mypy-cache"
+python_version = "3.10"
+warn_return_any = false
+warn_unused_configs = true
+ignore_missing_imports = false
+follow_imports = "normal"
+namespace_packages = true
+explicit_package_bases = true
+follow_imports_for_stubs = true
+implicit_reexport = true
+allow_untyped_globals = false
+disallow_any_generics = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = false
+no_implicit_optional = true
+strict_optional = true
+warn_unused_ignores = true
+warn_no_return = true
+show_none_errors = true
+ignore_errors = false
+allow_redefinition = false
+strict_equality = true
+show_error_context = false
+show_column_numbers = false
+warn_redundant_casts = true
+warn_unreachable = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
+
+[[tool.mypy.overrides]]
+module = [
+    "sqlalchemy_serializer",
+    "api_utils"
+]
+ignore_missing_imports = true
+
+[tool.ruff]
+exclude = ["migrations"]
+lint.select = ["ALL"]
+lint.ignore = ["D", "RUF001", "PGH003"]
+lint.mccabe.max-complexity = 4
+lint.extend-ignore = [
+    "N805",     # First argument of a method should be named `self` - but pydantic docs use cls
+    "TRY003",   # Avoid specifying long messages outside the exception class - but pydantic allow to use simple raise error
+    "EM101",    # Exception must not use a string literal, assign to variable first - duplicate msg? ok
+    "S101",     # Use of `assert` detected - only way to deal with paranoic mypy
+    "PLR0913",  # Too many arguments in function definition (6 > 5) - maybe good. wiil be refactored later
+    "RUF012",   # Mutable class attributes should be annotated with `typing.ClassVar` - sqlalchemy allow to mutations
+    "G004",     # Logging statement uses f-string - it's OK
+    "UP035",    # `typing.List` is deprecated, use `list` instead - yes, but `list` broke api-utils @rest_api
+    "UP006",    # Use `list` instead of `List` for type annotation - yes, but `list` broke api-utils @rest_api
+]
+line-length = 120
+target-version = "py310"
+cache-dir = "./.tmp/ruff-cache"
+
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+exclude = "migrations"
+#include = [
+#    "^/src",
+#    "^/notification_sdk",
+#]
+check = true
