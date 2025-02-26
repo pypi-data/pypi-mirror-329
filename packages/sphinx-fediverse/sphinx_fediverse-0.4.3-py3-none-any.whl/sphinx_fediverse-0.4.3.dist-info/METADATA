@@ -1,0 +1,137 @@
+Metadata-Version: 2.1
+Name: sphinx-fediverse
+Version: 0.4.3
+Summary: Add fediverse comments to your sphinx page
+Home-page: https://oliviaappleton.com/sphinx-fediverse/
+Author: Olivia Appleton-Crocker
+Author-email: liv@oliviaappleton.com
+Project-URL: Documentation, https://oliviaappleton.com/sphinx-fediverse/
+Project-URL: Source Code, https://github.com/LivInTheLookingGlass/sphinx-fediverse
+Project-URL: Issue Tracker, https://github.com/LivInTheLookingGlass/sphinx-fediverse/issues
+Keywords: sphinx fediverse comments activitypub mastodon
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Environment :: Plugins
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Sphinx
+Classifier: Framework :: Sphinx :: Extension
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Programming Language :: JavaScript
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Topic :: Communications
+Classifier: Topic :: Documentation
+Classifier: Topic :: Documentation :: Sphinx
+Classifier: Topic :: Internet
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Software Development :: Documentation
+Requires-Python: >=3.6
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+Requires-Dist: doctools
+Requires-Dist: mastodon.py
+Requires-Dist: requests
+Requires-Dist: sphinx
+
+.. sphinx-fediverse documentation master file, created by
+   sphinx-quickstart on Sat Feb 15 16:51:44 2025.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+sphinx-fediverse documentation
+==============================
+
+For more of my work, please see my `home page <https://oliviaappleton.com/>`__.
+
+
+Quick Start Guide
+~~~~~~~~~~~~~~~~~
+
+Installation
+------------
+
+.. code:: bash
+
+   pip install sphinx-fediverse
+
+Configuration
+-------------
+
+There are a few necessary values that you must provide:
+
+.. table::
+
+   ========================  ============================================  ===============================
+   Option                    Description                                   Example
+   ========================  ============================================  ===============================
+   html_baseurl              The host your documentation will be on        https://www.sphinx-doc.org/
+   mastodon_username         The username of the account to make posts on  xkcd
+   mastodon_instance         The host you're making comments on            botsin.space
+   comments_mapping_file     The name of the comments map file             comments_mapping.json (default)
+   replace_index_with_slash  True to replace ``/index.html`` with ``/``    True (default)
+   enable_post_creation      True to automatically post, False for manual  True (default)
+   raise_error_if_no_post    True to raise an error if not post is made    True (default)
+   ========================  ============================================  ===============================
+
+We also rely on the following environment variables: ``MASTODON_CLIENT_ID``, ``MASTODON_CLIENT_SECRET``,
+``MASTODON_ACCESS_TOKEN``. Each of these must be set if you want to have automatic post creation. They are
+intentionally not included in the config file so you are incentivized to not store them publicly.
+
+Usage
+-----
+
+To use this extension, simply add it to your ``conf.py``'s extension list:
+
+.. code:: python
+
+   extensions = [
+      # ...
+      'sphinx_fediverse',
+   ]
+
+And add the following to each page you want a comments section to appear in:
+
+.. code:: reStructuredText
+
+   .. mastodon-comments::
+
+This will enable a comments section for each post. Upon build, a Mastodon post will be generated for each new page.
+This will be stored in the same directory as your config file. The ID of each page's post will be embedded into the
+output documents, and used to retrieve comments.
+
+.. warning::
+
+   sphinx-fediverse only works in pure HTML builds. If you produce other builds, you *must* wrap it in an "only" directive
+
+   .. code:: reStructuredText
+
+      .. only:: html
+
+         .. mastodon-comments::
+
+Supported Themes
+~~~~~~~~~~~~~~~~
+
+Because this project includes styling, we need to ensure compatibility with each theme individually. To view it in any
+officially supported theme, click one of the links below:
+
+- `alabaster <https://oliviaappleton.com/sphinx-fediverse/alabaster/>`_
+- `Read the Docs <https://oliviaappleton.com/sphinx-fediverse/sphinx_rtd_theme/>`_
+- `shibuya <https://oliviaappleton.com/sphinx-fediverse/shibuya/>`_
+- `agogo <https://oliviaappleton.com/sphinx-fediverse/agogo/>`_
+- `bizstyle <https://oliviaappleton.com/sphinx-fediverse/bizstyle/>`_
+- `classic <https://oliviaappleton.com/sphinx-fediverse/classic/>`_
+- `haiku <https://oliviaappleton.com/sphinx-fediverse/haiku/>`_
+- `nature <https://oliviaappleton.com/sphinx-fediverse/nature/>`_
+- `pyramid <https://oliviaappleton.com/sphinx-fediverse/pyramid/>`_
+- `scrolls <https://oliviaappleton.com/sphinx-fediverse/scrolls/>`_
+- `sphinxdoc <https://oliviaappleton.com/sphinx-fediverse/sphinxdoc/>`_
+- `traditional <https://oliviaappleton.com/sphinx-fediverse/traditional/>`_
