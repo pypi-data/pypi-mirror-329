@@ -1,0 +1,163 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ariadne-auth"
+dynamic = ["version"]
+description = "An Ariadne extension for authorization, allowing global permissions for all resolvers and fine-grained control over required permissions for specific resolvers in GraphQL APIs."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "BSD-3-Clause"
+license-files = ["LICEN[CS]E*"]
+keywords = ["ariadne", "ariadne-extension", "authorization", "permissions"]
+authors = [{ name = "Mirumee Labs", email = "hello@mirumee.com" }]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+  "ariadne",
+  "typing_extensions"
+]
+
+[project.optional-dependencies]
+types = ["mypy>=1.0.0",]
+dev = [
+    "rich",
+    "uvicorn",
+    "starlette",
+    "ipdb",
+]
+
+[project.urls]
+Homepage = "https://github.com/mirumee/ariadne-auth"
+Issues = "https://github.com/mirumee/ariadne-auth/issues"
+
+
+
+
+[tool.hatch.version]
+path = "src/ariadne_auth/__about__.py"
+
+
+# Environment configuration
+
+## Default environment
+[tool.hatch.envs.default]
+features = ["dev", "types"]
+
+[tool.hatch.envs.default.env-vars]
+PYTHONBREAKPOINT = "ipdb.set_trace"
+
+[tool.hatch.envs.default.scripts]
+ariadne_auth = "python -m test_app.__main__"
+check = [
+    "hatch fmt",
+    "hatch test -a -p",
+    "hatch test --cover",
+    "hatch run types:check",
+]
+
+
+## Test environment
+[tool.hatch.envs.hatch-test.env-vars]
+PYTHONBREAKPOINT = "ipdb.set_trace"
+
+
+[tool.hatch.envs.hatch-test]
+extra-dependencies = [
+    "pytest-cov", "pytest-mock", "pytest-asyncio", "ipdb"
+]
+extra-args = ["-s"]  # to stop on ipdb breakpoint
+
+[[tool.hatch.envs.hatch-test.matrix]]
+python = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+## Types environment
+[tool.hatch.envs.types]
+features = ["types"]
+
+[tool.hatch.envs.types.scripts]
+check = "mypy . --install-types --non-interactive"
+
+# Tool configuration
+
+## Pytest configuration
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
+
+## Types configuration
+
+[tool.mypy]
+python_version = "3.9"
+files = ["src/**/*.py"]
+exclude = ["tests/.*", "test_app/.*"]
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+disallow_untyped_defs = true
+strict = true
+disable_error_code = ["import-untyped"]
+
+[[tool.mypy.overrides]]
+module = "setproctitle.*"
+ignore_missing_imports = true
+
+
+## Coverage configuration
+
+[tool.coverage.run]
+source_pkgs = ["ariadne_auth"]
+branch = true
+parallel = true
+omit = [
+  "src/ariadne_auth/__about__.py",
+]
+
+[tool.coverage.paths]
+ariadne_auth = ["src/ariadne_auth", "*/ariadne-auth/src/ariadne_auth"]
+tests = ["tests", "*/ariadne-auth/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+## Ruff configuration
+
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 80
+
+[tool.ruff.lint]
+select = ["E", "F", "G", "I", "N", "Q", "UP", "C90", "T20", "TID"]
+unfixable = ["UP007"] # typer does not handle PEP604 annotations
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.isort]
+known-first-party = ["ariadne_auth"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
