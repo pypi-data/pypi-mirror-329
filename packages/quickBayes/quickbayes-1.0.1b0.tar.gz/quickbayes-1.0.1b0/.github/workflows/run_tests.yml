@@ -1,0 +1,63 @@
+name: run unit tests
+
+on:
+  push:
+    branches:
+    - 'main'
+  pull_request:
+    branches:
+      - 'main'
+  release:
+
+jobs:
+  run_tests:
+    strategy:
+      matrix:
+           os: [windows-latest, ubuntu-latest, macOS-latest]
+           python_version: ['3.8', '3.9', '3.10', '3.11']
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Needed to get tags so that git describe works during package build
+          fetch-depth: "0"
+
+      - name: Get Date
+        id: get-date
+        run: |
+          echo "::set-output name=date::$(/bin/date -u "+%Y%V")"
+        shell: bash
+
+      - name: create_yml_file
+        shell: bash -l {0}
+        run:  |
+             echo ${{ matrix.os }} ${{matrix.python_version}}
+             python tools/create_conda_yml.py ${{ matrix.os }} ${{matrix.python_version}}
+      - name: Setup Mambaforge
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: quickBayes-dev.yml
+
+      - name: check install
+        shell: bash -l {0}
+        run:  |
+             mamba env list
+             python --version; conda list ; pip list
+      - name: compile
+        shell: bash -l {0}
+        run:  |
+            conda activate quickBayes-dev
+            python -m pip install .
+      - name: run tests default
+        timeout-minutes: 10
+        shell: bash -l {0}
+        run:  |
+             python -m pytest test/default test/shared
+      - name: run tests gofit
+        timeout-minutes: 10
+        shell: bash -l {0}
+        run:  |
+             python -m pip uninstall quickBayes
+             python -m pip install .[gofit]
+             python -m pytest test/gofit test/shared
