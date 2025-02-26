@@ -1,0 +1,90 @@
+Metadata-Version: 2.2
+Name: NEMO-wago-interlocks
+Version: 1.0.0
+Summary: WAGO Interlocks plugin for NEMO
+Author-email: Atlantis Labs LLC <atlantis@atlantislabs.io>
+License: MIT License
+        
+        Copyright (c) 2023 Atlantis Labs LLC
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Homepage, https://gitlab.com/nemo-community/atlantis-labs/nemo-wago-interlocks
+Project-URL: Changelog, https://gitlab.com/nemo-community/atlantis-labs/nemo-wago-interlocks/-/releases
+Project-URL: Issues, https://gitlab.com/nemo-community/atlantis-labs/nemo-wago-interlocks/-/issues
+Project-URL: CI, https://gitlab.com/nemo-community/atlantis-labs/nemo-wago-interlocks/-/pipelines
+Keywords: NEMO
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Framework :: Django :: 4.2
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: django
+Provides-Extra: nemo-ce
+Requires-Dist: NEMO-CE>=1.7.0; extra == "nemo-ce"
+Provides-Extra: nemo
+Requires-Dist: NEMO>=4.7.0; extra == "nemo"
+Provides-Extra: dev-tools
+Requires-Dist: pre-commit; extra == "dev-tools"
+Requires-Dist: djlint; extra == "dev-tools"
+Requires-Dist: black; extra == "dev-tools"
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/NEMO-wago-interlocks?label=python)](https://www.python.org/downloads/release/python-3110/)
+[![PyPI](https://img.shields.io/pypi/v/nemo-wago-interlocks?label=pypi%20version)](https://pypi.org/project/NEMO-wago-interlocks/)
+
+# NEMO Wago Interlocks
+
+This plugin for NEMO adds compatibility with WAGO Interlocks.
+
+# Compatibility:
+
+### NEMO-wago-interlocks >= 0.1.0
+* NEMO >= 4.7.0
+* NEMO-CE >= 1.7.0
+
+# Installation
+
+`pip install NEMO-wago-interlocks`
+
+# Add NEMO WAGO interlocks
+
+in `settings.py` add to `INSTALLED_APPS`:
+
+```python
+INSTALLED_APPS = [
+    '...',
+    'NEMO_wago_interlocks',
+    '...'
+]
+```
+
+# Usage
+* Go to Detailed Administration and add a new Interlock Card
+* Pick "WAGOModbusTCP" as the card category
+* Fill in the required information
+* Add a new Interlock linked to the card
+* Link the interlock to a tool
