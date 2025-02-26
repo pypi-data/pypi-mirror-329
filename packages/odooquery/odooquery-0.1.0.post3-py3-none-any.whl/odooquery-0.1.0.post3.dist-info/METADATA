@@ -1,0 +1,54 @@
+Metadata-Version: 2.4
+Name: odooquery
+Version: 0.1.0.post3
+Summary: A library to add specific query functionality on top of odoorpc for higher-level functions
+Project-URL: Repository, https://github.com/benagricola/odooquery
+Project-URL: Documentation, https://github.com/benagricola/odooquery#readme
+Author-email: Ben Agricola <odooquery@lawlr.us>
+License: MIT
+License-File: LICENSE
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.12
+Requires-Dist: beautifulsoup4>=4.13.3
+Requires-Dist: odoorpc>=0.10.1
+Requires-Dist: typing-extensions>=4.12.2
+Description-Content-Type: text/markdown
+
+# OdooQuery
+
+A Python library that provides enhanced query functionality on top of odoorpc for higher-level operations with Odoo.
+
+## Installation
+
+```bash
+pip install odooquery
+```
+
+## Usage
+
+```python
+from odooquery import OdooQuery
+
+# Initialize the connection
+query = OdooQuery(host='localhost', port=8069, database='mydb', user='admin', password='admin')
+
+# Use enhanced query functions
+results = query.find_records('res.partner', [('is_company', '=', True)])
+```
+
+## Features
+
+- Enhanced query interface for Odoo
+- Simplified record operations
+- Type-safe query building
+
+## Requirements
+
+- Python 3.12+
+- odoorpc>=0.9.0
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
