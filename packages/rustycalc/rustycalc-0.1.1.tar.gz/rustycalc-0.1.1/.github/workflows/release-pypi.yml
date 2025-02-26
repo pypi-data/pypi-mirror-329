@@ -1,0 +1,33 @@
+name: PyPI Release
+
+# https://help.github.com/en/actions/reference/events-that-trigger-workflows
+on: # Trigger the workflow on push or pull request, but only for the main branch
+  # push:
+  #   branches: [main]
+  release:
+    types: [published]
+
+# based on https://github.com/pypa/gh-action-pypi-publish
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Specifying a GitHub environment is optional, but strongly encouraged
+    environment: pypi
+    permissions:
+      # IMPORTANT: this permission is mandatory for Trusted Publishing
+      id-token: write
+
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install UV & rust
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      - uses: actions/checkout@v4
+      - name: Build & Publish
+        run: |
+          uv sync --all-extras
+          uv build --sdist
+          uv publish
