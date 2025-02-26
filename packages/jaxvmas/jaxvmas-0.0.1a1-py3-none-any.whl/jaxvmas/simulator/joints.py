@@ -1,0 +1,312 @@
+#  Copyright (c) 2022-2024.
+#  ProrokLab (https://www.proroklab.org/)
+#  All rights reserved.
+
+
+from typing import TYPE_CHECKING
+
+import jax.numpy as jnp
+from beartype import beartype
+from jaxtyping import jaxtyped
+
+from jaxvmas.equinox_utils import PyTreeNode
+from jaxvmas.simulator import rendering
+
+if TYPE_CHECKING:
+    from jaxvmas.simulator.core.entity import Entity
+
+from jaxvmas.simulator.rendering import Geom
+from jaxvmas.simulator.utils import Color, JaxUtils, X, Y
+
+UNCOLLIDABLE_JOINT_RENDERING_WIDTH = 1
+
+
+@jaxtyped(typechecker=beartype)
+class Joint(PyTreeNode):
+    entity_a_id: int
+    entity_b_id: int
+    rotate_a: bool
+    rotate_b: bool
+    fixed_rotation_a: float | None
+    fixed_rotation_b: float | None
+    landmark: "Entity"
+    joint_constraints: list["JointConstraint"]
+
+    @classmethod
+    def create(
+        cls,
+        entity_a: "Entity",
+        entity_b: "Entity",
+        anchor_a: tuple[float, float] = (0.0, 0.0),
+        anchor_b: tuple[float, float] = (0.0, 0.0),
+        rotate_a: bool = True,
+        rotate_b: bool = True,
+        dist: float = 0.0,
+        collidable: bool = False,
+        width: float = 0.0,
+        mass: float = 1.0,
+        fixed_rotation_a: float | None = None,
+        fixed_rotation_b: float | None = None,
+    ):
+        assert entity_a.id != entity_b.id, "Cannot join same entity"
+        for anchor in (anchor_a, anchor_b):
+            assert (
+                max(anchor) <= 1 and min(anchor) >= -1
+            ), f"Joint anchor points should be between -1 and 1, got {anchor}"
+        assert dist >= 0, f"Joint dist must be >= 0, got {dist}"
+        if dist == 0:
+            assert not collidable, "Cannot have collidable joint with dist 0"
+            assert width == 0, "Cannot have width for joint with dist 0"
+            assert (
+                fixed_rotation_a == fixed_rotation_b
+            ), "If dist is 0, fixed_rotation_a and fixed_rotation_b should be the same"
+        if fixed_rotation_a is not None:
+            assert (
+                not rotate_a
+            ), "If you provide a fixed rotation for a, rotate_a should be False"
+        if fixed_rotation_b is not None:
+            assert (
+                not rotate_b
+            ), "If you provide a fixed rotation for b, rotate_b should be False"
+
+        if width > 0:
+            assert collidable
+
+        self = cls(
+            entity_a_id=entity_a.id,
+            entity_b_id=entity_b.id,
+            rotate_a=rotate_a,
+            rotate_b=rotate_b,
+            fixed_rotation_a=fixed_rotation_a,
+            fixed_rotation_b=fixed_rotation_b,
+            landmark=None,
+            joint_constraints=[],
+        )
+        joint_constraints = []
+        if dist == 0:
+            joint_constraints.append(
+                JointConstraint.create(
+                    entity_a,
+                    entity_b,
+                    anchor_a=anchor_a,
+                    anchor_b=anchor_b,
+                    dist=dist,
+                    rotate=rotate_a and rotate_b,
+                    fixed_rotation=fixed_rotation_a,  # or b, it is the same
+                ),
+            )
+        else:
+            from jaxvmas.simulator.core.landmark import Landmark
+            from jaxvmas.simulator.core.shapes import Box, Line
+
+            self = self.replace(
+                landmark=Landmark.create(
+                    name=f"joint {entity_a.id} {entity_b.id}",
+                    collide=collidable,
+                    movable=True,
+                    rotatable=True,
+                    mass=mass,
+                    shape=(
+                        Box(length=dist, width=width)
+                        if width != 0
+                        else Line(length=dist)
+                    ),
+                    color=Color.BLACK,
+                    is_joint=True,
+                ),
+            )
+            joint_constraints += [
+                JointConstraint.create(
+                    self.landmark,
+                    entity_a,
+                    anchor_a=(-1.0, 0.0),
+                    anchor_b=anchor_a,
+                    dist=0.0,
+                    rotate=rotate_a,
+                    fixed_rotation=fixed_rotation_a,
+                ),
+                JointConstraint.create(
+                    self.landmark,
+                    entity_b,
+                    anchor_a=(1.0, 0.0),
+                    anchor_b=anchor_b,
+                    dist=0.0,
+                    rotate=rotate_b,
+                    fixed_rotation=fixed_rotation_b,
+                ),
+            ]
+
+        return self.replace(joint_constraints=joint_constraints)
+
+    def update_joint_state(self, entity_a: "Entity", entity_b: "Entity") -> "Joint":
+        """Pure function to update joint state based on entity states"""
+
+        assert (
+            entity_a.id == self.entity_a_id
+        ), f"Entity a id mismatch: {entity_a.id} != {self.entity_a_id}"
+        assert (
+            entity_b.id == self.entity_b_id
+        ), f"Entity b id mismatch: {entity_b.id} != {self.entity_b_id}"
+
+        self = self.replace(entity_a=entity_a, entity_b=entity_b)
+
+        # Get positions of joint points
+        pos_a = self.joint_constraints[0].pos_point(entity_a)
+        pos_b = self.joint_constraints[1].pos_point(entity_b)
+
+        # Calculate new landmark position and rotation
+        new_pos = (pos_a + pos_b) / 2
+        angle = jnp.atan2(
+            pos_b[:, Y] - pos_a[:, Y],
+            pos_b[:, X] - pos_a[:, X],
+        )[..., None]
+
+        # Create new landmark with updated position and rotation
+        new_landmark = self.landmark.set_pos(self.landmark, new_pos, batch_index=None)
+        new_landmark = new_landmark.set_rot(new_landmark, angle, batch_index=None)
+
+        # Create new joint constraints with updated fixed rotations if needed
+        new_joint_constraints = list(self.joint_constraints)
+
+        if not self.rotate_a and self.fixed_rotation_a is None:
+            new_constraint = new_joint_constraints[0].replace(
+                fixed_rotation=angle - entity_a.state.rot
+            )
+            new_joint_constraints[0] = new_constraint
+
+        if not self.rotate_b and self.fixed_rotation_b is None:
+            new_constraint = new_joint_constraints[1].replace(
+                fixed_rotation=angle - entity_b.state.rot
+            )
+            new_joint_constraints[1] = new_constraint
+
+        # Return new joint instance with updated state
+        return self.replace(
+            landmark=new_landmark, joint_constraints=new_joint_constraints
+        )
+
+
+# Private class: do not instantiate directly
+@jaxtyped(typechecker=beartype)
+class JointConstraint(PyTreeNode):
+    """
+    This is an uncollidable constraint that bounds two entities in the specified anchor points at the specified distance
+    """
+
+    entity_a_id: int
+    entity_b_id: int
+    anchor_a: tuple[float, float]
+    anchor_b: tuple[float, float]
+    dist: float
+    rotate: bool
+    fixed_rotation: float | None
+    _delta_anchor_tensor_map: dict["Entity", jnp.ndarray]
+
+    @classmethod
+    def create(
+        cls,
+        entity_a: "Entity",
+        entity_b: "Entity",
+        anchor_a: tuple[float, float] = (0.0, 0.0),
+        anchor_b: tuple[float, float] = (0.0, 0.0),
+        dist: float = 0.0,
+        rotate: bool = True,
+        fixed_rotation: float | None = None,
+    ):
+        assert entity_a.id != entity_b.id, "Cannot join same entity"
+        for anchor in (anchor_a, anchor_b):
+            assert (
+                max(anchor) <= 1 and min(anchor) >= -1
+            ), f"Joint anchor points should be between -1 and 1, got {anchor}"
+        assert dist >= 0, f"Joint dist must be >= 0, got {dist}"
+        if fixed_rotation is not None:
+            assert not rotate, "If fixed rotation is provided, rotate should be False"
+        if rotate:
+            assert (
+                fixed_rotation is None
+            ), "If you provide a fixed rotation, rotate should be False"
+            fixed_rotation = 0.0
+
+        return cls(
+            entity_a_id=entity_a.id,
+            entity_b_id=entity_b.id,
+            anchor_a=anchor_a,
+            anchor_b=anchor_b,
+            dist=dist,
+            rotate=rotate,
+            fixed_rotation=fixed_rotation,
+            _delta_anchor_tensor_map={},
+        )
+
+    def update_joint_state(self, entity_a: "Entity", entity_b: "Entity"):
+        self = self.replace(entity_a_id=entity_a.id, entity_b_id=entity_b.id)
+
+        return self
+
+    def _delta_anchor_jax_array(self, entity: "Entity"):
+        _delta_anchor_tensor_map = {**self._delta_anchor_tensor_map}
+
+        if entity.id == self.entity_a_id:
+            anchor = self.anchor_a
+        elif entity.id == self.entity_b_id:
+            anchor = self.anchor_b
+        else:
+            raise ValueError(
+                f"Entity {entity.id} is not part of joint {self.entity_a_id} {self.entity_b_id}"
+            )
+
+        delta = jnp.broadcast_to(
+            entity.shape.get_delta_from_anchor(anchor)[None],
+            entity.state.pos.shape,
+        )
+        _delta_anchor_tensor_map[entity.id] = delta
+
+        return _delta_anchor_tensor_map[entity.id]
+
+    def get_delta_anchor(self, entity: "Entity"):
+        delta_anchor = self._delta_anchor_jax_array(entity)
+        return JaxUtils.rotate_vector(
+            delta_anchor,
+            entity.state.rot,
+        )
+
+    def pos_point(
+        self,
+        entity: "Entity",
+    ) -> tuple[jnp.ndarray, "JointConstraint"]:
+        pos_point = self.get_delta_anchor(entity)
+        return entity.state.pos + pos_point
+
+    def render(
+        self,
+        entity_a: "Entity",
+        entity_b: "Entity",
+        env_index: int = 0,
+    ) -> list[Geom]:
+        if self.dist == 0:
+            return []
+
+        geoms: list[Geom] = []
+        joint_line = Geom(
+            (-self.dist / 2, 0),
+            (self.dist / 2, 0),
+            width=UNCOLLIDABLE_JOINT_RENDERING_WIDTH,
+        )
+        pos_point_a = self.pos_point(entity_a)
+        pos_point_b = self.pos_point(entity_b)
+
+        pos_point_a = pos_point_a[env_index]
+        pos_point_b = pos_point_b[env_index]
+
+        angle = jnp.atan2(
+            pos_point_b[Y] - pos_point_a[Y],
+            pos_point_b[X] - pos_point_a[X],
+        )
+
+        xform = rendering.Transform()
+        xform.set_translation(*((pos_point_a + pos_point_b) / 2))
+        xform.set_rotation(angle)
+        joint_line.add_attr(xform)
+
+        geoms.append(joint_line)
+        return geoms
