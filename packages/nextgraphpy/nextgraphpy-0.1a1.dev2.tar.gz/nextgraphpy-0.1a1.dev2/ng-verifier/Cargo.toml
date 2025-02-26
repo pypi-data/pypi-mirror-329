@@ -1,0 +1,49 @@
+[package]
+name = "ng-verifier"
+version = "0.1.1-alpha"
+description = "Verifier library of NextGraph"
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+keywords = ["crdt","e2ee","local-first","p2p","eventual-consistency"]
+documentation.workspace = true
+rust-version.workspace = true
+build = "build.rs"
+readme = "README.md"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[features]
+testing = []
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_bare = "0.5.0"
+serde_bytes = "0.11.7"
+serde_json = "1.0"
+rand =  { version = "0.7", features = ["getrandom"] }
+web-time = "0.2.0"
+either = "1.8.1"
+futures = "0.3.24"
+lazy_static = "1.4.0"
+async-trait = "0.1.64"
+async-std = { version = "1.12.0", features = [ "attributes", "unstable" ] }
+automerge = "0.5.11"
+yrs = "0.19.2"
+sbbf-rs-safe = "0.3.2"
+ng-repo = { path = "../ng-repo", version = "0.1.1-alpha" }
+ng-net = { path = "../ng-net", version = "0.1.1-alpha" }
+ng-oxigraph = { path = "../ng-oxigraph", version = "0.4.0-alpha.7-ngalpha" }
+
+[target.'cfg(target_family = "wasm")'.dependencies]
+ng-oxigraph = { path = "../ng-oxigraph", version = "0.4.0-alpha.7-ngalpha", features = ["js"] }
+
+[target.'cfg(all(not(target_family = "wasm"),not(docsrs)))'.dependencies]
+ng-storage-rocksdb = { path = "../ng-storage-rocksdb", version = "0.1.1-alpha" }
+getrandom = "0.2.7"
+
+[dev-dependencies]
+ng-repo = { path = "../ng-repo", version = "0.1.1-alpha", features = ["testing"] }
