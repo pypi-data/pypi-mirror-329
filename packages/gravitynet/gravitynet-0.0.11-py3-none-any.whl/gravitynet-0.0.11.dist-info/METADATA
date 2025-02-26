@@ -1,0 +1,93 @@
+Metadata-Version: 2.1
+Name: gravitynet
+Version: 0.0.11
+Summary: gravitynet package
+Home-page: https://github.com/cirorusso2910/GravityNet
+Author: Ciro Russo, Giulio Russo
+Author-email: ciro.russo2910@gmail.com
+License: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8.0
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: setuptools ==60.2.0
+Requires-Dist: numpy ==1.23.5
+Requires-Dist: torch ==1.12.0
+Requires-Dist: torchvision ==0.13.0
+Requires-Dist: opencv-python ==4.11.0.86
+
+# 🚀 GRAVITY NET
+
+**GravityNet** is a novel **one-stage** **end-to-end** **detector** specifically designed to detect **small lesions** in **medical images**. <br>
+
+**GravityNet framework** is available on [**GitHub**](https://github.com/cirorusso2910/GravityNet)
+
+----------------------------------------------------------------------
+
+## 📥 INSTALLATION
+
+Install the package running:
+    
+    pip install gravitynet
+
+Import the package as:
+
+    import gravitynet
+
+----------------------------------------------------------------------
+
+## 📁 PACKAGE ORGANIZATION
+
+GravityNet is structured into three main modules:
+
+### 🔧 **gravity_points_config**
+Generates the configuration of gravity points. <br>
+
+    gravity_points, num_gravity_points, num_gravity_points_feature_map = gravity_points_config(config,
+                                                                                               image_shape)
+
+**PARAMETERS** <br>
+**_config_**: type of configuration: <br>
+grid: grid-base configuration for gravity-points (e.g., _grid-10_) <br>
+dice: dice-base configuration for gravity-points (e.g., _dice-1_) <br>
+
+**_image_shape_**: the shape of the image (H x W) <br>
+
+**RETURNS** <br>
+**_gravity_points_**: configuration of the gravity points on the image <br>
+**_num_gravity_points_**: number of gravity points generated <br>
+**_num_gravity_points_feature_map_**: number of gravity points generated per feature map <br>
+
+### 🌐 **GravityNet**
+Define the GravityNet model. <br>
+
+    net = GravityNet(backbone,
+                     pretrained,
+                     num_gravity_points_feature_map)
+
+**PARAMETERS** <br>
+**_backbone_**: backbone model (e.g., _ResNet_) <br>
+**_pretrained_**: pretrained option <br>
+**_num_gravity_points_feature_map_**: number of gravity points generated per feature map <br>
+
+**RETURNS** <br>
+**_net_**: GravityNet model <br>
+
+### 📉 **GravityLoss**
+Define the GravityLoss function used for training. <br>
+    
+    criterion = GravityLoss(config,
+                            hook,
+                            num_gravity_points_feature_map,
+                            device)
+
+**PARAMETERS** <br>
+**_config_**: type of configuration (e.g., _grid-10_) <br>
+**_hook_**: hooking distance (e.g., 10) <br>
+**_num_gravity_points_feature_map_**: number of gravity points generated per feature map <br>
+**_device_**: device (e.g., cuda) <br>
+
+**RETURNS** <br>
+**_criterion_**: GravityLoss criterion <br>
