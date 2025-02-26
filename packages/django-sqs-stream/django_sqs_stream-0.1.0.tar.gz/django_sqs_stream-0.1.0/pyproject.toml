@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-sqs-stream"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "boto3>=1.36.26",
+    "cache-register>=0.1.1",
+    "django>=5.1.6",
+    "djangorestframework>=3.15.2",
+]
+
+[tool.setuptools]
+packages = ["django_sqs_stream", "django_sqs_stream.core", "django_sqs_stream.django_app"]
+package-dir = { "" = "./src"}
+
+[dependency-groups]
+dev = [
+    "django-stubs[compatible-mypy]>=5.1.2",
+    "invoke>=2.2.0",
+    "mypy>=1.15.0",
+    "pytest>=8.3.4",
+    "pytest-django>=4.10.0",
+    "ruff>=0.9.7",
+]
+
+[tool.ruff]
+preview = true
+line-length = 88
+exclude = [
+    ".git",
+    ".venv",
+    "**/migrations/",
+    "**project/settings.py",
+]
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "I",
+    "F",
+    "E",
+    "W",
+    "Q",
+    "UP",
+    "FAST",
+    "LOG",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "tests",
+]
+
+[tool.django-stubs]
+django_settings_module = "project.settings"
+
+[tool.mypy]
+exclude = [
+    ".venv/",
+    "migrations/",
+]
+ignore_missing_imports = true
+mypy_path = "src/"
+plugins = ["mypy_django_plugin.main"]
