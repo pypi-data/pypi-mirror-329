@@ -1,0 +1,45 @@
+Metadata-Version: 2.1
+Name: harness-pywinrm
+Version: 0.4.4
+Summary: CLI for Windows Remote Management
+Home-page: https://harness0.harness.io/ng/account/l7B_kbSEQD2wjrM7PShm5w/module/code/orgs/PROD/projects/Harness_Commons/repos/winrm-kerberos-pywinrm
+Author: Harness.io
+Author-email: ivan.mijailovic@harness.io
+License: Free To Use But Restricted
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: Free To Use But Restricted
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pykerberos
+Requires-Dist: pywinrm
+Provides-Extra: test
+Requires-Dist: unittest; extra == "test"
+
+# harness-pywinrm
+
+CLI library for interacting with Windows machines via the Windows Remote Management (WinRM) service, using Kerberos authentication.
+
+## Installation
+
+To install the library, run:
+
+```python
+pip install harness-pywinrm
+```
+
+## Usage
+
+Here’s an example of how to use it:
+
+```python
+
+# Create file_with_command file with command to be executed on remote machine
+
+# HTTPS - 5986
+harness-pywinrm -e https://hostname.domain.com:5986/wsman -u Principal@Realm -s false -env {KEY1=VALUE1,KEY2=VALUE2} -w %USERPROFILE% -t 1800000 -cfile file_with_command
+
+# HTTP - 5985
+harness-pywinrm -e http://hostname.domain.com:5985/wsman -u Principal@Realm -s false -env {KEY1=VALUE1,KEY2=VALUE2} -w %USERPROFILE% -t 1800000 -cfile file_with_command
+```
