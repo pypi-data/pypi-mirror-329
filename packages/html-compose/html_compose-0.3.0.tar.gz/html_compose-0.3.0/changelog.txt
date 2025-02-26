@@ -1,0 +1,41 @@
+# 0.3.0
+* Add HTML5Document function, wrapping some boilerplate.
+* Minor fix: Remove trailing space when no attrs are defined in void elements.
+* Add equality check override which compares rendered elements
+* When FLOATING_PRECISION is 0, convert float to int.
+* Add html_compose.notebook.render which displays HTML in a Jupyter notebook
+* More tests
+
+# 0.2.1
+* [breaking] BaseElement now places keyword arg `class` / `style` after `attrs=` when you include definitions for both 
+* [bug] Fix attr resolution breaking for dictionary values
+* Add constructor "skip" via __class_getitem__. Where you had to do li()["demo"] you can now li["demo"]
+* Docs/readme improvements
+
+# 0.2.0
+* Generate descriptions for attrs in elements along with full keyword arguments. We intentionally excluded onclick= and other onX attributes to avoid overloading the language server.
+* Element constructor docstring is a little nicer to read
+* Add attrs documentation
+* [breaking] attrs is now first parameter, allowing `div({"class": "flex"})` syntax
+* Prevent re-escaping _HasHtml from our code
+
+# 0.1.2
+* [bugfix] Pass children arg in elements
+* Sort attr list so generated element code doesn't change arbitrarily
+
+# 0.1.1
+* Add element import to module import i.e. from html_compose import div
+
+* Remove callable on attr template which is already non functionable
+
+* [breaking] Move BaseElement children kwarg position ahead of anyone using it
+
+* Code generator no longer translates attr list for html element because the living HTML doc changed. I caught this with an assertion!
+
+* Remove data attr, you can define that on your own or subclass
+
+* Generate elements with attr list in params. I'm intentionally not choosing kwargs to favor explicit over implicit support. For everything else, theres attrs=
+
+* Remove callable references for attr system. I was going to make attrs evaluate callables but i decided the element resolution system is enough and the complexity has burden to also maintain in attrs.
+
+* Add exception when you fail to initialize an element: `div["test"]` raises an error because you forgot `div()`
