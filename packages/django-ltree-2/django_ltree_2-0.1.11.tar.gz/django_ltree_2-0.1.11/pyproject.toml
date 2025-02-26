@@ -1,0 +1,57 @@
+[tool.poetry]
+name = "django-ltree-2"
+version = "0.1.11"
+description = "Continual of django-ltree with additional goodies"
+authors = [
+    "baseplate-admin <61817579+baseplate-admin@users.noreply.github.com>",
+    "Mario César Señoranis Ayala <mariocesar@humanzilla.com>",
+    "Kimsia Sim",
+]
+maintainers = [
+    "baseplate-admin <61817579+baseplate-admin@users.noreply.github.com>",
+]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "django_ltree", from = "src" }]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/baseplate-admin/django-ltree-2/issues"
+"homepage" = "https://github.com/baseplate-admin/django-ltree-2"
+"repository" = "https://github.com/baseplate-admin/django-ltree-2"
+
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+django = ">=3.2"
+psycopg = ">=3"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.0.1"
+pytest-django = "^4.8.0"
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^7.2.6"
+myst-parser = ">=2"
+sphinx-reload = "^0.2.0"
+shibuya = ">=2024.6.1,<2026.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
