@@ -1,0 +1,233 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.utils.benchmarking &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.utils.benchmarking</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.utils.benchmarking</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">snpio.plotting.plotting</span> <span class="kn">import</span> <span class="n">Plotting</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">psutil</span>
+    <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>
+
+    <span class="n">MEMORY_PROFILING_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ModuleNotFoundError</span><span class="p">):</span>
+    <span class="n">MEMORY_PROFILING_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="Benchmark">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.benchmarking.Benchmark">[docs]</a>
+<span class="k">class</span> <span class="nc">Benchmark</span><span class="p">:</span>
+<div class="viewcode-block" id="Benchmark.plot_performance">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.benchmarking.Benchmark.plot_performance">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">plot_performance</span><span class="p">(</span>
+        <span class="n">genotype_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">resource_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;#8C56E3&quot;</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the performance metrics: CPU Load, Memory Footprint, and Execution Time.</span>
+
+<span class="sd">        Takes a dictionary of performance data and plots the metrics for each of the methods. The resulting plot is saved in a .png file in the ``&lt;prefix_output/gtdata/plots/performance`` directory.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            genotype_data (GenotypeData): Initialized GenotypeData object to use.</span>
+
+<span class="sd">            resource_data (Dict[str, Any]): Dictionary with performance data. Keys are method names, and values are dictionaries with keys &#39;cpu_load&#39;, &#39;memory_footprint&#39;, and &#39;execution_time&#39;.</span>
+
+<span class="sd">            color (str, optional): Color to be used in the plot. Should be a valid color string. Defaults to &quot;#8C56E3&quot;.</span>
+
+<span class="sd">            figsize (Tuple[int, int], optional): Size of the figure. Should be a tuple of two integers. Defaults to (18, 10).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None. The function saves the plot to a file.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The plot is saved in the ``&lt;prefix_output/gtdata/plots/performance`` directory.</span>
+
+<span class="sd">            The plot is saved in `genotype_data.plot_format` format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">plot_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_output&quot;</span><span class="p">)</span>
+        <span class="n">plot_dir</span> <span class="o">=</span> <span class="n">plot_dir</span> <span class="o">/</span> <span class="s2">&quot;gtdata&quot;</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span> <span class="o">/</span> <span class="s2">&quot;performance&quot;</span>
+        <span class="n">plot_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">plotting</span> <span class="o">=</span> <span class="n">Plotting</span><span class="p">(</span><span class="n">genotype_data</span><span class="o">=</span><span class="n">genotype_data</span><span class="p">,</span> <span class="o">**</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">plot_kwargs</span><span class="p">)</span>
+
+        <span class="n">plotting</span><span class="o">.</span><span class="n">plot_performance</span><span class="p">(</span><span class="n">resource_data</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Benchmark.measure_execution_time">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.benchmarking.Benchmark.measure_execution_time">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">measure_execution_time</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decorator to measure the execution time of a function.</span>
+
+<span class="sd">        This method is a decorator that measures the execution time of a function and adds the performance data to the resource_data dictionary of the object that the function is called on. The decorator also measures the CPU load and memory footprint of the function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            func (Callable): The function to be decorated.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Callable: The decorated function. The wrapper function measures the execution time of the decorated function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">MEMORY_PROFILING_AVAILABLE</span><span class="p">:</span>
+            <span class="c1"># If memory profiler is not available, return the original function</span>
+            <span class="c1"># without modification</span>
+            <span class="k">return</span> <span class="n">func</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Wrapper function to measure the execution time of the decorated function.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                *args: Variable length argument list.</span>
+<span class="sd">                **kwargs: Arbitrary keyword arguments.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                Any: The result of the decorated function.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># Monitor start time, CPU, and memory usage before execution</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">start_cpu</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">cpu_percent</span><span class="p">(</span><span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">start_memory</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="c1"># Monitor end time, CPU, and memory usage after execution</span>
+            <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">end_cpu</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">cpu_percent</span><span class="p">(</span><span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">end_memory</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Calculate performance metrics</span>
+            <span class="n">execution_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+            <span class="n">avg_cpu_load</span> <span class="o">=</span> <span class="p">(</span><span class="n">start_cpu</span> <span class="o">+</span> <span class="n">end_cpu</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">memory_footprint</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">end_memory</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">start_memory</span><span class="p">)</span>
+
+            <span class="c1"># Add the performance data to the resource_data dictionary</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;resource_data&quot;</span><span class="p">):</span>
+                <span class="c1"># Initialize an empty list if the key doesn&#39;t exist</span>
+                <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">resource_data</span><span class="p">:</span>
+                    <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">resource_data</span><span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="c1"># Append the new performance data to the list</span>
+                <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">resource_data</span><span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;cpu_load&quot;</span><span class="p">:</span> <span class="n">avg_cpu_load</span><span class="p">,</span>
+                        <span class="s2">&quot;memory_footprint&quot;</span><span class="p">:</span> <span class="n">memory_footprint</span><span class="p">,</span>
+                        <span class="s2">&quot;execution_time&quot;</span><span class="p">:</span> <span class="n">execution_time</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

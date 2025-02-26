@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.io.structure_reader &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.io.structure_reader</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.io.structure_reader</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">snpio.read_input.genotype_data</span> <span class="kn">import</span> <span class="n">GenotypeData</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.custom_exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AlignmentError</span><span class="p">,</span>
+    <span class="n">AlignmentFileNotFoundError</span><span class="p">,</span>
+    <span class="n">AlignmentFormatError</span><span class="p">,</span>
+    <span class="n">StructureAlignmentSampleMismatch</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.logging</span> <span class="kn">import</span> <span class="n">LoggerManager</span>
+
+
+<div class="viewcode-block" id="StructureReader">
+<a class="viewcode-back" href="../../../snpio.io.html#snpio.io.structure_reader.StructureReader">[docs]</a>
+<span class="k">class</span> <span class="nc">StructureReader</span><span class="p">(</span><span class="n">GenotypeData</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class reads STRUCTURE files and stores the SNP data, sample IDs, and populations.</span>
+
+<span class="sd">    ``StructureReader`` is a subclass of GenotypeData and inherits its attributes and methods. It reads STRUCTURE files and stores the SNP data, sample IDs, and populations, as well as various other attributes.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from snpio import StructureReader</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data = StructureReader(filename=&quot;data.structure&quot;, popmapfile=&quot;example.popmap&quot;, verbose=True)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.snp_data</span>
+<span class="sd">        array([[&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;], [&quot;C&quot;, &quot;G&quot;, &quot;G&quot;, &quot;C&quot;], [&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;]], dtype=&quot;&lt;U1&quot;)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.samples</span>
+<span class="sd">        [&quot;Sample1&quot;, &quot;Sample2&quot;, &quot;Sample3&quot;, &quot;Sample4&quot;]</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.populations</span>
+<span class="sd">        [&quot;Pop1&quot;, &quot;Pop1&quot;, &quot;Pop2&quot;, &quot;Pop2&quot;]</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.num_snps</span>
+<span class="sd">        3</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.num_inds</span>
+<span class="sd">        4</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.popmap</span>
+<span class="sd">        &gt;&gt;&gt; {&quot;Sample1&quot;: &quot;Pop1&quot;, &quot;Sample2&quot;: &quot;Pop1&quot;, &quot;Sample3&quot;: &quot;Pop2&quot;, &quot;Sample4&quot;: &quot;Pop2&quot;}</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.popmap_inverse</span>
+<span class="sd">        {&quot;Pop1&quot;: [&quot;Sample1&quot;, &quot;Sample2&quot;], &quot;Pop2&quot;: [&quot;Sample3&quot;, &quot;Sample4&quot;]}</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.ref</span>
+<span class="sd">        [&quot;A&quot;, &quot;C&quot;, &quot;A&quot;]</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.alt</span>
+<span class="sd">        [&quot;T&quot;, &quot;G&quot;, &quot;T&quot;]</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.missingness_reports()</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.run_pca()</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.write_structure(&quot;output.str&quot;)</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        logger (LoggerManager): Logger object.</span>
+<span class="sd">        verbose (bool): If True, status updates are printed.</span>
+<span class="sd">        debug (bool): If True, debug messages are printed.</span>
+<span class="sd">        _has_popids (bool): If True, the STRUCTURE file includes population IDs.</span>
+<span class="sd">        _onerow (bool): If True, the STRUCTURE file is in one-row format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">popmapfile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">has_popids</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">force_popmap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">exclude_pops</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_pops</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">plot_format</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;png&quot;</span><span class="p">,</span>
+        <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio&quot;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the StructureReader class.</span>
+
+<span class="sd">        This class reads STRUCTURE files and stores the SNP data, sample IDs, and populations. It is a subclass of GenotypeData and inherits its attributes and methods.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str, optional): Name of the STRUCTURE file.</span>
+<span class="sd">            popmapfile (str, optional): Name of the population map file.</span>
+<span class="sd">            has_popids (bool, optional): If True, the STRUCTURE file includes population IDs.</span>
+<span class="sd">            force_popmap (bool, optional): If True, force the use of the popmap file.</span>
+<span class="sd">            exclude_pops (List[str], optional): List of populations to exclude.</span>
+<span class="sd">            include_pops (List[str], optional): List of populations to include.</span>
+<span class="sd">            plot_format (str, optional): Format for saving plots (e.g., &#39;png&#39;, &#39;svg&#39;).</span>
+<span class="sd">            prefix (str, optional): Prefix for output files.</span>
+<span class="sd">            verbose (bool, optional): If True, status updates are printed.</span>
+<span class="sd">            debug (bool, optional): If True, debug messages are printed.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AlignmentFileNotFoundError: If the STRUCTURE file is not found.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            If the filename is provided, the STRUCTURE file is loaded immediately.</span>
+
+<span class="sd">            If the filename is not provided, the STRUCTURE file can be loaded later using the load_aln method.</span>
+
+<span class="sd">            The STRUCTURE file can be written to a new file using the write_structure method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Set up logger</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        <span class="n">logman</span> <span class="o">=</span> <span class="n">LoggerManager</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="vm">__name__</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logman</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
+
+        <span class="c1"># Initialize the parent class GenotypeData</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+            <span class="n">filetype</span><span class="o">=</span><span class="s2">&quot;structure&quot;</span><span class="p">,</span>
+            <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmapfile</span><span class="p">,</span>
+            <span class="n">force_popmap</span><span class="o">=</span><span class="n">force_popmap</span><span class="p">,</span>
+            <span class="n">exclude_pops</span><span class="o">=</span><span class="n">exclude_pops</span><span class="p">,</span>
+            <span class="n">include_pops</span><span class="o">=</span><span class="n">include_pops</span><span class="p">,</span>
+            <span class="n">plot_format</span><span class="o">=</span><span class="n">plot_format</span><span class="p">,</span>
+            <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
+            <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_has_popids</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">has_popids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_onerow</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="StructureReader.load_aln">
+<a class="viewcode-back" href="../../../snpio.io.html#snpio.io.structure_reader.StructureReader.load_aln">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_aln</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load the STRUCTURE file and populate SNP data, samples, and populations.</span>
+
+<span class="sd">        This method reads the STRUCTURE file and populates the SNP data, sample IDs, and populations. It also sets the number of SNPs and individuals.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AlignmentNotFoundError: If the STRUCTURE file is not found.</span>
+<span class="sd">            AlignmentFormatError: If the STRUCTURE file has an invalid format.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method should be called after initializing the StructureReader object.</span>
+
+<span class="sd">            The SNP data, sample IDs, and populations are stored in the snp_data, samples, and populations attributes, respectively.4</span>
+
+<span class="sd">            The number of SNPs and individuals are stored in the num_snps and num_inds attributes, respectively.</span>
+
+<span class="sd">            The STRUCTURE file can be written to a new file using the write_structure method.</span>
+
+<span class="sd">            The SNP data can be accessed in the IUPAC format using the `snp_data` attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">AlignmentFileNotFoundError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">AlignmentFileNotFoundError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading STRUCTURE file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+        <span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">snp_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_onerow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detect_format</span><span class="p">()</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_onerow</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">alleles</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_popids</span> <span class="k">else</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+                    <span class="n">snp_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alleles</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+                    <span class="n">firstline</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="n">secondline</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+                    <span class="k">if</span> <span class="n">firstline</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">secondline</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="k">raise</span> <span class="n">AlignmentFormatError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Sample names do not match between lines: &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">firstline</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">secondline</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+
+                    <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">firstline</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">alleles1</span> <span class="o">=</span> <span class="n">firstline</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_popids</span> <span class="k">else</span> <span class="n">firstline</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+                    <span class="n">alleles2</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">secondline</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_popids</span> <span class="k">else</span> <span class="n">secondline</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+                    <span class="p">)</span>
+
+                    <span class="n">merged_alleles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                        <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">a2</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">alleles1</span><span class="p">,</span> <span class="n">alleles2</span><span class="p">)]</span>
+                    <span class="p">)</span>
+                    <span class="n">snp_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merged_alleles</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">snp_data</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unexpected number of samples found.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">StructureAlignmentSampleMismatch</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">snp_data</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_genotype_to_iupac</span><span class="p">,</span> <span class="n">row</span><span class="p">))</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">snp_data</span>
+            <span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;STRUCTURE file successfully loaded!&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_snps</span><span class="si">}</span><span class="s2"> SNPs and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_inds</span><span class="si">}</span><span class="s2"> individuals.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">except</span> <span class="p">(</span><span class="n">AlignmentError</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;An error occurred while reading the STRUCTURE file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="StructureReader.write_structure">
+<a class="viewcode-back" href="../../../snpio.io.html#snpio.io.structure_reader.StructureReader.write_structure">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_structure</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">output_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">genotype_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">snp_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">samples</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the stored alignment as a STRUCTURE file.</span>
+
+<span class="sd">        This method writes the stored alignment as a STRUCTURE file. If genotype_data is provided, the SNP data and sample IDs are extracted from it. Otherwise, the SNP data and sample IDs must be provided.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output_file (str): Name of the output STRUCTURE file.</span>
+<span class="sd">            genotype_data (GenotypeData, optional): GenotypeData instance.</span>
+<span class="sd">            snp_data (List[List[str]], optional): SNP data in IUPAC format. Must be provided if genotype_data is None.</span>
+<span class="sd">            samples (List[str]], optional): List of sample IDs. Must be provided if snp_data is not provided.</span>
+<span class="sd">            verbose (bool, optional): If True, status updates are printed.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If genotype_data and snp_data are both provided.</span>
+<span class="sd">            TypeError: If samples are not provided when snp_data is provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Writing STRUCTURE file </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">genotype_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">snp_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">snp_data</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">snp_data</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">samples</span>
+        <span class="k">elif</span> <span class="n">genotype_data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">snp_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">snp_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span>
+        <span class="k">elif</span> <span class="n">genotype_data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">snp_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">samples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;samples must be provided if snp_data is provided.&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">sample</span><span class="p">,</span> <span class="n">sample_data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">snp_data</span><span class="p">):</span>
+                    <span class="c1"># Convert IUPAC codes back to genotype format (e.g., 1/1, 2/2)</span>
+                    <span class="n">genotypes</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_iupac_to_genotype</span><span class="p">(</span><span class="n">iupac</span><span class="p">)</span> <span class="k">for</span> <span class="n">iupac</span> <span class="ow">in</span> <span class="n">sample_data</span>
+                    <span class="p">]</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_onerow</span><span class="p">:</span>
+                        <span class="c1"># Flatten the genotype pairs and write to file in one-row format</span>
+                        <span class="n">genotype_pairs</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="n">allele</span>
+                            <span class="k">for</span> <span class="n">genotype</span> <span class="ow">in</span> <span class="n">genotypes</span>
+                            <span class="k">for</span> <span class="n">allele</span> <span class="ow">in</span> <span class="n">genotype</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+                        <span class="p">]</span>
+                        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">genotype_pairs</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Write the two alleles in two separate rows for two-row format</span>
+                        <span class="n">first_row</span> <span class="o">=</span> <span class="p">[</span><span class="n">genotype</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">genotype</span> <span class="ow">in</span> <span class="n">genotypes</span><span class="p">]</span>
+                        <span class="n">second_row</span> <span class="o">=</span> <span class="p">[</span><span class="n">genotype</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">genotype</span> <span class="ow">in</span> <span class="n">genotypes</span><span class="p">]</span>
+                        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">first_row</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">second_row</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully wrote STRUCTURE file!&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;An error occurred while writing the STRUCTURE file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_detect_format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect the format of the STRUCTURE file (onerow or tworow).</span>
+
+<span class="sd">        This method reads the first two lines of the STRUCTURE file and compares the sample names. If the sample names are the same, the file is in one-row format; otherwise, it is in two-row format.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the file is in one-row format, False if it is in two-row format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;STRUCTURE file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2"> not found.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">AlignmentFileNotFoundError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="n">first_line</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">second_line</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+        <span class="c1"># If the first two lines have the same sample name, then it&#39;s a two-row format</span>
+        <span class="n">onerow</span> <span class="o">=</span> <span class="n">first_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">second_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">onerow</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

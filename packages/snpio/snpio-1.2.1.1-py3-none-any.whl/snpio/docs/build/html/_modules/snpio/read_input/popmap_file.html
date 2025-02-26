@@ -1,0 +1,641 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.read_input.popmap_file &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.read_input.popmap_file</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.read_input.popmap_file</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">snpio.plotting.plotting</span> <span class="kn">import</span> <span class="n">Plotting</span>
+
+
+<div class="viewcode-block" id="ReadPopmap">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.popmap_file.ReadPopmap">[docs]</a>
+<span class="k">class</span> <span class="nc">ReadPopmap</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to read and parse a population map file.</span>
+
+<span class="sd">    Population map file should contain two comma or whitespace-delimited columns, with one being the SampleIDs and the other being the associated populationIDs. There should either not be a header line in the popmap file, in which case the column order should be sampleIDs and then populationIDs.</span>
+
+<span class="sd">    Alternatively, tthe header line should contain exactly one of the accepted sampleID column names (&#39;sampleid&#39; or &#39;sampleids&#39;) and exactly one of the accepted populationID column names (&#39;populationid&#39;, &#39;populationids&#39;, &#39;popid&#39;, or &#39;popids&#39;).</span>
+
+<span class="sd">    The population map file should not contain any duplicate SampleIDs.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        Example population map file format:</span>
+
+<span class="sd">        ```</span>
+<span class="sd">        sampleID,populationID</span>
+<span class="sd">        Sample1,Population1</span>
+<span class="sd">        Sample2,Population1</span>
+<span class="sd">        Sample3,Population2</span>
+<span class="sd">        Sample4,Population2</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        &gt;&gt;&gt; from snpio.read_input.popmap_file import ReadPopmap</span>
+<span class="sd">        &gt;&gt;&gt; pm = ReadPopmap(&quot;popmap.txt&quot;, logger, verbose=True)</span>
+<span class="sd">        &gt;&gt;&gt; pm.get_pop_counts(genotype_data)</span>
+<span class="sd">        &gt;&gt;&gt; pm.validate_popmap(samples, force=True)</span>
+<span class="sd">        &gt;&gt;&gt; pm.subset_popmap(samples, include=[&quot;Population1&quot;])</span>
+<span class="sd">        &gt;&gt;&gt; pm.write_popmap(&quot;subset_popmap.txt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(pm.popmap)</span>
+<span class="sd">        {&#39;Sample1&#39;: &#39;Population1&#39;, &#39;Sample2&#39;: &#39;Population1&#39;}</span>
+<span class="sd">        &gt;&gt;&gt; print(pm.inverse_popmap):</span>
+<span class="sd">        {&#39;Population1&#39;: [&#39;Sample1&#39;, &#39;Sample2&#39;]}</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        filename (str): Filename for the population map.</span>
+<span class="sd">        verbose (bool): Verbosity setting (True or False). If True, enables verbose output. If False, suppresses verbose output.</span>
+<span class="sd">        _popdict (Dict[str, str]): Dictionary with SampleIDs as keys and the corresponding population ID as values.</span>
+<span class="sd">        _sample_indices (np.ndarray): Boolean array representing the subset samples.</span>
+<span class="sd">        logger (logging): Logger object.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        read_popmap: Read a population map file from disk into a dictionary object.</span>
+
+<span class="sd">        write_popmap: Write the population map dictionary to a file.</span>
+
+<span class="sd">        get_pop_counts: Print out unique population IDs and their counts.</span>
+
+<span class="sd">        validate_popmap: Validate that all alignment sample IDs are present in the population map.</span>
+
+<span class="sd">        subset_popmap: Subset the population map based on inclusion and exclusion criteria.</span>
+
+<span class="sd">        _infer_delimiter: Infer the delimiter of a given file.</span>
+
+<span class="sd">        _infer_header: Infer whether the file has a header.</span>
+
+<span class="sd">        _is_numeric: Check if a string can be converted to a float.</span>
+
+<span class="sd">        _validate_pop_subset_lists: Validates the elements in the given list to ensure they are all of type str.</span>
+
+<span class="sd">        _flip_dictionary: Flip the keys and values of a dictionary.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the ReadPopmap object.</span>
+
+<span class="sd">            This class reads and parses a population map file. The population map file should contain two comma or whitespace-delimited columns, with one being the SampleIDs and the other being the associated populationIDs. There should either not be a header line in the popmap file, in which case the column order should be sampleIDs and then populationIDs. Alternatively, the header line should contain exactly one of the accepted sampleID column names (&#39;sampleid&#39; or &#39;sampleids&#39;) and exactly one of the accepted populationID column names (&#39;populationid&#39;, &#39;populationids&#39;, &#39;popid&#39;, or &#39;popids&#39;). The population map file should not contain any duplicate SampleIDs.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str): Filename for the population map. The population map file to be read and parsed.</span>
+
+<span class="sd">            logger (logging): Logger object.</span>
+
+<span class="sd">            verbose (bool): Verbosity setting (True or False). If True, enables verbose output. If False, suppresses verbose output.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Initializing the ReadPopmap object will read the population map file from disk into a dictionary object.</span>
+
+<span class="sd">            This class will be used to read and parse a population map file.</span>
+
+<span class="sd">            The population map file should contain two comma or whitespace-delimited columns, with one being the SampleIDs and the other being the associated populationIDs.</span>
+
+<span class="sd">            There should either not be a header line in the popmap file, in which case the column order should be sampleIDs and then populationIDs.</span>
+
+<span class="sd">            Alternatively, the header line should contain exactly one of the accepted sampleID column names (&#39;sampleid&#39; or &#39;sampleids&#39;) and exactly one of the accepted populationID column names (&#39;populationid&#39;, &#39;populationids&#39;, &#39;popid&#39;, or &#39;popids&#39;).</span>
+
+<span class="sd">            The population map file should not contain any duplicate SampleIDs.</span>
+
+<span class="sd">            The dictionary will have SampleIDs as keys and the associated population ID as the values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_popmap</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ReadPopmap.read_popmap">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.popmap_file.ReadPopmap.read_popmap">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_popmap</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read a population map file from disk into a dictionary object.</span>
+
+<span class="sd">        The dictionary will have SampleIDs as keys and the associated population ID as the values. The population map file should contain two comma or whitespace-delimited columns, with one being the SampleIDs and the other being the associated populationIDs. There should either not be a header line in the popmap file, in which case the column order should be sampleIDs and then populationIDs. Alternatively, the header line should contain exactly one of the accepted sampleID column names (&#39;sampleid&#39; or &#39;sampleids&#39;) and exactly one of the accepted populationID column names (&#39;populationid&#39;, &#39;populationids&#39;, &#39;popid&#39;, or &#39;popids&#39;). The population map file should not contain any duplicate SampleIDs.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: Raises an exception if the population map file is not found on disk.</span>
+
+<span class="sd">            ValueError: Raises an exception if the population map file is empty or if the data cannot be correctly loaded from the file.</span>
+
+<span class="sd">            AssertionError: Raises an exception if the population map file is empty or if the data cannot be correctly loaded from the file.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method will be executed upon initialization of the ReadPopmap object.</span>
+
+<span class="sd">            The population map file should contain two comma or whitespace-delimited columns, with one being the SampleIDs and the other being the associated populationIDs.</span>
+
+<span class="sd">            There should either not be a header line in the popmap file, in which case the column order should be sampleIDs and then populationIDs.</span>
+
+<span class="sd">            Alternatively, the header line should contain exactly one of the accepted sampleID column names (&#39;sampleid&#39; or &#39;sampleids&#39;) and exactly one of the accepted populationID column names (&#39;populationid&#39;, &#39;populationids&#39;, &#39;popid&#39;, or &#39;popids&#39;).</span>
+
+<span class="sd">            The population map file should not contain any duplicate SampleIDs.</span>
+
+<span class="sd">            The dictionary will have SampleIDs as keys and the associated population ID as the values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fn</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">fn</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Population map file not found: </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">delim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_infer_delimiter</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_infer_header</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">fn</span><span class="p">),</span> <span class="n">delim</span><span class="p">)</span>
+
+        <span class="c1"># Read the file with inferred delimiter and header</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">delim</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error reading the popmap file &#39;</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;Please check the population map file format: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Empty (or incorrectly loaded) popmap file: &#39;</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">&#39;. Please ensure the popmap file is not empty and is in the correct format.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Validate columns. Must have exactly two columns or contain the</span>
+        <span class="c1"># correct headers.</span>
+        <span class="n">required_columns</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;populationid&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;populationids&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;popid&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;popids&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sampleid&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sampleids&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">required_columns</span> <span class="o">&amp;</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="n">pop</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;populationid&quot;</span><span class="p">,</span> <span class="s2">&quot;populationids&quot;</span><span class="p">,</span> <span class="s2">&quot;popid&quot;</span><span class="p">,</span> <span class="s2">&quot;popids&quot;</span><span class="p">}</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;p&quot;</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">pop</span> <span class="k">else</span> <span class="s2">&quot;s&quot;</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The popmap file &#39;</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">&#39; must have exactly two columns or must contain two of the following header names (one for samples and one for populations): </span><span class="si">{</span><span class="n">required_columns</span><span class="si">}</span><span class="s2">, but found </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns without the two required headers.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;samples&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;samples&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;populations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;populations&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;samples&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;populations&quot;</span><span class="p">]))</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;popdict: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Found empty popmap file or could not correctly load data from popmap file: &#39;</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">&#39;. Please ensure the popmap file is in the correct format.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReadPopmap._infer_delimiter">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.popmap_file.ReadPopmap._infer_delimiter">[docs]</a>
+    <span class="k">def</span> <span class="nf">_infer_delimiter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Infer the delimiter of a given file.</span>
+
+<span class="sd">        This method reads the first 1024 bytes of the file to infer the delimiter used in the file. It returns &#39;,&#39; for comma-separated files or a whitespace regex pattern character for whitespace-separated files.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path (str): Path to the population map file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The inferred delimiter. Returns &#39;,&#39; for comma-separated files</span>
+<span class="sd">                or whitespace regex pattern for whitespace-separated files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">sample</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;,&quot;</span>
+            <span class="k">return</span> <span class="sa">r</span><span class="s2">&quot;\s+&quot;</span></div>
+
+
+<div class="viewcode-block" id="ReadPopmap._infer_header">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.popmap_file.ReadPopmap._infer_header">[docs]</a>
+    <span class="k">def</span> <span class="nf">_infer_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Infer whether the file has a header.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path (str): Path to the population map file.</span>
+<span class="sd">            delimiter (str): The delimiter used in the file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Optional[int]: Row number to use as header (0 for first row),</span>
+<span class="sd">                        or None if there is no header.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Raises an exception if the file has a header with numeric values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">first_line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">delimiter</span> <span class="o">==</span> <span class="s2">&quot;,&quot;</span><span class="p">:</span>
+                <span class="n">parts</span> <span class="o">=</span> <span class="n">first_line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">parts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">,</span> <span class="n">first_line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+            <span class="c1"># Check if all parts are non-numeric</span>
+            <span class="n">is_header</span> <span class="o">=</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_is_numeric</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">is_header</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="ReadPopmap._is_numeric">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.popmap_file.ReadPopmap._is_numeric">[docs]</a>
+    <span class="k">def</span> <span class="nf">_is_numeric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a string can be converted to a float.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            s (str): The string to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the string is numeric, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="ReadPopmap.write_popmap">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.popmap_file.ReadPopmap.write_popmap">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_popmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the population map dictionary to a file.</span>
+
+<span class="sd">        Writes the population map dictionary, where SampleIDs are keys and the associated population ID are values, to the specified output file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output_file (str): The filename of the output file to write the population map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">sorted_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">sorted_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReadPopmap.get_pop_counts">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.popmap_file.ReadPopmap.get_pop_counts">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_pop_counts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">genotype_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print out unique population IDs and their counts.</span>
+
+<span class="sd">        Prints the unique population IDs along with their respective counts. It also generates a plot of the population counts.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            genotype_data (GenotypeData): GenotypeData object containing the alignment data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Count the occurrences of each unique value</span>
+        <span class="n">value_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Found the following populations:</span><span class="se">\n</span><span class="s2">Population</span><span class="se">\t</span><span class="s2">Count</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">value</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">value_counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}{</span><span class="n">count</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">plotting</span> <span class="o">=</span> <span class="n">Plotting</span><span class="p">(</span><span class="n">genotype_data</span><span class="p">,</span> <span class="o">**</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">plot_kwargs</span><span class="p">)</span>
+        <span class="n">plotting</span><span class="o">.</span><span class="n">plot_pop_counts</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span></div>
+
+
+<div class="viewcode-block" id="ReadPopmap.validate_popmap">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.popmap_file.ReadPopmap.validate_popmap">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate_popmap</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that all alignment sample IDs are present in the population map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            samples (List[str]): List of SampleIDs present in the alignment.</span>
+<span class="sd">                The list of SampleIDs to be validated against the population map.</span>
+
+<span class="sd">            force (bool, optional): If True, return a subset dictionary without the keys that weren&#39;t found. If False, return a boolean indicating whether all keys were found. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[bool, Dict[str, str]]: If force is False, returns True if all alignment samples are present in the population map and all population map samples are present in the alignment. Returns False otherwise. If force is True, returns a subset of the population map containing only the samples present in the alignment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">):</span>
+            <span class="n">counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+            <span class="n">duplicates</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counter</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Duplicate sample IDs found in the popmapfile: </span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">duplicates</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Sort by alignment order.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">samples</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
+            <span class="c1"># Create a boolean array where True indicates presence in popmap</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">samp</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">samp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">samp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">samp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="ReadPopmap.subset_popmap">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.popmap_file.ReadPopmap.subset_popmap">[docs]</a>
+    <span class="k">def</span> <span class="nf">subset_popmap</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">samples</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">include</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">exclude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subset the population map based on inclusion and exclusion criteria.</span>
+
+<span class="sd">        Subsets the population map by including only the specified populations (include) and excluding the specified populations (exclude).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            samples (List[str]): List of samples from alignment.</span>
+
+<span class="sd">            include (List[str] or None): List of populations to include in the subset.</span>
+<span class="sd">                The populations to include in the subset of the population map.</span>
+
+<span class="sd">            exclude (List[str] or None): List of populations to exclude from the subset of the population map.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Raises an exception if populations are present in both include and exclude lists.</span>
+
+<span class="sd">            TypeError: Raises an exception if include or exclude arguments are not lists.</span>
+
+<span class="sd">            ValueError: Raises an exception if the population map is empty after subsetting.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">include</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">exclude</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">include</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">exclude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">include_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">include</span><span class="p">)</span>
+            <span class="n">exclude_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">exclude</span><span class="p">)</span>
+            <span class="n">common</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">include_set</span> <span class="o">&amp;</span> <span class="n">exclude_set</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">common</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Populations found in both include_pops and exclude_pops: </span><span class="si">{</span><span class="n">common</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">include</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_pop_subset_lists</span><span class="p">(</span><span class="n">include</span><span class="p">)</span>
+
+            <span class="n">popmap</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">include</span><span class="p">}</span>
+            <span class="n">inc_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">popmap</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>  <span class="c1"># Boolean array</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inc_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>  <span class="c1"># All True</span>
+
+        <span class="k">if</span> <span class="n">exclude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_pop_subset_lists</span><span class="p">(</span><span class="n">exclude</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">include</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">popmap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span>
+
+            <span class="n">popmap</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">popmap</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude</span><span class="p">}</span>
+            <span class="n">exc_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">popmap</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>  <span class="c1"># Boolean array</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exc_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>  <span class="c1"># All True</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">popmap</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;popmap was empty after subseting with &#39;include_pops&#39; and/ or &#39;exclude_pops&#39; arguments.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Boolean intersection of inclusion and exclusion conditions</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">inc_idx</span><span class="p">,</span> <span class="n">exc_idx</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="o">=</span> <span class="n">indices</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">popmap</span> <span class="o">=</span> <span class="n">popmap</span></div>
+
+
+<div class="viewcode-block" id="ReadPopmap._validate_pop_subset_lists">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.popmap_file.ReadPopmap._validate_pop_subset_lists">[docs]</a>
+    <span class="k">def</span> <span class="nf">_validate_pop_subset_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">lname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;include_pops&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates the elements in the given list `l` to ensure they are all of type `str`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            l (List[str]): The list to be validated and type checked.</span>
+<span class="sd">            lname (str, optional): The name of the list being validated. Defaults to &quot;include_pops&quot;.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If any element in the list is not of type `str`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">l</span><span class="p">):</span>
+            <span class="n">all_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">l</span><span class="p">])</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid type encountered in &#39;</span><span class="si">{</span><span class="n">lname</span><span class="si">}</span><span class="s2">&#39;. Expected str, but got: </span><span class="si">{</span><span class="n">all_types</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReadPopmap._flip_dictionary">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.popmap_file.ReadPopmap._flip_dictionary">[docs]</a>
+    <span class="k">def</span> <span class="nf">_flip_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Flip the keys and values of a dictionary.</span>
+
+<span class="sd">        Flips the keys and values of the input dictionary, where the original keys become values and the original values become keys.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_dict (Dict[str, str]): The input dictionary to be flipped.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, List[str]]: The flipped dictionary with the original values as keys and lists of original keys as values.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">flipped_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sample_id</span><span class="p">,</span> <span class="n">population_id</span> <span class="ow">in</span> <span class="n">input_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">population_id</span> <span class="ow">in</span> <span class="n">flipped_dict</span><span class="p">:</span>
+                <span class="n">flipped_dict</span><span class="p">[</span><span class="n">population_id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_id</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">flipped_dict</span><span class="p">[</span><span class="n">population_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample_id</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">flipped_dict</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">popmap</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the population dictionary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, str]: Dictionary with SampleIDs as keys and the corresponding population ID as values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span>
+
+    <span class="nd">@popmap</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">popmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setter for the population map dictionary.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (Dict[str, Union[str, int]]): Dictionary object with SampleIDs as keys and the associated population ID as the value.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: Raises an exception if the value is not a dictionary object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sample_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the indices of the subset samples from the population map as a boolean array.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: Boolean array representing the subset samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">popmap_flipped</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Associate unique populations with lists of SampleIDs.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, List[str]]: Dictionary with unique populations as keys and lists of associated SampleIDs as values.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flip_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Sample </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> not in popmap: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ReadPopmap(filename=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">, verbose=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_popdict</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,791 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.analysis package &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=859da57e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=ca842793"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="snpio.read_input package" href="snpio.read_input.html" />
+    <link rel="prev" title="snpio.io package" href="snpio.io.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SNPio
+              <img src="_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">snpio</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="snpio.html">snpio package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="snpio.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="snpio.filtering.html">snpio.filtering package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.plotting.html">snpio.plotting package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.io.html">snpio.io package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">snpio.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.read_input.html">snpio.read_input package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.utils.html">snpio.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.popgenstats.html">snpio.popgenstats package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="snpio.html#module-snpio">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">snpio</a></li>
+          <li class="breadcrumb-item"><a href="snpio.html">snpio package</a></li>
+      <li class="breadcrumb-item active">snpio.analysis package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/btmartin721/SNPio/blob/master/docs/source/snpio.analysis.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="snpio-analysis-package">
+<h1>snpio.analysis package<a class="headerlink" href="#snpio-analysis-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="snpio-analysis-genotype-encoder-module">
+<h2>snpio.analysis.genotype_encoder module<a class="headerlink" href="#snpio-analysis-genotype-encoder-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.analysis.genotype_encoder.</span></span><span class="sig-name descname"><span class="pre">GenotypeEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/genotype_encoder.html#GenotypeEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Encode genotypes to various formats suitable for machine learning.</p>
+<p>This class provides methods to encode genotypes to various formats suitable for machine learning, including 012, one-hot, and integer encodings, as well as the inverse operations.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import necessary modules</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">VCFReader</span><span class="p">,</span> <span class="n">GenotypeEncoder</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize VCFReader and GenotypeEncoder objects</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;my_vcf.vcf&quot;</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="s2">&quot;my_popmap.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ge</span> <span class="o">=</span> <span class="n">GenotypeEncoder</span><span class="p">(</span><span class="n">gd</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Encode genotypes to 012, one-hot, and integer formats</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gt_012</span> <span class="o">=</span> <span class="n">ge</span><span class="o">.</span><span class="n">genotypes_012</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gt_onehot</span> <span class="o">=</span> <span class="n">ge</span><span class="o">.</span><span class="n">genotypes_onehot</span><span class="p">(</span><span class="n">gt_012</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gt_int</span> <span class="o">=</span> <span class="n">ge</span><span class="o">.</span><span class="n">genotypes_int</span><span class="p">(</span><span class="n">gt_012</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Inverse operations</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ge</span><span class="o">.</span><span class="n">genotypes_012</span> <span class="o">=</span> <span class="n">gt_012</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ge</span><span class="o">.</span><span class="n">genotypes_onehot</span> <span class="o">=</span> <span class="n">gt_onehot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ge</span><span class="o">.</span><span class="n">genotypes_int</span> <span class="o">=</span> <span class="n">gt_int</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_format</span></span></dt>
+<dd><p>Plot format for the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">prefix</span></span></dt>
+<dd><p>Prefix for the output directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">verbose</span></span></dt>
+<dd><p>If True, display verbose output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">snp_data</span></span></dt>
+<dd><p>List of lists of SNPs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">samples</span></span></dt>
+<dd><p>List of sample IDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filetype</span></span></dt>
+<dd><p>File type of the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">missing_vals</span></span></dt>
+<dd><p>List of missing values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">replace_vals</span></span></dt>
+<dd><p>List of values to replace missing values with.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">convert_012</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/genotype_encoder.html#GenotypeEncoder.convert_012"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Encode IUPAC nucleotides as 0 (reference), 1 (heterozygous), and 2 (alternate) alleles.</p>
+<p>This method encodes IUPAC nucleotides as 0 (reference), 1 (heterozygous), and 2 (alternate) alleles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>snps</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – 2D list of genotypes of shape (n_samples, n_sites).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Encoded 012 genotypes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[List[int]]</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Monomorphic sites are detected and encoded as 0 (reference).</p>
+<p>Non-biallelic sites are detected and forced to be bi-allelic.</p>
+<p>Sites with all missing data are detected and excluded from the alignment.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">convert_int_iupac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snp_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encodings_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/genotype_encoder.html#GenotypeEncoder.convert_int_iupac"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert input data to integer-encoded format (0-9) based on IUPAC codes.</p>
+<p>This method converts input data to integer-encoded format (0-9) based on IUPAC codes. The integer encoding is as follows: A=0, T=1, G=2, C=3, W=4, R=5, M=6, K=7, Y=8, S=9, N=-9.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>snp_data</strong> (<em>numpy.ndarray</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_SNPs</em><em>) or </em><em>List</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em>) – Input 012-encoded data.</p></li>
+<li><p><strong>encodings_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em>] or </em><em>None</em>) – Encodings to convert structure to phylip format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Integer-encoded data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the data file type is “phylip” or “vcf” and <code class="docutils literal notranslate"><span class="pre">encodings_dict</span></code> is not provided, default encodings based on IUPAC codes are used.</p>
+<p>If the data file type is “structure” and <code class="docutils literal notranslate"><span class="pre">encodings_dict</span></code> is not provided, default encodings for alleles are used.</p>
+<p>Otherwise, if <code class="docutils literal notranslate"><span class="pre">encodings_dict</span></code> is provided, it will be used for conversion.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">convert_onehot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snp_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encodings_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/genotype_encoder.html#GenotypeEncoder.convert_onehot"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert input data to one-hot encoded format.</p>
+<p>This method converts input data to one-hot encoded format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>snp_data</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>List</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em><em>]</em>) – Input 012-encoded data of shape (n_samples, n_SNPs).</p></li>
+<li><p><strong>encodings_dict</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em>) – Encodings to convert structure to phylip format. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>One-hot encoded data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the data file type is “phylip” and <cite>encodings_dict</cite> is not provided, default encodings for nucleotides are used.</p>
+<p>If the data file type is “structure1row” or “structure2row” and <cite>encodings_dict</cite> is not provided, default encodings for alleles are used.</p>
+<p>Otherwise, if <cite>encodings_dict</cite> is provided, it will be used for conversion.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If the data file type is “structure1row” or “structure2row” and <cite>encodings_dict</cite> is not provided, default encodings for alleles are used.</p>
+<p>If the data file type is “phylip” and <cite>encodings_dict</cite> is not provided, default encodings for nucleotides are used.</p>
+<p>If the data file type is “structure” and <cite>encodings_dict</cite> is not provided, default encodings for alleles are used.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">decode_012</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_nuc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/genotype_encoder.html#GenotypeEncoder.decode_012"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Decode 012-encoded or 0-9 integer-encoded imputed data to STRUCTURE or PHYLIP format.</p>
+<p>This method decodes 012-encoded or 0-9 integer-encoded imputed data to IUPAC format. The decoded data can be saved to a file or returned as a DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>pandas.DataFrame</em><em> | </em><em>numpy.ndarray</em><em> | </em><em>List</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em>) – Imputed data to decode, encoded as 012 or 0-9 integers.</p></li>
+<li><p><strong>write_output</strong> (<em>bool</em>) – If True, save the decoded output to a file. If False, return the decoded data as a DataFrame. Defaults to True.</p></li>
+<li><p><strong>is_nuc</strong> (<em>bool</em>) – Whether the encoding is based on nucleotides instead of 012. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If write_output is True, returns the filename where the imputed data was written. If write_output is False, returns the decoded data as a DataFrame.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">genotypes_012</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em></dt>
+<dd><p>Encode 012 genotypes as a numpy array.</p>
+<p>This method encodes genotypes as 0 (reference), 1 (heterozygous), and 2 (alternate) alleles. The encoded genotypes are returned as a 2D list, numpy array, or pandas DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>encoded 012 genotypes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[List[int]], np.ndarray, or pd.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ge</span> <span class="o">=</span> <span class="n">GenotypeEncoder</span><span class="p">(</span><span class="n">gd</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gt012</span> <span class="o">=</span> <span class="n">ge</span><span class="o">.</span><span class="n">genotypes_012</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gt012</span><span class="p">)</span>
+<span class="go">[[&quot;0&quot;, &quot;1&quot;, &quot;2&quot;], [&quot;0&quot;, &quot;1&quot;, &quot;2&quot;], [&quot;0&quot;, &quot;1&quot;, &quot;2&quot;]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">genotypes_int</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em></dt>
+<dd><p>Integer-encoded (0-9 including IUPAC characters) snps format.</p>
+<p>Integer-encoded genotypes are returned as a 2D numpy array of shape (n_samples, n_sites). The integer encoding is as follows: A=0, T=1, G=2, C=3, W=4, R=5, M=6, K=7, Y=8, S=9, N=-9. Missing values are encoded as -9.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>2D array of shape (n_samples, n_sites), integer-encoded from 0-9 with IUPAC characters.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">genotypes_onehot</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em></dt>
+<dd><p>One-hot encoded snps format of shape (n_samples, n_loci, 4).</p>
+<p>One-hot encoded genotypes are returned as a 3D numpy array of shape (n_samples, n_loci, 4).  The one-hot encoding is as follows: A=[1, 0, 0, 0], T=[0, 1, 0, 0], G=[0, 0, 1, 0], C=[0, 0, 0, 1]. Missing values are encoded as [0, 0, 0, 0]. The one-hot encoding is based on the IUPAC ambiguity codes. Heterozygous sites are encoded as 0.5 for each allele.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>One-hot encoded numpy array of shape (n_samples, n_loci, 4).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">inverse_int_iupac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">int_encoded_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encodings_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/genotype_encoder.html#GenotypeEncoder.inverse_int_iupac"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert integer-encoded data back to original format.</p>
+<p>This method converts integer-encoded data back to the original format based on IUPAC codes. The integer encoding is as follows: A=0, T=1, G=2, C=3, W=4, R=5, M=6, K=7, Y=8, S=9, N=-9.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>int_encoded_data</strong> (<em>numpy.ndarray</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_SNPs</em><em>) or </em><em>List</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em>) – Input integer-encoded data.</p></li>
+<li><p><strong>encodings_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em>] or </em><em>None</em>) – Encodings to convert from integer encoding to original format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Original format data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the data file type is “phylip” or “vcf” and <cite>encodings_dict</cite> is not provided, default encodings based on IUPAC codes are used.</p>
+<p>If the data file type is “structure” and <cite>encodings_dict</cite> is not provided, default encodings for alleles are used.</p>
+<p>Otherwise, if <cite>encodings_dict</cite> is provided, it will be used for conversion</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">inverse_onehot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">onehot_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encodings_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/genotype_encoder.html#GenotypeEncoder.inverse_onehot"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert one-hot encoded data back to original format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>onehot_data</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em><em>]</em>) – Input one-hot encoded data of shape (n_samples, n_SNPs).</p></li>
+<li><p><strong>encodings_dict</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em><em>]</em>) – Encodings to convert from one-hot encoding to original format. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Original format data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the data file type is “phylip” or “vcf” and <cite>encodings_dict</cite> is not provided, default encodings based on IUPAC codes are used.</p>
+<p>If the data file type is “structure” and <cite>encodings_dict</cite> is not provided, default encodings for alleles are used.</p>
+<p>Otherwise, if <cite>encodings_dict</cite> is provided, it will be used for conversion.</p>
+<p>If the input data is a numpy array, it will be converted to a list of lists before decoding.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">read_012</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/genotype_encoder.html#GenotypeEncoder.read_012"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Read 012-encoded comma-delimited file.</p>
+<p>This method reads a 012-encoded comma-delimited file and stores the data in the GenotypeEncoder object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – Sequences differ in length.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-analysis-tree-builder-module">
+<h2>snpio.analysis.tree_builder module<a class="headerlink" href="#snpio-analysis-tree-builder-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.analysis.tree_parser.</span></span><span class="sig-name descname"><span class="pre">TreeParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treefile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qmatrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">siterates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/tree_parser.html#TreeParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">GenotypeData</span></code></p>
+<p>TreeParser class for reading and manipulating phylogenetic trees.</p>
+<p>This class provides methods for reading, writing, and manipulating phylogenetic trees. The TreeParser class inherits from the GenotypeData class and provides additional functionality for working with phylogenetic trees. The TreeParser class can read phylogenetic trees from Newick or NEXUS format files, calculate basic statistics for the tree, extract subtrees, prune the tree, reroot the tree, and calculate pairwise distance matrices.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tp</span> <span class="o">=</span> <span class="n">TreeParser</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">genotype_data</span><span class="o">=</span><span class="n">gd_filt</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">treefile</span><span class="o">=</span><span class="s2">&quot;snpio/example_data/trees/test.tre&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">qmatrix</span><span class="o">=</span><span class="s2">&quot;snpio/example_data/trees/test.iqtree&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">siterates</span><span class="o">=</span><span class="s2">&quot;snpio/example_data/trees/test14K.rate&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">show_plots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">read_tree</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">tree_stats</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tp</span><span class="o">.</span><span class="n">reroot_tree</span><span class="p">(</span><span class="s2">&quot;~EA&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">get_distance_matrix</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">qmat</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">site_rates</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">subtree</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">get_subtree</span><span class="p">(</span><span class="s2">&quot;~EA&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pruned_tree</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">prune_tree</span><span class="p">(</span><span class="s2">&quot;~ON&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">write_tree</span><span class="p">(</span><span class="n">subtree</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">write_tree</span><span class="p">(</span><span class="n">pruned_tree</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">genotype_data</span></span></dt>
+<dd><p>GenotypeData object containing the SNP data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>GenotypeData</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">treefile</span></span></dt>
+<dd><p>Path to the phylogenetic tree file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">qmatrix</span></span></dt>
+<dd><p>Path to the Q matrix file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">siterates</span></span></dt>
+<dd><p>Path to the site rates file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">verbose</span></span></dt>
+<dd><p>Whether to display verbose output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">debug</span></span></dt>
+<dd><p>Whether to display debug output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_distance_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/tree_parser.html#TreeParser.get_distance_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate the pairwise distance matrix between all tips in the tree.</p>
+<p>This method computes the pairwise distance matrix between all nodes and tips in the phylogenetic tree. The distance matrix is returned as a pandas DataFrame object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pairwise distance matrix as a pandas DataFrame.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_subtree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regex</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/tree_parser.html#TreeParser.get_subtree"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a subtree rooted at a specified node or tip.</p>
+<p>This method extracts a subtree from the phylogenetic tree rooted at the specified node or tip. The subtree is returned as a toytree object. The regex argument can be a regular expression to match the node or tip name. Regular expressions can be prefixed with ‘~’ to indicate taxa to keep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>regex</strong> (<em>int</em>) – Regular expression to match the node or tip name. Regular expressions can be prefixed with ‘~’ to indicate taxa to keep.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The subtree rooted at the specified node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toytree.tree</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">load_tree_from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newick_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/tree_parser.html#TreeParser.load_tree_from_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Load a phylogenetic tree from a Newick string.</p>
+<p>This method loads a phylogenetic tree from a Newick string and returns it as a toytree object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>newick_str</strong> (<em>str</em>) – The Newick string representing the tree.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded tree object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toytree.tree</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">prune_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">taxa</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/tree_parser.html#TreeParser.prune_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Prune the tree by removing a set of taxa (leaf nodes).</p>
+<p>This method prunes the tree by removing a set of taxa (leaf nodes) from the tree. The taxa argument can be a list of taxa names to remove from the tree or a regular expression to match the node or tip name. Regular expressions can be prefixed with ‘~’ to indicate taxa to keep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>taxa</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>str</em><em>]</em>) – List of taxa names to remove from the tree or a regular expression to match the node or tip name. Regular expressions can be prefixed with ‘~’ to indicate taxa to keep.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pruned tree object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toytree.tree</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">qmat</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em></dt>
+<dd><p>Get q-matrix object for a corresponding phylogenetic tree.</p>
+<p>This method reads the Q matrix from a file and returns it as a pandas DataFrame object. The Q matrix file can be in either comma-separated or whitespace-separated format. The Q matrix should be a square matrix with columns and index in the order A, C, G, T.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Q-matrix as a pandas DataFrame.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">read_tree</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/tree_parser.html#TreeParser.read_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Read Newick or NEXUS-style phylogenetic tree into toytree object.</p>
+<p>This method reads a phylogenetic tree from a file and returns it as a toytree object. The tree file can be in Newick or NEXUS format. If the tree file is not found or is unreadable, an exception is raised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The input tree as a toytree object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>toytree.tree object</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – If the tree file is not found.</p></li>
+<li><p><strong>PermissionError</strong> – If the tree file exists but is not readable.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">reroot_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/tree_parser.html#TreeParser.reroot_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Reroot the tree at a specific node or tip.</p>
+<p>This method reroots the tree at a specific node or tip, changing the root of the tree to the specified node. The rerooted tree is returned as a toytree object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em>) – Index of the node or tip where the tree should be rerooted, a regex string to match the node or tip name prefixed by “~”, or a list of node or tip names.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The rerooted tree.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>toytree.tree</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">site_rates</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em></dt>
+<dd><p>Get site rate data for phylogenetic tree.</p>
+<p>This method reads the site-specific substitution rates from a file and returns them as a list of float values. The site rates file should either contain the site rates in a single column, with each rate on a separate line, or in a table format with the rates in the ‘Rate’ column, as output by IQ-TREE. For example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">0.0000</span>
+<span class="pre">0.0000</span>
+<span class="pre">0.0000</span>
+<span class="pre">0.0000</span>
+<span class="pre">0.0000</span>
+<span class="pre">`</span></code></p>
+<p>OR:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">#</span> <span class="pre">Any</span> <span class="pre">comment</span> <span class="pre">lines</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">included</span> <span class="pre">here.</span>
+<span class="pre">Site</span>&#160;&#160;&#160; <span class="pre">Rate</span>&#160;&#160; <span class="pre">Cat</span> <span class="pre">C_rate</span>
+<span class="pre">1</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0000</span>&#160; <span class="pre">1</span>&#160;&#160; <span class="pre">0.0000</span>
+<span class="pre">2</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0000</span>&#160; <span class="pre">1</span>&#160;&#160; <span class="pre">0.0000</span>
+<span class="pre">3</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0000</span>&#160; <span class="pre">1</span>&#160;&#160; <span class="pre">0.0000</span>
+<span class="pre">4</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0000</span>&#160; <span class="pre">1</span>&#160;&#160; <span class="pre">0.0000</span>
+<span class="pre">5</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0000</span>&#160; <span class="pre">1</span>&#160;&#160; <span class="pre">0.0000</span>
+<span class="pre">`</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Site rates for the phylogenetic tree.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tree</span></span></dt>
+<dd><p>Get newick tree from provided path.</p>
+<p>This method reads the phylogenetic tree from the provided tree file path and returns it as a toytree object. If the tree file path is not provided, an exception is raised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The toytree tree object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>toytree.tree</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">tree_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/tree_parser.html#TreeParser.tree_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate basic statistics for the phylogenetic tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary containing tree statistics such as the number of tips, number of nodes, and total tree height.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">write_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nexus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/analysis/tree_parser.html#TreeParser.write_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Write the phylogenetic tree to a file.</p>
+<p>This method saves the phylogenetic tree to a file in Newick or NEXUS format. If the save_path argument is not provided, the tree is returned as a string representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tree</strong> (<em>toytree.tree</em>) – The tree object to save.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save the tree file. If not provided (left as None), then a string representation of the tree is returned. Defaults to None.</p></li>
+<li><p><strong>nexus</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save the tree in NEXUS format.If False, then Newick format is used. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The string representation of the tree if save_path is None. Otherwise, None is returned.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[str]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If the input tree is not a toytree object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="snpio.io.html" class="btn btn-neutral float-left" title="snpio.io package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="snpio.read_input.html" class="btn btn-neutral float-right" title="snpio.read_input package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

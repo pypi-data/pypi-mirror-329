@@ -1,0 +1,1384 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.read_input.genotype_data &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.read_input.genotype_data</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.read_input.genotype_data</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pysam</span>
+
+<span class="kn">from</span> <span class="nn">snpio.plotting.plotting</span> <span class="kn">import</span> <span class="n">Plotting</span>
+<span class="kn">from</span> <span class="nn">snpio.read_input.genotype_data_base</span> <span class="kn">import</span> <span class="n">BaseGenotypeData</span>
+<span class="kn">from</span> <span class="nn">snpio.read_input.popmap_file</span> <span class="kn">import</span> <span class="n">ReadPopmap</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.custom_exceptions</span> <span class="kn">import</span> <span class="n">SequenceLengthError</span><span class="p">,</span> <span class="n">UnsupportedFileTypeError</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.logging</span> <span class="kn">import</span> <span class="n">LoggerManager</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.misc</span> <span class="kn">import</span> <span class="n">IUPAC</span>
+
+
+<div class="viewcode-block" id="GenotypeData">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData">[docs]</a>
+<span class="k">class</span> <span class="nc">GenotypeData</span><span class="p">(</span><span class="n">BaseGenotypeData</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for handling and analyzing genotype data.</span>
+
+<span class="sd">    The GenotypeData class is intended as a parent class for the file reader classes, such as VCFReader, StructureReader, and PhylipReader. It provides common methods and attributes for handling genotype data, such as reading population maps, subsetting data, and generating missingness reports.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        GenotypeData handles the following characters as missing data:</span>
+<span class="sd">            - &#39;N&#39;</span>
+<span class="sd">            - &#39;-&#39;</span>
+<span class="sd">            - &#39;?&#39;</span>
+<span class="sd">            - &#39;.&#39;</span>
+
+<span class="sd">        If using PHYLIP or STRUCTURE formats, all sites will be forced to be biallelic. If multiple alleles are needed, you must use a VCF file.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        inputs (dict): GenotypeData keyword arguments as a dictionary.</span>
+
+<span class="sd">        num_snps (int): Number of SNPs in the dataset.</span>
+
+<span class="sd">        num_inds (int): Number of individuals in the dataset.</span>
+
+<span class="sd">        populations (List[Union[str, int]]): Population IDs.</span>
+
+<span class="sd">        popmap (dict): Dictionary object with SampleIDs as keys and popIDs as values.</span>
+
+<span class="sd">        popmap_inverse (dict or None): Inverse dictionary of popmap, where popIDs are keys and lists of sampleIDs are values.</span>
+
+<span class="sd">        samples (List[str]): Sample IDs in input order.</span>
+
+<span class="sd">        snpsdict (dict or None): Dictionary with SampleIDs as keys and lists of genotypes as values.</span>
+
+<span class="sd">        snp_data (List[List[str]]): Genotype data as a 2D list.</span>
+
+<span class="sd">        loci_indices (List[int]): Column indices for retained loci in filtered alignment.</span>
+
+<span class="sd">        sample_indices (List[int]): Row indices for retained samples in the alignment.</span>
+
+<span class="sd">        ref (List[str]): List of reference alleles of length num_snps.</span>
+
+<span class="sd">        alt (List[str]): List of alternate alleles of length num_snps.</span>
+
+<span class="sd">        iupac_mapping (dict): Mapping of allele tuples to IUPAC codes.</span>
+
+<span class="sd">        reverse_iupac_mapping (dict): Mapping of IUPAC codes to allele tuples.</span>
+
+<span class="sd">        missing_vals (List[str]): List of missing value characters.</span>
+
+<span class="sd">        replace_vals (List[pd.NA]): List of missing value replacements.</span>
+
+<span class="sd">        logger (logging.Logger): Logger object.</span>
+
+<span class="sd">        debug (bool): If True, display debug messages.</span>
+
+<span class="sd">        plot_kwargs (dict): Plotting keyword arguments.</span>
+
+<span class="sd">        supported_filetypes (List[str]): List of supported filetypes.</span>
+
+<span class="sd">        kwargs (dict): GenotypeData keyword arguments.</span>
+
+<span class="sd">        chunk_size (int): Chunk size for reading in large files.</span>
+
+<span class="sd">        plot_format (str): Format to save report plots.</span>
+
+<span class="sd">        plot_fontsize (int): Font size for plots.</span>
+
+<span class="sd">        plot_dpi (int): Resolution in dots per inch for plots.</span>
+
+<span class="sd">        plot_despine (bool): If True, remove the top and right spines from plots.</span>
+
+<span class="sd">        show_plots (bool): If True, display plots in the console.</span>
+
+<span class="sd">        prefix (str): Prefix to use for output directory.</span>
+
+<span class="sd">        verbose (bool): If True, display verbose output.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        read_popmap: Read population map from file to map samples to populations.</span>
+
+<span class="sd">        subset_with_popmap: Subset popmap and samples based on population criteria.</span>
+
+<span class="sd">        write_popmap: Write the population map to a file.</span>
+
+<span class="sd">        missingness_reports: Generate missingness reports and plots.</span>
+
+<span class="sd">        _make_snpsdict: Make a dictionary with SampleIDs as keys and a list of SNPs associated with the sample as the values.</span>
+
+<span class="sd">        _genotype_to_iupac: Convert a genotype string to its corresponding IUPAC code.</span>
+
+<span class="sd">        _iupac_to_genotype: Convert an IUPAC code to its corresponding genotype string.</span>
+
+<span class="sd">        calc_missing: Calculate missing value statistics based on a DataFrame.</span>
+
+<span class="sd">        copy: Create a deep copy of the GenotypeData object.</span>
+
+<span class="sd">        read_popmap: Read in a popmap file.</span>
+
+<span class="sd">        missingness_reports: Create missingness reports from GenotypeData object.</span>
+
+<span class="sd">        _report2file: Write a DataFrame to a CSV file.</span>
+
+<span class="sd">        _genotype_to_iupac: Convert a genotype string to its corresponding IUPAC code.</span>
+
+<span class="sd">        _iupac_to_genotype: Convert an IUPAC code to its corresponding genotype string.</span>
+
+<span class="sd">        get_reverse_iupac_mapping: Create a reverse mapping from IUPAC codes to allele tuples.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; gd = GenotypeData(file=&quot;data.vcf&quot;, filetype=&quot;vcf&quot;, popmapfile=&quot;popmap.txt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(gd.snp_data)</span>
+<span class="sd">        [[&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39;], [&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39;], [&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39;]]</span>
+<span class="sd">        &gt;&gt;&gt; print(gd.num_snps)</span>
+<span class="sd">        4</span>
+<span class="sd">        &gt;&gt;&gt; print(gd.num_inds)</span>
+<span class="sd">        3</span>
+<span class="sd">        &gt;&gt;&gt; print(gd.populations)</span>
+<span class="sd">        [&#39;pop1&#39;, &#39;pop2&#39;, &#39;pop2&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; print(gd.popmap)</span>
+<span class="sd">        {&#39;sample1&#39;: &#39;pop1&#39;, &#39;sample2&#39;: &#39;pop2&#39;, &#39;sample3&#39;: &#39;pop2&#39;}</span>
+<span class="sd">        &gt;&gt;&gt; print(gd.samples)</span>
+<span class="sd">        [&#39;sample1&#39;, &#39;sample2&#39;, &#39;sample3&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">filetype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">popmapfile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">force_popmap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">exclude_pops</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_pops</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">plot_format</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;png&quot;</span><span class="p">,</span>
+        <span class="n">plot_fontsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
+        <span class="n">plot_dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+        <span class="n">plot_despine</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">show_plots</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;snpio&quot;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">loci_indices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sample_indices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the GenotypeData object.</span>
+
+<span class="sd">        This class is used to read in genotype data from various file formats, such as VCF, PHYLIP, and STRUCTURE. It provides methods for reading population maps, subsetting data, and generating missingness reports.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str, optional): Path to input file containing genotypes. Defaults to None.</span>
+
+<span class="sd">            filetype (str, optional): Type of input genotype file. Possible values include: &#39;phylip&#39;, &#39;structure&#39;, &#39;vcf&#39;, &#39;tree&#39;, or &#39;012&#39;. Defaults to None.</span>
+
+<span class="sd">            popmapfile (str, optional): Path to population map file. If supplied and filetype is one of the STRUCTURE formats, then the structure file is assumed to have NO popID column. Defaults to None.</span>
+
+<span class="sd">            force_popmap (bool, optional): If True, then samples not present in the popmap file will be excluded from the alignment. If False, then an error is raised if samples are present in the popmap file that are not present in the alignment. Defaults to False.</span>
+
+<span class="sd">            exclude_pops (List[str], optional): List of population IDs to exclude from the alignment. Defaults to None.</span>
+
+<span class="sd">            include_pops (List[str], optional): List of population IDs to include in the alignment. Populations not present in the include_pops list will be excluded. Defaults to None.</span>
+
+<span class="sd">            plot_format (str, optional): Format to save report plots. Valid options include: &#39;pdf&#39;, &#39;svg&#39;, &#39;png&#39;, and &#39;jpeg&#39;. Defaults to &#39;png&#39;.</span>
+
+<span class="sd">            plot_fontsize (int, optional): Font size for plots. Defaults to 12.</span>
+
+<span class="sd">            plot_dpi (int, optional): Resolution in dots per inch for plots. Defaults to 300.</span>
+
+<span class="sd">            plot_despine (bool, optional): If True, remove the top and right spines from plots. Defaults to True.</span>
+
+<span class="sd">            show_plots (bool, optional): If True, display plots in the console. Defaults to False.</span>
+
+<span class="sd">            prefix (str, optional): Prefix to use for output directory. Defaults to &quot;gtdata&quot;.</span>
+
+<span class="sd">            verbose (bool, optional): If True, display verbose output. Defaults to False.</span>
+
+<span class="sd">            loci_indices (np.ndarray, optional): Column indices for retained loci in filtered alignment. Defaults to None.</span>
+
+<span class="sd">            sample_indices (np.ndarray, optional): Row indices for retained samples in the alignment. Defaults to None.</span>
+
+<span class="sd">            chunk_size (int, optional): Chunk size for reading in large files. Defaults to 1000.</span>
+
+<span class="sd">            logger (logging.Logger, optional): Logger object. Defaults to None.</span>
+
+<span class="sd">            debug (bool, optional): If True, display debug messages. Defaults to False.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            UnsupportedFileTypeError: If the filetype is not supported.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            If using PHYLIP or STRUCTURE formats, all sites will be forced to be biallelic. If multiple alleles are needed, you must use a VCF file.</span>
+
+<span class="sd">            If popmapfile is provided, the samples will be subset based on the population criteria.</span>
+
+<span class="sd">            If popmapfile is not provided, the popmap attribute will be None.</span>
+
+<span class="sd">            If popmapfile is not provided, the missingness_reports method will not generate population-based reports or plots.</span>
+
+<span class="sd">            If popmapfile is not provided, the write_popmap method will raise an AttributeError.</span>
+
+<span class="sd">            If popmapfile is not provided, the read_popmap method will raise an AttributeError.</span>
+
+<span class="sd">            If popmapfile is not provided, the subset_with_popmap method will raise an AttributeError.</span>
+
+<span class="sd">            If popmapfile is not provided, the popmap attribute will be None.</span>
+
+<span class="sd">            If popmapfile is not provided, the popmap_inverse attribute will be None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">filetype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filetype</span> <span class="o">=</span> <span class="n">filetype</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filetype</span> <span class="o">=</span> <span class="n">filetype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">popmapfile</span> <span class="o">=</span> <span class="n">popmapfile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">force_popmap</span> <span class="o">=</span> <span class="n">force_popmap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exclude_pops</span> <span class="o">=</span> <span class="n">exclude_pops</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_pops</span> <span class="o">=</span> <span class="n">include_pops</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_format</span> <span class="o">=</span> <span class="n">plot_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_fontsize</span> <span class="o">=</span> <span class="n">plot_fontsize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_dpi</span> <span class="o">=</span> <span class="n">plot_dpi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_despine</span> <span class="o">=</span> <span class="n">plot_despine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_plots</span> <span class="o">=</span> <span class="n">show_plots</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">chunk_size</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">supported_filetypes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;vcf&quot;</span><span class="p">,</span> <span class="s2">&quot;phylip&quot;</span><span class="p">,</span> <span class="s2">&quot;structure&quot;</span><span class="p">,</span> <span class="s2">&quot;tree&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">logger</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;prefix&quot;</span><span class="p">:</span> <span class="n">prefix</span><span class="p">,</span> <span class="s2">&quot;verbose&quot;</span><span class="p">:</span> <span class="n">verbose</span><span class="p">,</span> <span class="s2">&quot;debug&quot;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
+            <span class="n">logman</span> <span class="o">=</span> <span class="n">LoggerManager</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logman</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
+            <span class="s2">&quot;filetype&quot;</span><span class="p">:</span> <span class="n">filetype</span><span class="p">,</span>
+            <span class="s2">&quot;popmapfile&quot;</span><span class="p">:</span> <span class="n">popmapfile</span><span class="p">,</span>
+            <span class="s2">&quot;force_popmap&quot;</span><span class="p">:</span> <span class="n">force_popmap</span><span class="p">,</span>
+            <span class="s2">&quot;exclude_pops&quot;</span><span class="p">:</span> <span class="n">exclude_pops</span><span class="p">,</span>
+            <span class="s2">&quot;include_pops&quot;</span><span class="p">:</span> <span class="n">include_pops</span><span class="p">,</span>
+            <span class="s2">&quot;plot_format&quot;</span><span class="p">:</span> <span class="n">plot_format</span><span class="p">,</span>
+            <span class="s2">&quot;plot_fontsize&quot;</span><span class="p">:</span> <span class="n">plot_fontsize</span><span class="p">,</span>
+            <span class="s2">&quot;plot_dpi&quot;</span><span class="p">:</span> <span class="n">plot_dpi</span><span class="p">,</span>
+            <span class="s2">&quot;plot_despine&quot;</span><span class="p">:</span> <span class="n">plot_despine</span><span class="p">,</span>
+            <span class="s2">&quot;show_plots&quot;</span><span class="p">:</span> <span class="n">show_plots</span><span class="p">,</span>
+            <span class="s2">&quot;prefix&quot;</span><span class="p">:</span> <span class="n">prefix</span><span class="p">,</span>
+            <span class="s2">&quot;verbose&quot;</span><span class="p">:</span> <span class="n">verbose</span><span class="p">,</span>
+            <span class="s2">&quot;logger&quot;</span><span class="p">:</span> <span class="n">logger</span><span class="p">,</span>
+            <span class="s2">&quot;debug&quot;</span><span class="p">:</span> <span class="n">debug</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;plot_format&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_format</span><span class="p">,</span>
+            <span class="s2">&quot;plot_fontsize&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_fontsize</span><span class="p">,</span>
+            <span class="s2">&quot;dpi&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_dpi</span><span class="p">,</span>
+            <span class="s2">&quot;despine&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_despine</span><span class="p">,</span>
+            <span class="s2">&quot;show&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_plots</span><span class="p">,</span>
+            <span class="s2">&quot;verbose&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="s2">&quot;debug&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replace_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_populations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ref</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_popmap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_popmap_inverse</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span> <span class="o">=</span> <span class="n">loci_indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="o">=</span> <span class="n">sample_indices</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filetype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">supported_filetypes</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Unsupported filetype provided to GenotypeData: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filetype</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">UnsupportedFileTypeError</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">filetype</span><span class="p">,</span> <span class="n">supported_types</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">supported_filetypes</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;filetype&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filetype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;loci_indices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;sample_indices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">iupac_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iupac_from_gt_tuples</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_iupac_mapping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iupac_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span> <span class="o">=</span> <span class="n">IUPAC</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_iupac_from_gt_tuples</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the IUPAC code mapping.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[Tuple[str, str], str]: Mapping of allele tuples to IUPAC codes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">):</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">):</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">):</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">):</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">):</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">):</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">):</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">):</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">):</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">):</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">):</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">):</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">):</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="GenotypeData.get_reverse_iupac_mapping">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData.get_reverse_iupac_mapping">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_reverse_iupac_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a reverse mapping from IUPAC codes to allele tuples.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Tuple[str, str]]: Mapping of IUPAC codes to allele tuples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_iupac_mapping</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData._make_snpsdict">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData._make_snpsdict">[docs]</a>
+    <span class="k">def</span> <span class="nf">_make_snpsdict</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">samples</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">snp_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a dictionary with SampleIDs as keys and a list of SNPs associated with the sample as the values.</span>
+
+<span class="sd">        This method is used to create a dictionary with sample IDs as keys and a list of SNPs as values. The dictionary is used to quickly access the SNPs associated with a sample.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            samples (List[str], optional): List of sample IDs. If not provided, uses self.samples.</span>
+
+<span class="sd">            snp_data (np.ndarray, optional): 2D list of genotypes. If not provided, uses self.snp_data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, List[str]]: Dictionary with sample IDs as keys and a list of SNPs as values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">samples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span>
+        <span class="k">if</span> <span class="n">snp_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">snp_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span>
+
+        <span class="n">snpsdict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">seq</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">snp_data</span><span class="p">):</span>
+            <span class="n">snpsdict</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">seq</span>
+        <span class="k">return</span> <span class="n">snpsdict</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData.read_popmap">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData.read_popmap">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_popmap</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read population map from file to map samples to populations.</span>
+
+<span class="sd">        Makes use of the ReadPopmap class to read in the popmap file and validate the samples against the alignment.</span>
+
+<span class="sd">        Sets the following attributes:</span>
+<span class="sd">            - samples</span>
+<span class="sd">            - populations</span>
+<span class="sd">            - popmap</span>
+<span class="sd">            - popmap_inverse</span>
+<span class="sd">            - sample_indices</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">popmapfile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popmapfile</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid popmapfile type. Expected str, but got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popmapfile</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="c1"># Instantiate popmap object and read in the popmap file.</span>
+            <span class="n">pm</span> <span class="o">=</span> <span class="n">ReadPopmap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popmapfile</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+
+            <span class="c1"># Get the samples and populations from the popmap file.</span>
+            <span class="n">fc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_popmap</span>
+            <span class="n">inc</span><span class="p">,</span> <span class="n">exc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_pops</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude_pops</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;force&quot;</span><span class="p">:</span> <span class="n">fc</span><span class="p">,</span> <span class="s2">&quot;include_pops&quot;</span><span class="p">:</span> <span class="n">inc</span><span class="p">,</span> <span class="s2">&quot;exclude_pops&quot;</span><span class="p">:</span> <span class="n">exc</span><span class="p">}</span>
+
+            <span class="c1"># Subset the popmap and samples based on the population criteria.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subset_with_popmap</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">pm</span><span class="o">.</span><span class="n">get_pop_counts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData.subset_with_popmap">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData.subset_with_popmap">[docs]</a>
+    <span class="k">def</span> <span class="nf">subset_with_popmap</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">my_popmap</span><span class="p">:</span> <span class="n">ReadPopmap</span><span class="p">,</span>
+        <span class="n">samples</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">include_pops</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exclude_pops</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">return_indices</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subset popmap and samples based on population criteria.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            my_popmap (ReadPopmap): ReadPopmap instance.</span>
+
+<span class="sd">            samples (List[str]): List of sample IDs.</span>
+
+<span class="sd">            force (bool): If True, force the subsetting. If False, raise an error if the samples don&#39;t align.</span>
+
+<span class="sd">            include_pops (Optional[List[str]]): List of populations to include. If provided, only samples belonging to these populations will be retained.</span>
+
+<span class="sd">            exclude_pops (Optional[List[str]]): List of populations to exclude. If provided, samples belonging to these populations will be excluded.</span>
+
+<span class="sd">            return_indices (bool, optional): If True, return the indices for samples. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Optional[np.ndarray]: Boolean array of `sample_indices` if return_indices is True. Otherwise, None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Validate popmap with current samples</span>
+        <span class="n">popmap_ok</span> <span class="o">=</span> <span class="n">my_popmap</span><span class="o">.</span><span class="n">validate_popmap</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">popmap_ok</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Popmap validation failed. Check the popmap file and try again.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Subset the popmap based on inclusion/exclusion criteria</span>
+        <span class="n">my_popmap</span><span class="o">.</span><span class="n">subset_popmap</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">include_pops</span><span class="p">,</span> <span class="n">exclude_pops</span><span class="p">)</span>
+
+        <span class="c1"># Update the sample list and the populations</span>
+        <span class="n">new_samples</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">my_popmap</span><span class="o">.</span><span class="n">popmap</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_samples</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Some samples in the alignment are not found in the population map.&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Length of samples: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Length of new_samples: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new_samples</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;samples: </span><span class="si">{</span><span class="n">samples</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;new_samples: </span><span class="si">{</span><span class="n">new_samples</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">new_populations</span> <span class="o">=</span> <span class="p">[</span><span class="n">my_popmap</span><span class="o">.</span><span class="n">popmap</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">new_samples</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">new_samples</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;No valid samples found after popmap subsetting.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Update the sample indices as a boolean array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span> <span class="n">new_samples</span><span class="p">)</span>
+
+        <span class="c1"># Update samples and populations based on the subset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">new_samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_populations</span> <span class="o">=</span> <span class="n">new_populations</span>
+
+        <span class="c1"># Ensure the snp_data is filtered by the subset of samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># Update popmap and inverse popmap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_popmap</span> <span class="o">=</span> <span class="n">my_popmap</span><span class="o">.</span><span class="n">popmap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_popmap_inverse</span> <span class="o">=</span> <span class="n">my_popmap</span><span class="o">.</span><span class="n">popmap_flipped</span>
+
+        <span class="c1"># Return indices if requested</span>
+        <span class="k">if</span> <span class="n">return_indices</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData.write_popmap">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData.write_popmap">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_popmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the population map to a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str): Output file path.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AttributeError: If the samples attribute is not defined.</span>
+<span class="sd">            AttributeError: If the popmap attribute is not defined.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&#39;samples attribute is undefined.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&#39;populations&#39; attribute is undefined.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">):</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData.missingness_reports">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData.missingness_reports">[docs]</a>
+    <span class="k">def</span> <span class="nf">missingness_reports</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">zoom</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">bar_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gray&quot;</span><span class="p">,</span>
+        <span class="n">heatmap_palette</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;magma&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate missingness reports and plots.</span>
+
+<span class="sd">        The function will write several comma-delimited report files:</span>
+
+<span class="sd">            1. individual_missingness.csv: Missing proportions per individual.</span>
+
+<span class="sd">            2. locus_missingness.csv: Missing proportions per locus.</span>
+
+<span class="sd">            3. population_missingness.csv: Missing proportions per population (only generated if popmapfile was passed to GenotypeData).</span>
+
+<span class="sd">            4. population_locus_missingness.csv: Table of per-population and per-locus missing data proportions.</span>
+
+<span class="sd">        A file missingness.&lt;plot_format&gt; will also be saved. It contains the following subplots:</span>
+
+<span class="sd">            1. Barplot with per-individual missing data proportions.</span>
+
+<span class="sd">            2. Barplot with per-locus missing data proportions.</span>
+
+<span class="sd">            3. Barplot with per-population missing data proportions (only if popmapfile was passed to GenotypeData).</span>
+
+<span class="sd">            4. Heatmap showing per-population + per-locus missing data proportions (only if popmapfile was passed to GenotypeData).</span>
+
+<span class="sd">            5. Stacked barplot showing missing data proportions per individual.</span>
+
+<span class="sd">            6. Stacked barplot showing missing data proportions per population (only if popmapfile was passed to GenotypeData).</span>
+
+<span class="sd">        If popmapfile was not passed to GenotypeData, then the subplots and report files that require populations are not included.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            prefix (str, optional): Output file prefix for the missingness report. Defaults to None.</span>
+
+<span class="sd">            zoom (bool, optional): If True, zoom in to the missing proportion range on some of the plots. If False, the plot range is fixed at [0, 1]. Defaults to True.</span>
+
+<span class="sd">            bar_color (str, optional): Color of the bars on the non-stacked bar plots. Can be any color supported by matplotlib. See the matplotlib.pyplot.colors documentation. Defaults to &#39;gray&#39;.</span>
+
+<span class="sd">            heatmap_palette (str, otpional): Color palette for the heatmap plot. Defaults to &#39;magma&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set the prefix for the missingness report files,</span>
+        <span class="c1"># If not provided.</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">prefix</span>
+
+        <span class="c1"># Set the parameters for the missingness report plots.</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;prefix&quot;</span><span class="p">,</span> <span class="s2">&quot;zoom&quot;</span><span class="p">,</span> <span class="s2">&quot;horizontal_space&quot;</span><span class="p">,</span> <span class="s2">&quot;vertical_space&quot;</span><span class="p">]</span>
+        <span class="n">keys</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;bar_color&quot;</span><span class="p">,</span> <span class="s2">&quot;heatmap_palette&quot;</span><span class="p">])</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">prefix</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">bar_color</span><span class="p">,</span> <span class="n">heatmap_palette</span><span class="p">]</span>
+
+        <span class="c1"># Create a dictionary of the parameters.</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span>
+
+        <span class="c1"># Create a DataFrame from snp_data and replace missing values</span>
+        <span class="c1"># with NA.</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace_vals</span><span class="p">)</span>
+
+        <span class="c1"># Update plot_kwargs and params with the appropriate values.</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_kwargs</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;plot_fontsize&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_fontsize</span><span class="p">})</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;plot_title_fontsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_fontsize</span>
+
+        <span class="c1"># Plot the missingness reports.</span>
+        <span class="n">plotting</span> <span class="o">=</span> <span class="n">Plotting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">dfs</span> <span class="o">=</span> <span class="n">plotting</span><span class="o">.</span><span class="n">visualize_missingness</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">loc</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">poploc</span><span class="p">,</span> <span class="n">poptotal</span><span class="p">,</span> <span class="n">indpop</span> <span class="o">=</span> <span class="n">dfs</span>
+
+        <span class="c1"># Write the missingness reports to file.</span>
+        <span class="n">report_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_output&quot;</span><span class="p">,</span> <span class="s2">&quot;gtdata&quot;</span><span class="p">,</span> <span class="s2">&quot;reports&quot;</span><span class="p">)</span>
+        <span class="n">report_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">report_path</span> <span class="o">=</span> <span class="n">report_path</span> <span class="o">/</span> <span class="s2">&quot;individual_missingness.csv&quot;</span>
+
+        <span class="c1"># Write the individual missingness report to file.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_report2file</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">report_path</span><span class="p">)</span>
+
+        <span class="c1"># Write the locus missingness report to file.</span>
+        <span class="n">outfn</span> <span class="o">=</span> <span class="n">report_path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;locus_missingness.csv&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_report2file</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">outfn</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">outfn</span> <span class="o">=</span> <span class="n">report_path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;population_locus_missingness.csv&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_report2file</span><span class="p">(</span><span class="n">poploc</span><span class="p">,</span> <span class="n">outfn</span><span class="p">)</span>
+
+            <span class="n">outfn</span> <span class="o">=</span> <span class="n">report_path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;population_missingness.csv&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_report2file</span><span class="p">(</span><span class="n">poptotal</span><span class="p">,</span> <span class="n">outfn</span><span class="p">)</span>
+
+            <span class="n">outfn</span> <span class="o">=</span> <span class="n">report_path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;pop_individ_locus_missingness.csv&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_report2file</span><span class="p">(</span><span class="n">indpop</span><span class="p">,</span> <span class="n">outfn</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData._report2file">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData._report2file">[docs]</a>
+    <span class="k">def</span> <span class="nf">_report2file</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">report_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write a DataFrame to a CSV file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pandas.DataFrame): DataFrame to be written to the file.</span>
+
+<span class="sd">            report_path (str): Path to the report directory.</span>
+
+<span class="sd">            header (bool, optional): Whether to include the header row in the file. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">report_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData._genotype_to_iupac">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData._genotype_to_iupac">[docs]</a>
+    <span class="k">def</span> <span class="nf">_genotype_to_iupac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">genotype</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a genotype string to its corresponding IUPAC code.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            genotype (str): Genotype string in the format &quot;x/y&quot;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Corresponding IUPAC code for the input genotype. Returns &#39;N&#39; if the genotype is not in the lookup dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">iupac_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span><span class="o">.</span><span class="n">get_gt2iupac</span><span class="p">()</span>
+
+        <span class="n">gt</span> <span class="o">=</span> <span class="n">iupac_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">genotype</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">gt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid Genotype: </span><span class="si">{</span><span class="n">genotype</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gt</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData._iupac_to_genotype">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData._iupac_to_genotype">[docs]</a>
+    <span class="k">def</span> <span class="nf">_iupac_to_genotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iupac_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert an IUPAC code to its corresponding genotype string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            iupac_code (str): IUPAC encoded nucleotide character.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Corresponding genotype string for the input IUPAC code. Returns &#39;-9/-9&#39; if the IUPAC code is not in the lookup dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">genotype_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span><span class="o">.</span><span class="n">get_iupac2gt</span><span class="p">()</span>
+
+        <span class="n">gt</span> <span class="o">=</span> <span class="n">genotype_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">iupac_code</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid IUPAC Code: </span><span class="si">{</span><span class="n">iupac_code</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gt</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData.calc_missing">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData.calc_missing">[docs]</a>
+    <span class="k">def</span> <span class="nf">calc_missing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">use_pops</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">],</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+    <span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate missing value statistics based on a DataFrame.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame): Input DataFrame containing genotype data.</span>
+
+<span class="sd">            use_pops (bool, optional): If True, calculate statistics per population. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[pd.Series, pd.Series, Optional[pd.DataFrame], Optional[pd.Series], Optional[pd.DataFrame]]: A tuple of missing value statistics:</span>
+
+<span class="sd">            - loc (pd.Series): Missing value proportions per locus.</span>
+
+<span class="sd">            - ind (pd.Series): Missing value proportions per individual.</span>
+
+<span class="sd">            - poploc (Optional[pd.DataFrame]): Missing value proportions per population and locus. Only returned if use_pops=True.</span>
+
+<span class="sd">            - poptot (Optional[pd.Series]): Missing value proportions per population. Only returned if use_pops=True.</span>
+
+<span class="sd">            - indpop (Optional[pd.DataFrame]): Missing value proportions per individual and population. Only returned if use_pops=True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get missing value counts per-locus.</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_inds</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="n">loc</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Get missing value counts per-individual.</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_snps</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">poploc</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">poptot</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">indpop</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">use_pops</span><span class="p">:</span>
+            <span class="n">popdf</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">popdf</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_populations</span>
+            <span class="n">misscnt</span> <span class="o">=</span> <span class="n">popdf</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">popdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+            <span class="n">poploc</span> <span class="o">=</span> <span class="n">misscnt</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">poptot</span> <span class="o">=</span> <span class="n">misscnt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_snps</span>
+            <span class="n">poptot</span> <span class="o">=</span> <span class="n">poptot</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">indpop</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">loc</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">poploc</span><span class="p">,</span> <span class="n">poptot</span><span class="p">,</span> <span class="n">indpop</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData.copy">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData.copy">[docs]</a>
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a deep copy of the GenotypeData or VCFReader object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            GenotypeData or VCFReader: A new object with the same attributes as the original.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Determine the class type of the current object</span>
+        <span class="n">new_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+
+        <span class="c1"># Shallow copy of the original object&#39;s __dict__</span>
+        <span class="n">new_obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+        <span class="c1"># Deep copy all attributes EXCEPT the problematic VariantHeader</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;vcf_header&quot;</span><span class="p">,</span> <span class="s2">&quot;_vcf_attributes_fn&quot;</span><span class="p">}:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">new_obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">attr</span><span class="p">))</span>
+
+        <span class="c1"># Handle VCF-specific attributes if they exist</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;vcf_header&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">vcf_header</span><span class="p">:</span>
+            <span class="n">new_header</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">VariantHeader</span><span class="p">()</span>
+            <span class="n">new_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vcf_header</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">new_obj</span><span class="o">.</span><span class="n">vcf_header</span> <span class="o">=</span> <span class="n">new_header</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_vcf_attributes_fn&quot;</span><span class="p">):</span>
+            <span class="c1"># Copy the VCF attributes file path as a Path object</span>
+            <span class="n">new_obj</span><span class="o">.</span><span class="n">_vcf_attributes_fn</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vcf_attributes_fn</span><span class="p">)</span>
+
+        <span class="c1"># Ensure BaseGenotypeData attributes are copied if they exist</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">super</span><span class="p">(),</span> <span class="s2">&quot;copy&quot;</span><span class="p">):</span>
+            <span class="n">base_copy</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">new_obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">base_copy</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">new_obj</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData.load_aln">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData.load_aln">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_aln</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;load_aln method must be implemented in child class.&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenotypeData.get_population_indices">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData.get_population_indices">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_population_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a mapping from population IDs to sample indices.</span>
+
+<span class="sd">        This method creates a dictionary with population IDs as keys and lists of sample indices as values. The sample indices are used to subset the genotype data by population.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, int]: Dictionary with population IDs as keys and lists of sample indices as values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sample_id_to_index</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">sample_id</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">sample_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">pop_indices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">pop_id</span><span class="p">,</span> <span class="n">sample_ids</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">popmap_inverse</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">sample_id_to_index</span><span class="p">[</span><span class="n">sample_id</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">sample_id</span> <span class="ow">in</span> <span class="n">sample_ids</span>
+                <span class="k">if</span> <span class="n">sample_id</span> <span class="ow">in</span> <span class="n">sample_id_to_index</span>
+            <span class="p">]</span>
+            <span class="n">pop_indices</span><span class="p">[</span><span class="n">pop_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">indices</span>
+        <span class="k">return</span> <span class="n">pop_indices</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get GenotypeData keyword arguments as a dictionary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: GenotypeData keyword arguments as a dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span>
+
+    <span class="nd">@inputs</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setter method for class keyword arguments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (Dict[str, Any]): Dictionary of keyword arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">num_snps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of snps (loci) in the dataset.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Number of SNPs (loci) per individual.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="nd">@num_snps</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">num_snps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the number of SNPs in the dataset.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (int): Number of SNPs (loci) in the dataset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;num_snps must be numeric, but got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;num_snps must be a positive integer, but got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_snps</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">num_inds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of individuals (samples) in dataset.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Number of individuals (samples) in input data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="nd">@num_inds</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">num_inds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the number of individuals (samples) in the dataset.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (int): Number of individuals (samples) in the dataset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="sa">f</span><span class="s2">&quot;num_inds must be numeric, but got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;num_inds must be a positive integer, but got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_inds</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">populations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Population IDs as a list of strings or integers.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Union[str, int]]: Population IDs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_populations</span>
+
+    <span class="nd">@populations</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">populations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the population IDs.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (List[Union[str, int]]): List of population IDs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_populations</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">popmap</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dictionary object with SampleIDs as keys and popIDs as values.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, str]: Dictionary with SampleIDs as keys and popIDs as values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popmap</span>
+
+    <span class="nd">@popmap</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">popmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dictionary with SampleIDs as keys and popIDs as values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (Dict[str, str]): Dictionary object with SampleIDs as keys and popIDs as values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;popmap must be a dictionary object, but got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;popmap values must be strings or integers&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_popmap</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">popmap_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inverse popmap dictionary with populationIDs as keys and lists of sampleIDs as values.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, List[str]]: Inverse dictionary of popmap, where popIDs are keys and lists of sampleIDs are values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popmap_inverse</span>
+
+    <span class="nd">@popmap_inverse</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">popmap_inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setter for popmap_inverse. Should have populationIDs as keys and lists of corresponding sampleIDs as values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (Dict[str, List[str]]): Inverse dictionary of popmap, where popIDs are keys and lists of sampleIDs are values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;popmap_inverse&#39; must be a dict object: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;popmap_inverse&#39; values must be lists of sampleIDs per populationID key, but got: </span><span class="si">{</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_popmap_inverse</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">samples</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List of sample IDs in input order.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[str]: Sample IDs in input order.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span>
+
+    <span class="nd">@samples</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the sampleIDs as a list of strings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (List[str]): List of sample IDs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">snpsdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dictionary with Sample IDs as keys and lists of genotypes as values.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, List[str]]: Dictionary with sample IDs as keys and lists of genotypes as values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_snpsdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_snpsdict</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_snpsdict</span>
+
+    <span class="nd">@snpsdict</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">snpsdict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set snpsdict object, which is a dictionary with sample IDs as keys and lists of genotypes as values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (Dict[str, List[str]]): Dictionary with sample IDs as keys and lists of genotypes as values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_snpsdict</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">loci_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Boolean array for retained loci in filtered alignment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: Boolean array of loci indices, with True for retained loci and False for excluded loci.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the loci_indices attribute is not a numpy.ndarray or list.</span>
+<span class="sd">            TypeError: If the loci_indices attribute is not a numpy.dtype &#39;bool&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;loci_indices&#39; set to invalid type. Expected numpy.ndarray or list, but got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_snps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="nb">bool</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;loci_indices&#39; must be numpy.dtype &#39;bool&#39;, but got: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span>
+
+    <span class="nd">@loci_indices</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">loci_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Column indices for retained loci in filtered alignment.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (np.ndarray): Boolean array of loci indices, with True for retained loci and False for excluded loci.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the loci_indices attribute is not a numpy.ndarray or list.</span>
+<span class="sd">            TypeError: If the loci_indices attribute is not a numpy.dtype &#39;bool&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_snps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="nb">bool</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Attempt to set &#39;sample_indices&#39; to an unexpected np.dtype. Expected &#39;bool&#39;, but got: </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sample_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Row indices for retained samples in alignemnt.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: Boolean array of sample indices, with True for retained samples and False for excluded samples.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the sample_indices attribute is not a numpy.ndarray or list.</span>
+<span class="sd">            TypeError: If the sample_indices attribute is not a numpy.dtype &#39;bool&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;sample_indices&#39; set to invalid type. Expected numpy.ndarray or list, but got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="nb">bool</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;sample_indices&#39; must be numpy.dtype &#39;bool&#39;, but got: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span>
+
+    <span class="nd">@sample_indices</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sample_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the sample indices as a boolean array.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value: Boolean array of sample indices, with True for retained samples and False for excluded samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="nb">bool</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Attempt to set &#39;sample_indices&#39; to an unexpected np.dtype. Expected &#39;bool&#39;, but got: </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ref</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get list of reference alleles of length num_snps.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[str]: List of reference alleles of length num_snps.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ref</span>
+
+    <span class="nd">@ref</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setter for list of reference alleles of length num_snps.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (List[str]): List of reference alleles of length num_snps.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ref</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">alt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get list of alternate alleles of length num_snps.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[str]: List of alternate alleles of length num_snps.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alt</span>
+
+    <span class="nd">@alt</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">alt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setter for list of alternate alleles of length num_snps.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (List[str]): List of alternate alleles of length num_snps.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alt</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">snp_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the genotypes as a 2D list of shape (n_samples, n_loci).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: 2D array of IUPAC encoded genotype data.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the snp_data attribute is not a numpy.ndarray, pandas.DataFrame, or list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_aln</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">read_popmap</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span>  <span class="c1"># already numpy.ndarray</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid &#39;snp_data&#39; type. Expected numpy.ndarray, pandas.DataFrame, or list, but got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="nd">@snp_data</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">snp_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set snp_data attribute as a 2D list of IUPAC encoded genotype data.</span>
+
+<span class="sd">        Input can be a 2D list, numpy array, or pandas DataFrame object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (Union[np.ndarray, List[List[str]], pd.DataFrame]): 2D array of IUPAC encoded genotype data.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the snp_data attribute is not a numpy.ndarray, pandas.DataFrame, or list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_snp_data</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_seq_lengths</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Attempt to set &#39;snp_data&#39; to invalid type. Must be a list, numpy.ndarray, pandas.DataFrame, but got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_validate_seq_lengths</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure that all SNP data rows have the same length.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SequenceLengthError: If the sequence lengths are not all the same.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lengths</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lengths</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">n_snps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n_snps</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid sequence length for Sample </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">. Expected </span><span class="si">{</span><span class="n">n_snps</span><span class="si">}</span><span class="s2">, but got: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">SequenceLengthError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<div class="viewcode-block" id="GenotypeData.set_alignment">
+<a class="viewcode-back" href="../../../snpio.read_input.html#snpio.read_input.genotype_data.GenotypeData.set_alignment">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_alignment</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">snp_data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">samples</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">sample_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">loci_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the alignment data and sample IDs.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            snp_data (np.ndarray): 2D array of genotype data.</span>
+<span class="sd">            samples (List[str]): List of sample IDs.</span>
+<span class="sd">            sample_indices (np.ndarray): Boolean array of sample indices.</span>
+<span class="sd">            loci_indices (np.ndarray): Boolean array of locus indices.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This method is used to set the alignment data and sample IDs after filtering.</span>
+
+<span class="sd">            The method updates the following attributes:</span>
+<span class="sd">                - snp_data</span>
+<span class="sd">                - samples</span>
+<span class="sd">                - populations</span>
+<span class="sd">                - popmap</span>
+<span class="sd">                - popmap_inverse</span>
+<span class="sd">                - sample_indices</span>
+<span class="sd">                - loci_indices</span>
+<span class="sd">                - num_inds</span>
+<span class="sd">                - num_snps</span>
+<span class="sd">                - prefix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span> <span class="o">=</span> <span class="n">snp_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">popmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">popmap</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">popmap</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">popmap</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">popmap_inverse</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">p</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samp</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">samp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">popmap_inverse</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span> <span class="o">=</span> <span class="n">sample_indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span> <span class="o">=</span> <span class="n">loci_indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_snps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_filtered&quot;</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ref</span><span class="p">)</span> <span class="k">if</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alt</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alt</span><span class="p">)</span> <span class="k">if</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filetype</span> <span class="o">==</span> <span class="s2">&quot;vcf&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_vcf_attributes</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span>
+            <span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the number of individuals in the dataset.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_inds</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the genotype data for a specific individual.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over the genotype data for each individual.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_inds</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">individual</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if an individual is present in the dataset.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">individual</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a string representation of the GenotypeData object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;GenotypeData: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_snps</span><span class="si">}</span><span class="s2"> SNPs, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_inds</span><span class="si">}</span><span class="s2"> individuals&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a detailed string representation of the GenotypeData object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;GenotypeData(filename=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">, filetype=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filetype</span><span class="si">}</span><span class="s2">, popmapfile=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">popmapfile</span><span class="si">}</span><span class="s2">, force_popmap=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">force_popmap</span><span class="si">}</span><span class="s2">, exclude_pops=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exclude_pops</span><span class="si">}</span><span class="s2">, include_pops=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">include_pops</span><span class="si">}</span><span class="s2">, plot_format=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_format</span><span class="si">}</span><span class="s2">, prefix=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

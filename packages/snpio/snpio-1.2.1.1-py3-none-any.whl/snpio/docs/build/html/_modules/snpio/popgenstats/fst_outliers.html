@@ -1,0 +1,528 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.popgenstats.fst_outliers &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.popgenstats.fst_outliers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.popgenstats.fst_outliers</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">kneed</span> <span class="kn">import</span> <span class="n">KneeLocator</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">DBSCAN</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.multitest</span> <span class="kn">import</span> <span class="n">multipletests</span>
+
+<span class="kn">from</span> <span class="nn">snpio.popgenstats.summary_statistics</span> <span class="kn">import</span> <span class="n">SummaryStatistics</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.results_exporter</span> <span class="kn">import</span> <span class="n">ResultsExporter</span>
+
+<span class="n">exporter</span> <span class="o">=</span> <span class="n">ResultsExporter</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="FstOutliers">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.fst_outliers.FstOutliers">[docs]</a>
+<span class="k">class</span> <span class="nc">FstOutliers</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for detecting Fst outliers between populations.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">genotype_data</span><span class="p">,</span> <span class="n">alignment_012</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">plotter</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the FstOutliers object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            genotype_data (GenotypeData): GenotypeData object containing genotype data.</span>
+<span class="sd">            logger (logging.Logger): Logger object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span> <span class="o">=</span> <span class="n">genotype_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alignment_012</span> <span class="o">=</span> <span class="n">alignment_012</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plotter</span> <span class="o">=</span> <span class="n">plotter</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sum_stats</span> <span class="o">=</span> <span class="n">SummaryStatistics</span><span class="p">(</span>
+            <span class="n">genotype_data</span><span class="p">,</span> <span class="n">alignment_012</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">plotter</span>
+        <span class="p">)</span>
+
+        <span class="n">exporter</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_output&quot;</span><span class="p">,</span> <span class="s2">&quot;analysis&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FstOutliers.detect_fst_outliers_dbscan">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.fst_outliers.FstOutliers.detect_fst_outliers_dbscan">[docs]</a>
+    <span class="nd">@exporter</span><span class="o">.</span><span class="n">capture_results</span>
+    <span class="k">def</span> <span class="nf">detect_fst_outliers_dbscan</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">correction_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;bonferroni&quot;</span><span class="p">,</span> <span class="s2">&quot;fdr_bh&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect Fst outliers from SNP data using DBSCAN.</span>
+
+<span class="sd">        This method detects Fst outliers from SNP data using DBSCAN clustering. Outliers are identified based on the distribution of Fst values between population pairs. The method returns a DataFrame containing the Fst outliers and contributing population pairs, as well as a DataFrame containing the adjusted or unadjusted P-values, depending on whether a multiple testing correction method was specified.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            correction_method (str, optional): Multiple testing correction method that performs P-value adjustment, &#39;bonf&#39; (Bonferroni) or &#39;fdr&#39; (FDR B-H). If not specified, no correction or P-value adjustment is applied. Defaults to None.</span>
+<span class="sd">            alpha (float): Significance level for multiple test correction (with adjusted P-values). Defaults to 0.05.</span>
+<span class="sd">            n_jobs (int): Number of CPU threads to use for parallelization. If set to -1, all available CPU threads are used. Defaults to 1.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[pd.DataFrame, pd.DataFrame]: A DataFrame containing the Fst outliers and contributing population pairs, and a DataFrame containing the adjusted P-values if ``correction_method`` was provided or the un-adjusted P-values otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">outlier_snps</span><span class="p">,</span> <span class="n">contributing_pairs</span><span class="p">,</span> <span class="n">adjusted_pvals_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbscan_fst</span><span class="p">(</span>
+            <span class="n">correction_method</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_jobs</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Add contributing pairs to the outlier_snps DataFrame</span>
+        <span class="n">outlier_snps</span><span class="p">[</span><span class="s2">&quot;Contributing_Pairs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">contributing_pairs</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">outlier_snps</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">outlier_snps</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No Fst outliers detected. Skipping correspoding plot.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">outlier_snps</span><span class="p">)</span><span class="si">}</span><span class="s2"> Fst outliers detected.&quot;</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Plot the outlier SNPs</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plotter</span><span class="o">.</span><span class="n">plot_fst_outliers</span><span class="p">(</span><span class="n">outlier_snps</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error plotting Fst outliers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Skipping plot.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fst outlier detection complete!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">outlier_snps</span><span class="p">,</span> <span class="n">adjusted_pvals_df</span></div>
+
+
+<div class="viewcode-block" id="FstOutliers.detect_fst_outliers_bootstrap">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.fst_outliers.FstOutliers.detect_fst_outliers_bootstrap">[docs]</a>
+    <span class="nd">@exporter</span><span class="o">.</span><span class="n">capture_results</span>
+    <span class="k">def</span> <span class="nf">detect_fst_outliers_bootstrap</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">correction_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;bonferroni&quot;</span><span class="p">,</span> <span class="s2">&quot;fdr_bh&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+        <span class="n">n_bootstraps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">alternative</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;two&quot;</span><span class="p">,</span> <span class="s2">&quot;upper&quot;</span><span class="p">,</span> <span class="s2">&quot;lower&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;two&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect Fst outliers from SNP data using traditional bootstrapping.</span>
+
+<span class="sd">        Outliers are identified based on the distribution of Fst values between population pairs. This method now supports one-tailed tests: specifying &#39;upper&#39; identifies SNPs with significantly higher Fst than expected, and &#39;lower&#39; identifies SNPs with significantly lower Fst than expected. The default &#39;two&#39; option performs a two-tailed test.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            correction_method (Literal[&quot;bonferroni&quot;, &quot;fdr_bh&quot;] | None): Multiple testing correction method.</span>
+<span class="sd">                If None, no adjustment is applied.</span>
+<span class="sd">            alpha (float): Significance level for adjusted P-values. Defaults to 0.05.</span>
+<span class="sd">            n_bootstraps (int): Number of bootstrap replicates. Defaults to 1000.</span>
+<span class="sd">            n_jobs (int): Number of CPU threads for parallelization. Defaults to 1.</span>
+<span class="sd">            alternative (Literal[&quot;two&quot;, &quot;upper&quot;, &quot;lower&quot;]): Type of test to perform.</span>
+<span class="sd">                &quot;two&quot; for two-tailed, &quot;upper&quot; for testing higher than expected, and &quot;lower&quot; for lower than expected.</span>
+<span class="sd">                Defaults to &quot;two&quot;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[pd.DataFrame, pd.DataFrame]: A tuple containing a DataFrame of Fst outliers (with contributing</span>
+<span class="sd">            population pairs as a column) and a DataFrame of adjusted (or unadjusted) P-values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">outlier_snps</span><span class="p">,</span> <span class="n">contributing_pairs</span><span class="p">,</span> <span class="n">adjusted_pvals_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_boot_fst</span><span class="p">(</span>
+            <span class="n">correction_method</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_bootstraps</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alternative</span>
+        <span class="p">)</span>
+
+        <span class="n">outlier_snps</span><span class="p">[</span><span class="s2">&quot;Contributing_Pairs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">contributing_pairs</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">outlier_snps</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">outlier_snps</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No Fst outliers detected. Skipping corresponding plot.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">outlier_snps</span><span class="p">)</span><span class="si">}</span><span class="s2"> Fst outliers detected.&quot;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plotter</span><span class="o">.</span><span class="n">plot_fst_outliers</span><span class="p">(</span><span class="n">outlier_snps</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error plotting Fst outliers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Skipping plot.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fst outlier detection complete!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">outlier_snps</span><span class="p">,</span> <span class="n">adjusted_pvals_df</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_boot_fst</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">correction_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">n_bootstraps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">alternative</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;two&quot;</span><span class="p">,</span> <span class="s2">&quot;upper&quot;</span><span class="p">,</span> <span class="s2">&quot;lower&quot;</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect Fst outliers using a bootstrapping approach.</span>
+
+<span class="sd">        Bootstrap replicates of pairwise Weir and Cockerham&#39;s Fst estimates are used to generate a null distribution for each SNP. Observed Fst values are compared against the bootstrap distribution using Z-scores and associated one- or two-tailed P-values. Multiple testing correction is applied if specified. Outliers are identified based on the adjusted P-values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            correction_method (Optional[str]): Correction method for multiple tests.</span>
+<span class="sd">            alpha (float): Significance level.</span>
+<span class="sd">            n_bootstraps (int): Number of bootstrap replicates.</span>
+<span class="sd">            n_jobs (int): Number of parallel jobs (if -1, all cores are used).</span>
+<span class="sd">            alternative (Literal[&quot;two&quot;, &quot;upper&quot;, &quot;lower&quot;]): Type of test to perform.</span>
+<span class="sd">                &quot;two&quot; for two-tailed, &quot;upper&quot; for testing higher than expected, and &quot;lower&quot; for lower than expected.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[pd.DataFrame, List[Tuple[str]], pd.DataFrame]:</span>
+<span class="sd">                - DataFrame of outlier SNPs (rows) with observed Fst values (columns),</span>
+<span class="sd">                - List of contributing population pairs for each outlier SNP,</span>
+<span class="sd">                - DataFrame of adjusted (or unadjusted) P-values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Detecting Fst outliers using bootstrapping...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Compute bootstrapped Fst estimates.</span>
+        <span class="n">fst_bootstrap_per_population_pair</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_stats</span><span class="o">.</span><span class="n">weir_cockerham_fst</span><span class="p">(</span>
+            <span class="n">n_bootstraps</span><span class="o">=</span><span class="n">n_bootstraps</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span>
+        <span class="p">)</span>
+
+        <span class="n">fst_means</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">fst_stds</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">pop_pair</span><span class="p">,</span> <span class="n">fst_bootstrap</span> <span class="ow">in</span> <span class="n">fst_bootstrap_per_population_pair</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">valid_vals</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">fst_bootstrap</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">valid_vals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
+                    <span class="n">mean_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">fst_bootstrap</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">std_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">(</span><span class="n">fst_bootstrap</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">fst_means</span><span class="p">[</span><span class="n">pop_pair</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean_vals</span>
+                <span class="n">fst_stds</span><span class="p">[</span><span class="n">pop_pair</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">std_vals</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No valid bootstrap Fst values for pair </span><span class="si">{</span><span class="n">pop_pair</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="n">n_loci</span> <span class="o">=</span> <span class="n">fst_bootstrap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">fst_means</span><span class="p">[</span><span class="n">pop_pair</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_loci</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">fst_stds</span><span class="p">[</span><span class="n">pop_pair</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_loci</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+        <span class="n">fst_mean_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">fst_means</span><span class="p">)</span>
+        <span class="n">fst_std_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">fst_stds</span><span class="p">)</span>
+
+        <span class="n">valid_rows</span> <span class="o">=</span> <span class="n">fst_mean_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">fst_mean_df</span> <span class="o">=</span> <span class="n">fst_mean_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_rows</span><span class="p">]</span>
+        <span class="n">fst_std_df</span> <span class="o">=</span> <span class="n">fst_std_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_rows</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bootstrap mean DataFrame: </span><span class="si">{</span><span class="n">fst_mean_df</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bootstrap std DataFrame: </span><span class="si">{</span><span class="n">fst_std_df</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">fst_per_population_pair</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_stats</span><span class="o">.</span><span class="n">weir_cockerham_fst</span><span class="p">()</span>
+        <span class="n">fst_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">fst_per_population_pair</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">fst_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fst_df</span><span class="p">))</span>
+        <span class="n">fst_df</span> <span class="o">=</span> <span class="n">fst_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_rows</span><span class="p">]</span>
+
+        <span class="n">common_columns</span> <span class="o">=</span> <span class="n">fst_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">fst_mean_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">fst_df</span> <span class="o">=</span> <span class="n">fst_df</span><span class="p">[</span><span class="n">common_columns</span><span class="p">]</span>
+        <span class="n">fst_mean_df</span> <span class="o">=</span> <span class="n">fst_mean_df</span><span class="p">[</span><span class="n">common_columns</span><span class="p">]</span>
+        <span class="n">fst_std_df</span> <span class="o">=</span> <span class="n">fst_std_df</span><span class="p">[</span><span class="n">common_columns</span><span class="p">]</span>
+
+        <span class="n">fst_df</span> <span class="o">=</span> <span class="n">fst_df</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Observed Fst DataFrame: </span><span class="si">{</span><span class="n">fst_df</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Aligned bootstrap mean DataFrame: </span><span class="si">{</span><span class="n">fst_mean_df</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Aligned bootstrap std DataFrame: </span><span class="si">{</span><span class="n">fst_std_df</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Compute Z-scores: (observed Fst - bootstrap mean) / bootstrap std</span>
+        <span class="n">z_scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">fst_df</span> <span class="o">-</span> <span class="n">fst_mean_df</span><span class="p">)</span> <span class="o">/</span> <span class="n">fst_std_df</span>
+
+        <span class="c1"># Compute one- or two-tailed P-values based on the alternative hypothesis</span>
+        <span class="k">if</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s2">&quot;two&quot;</span><span class="p">:</span>
+            <span class="n">p_values</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s2">&quot;upper&quot;</span><span class="p">:</span>
+            <span class="n">p_values</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s2">&quot;lower&quot;</span><span class="p">:</span>
+            <span class="n">p_values</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Invalid value for &#39;alternative&#39;. Choose from &#39;two&#39;, &#39;upper&#39;, or &#39;lower&#39;.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">p_values</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">p_values</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">z_scores</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">z_scores</span><span class="o">.</span><span class="n">columns</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Z-scores DataFrame: </span><span class="si">{</span><span class="n">z_scores</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P-values DataFrame: </span><span class="si">{</span><span class="n">p_values</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">all_p_values</span> <span class="o">=</span> <span class="n">p_values</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">valid_idx</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">all_p_values</span><span class="p">)</span>
+        <span class="n">all_p_values_valid</span> <span class="o">=</span> <span class="n">all_p_values</span><span class="p">[</span><span class="n">valid_idx</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">correction_method</span><span class="p">:</span>
+            <span class="n">adjusted_pvals_valid</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span>
+                <span class="n">all_p_values_valid</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">correction_method</span>
+            <span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adjusted_pvals_valid</span> <span class="o">=</span> <span class="n">all_p_values_valid</span>
+        <span class="n">adjusted_pvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">all_p_values</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="n">adjusted_pvals</span><span class="p">[</span><span class="n">valid_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">adjusted_pvals_valid</span>
+        <span class="n">adjusted_pvals_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">adjusted_pvals</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">p_values</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">p_values</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">p_values</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">significant</span> <span class="o">=</span> <span class="n">adjusted_pvals_df</span> <span class="o">&lt;</span> <span class="n">alpha</span>
+        <span class="n">outlier_indices</span> <span class="o">=</span> <span class="n">significant</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">outlier_snps</span> <span class="o">=</span> <span class="n">fst_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">outlier_indices</span><span class="p">]</span>
+
+        <span class="c1"># Compute contributing pairs only for the outlier SNPs</span>
+        <span class="n">contributing_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_identify_significant_pairs</span><span class="p">(</span>
+            <span class="n">alpha</span><span class="p">,</span> <span class="n">adjusted_pvals_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">outlier_snps</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outlier_snps</span><span class="p">,</span> <span class="n">contributing_pairs</span><span class="p">,</span> <span class="n">adjusted_pvals_df</span>
+
+    <span class="k">def</span> <span class="nf">_dbscan_fst</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">correction_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect Fst outliers using DBSCAN clustering.</span>
+
+<span class="sd">        Outliers are identified based on the distribution of Fst values between population pairs. The method returns a DataFrame of the outlier SNPs, a list of contributing population pairs, and a DataFrame of adjusted (or unadjusted) p-values. The DBSCAN algorithm is used to cluster the Fst values and identify outliers. The optimal eps value is estimated using the k-distance graph method. Contributing population pairs are identified using a z-score approach on the outlier SNPs.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            correction_method (Optional[str]): Correction method for multiple tests.</span>
+<span class="sd">            alpha (float): Significance level for adjusted p-values.</span>
+<span class="sd">            n_jobs (int): Number of CPU threads to use for parallelization.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[pd.DataFrame, list, pd.DataFrame]:</span>
+<span class="sd">                - DataFrame of Fst outliers,</span>
+<span class="sd">                - List of contributing population pairs for each outlier SNP,</span>
+<span class="sd">                - DataFrame of adjusted (or unadjusted) p-values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Detecting Fst outliers using DBSCAN...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 1: Calculate Fst values between population pairs</span>
+        <span class="n">fst_per_population_pair</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_stats</span><span class="o">.</span><span class="n">weir_cockerham_fst</span><span class="p">()</span>
+        <span class="n">fst_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+            <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">v</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">fst_per_population_pair</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">fst_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fst_df</span><span class="p">))</span>
+        <span class="n">fst_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Step 2: Prepare data for DBSCAN</span>
+        <span class="n">fst_values</span> <span class="o">=</span> <span class="n">fst_df</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">n_population_pairs</span> <span class="o">=</span> <span class="n">fst_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">n_data_points</span> <span class="o">=</span> <span class="n">fst_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">min_samples</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_population_pairs</span><span class="p">),</span> <span class="n">n_data_points</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+        <span class="n">fst_values_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">fst_values</span><span class="p">)</span>
+
+        <span class="c1"># Step 3: Estimate eps and run DBSCAN</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_eps</span><span class="p">(</span><span class="n">fst_values_scaled</span><span class="p">,</span> <span class="n">min_samples</span><span class="p">)</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">DBSCAN</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="n">min_samples</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">fst_values_scaled</span><span class="p">)</span>
+        <span class="n">outlier_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">labels</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">outlier_snps</span> <span class="o">=</span> <span class="n">fst_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">outlier_indices</span><span class="p">]</span>
+
+        <span class="c1"># Step 4: Identify contributing pairs using a z-score approach on the outlier SNPs</span>
+        <span class="n">fst_means</span> <span class="o">=</span> <span class="n">fst_df</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">fst_stds</span> <span class="o">=</span> <span class="n">fst_df</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
+        <span class="n">z_scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">outlier_snps</span> <span class="o">-</span> <span class="n">fst_means</span><span class="p">)</span> <span class="o">/</span> <span class="n">fst_stds</span>
+
+        <span class="c1"># Compute two-tailed p-values using vectorized operations</span>
+        <span class="n">p_values</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)))</span>
+        <span class="n">p_values</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">p_values</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">z_scores</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">z_scores</span><span class="o">.</span><span class="n">columns</span>
+        <span class="p">)</span>
+        <span class="n">all_p_values</span> <span class="o">=</span> <span class="n">p_values</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">valid_idx</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">all_p_values</span><span class="p">)</span>
+        <span class="n">all_p_values_valid</span> <span class="o">=</span> <span class="n">all_p_values</span><span class="p">[</span><span class="n">valid_idx</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">correction_method</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">all_p_values_valid</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">adjusted_pvals_valid</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span>
+                    <span class="n">all_p_values_valid</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">correction_method</span>
+                <span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No valid p-values found for DBSCAN outliers.&quot;</span><span class="p">)</span>
+                <span class="n">adjusted_pvals_valid</span> <span class="o">=</span> <span class="n">all_p_values_valid</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adjusted_pvals_valid</span> <span class="o">=</span> <span class="n">all_p_values_valid</span>
+        <span class="n">adjusted_pvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">all_p_values</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="n">adjusted_pvals</span><span class="p">[</span><span class="n">valid_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">adjusted_pvals_valid</span>
+        <span class="n">adjusted_pvals_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">adjusted_pvals</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">p_values</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">p_values</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">p_values</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># IMPORTANT: Compute contributing pairs only for the outlier SNPs</span>
+        <span class="n">contributing_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_identify_significant_pairs</span><span class="p">(</span>
+            <span class="n">alpha</span><span class="p">,</span> <span class="n">adjusted_pvals_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">outlier_snps</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outlier_snps</span><span class="p">,</span> <span class="n">contributing_pairs</span><span class="p">,</span> <span class="n">adjusted_pvals_df</span>
+
+    <span class="k">def</span> <span class="nf">_estimate_eps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fst_values</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">min_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Estimate the optimal eps value for DBSCAN clustering.</span>
+
+<span class="sd">        This method estimates the optimal eps value for DBSCAN clustering using the k-distance graph method. The optimal eps value is determined based on the knee point of the k-distance graph.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fst_values (pd.DataFrame): Fst values between population pairs.</span>
+<span class="sd">            min_samples (int): Minimum number of samples required for DBSCAN clustering.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The optimal eps value for DBSCAN clustering.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Step 4: Compute the k-distance graph to find optimal eps</span>
+        <span class="n">neighbor</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">min_samples</span><span class="p">)</span>
+        <span class="n">nbrs</span><span class="p">:</span> <span class="n">NearestNeighbors</span> <span class="o">=</span> <span class="n">neighbor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">fst_values</span><span class="p">)</span>
+        <span class="n">distances</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">nbrs</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">fst_values</span><span class="p">)</span>
+
+        <span class="c1"># Sort the distances to the min_samples-th nearest neighbor</span>
+        <span class="n">distances_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">distances</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># Check if distances are all zeros</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">distances_k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Distances all zeros. Setting eps to a small positive value.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">eps</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Adjust as appropriate</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Use KneeLocator to find the knee point</span>
+            <span class="n">kneedle</span> <span class="o">=</span> <span class="n">KneeLocator</span><span class="p">(</span>
+                <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">distances_k</span><span class="p">)),</span>
+                <span class="n">distances_k</span><span class="p">,</span>
+                <span class="n">S</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                <span class="n">curve</span><span class="o">=</span><span class="s2">&quot;convex&quot;</span><span class="p">,</span>
+                <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;increasing&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">kneedle</span><span class="o">.</span><span class="n">knee</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">eps</span> <span class="o">=</span> <span class="n">distances_k</span><span class="p">[</span><span class="n">kneedle</span><span class="o">.</span><span class="n">knee</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Fallback: Use a percentile of distances</span>
+                <span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">distances_k</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Automated eps could not identify a knee. Using eps from 10th percentile: </span><span class="si">{</span><span class="n">eps</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)):</span>
+            <span class="n">eps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">eps</span>
+
+    <span class="k">def</span> <span class="nf">_identify_significant_pairs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">adjusted_pvals_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify significant population pairs for each SNP in a subset.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            alpha (float): Significance level for identifying outliers.</span>
+<span class="sd">            adjusted_pvals_subset_df (pd.DataFrame): A DataFrame of adjusted p-values for a subset of SNPs.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of lists, where each inner list contains the population pairs (column names) that are significant (i.e. adjusted p-value &lt; alpha) for the corresponding SNP.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">adjusted_pvals_subset_df</span> <span class="o">=</span> <span class="n">adjusted_pvals_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">contributing_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">snp</span> <span class="ow">in</span> <span class="n">adjusted_pvals_subset_df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">adjusted_pvals_subset_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">snp</span><span class="p">]</span>
+            <span class="n">sig_pairs</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">row</span> <span class="o">&lt;</span> <span class="n">alpha</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">contributing_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sig_pairs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">contributing_pairs</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

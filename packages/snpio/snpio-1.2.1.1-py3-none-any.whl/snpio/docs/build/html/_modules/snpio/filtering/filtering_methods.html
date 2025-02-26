@@ -1,0 +1,1264 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.filtering.filtering_methods &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.filtering.filtering_methods</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.filtering.filtering_methods</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">numpy._typing._array_like</span> <span class="kn">import</span> <span class="n">NDArray</span>
+
+<span class="c1"># Custom imports</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.benchmarking</span> <span class="kn">import</span> <span class="n">Benchmark</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.custom_exceptions</span> <span class="kn">import</span> <span class="n">AlignmentFormatError</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.misc</span> <span class="kn">import</span> <span class="n">IUPAC</span>
+
+<span class="n">measure_execution_time</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">Benchmark</span><span class="o">.</span><span class="n">measure_execution_time</span>
+
+
+<div class="viewcode-block" id="FilteringMethods">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods">[docs]</a>
+<span class="k">class</span> <span class="nc">FilteringMethods</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nremover_instance</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize FilteringMethods class with an instance of NRemover2.</span>
+
+<span class="sd">        This class contains methods for filtering loci (columns) and samples (rows) based on various criteria.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            nremover_instance (NRemover2): An instance of NRemover2 to access its attributes. The instance should be initialized with the alignment data and other attributes.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The class uses the NRemover2 instance to access the alignment data and other attributes.</span>
+
+<span class="sd">            The class also uses the genotype_data attribute to access the resource data and other attributes.</span>
+
+<span class="sd">            The class uses the logger attribute to log messages.</span>
+
+<span class="sd">            The class uses the missing_vals attribute to define missing data values.</span>
+
+<span class="sd">            The class uses the _append_global_list method to append filtering results to the global list.</span>
+
+<span class="sd">            The class uses the _calculate_minor_allele_counts method to compute minor allele counts.</span>
+
+<span class="sd">            The class uses the _compute_maf_proportions method to compute minor allele frequencies.</span>
+
+<span class="sd">            The class uses the _update_loci_indices method to update loci indices based on a mask.</span>
+
+<span class="sd">            The class uses the _update_sample_indices method to update sample indices based on a mask.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            nremover (NRemover2): An instance of NRemover2 to access its attributes.</span>
+<span class="sd">            logger (Logger): A logger object to log messages.</span>
+<span class="sd">            resource_data (dict): A dictionary containing resource data.</span>
+<span class="sd">            missing_vals (list): A list of missing data values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">nremover_instance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource_data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">resource_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ambiguous_bases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exclude_hets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ambiguous_bases</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resource_data</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span> <span class="o">=</span> <span class="n">IUPAC</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FilteringMethods.filter_missing">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods.filter_missing">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">filter_missing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filters out columns (loci) with missing data proportion greater than the given threshold.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            threshold (float): The maximum proportion of missing data allowed for a locus to be retained.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            self: The NRemover2 object with the filtered alignment&#39;s boolean loci_indices array set.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the threshold is not a float.</span>
+<span class="sd">            ValueError: If the threshold is not between 0.0 and 1.0 inclusive.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Filtering loci with missing data proportion &gt; </span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Threshold must be a float value, but got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">threshold</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">threshold</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Threshold must be between 0.0 and 1.0 inclusive, but got: </span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No loci remain in the alignment. Try adjusting filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+        <span class="n">alignment_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">alignment</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span> <span class="p">:][</span>
+                <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span>
+            <span class="p">]</span>
+            <span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">missing_counts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">alignment_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+
+        <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Loci Before </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">num_samples</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">missing_props</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">missing_counts</span> <span class="o">/</span> <span class="n">num_samples</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Loci Before </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">num_samples</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;missing_props: </span><span class="si">{</span><span class="n">missing_props</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;missing_props shape: </span><span class="si">{</span><span class="n">missing_props</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">missing_props</span> <span class="o">&lt;=</span> <span class="n">threshold</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mask </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">mask</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mask shape </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">full_mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">full_mask</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span>
+
+        <span class="c1"># Update loci indices</span>
+        <span class="n">n_to_keep</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">full_mask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_to_keep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No loci remain in the alignment after </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">n_removed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">full_mask</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_global_list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">n_removed</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">t</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">search_mode</span> <span class="k">else</span> <span class="n">threshold</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_update_loci_indices</span><span class="p">(</span><span class="n">full_mask</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span></div>
+
+
+<div class="viewcode-block" id="FilteringMethods.filter_missing_pop">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods.filter_missing_pop">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">filter_missing_pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filters loci based on missing data proportion per population.</span>
+
+<span class="sd">        The method filters loci where the missing data proportion exceeds the given threshold in any population.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            threshold (float): The maximum proportion of missing data allowed for a locus to be retained.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            NRemover2: The NRemover2 object with the filtered alignment&#39;s boolean loci_indices array set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Filtering loci with missing data proportion &gt; </span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> in any population.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">popmap_inverse</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;No population map data found. Cannot filter by population.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+
+        <span class="c1"># Check if any loci are still active</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No loci remain in the alignment. Try adjusting the filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="c1"># Extract the active samples and loci from the alignment</span>
+        <span class="n">alignment_array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">alignment</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span> <span class="p">:][</span>
+                <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span>
+            <span class="p">]</span>
+            <span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">alignment_array</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No samples remain in the alignment. Try adjusting the filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">populations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">popmap_inverse</span>
+        <span class="n">samples</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">samples</span><span class="p">)[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Initialize a list to collect population-specific masks for loci</span>
+        <span class="n">pop_masks</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">sample_ids</span> <span class="ow">in</span> <span class="n">populations</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="c1"># Filter only the sample IDs in the current sample set</span>
+            <span class="n">sample_ids_filt</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">sid</span> <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">sample_ids</span> <span class="k">if</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">]</span>
+            <span class="n">indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="k">if</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">sample_ids_filt</span>
+            <span class="p">]</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">indices</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Calculate the missing data proportion for the current population</span>
+            <span class="n">missing_props</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">col</span><span class="p">[</span><span class="n">indices</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span><span class="p">))</span>
+                    <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">alignment_array</span><span class="o">.</span><span class="n">T</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Mask loci where the missing proportion exceeds the threshold</span>
+            <span class="n">pop_mask</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">Bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">missing_props</span> <span class="o">&lt;=</span> <span class="n">threshold</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pop_mask: </span><span class="si">{</span><span class="n">pop_mask</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pop_mask shape: </span><span class="si">{</span><span class="n">pop_mask</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pop_mask sum: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">pop_mask</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">pop_masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pop_mask</span><span class="p">)</span>
+
+        <span class="c1"># Combine all population masks: Loci must be retained if they meet the</span>
+        <span class="c1"># threshold in all populations</span>
+        <span class="k">if</span> <span class="n">pop_masks</span><span class="p">:</span>
+            <span class="n">cumulative_mask</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">Bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">pop_masks</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cumulative_mask</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">Bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="n">alignment_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cumulative_mask: </span><span class="si">{</span><span class="n">cumulative_mask</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cumulative_mask shape: </span><span class="si">{</span><span class="n">cumulative_mask</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Initialize full_mask with the same length as the alignment&#39;s loci</span>
+        <span class="n">full_mask</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">Bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Update loci_indices using the cumulative mask, applied only to active loci</span>
+        <span class="n">full_mask</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">]</span> <span class="o">=</span> <span class="n">cumulative_mask</span>
+
+        <span class="c1"># Check if any loci remain after filtering</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">full_mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No loci remain in the alignment after </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">n_removed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">full_mask</span><span class="p">)</span>
+            <span class="c1"># Append this information to the filtering results dataframe</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_global_list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">n_removed</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">t</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">search_mode</span> <span class="k">else</span> <span class="n">threshold</span>
+
+        <span class="c1"># Update the loci indices with the final mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_update_loci_indices</span><span class="p">(</span><span class="n">full_mask</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_compute_mac_counts</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">min_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">exclude_heterozygous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes a mask based on minor allele counts (MAC) for each locus.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            min_count (int): The minimum minor allele count required to keep a locus.</span>
+
+<span class="sd">            exclude_heterozygous (bool, optional): Whether to exclude heterozygous sites from the MAC calculation. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: A boolean mask where True means the locus passes the filter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mac_counts</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_minor_allele_counts</span><span class="p">(</span>
+                <span class="n">exclude_heterozygous</span><span class="o">=</span><span class="n">exclude_heterozygous</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">mac_counts</span> <span class="o">&gt;=</span> <span class="n">min_count</span>
+
+<div class="viewcode-block" id="FilteringMethods.filter_mac">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods.filter_mac">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">filter_mac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">exclude_heterozygous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filters loci where the minor allele count is below the given minimum count.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            min_count (int): The minimum minor allele count to retain a locus.</span>
+
+<span class="sd">            exclude_heterozygous (bool, optional): Whether to exclude heterozygous sites from the MAC calculation. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            self: The NRemover2 object with the filtered alignment&#39;s boolean loci_indices array set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filtering loci with minor allele count &lt; </span><span class="si">{</span><span class="n">min_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Ensure propagation within the chain if needed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No loci remain in the alignment. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="c1"># Compute the minor allele counts for the loci</span>
+        <span class="n">mac_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_compute_mac_counts</span><span class="p">(</span>
+            <span class="n">min_count</span><span class="p">,</span> <span class="n">exclude_heterozygous</span><span class="o">=</span><span class="n">exclude_heterozygous</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mask </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">mac_mask</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mask shape </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">mac_mask</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">mac_mask</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="c1"># Create a full mask to track loci to keep</span>
+        <span class="n">full_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">full_mask</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">]</span> <span class="o">=</span> <span class="n">mac_mask</span>
+
+        <span class="c1"># Determine how many loci will be kept after applying the mask</span>
+        <span class="n">n_to_keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">full_mask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_to_keep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No loci remain in the alignment after </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">n_removed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">full_mask</span><span class="p">)</span>
+            <span class="c1"># Append filtering information to the global list for tracking</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_global_list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">n_removed</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="c1"># If not in search mode, use the count threshold for tracking</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">search_mode</span> <span class="k">else</span> <span class="n">min_count</span>
+
+        <span class="c1"># Update the existing loci indices based on the mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_update_loci_indices</span><span class="p">(</span><span class="n">full_mask</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span></div>
+
+
+<div class="viewcode-block" id="FilteringMethods.filter_maf">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods.filter_maf">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">filter_maf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filters loci where the minor allele frequency is below the threshold.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            threshold (float): The minimum minor allele frequency required to keep a locus.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            self: The NRemover2 object with the filtered alignment&#39;s boolean loci_indices array set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Filtering loci with minor allele frequency &lt; </span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No loci remain in the alignment. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">maf_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_compute_maf_proportions</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mask </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">maf_mask</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mask shape </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">maf_mask</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">maf_mask</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">full_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">full_mask</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">]</span> <span class="o">=</span> <span class="n">maf_mask</span>
+
+        <span class="c1"># Update loci indices</span>
+        <span class="n">n_to_keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">full_mask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_to_keep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No loci remain in the alignment after </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">n_removed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">full_mask</span><span class="p">)</span>
+            <span class="c1"># Append this information to the filtering results dataframe</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_global_list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">n_removed</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">search_mode</span> <span class="k">else</span> <span class="n">threshold</span>
+
+        <span class="c1"># Update existing loci indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_update_loci_indices</span><span class="p">(</span><span class="n">full_mask</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span></div>
+
+
+<div class="viewcode-block" id="FilteringMethods.filter_linked">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods.filter_linked">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">filter_linked</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filters out linked loci based on VCF file CHROM information.</span>
+
+<span class="sd">        Randomly selects one locus from each unique chromosome, ensuring that the selected</span>
+<span class="sd">        loci are not already filtered out by `self.nremover.loci_indices`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            self: The NRemover2 object with the filtered alignment&#39;s boolean sample_indices array set.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            OSError: Unsupported file type provided.</span>
+<span class="sd">            FileNotFoundError: If the HDF5 file does not exist.</span>
+<span class="sd">            KeyError: If the key &#39;chrom&#39; is not present in the HDF5 file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Filtering linked loci based on VCF file CHROM data.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No loci remain in the alignment. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">filetype</span> <span class="o">!=</span> <span class="s2">&quot;vcf&quot;</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Only &#39;vcf&#39; file type is supported for filtering linked loci, but got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">filetype</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">AlignmentFormatError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Construct the path to the HDF5 file</span>
+        <span class="n">hdf5_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">vcf_attributes_fn</span>
+
+        <span class="c1"># Check if the HDF5 file exists</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">hdf5_path</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The vcf attributes HDF5 file </span><span class="si">{</span><span class="n">hdf5_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Read the chromosome information from the HDF5 file</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">hdf5_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;chrom&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;chrom&#39; key absent from the HDF5 file: </span><span class="si">{</span><span class="n">hdf5_path</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">()</span>
+            <span class="n">chrom_data</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;chrom&quot;</span><span class="p">][:]</span>
+
+        <span class="c1"># Ensure we&#39;re only considering loci that are currently set to True in</span>
+        <span class="c1"># self.nremover.loci_indices</span>
+        <span class="n">valid_loci_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">valid_chrom_data</span> <span class="o">=</span> <span class="n">chrom_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">]</span>
+
+        <span class="c1"># Find unique chromosomes from the valid loci</span>
+        <span class="n">unique_chroms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">valid_chrom_data</span><span class="p">)</span>
+
+        <span class="c1"># Create a boolean mask for each unique chromosome</span>
+        <span class="n">chrom_masks</span> <span class="o">=</span> <span class="p">{</span><span class="n">chrom</span><span class="p">:</span> <span class="n">valid_chrom_data</span> <span class="o">==</span> <span class="n">chrom</span> <span class="k">for</span> <span class="n">chrom</span> <span class="ow">in</span> <span class="n">unique_chroms</span><span class="p">}</span>
+
+        <span class="c1"># Initialize an empty mask</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+        <span class="c1"># Iterate over the unique chromosomes</span>
+        <span class="k">for</span> <span class="n">chrom_mask</span> <span class="ow">in</span> <span class="n">chrom_masks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="c1"># Get the indices of loci belonging to the current chromosome</span>
+            <span class="n">indices_of_chrom</span> <span class="o">=</span> <span class="n">valid_loci_indices</span><span class="p">[</span><span class="n">chrom_mask</span><span class="p">]</span>
+
+            <span class="c1"># Randomly select one locus from the available loci for the current</span>
+            <span class="c1"># chromosome</span>
+            <span class="n">random_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">indices_of_chrom</span><span class="p">)</span>
+
+            <span class="c1"># Set the selected locus to True in the mask</span>
+            <span class="n">mask</span><span class="p">[</span><span class="n">random_index</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Update loci indices</span>
+        <span class="n">n_to_keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_to_keep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No loci remain in the alignment after </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">n_removed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">mask</span><span class="p">)</span>
+            <span class="c1"># Append this information to the filtering results dataframe</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_global_list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">n_removed</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="c1"># Update the loci indices with the mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_update_loci_indices</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span></div>
+
+
+<div class="viewcode-block" id="FilteringMethods.filter_biallelic">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods.filter_biallelic">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">filter_biallelic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exclude_heterozygous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filters alignment to retain ONLY biallelic loci.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            exclude_heterozygous (bool, optional): Whether to exclude heterozygous sites from the biallelic filtering. This means that when set to True, only homozygous genotypes will be considered, and heterozygous genotypes will be ignored. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            self: The NRemover2 object with the filtered alignment&#39;s boolean sample_indices array set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Filtering loci to retain only biallelic loci (exclude_heterozygous=</span><span class="si">{</span><span class="n">exclude_heterozygous</span><span class="si">}</span><span class="s2">).&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No loci remain in the alignment. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="c1"># Ensure alignment_array is not empty before continuing</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span>
+        <span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;No data remain in the alignment before filtering. Try adjusting the filtering parameters.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="c1"># Define valid and invalid bases</span>
+        <span class="n">heterozygous_bases</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">),</span>  <span class="c1"># A or G</span>
+            <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">),</span>  <span class="c1"># C or T</span>
+            <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">),</span>  <span class="c1"># G or C</span>
+            <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">),</span>  <span class="c1"># A or T</span>
+            <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">),</span>  <span class="c1"># G or T</span>
+            <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">),</span>  <span class="c1"># A or C</span>
+        <span class="p">}</span>
+        <span class="n">invalid_bases</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span><span class="p">)</span>
+
+        <span class="c1"># Function to count unique valid bases</span>
+        <span class="k">def</span> <span class="nf">count_valid_bases</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">exclude_heterozygous</span><span class="p">):</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">col</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">invalid_bases</span><span class="p">)]</span>  <span class="c1"># Remove invalid bases</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">exclude_heterozygous</span><span class="p">:</span>
+                <span class="n">expanded_alleles</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">col</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">heterozygous_bases</span><span class="p">:</span>
+                        <span class="n">expanded_alleles</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">heterozygous_bases</span><span class="p">[</span><span class="n">base</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">expanded_alleles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+                <span class="n">col</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">expanded_alleles</span><span class="p">)</span>
+            <span class="n">unique_bases</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_bases</span><span class="p">)</span>
+
+        <span class="c1"># Apply the count_valid_bases function</span>
+        <span class="n">unique_base_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span>
+                <span class="n">count_valid_bases</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">alignment</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span> <span class="p">:],</span>
+                <span class="n">exclude_heterozygous</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create a mask for biallelic loci (those with exactly 2 unique bases)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">unique_base_counts</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Map the final mask back to the original loci_indices</span>
+        <span class="n">final_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">)</span>
+
+        <span class="c1"># Update loci indices</span>
+        <span class="n">n_to_keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">final_mask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_to_keep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No loci remain in the alignment after </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">search_mode</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="p">)</span>
+
+        <span class="c1"># Update the loci indices with the final mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_update_loci_indices</span><span class="p">(</span><span class="n">final_mask</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span></div>
+
+
+<div class="viewcode-block" id="FilteringMethods.filter_monomorphic">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods.filter_monomorphic">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">filter_monomorphic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exclude_heterozygous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filters out monomorphic sites from an alignment. Monomorphic sites are those that contain only one unique valid allele.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            exclude_heterozygous (bool, optional): Whether to exclude heterozygous sites from the monomorphic filtering.</span>
+<span class="sd">                                                Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            self: The NRemover2 object with the filtered alignment&#39;s boolean sample_indices array set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Filtering out monomorphic loci (exclude_heterozygous=</span><span class="si">{</span><span class="n">exclude_heterozygous</span><span class="si">}</span><span class="s2">).&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No loci remain in the alignment. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="c1"># Define invalid and ambiguous bases based on whether to exclude</span>
+        <span class="c1"># heterozygous sites</span>
+        <span class="k">if</span> <span class="n">exclude_heterozygous</span><span class="p">:</span>
+            <span class="n">invalid_bases</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">exclude_hets</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">invalid_bases</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span><span class="p">]</span>
+
+        <span class="c1"># Filter out invalid bases and count the unique alleles in each column</span>
+        <span class="n">polymorphic_mask</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">alignment</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+            <span class="c1"># Filter out invalid bases</span>
+            <span class="n">valid_alleles</span> <span class="o">=</span> <span class="n">col</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">invalid_bases</span><span class="p">)]</span>
+            <span class="n">unique_alleles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">valid_alleles</span><span class="p">)</span>
+
+            <span class="c1"># Check if the locus is polymorphic (more than one unique valid allele)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_alleles</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">polymorphic_mask</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">polymorphic_mask</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">polymorphic_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">polymorphic_mask</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+        <span class="c1"># Map the polymorphic_mask back to the full loci_indices</span>
+        <span class="n">final_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">,</span> <span class="n">polymorphic_mask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">final_mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No data remain in the alignment after </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">search_mode</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_update_loci_indices</span><span class="p">(</span><span class="n">final_mask</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span></div>
+
+
+<div class="viewcode-block" id="FilteringMethods.filter_singletons">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods.filter_singletons">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">filter_singletons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exclude_heterozygous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filters out singletons from an alignment. A singleton is defined as a locus where one variant appears only once.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            exclude_heterozygous (bool, optional): Whether to exclude heterozygous sites from the singleton filtering. This means that when set to True, only homozygous genotypes will be considered, and heterozygous genotypes will be ignored. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            self: The NRemover2 object with the filtered alignment&#39;s boolean sample_indices array set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Filtering out singleton loci.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No data remain in the alignment. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="c1"># Define invalid bases based on whether we are excluding heterozygous positions</span>
+        <span class="k">if</span> <span class="n">exclude_heterozygous</span><span class="p">:</span>
+            <span class="n">invalid_bases</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exclude_hets</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">invalid_bases</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span><span class="p">)</span>
+
+        <span class="c1"># Function to count valid alleles in a column</span>
+        <span class="k">def</span> <span class="nf">count_valid_alleles</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+            <span class="n">valid_col</span> <span class="o">=</span> <span class="n">col</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">invalid_bases</span><span class="p">)]</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="n">allele</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">valid_col</span> <span class="o">==</span> <span class="n">allele</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">allele</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">valid_col</span><span class="p">)</span>
+            <span class="p">}</span>
+
+        <span class="c1"># Determine if a locus is a singleton</span>
+        <span class="k">def</span> <span class="nf">is_singleton_column</span><span class="p">(</span><span class="n">allele_count</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">allele_count</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">min_allele_count</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">allele_count</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                <span class="k">return</span> <span class="n">min_allele_count</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Apply the is_singleton_column function to each column and create the</span>
+        <span class="c1"># mask</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="n">is_singleton_column</span><span class="p">(</span><span class="n">count_valid_alleles</span><span class="p">(</span><span class="n">col</span><span class="p">)),</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">alignment</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span> <span class="p">:],</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Map the mask back to the original self.nremover.loci_indices</span>
+        <span class="n">final_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="o">~</span><span class="n">mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">)</span>
+
+        <span class="c1"># Update loci indices</span>
+        <span class="n">n_to_keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">final_mask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_to_keep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No loci remain in the alignment after </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="c1"># Append this information to the filtering results dataframe</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">search_mode</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_update_loci_indices</span><span class="p">(</span><span class="n">final_mask</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span></div>
+
+
+<div class="viewcode-block" id="FilteringMethods.random_subset_loci">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods.random_subset_loci">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">random_subset_loci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Randomly subsets loci based on the `size` parameter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            size (int or float): The number or proportion of loci to subset. If int, the exact number of loci to keep. Must be less than the total number of loci. If float, the proportion of loci to keep (must be in (0, 1]). If the number of loci to keep is greater than the total number of loci, the loci will be randomly sampled with replacement.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            self: The NRemover2 object with the filtered alignment&#39;s boolean loci_indices array set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Randomly subsetting loci.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No loci remain in the alignment. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">total_loci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">)</span>
+
+        <span class="c1"># Validate size and calculate the number of loci to keep</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="n">total_loci</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;If size is an integer, it must be between 0 and the total number of remaining loci: Total loci=</span><span class="si">{</span><span class="n">total_loci</span><span class="si">}</span><span class="s2">, size=</span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">n_to_keep</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;If size is a float, it must be in the interval (0, 1].&quot;</span>
+                <span class="p">)</span>
+            <span class="n">n_to_keep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">total_loci</span> <span class="o">*</span> <span class="n">size</span><span class="p">))</span>
+
+        <span class="n">replace</span> <span class="o">=</span> <span class="n">n_to_keep</span> <span class="o">&gt;</span> <span class="n">total_loci</span>
+
+        <span class="c1"># Randomly select loci to keep</span>
+        <span class="n">subset_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">total_loci</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_to_keep</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="n">replace</span><span class="p">)</span>
+
+        <span class="c1"># Create the subset mask, ensuring it&#39;s aligned with loci_indices</span>
+        <span class="n">subset_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">active_loci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Get active loci</span>
+        <span class="n">subset_mask</span><span class="p">[</span><span class="n">active_loci</span><span class="p">[</span><span class="n">subset_indices</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Update loci indices</span>
+        <span class="n">n_to_keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">subset_mask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">n_to_keep</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No loci remain after randomly subsetting loci. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">n_removed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">subset_mask</span><span class="p">)</span>
+            <span class="c1"># Append this information to the filtering results dataframe</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_global_list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">n_removed</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">search_mode</span> <span class="k">else</span> <span class="n">size</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_update_loci_indices</span><span class="p">(</span><span class="n">subset_mask</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span></div>
+
+
+<div class="viewcode-block" id="FilteringMethods.thin_loci">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods.thin_loci">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">thin_loci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Thins loci that are within `size` bases of another SNP.</span>
+
+<span class="sd">        Uses the CHROM and POS fields of a VCF file to determine the locations of the loci.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            size (int): The thinning size. Removes all but one locus within `size` bases of another SNP.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            self: The NRemover2 object with the filtered alignment&#39;s boolean loci_indices array set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">infO</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Thinning loci within </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2"> bases of another SNP.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">filetype</span> <span class="o">!=</span> <span class="s2">&quot;vcf&quot;</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Only &#39;vcf&#39; file type is supported for thinning loci, but got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">filetype</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">AlignmentFormatError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">alignment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Alignment must be provided, but got NoneType.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No loci remain in the alignment. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="c1"># Get all chrom and pos VCF attributes.</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">vcf_attributes_fn</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">chrom_field</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;chrom&quot;</span><span class="p">][:]</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;pos&quot;</span><span class="p">][:]</span>
+
+        <span class="n">decoder</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">))</span>
+        <span class="n">chrom_field</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">chrom_field</span><span class="p">)</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+        <span class="c1"># Create an array to store which loci to keep</span>
+        <span class="n">to_keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">to_keep</span><span class="p">[</span><span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Loop through each chromosome</span>
+        <span class="n">unique_chroms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">chrom_field</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">chrom</span> <span class="ow">in</span> <span class="n">unique_chroms</span><span class="p">:</span>
+            <span class="n">chrom_mask</span> <span class="o">=</span> <span class="n">chrom_field</span> <span class="o">==</span> <span class="n">chrom</span>  <span class="c1"># Only current chromosome</span>
+            <span class="n">chrom_positions</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="n">chrom_mask</span><span class="p">]</span>  <span class="c1"># Subset to current CHROM value.</span>
+            <span class="n">chrom_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">chrom_mask</span><span class="p">,</span> <span class="n">to_keep</span><span class="p">)</span>  <span class="c1"># Get mask</span>
+
+            <span class="c1"># Sort positions and corresponding indices</span>
+            <span class="n">sorted_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">chrom_positions</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+            <span class="n">sorted_positions</span> <span class="o">=</span> <span class="n">chrom_positions</span><span class="p">[</span><span class="n">sorted_order</span><span class="p">]</span>
+            <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">chrom_indices</span><span class="p">[</span><span class="n">sorted_order</span><span class="p">]</span>
+
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">sorted_positions</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+            <span class="n">to_keep</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">diff</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">to_keep</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No loci remain in the alignment after </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">. Try adjusting the filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">n_removed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">to_keep</span><span class="p">)</span>
+
+            <span class="c1"># Append this information to the filtering results dataframe</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_global_list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">n_removed</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">search_mode</span> <span class="k">else</span> <span class="n">size</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_update_loci_indices</span><span class="p">(</span><span class="n">to_keep</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_append_global_list</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">loci_removed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">loci_removed_prop</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">df_global_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;Step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">step_index</span><span class="p">,</span>
+                    <span class="s2">&quot;Filter_Method&quot;</span><span class="p">:</span> <span class="n">method_name</span><span class="p">,</span>
+                    <span class="s2">&quot;Threshold&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">current_threshold</span><span class="p">,</span>
+                    <span class="s2">&quot;Removed_Count&quot;</span><span class="p">:</span> <span class="n">loci_removed</span><span class="p">,</span>
+                    <span class="s2">&quot;Removed_Prop&quot;</span><span class="p">:</span> <span class="n">loci_removed_prop</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_append_sample_list</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">removed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">removed_prop</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">df_sample_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;Step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">step_index</span><span class="p">,</span>
+                    <span class="s2">&quot;Filter_Method&quot;</span><span class="p">:</span> <span class="n">method_name</span><span class="p">,</span>
+                    <span class="s2">&quot;Threshold&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">current_threshold</span><span class="p">,</span>
+                    <span class="s2">&quot;Removed_Count&quot;</span><span class="p">:</span> <span class="n">removed</span><span class="p">,</span>
+                    <span class="s2">&quot;Removed_Prop&quot;</span><span class="p">:</span> <span class="n">removed_prop</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="FilteringMethods.filter_missing_sample">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.filtering_methods.FilteringMethods.filter_missing_sample">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">filter_missing_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Filtering sequences (samples) with missing data proportion &gt; </span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No loci remain in the alignment. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">alignment_array</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">alignment</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span> <span class="p">:][</span>
+                <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span>
+            <span class="p">]</span>
+            <span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">alignment_array</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No samples remain in the alignment before filtering. Try adjusting the filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">missing_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">alignment_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Calculate the proportion of missing data per sample based on the number of loci</span>
+        <span class="n">num_loci</span> <span class="o">=</span> <span class="n">alignment_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">missing_props</span> <span class="o">=</span> <span class="n">missing_counts</span> <span class="o">/</span> <span class="n">num_loci</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">missing_props</span> <span class="o">&lt;=</span> <span class="n">threshold</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mask </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">mask</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mask shape </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Map the mask back to the full sample_indices</span>
+        <span class="n">final_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">final_mask</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span>
+
+        <span class="c1"># Update loci indices</span>
+        <span class="n">n_to_keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">final_mask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_to_keep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No loci remain in the alignment after </span><span class="si">{</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">. Adjust filtering parameters.&quot;</span>
+            <span class="p">)</span>
+            <span class="c1"># Append this information to the filtering results dataframe</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_sample_list</span><span class="p">(</span>
+                <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_to_keep</span><span class="p">,</span>
+                <span class="mf">1.0</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">search_mode</span> <span class="k">else</span> <span class="n">threshold</span>
+
+        <span class="c1"># Update the sample indices with the final mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">_update_sample_indices</span><span class="p">(</span><span class="n">final_mask</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_compute_maf_proportions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">maf_threshold</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute MAF proportions and create a mask for loci based on the MAF threshold.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            maf_threshold (float): The minimum minor allele frequency required to keep a locus.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[numpy.ndarray, numpy.ndarray]: A tuple containing the MAF proportions and the mask for loci that pass the MAF threshold.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alignment_array</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">alignment</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span> <span class="p">:][</span>
+                <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span>
+            <span class="p">]</span>
+            <span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Ensure alignment_array is not empty before continuing</span>
+        <span class="k">if</span> <span class="n">alignment_array</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;No samples remain in the alignment before filtering MAF. Try adjusting the filtering parameters.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">count_bases</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Count occurrences of A, C, G, and T in a SNP data column, distributing heterozygous counts across alleles.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">base_count</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+            <span class="n">valid_bases</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">])</span>
+
+            <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">valid_bases</span><span class="p">:</span>
+                <span class="n">base_count</span><span class="p">[</span><span class="n">base</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">column</span> <span class="o">==</span> <span class="n">base</span><span class="p">)</span>
+
+            <span class="n">ambiguous_bases</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">base</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span><span class="o">.</span><span class="n">ambiguous_dna_values</span><span class="p">[</span><span class="n">base</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span><span class="o">.</span><span class="n">ambiguous_dna_values</span>
+            <span class="p">}</span>
+
+            <span class="k">for</span> <span class="n">ambig_base</span><span class="p">,</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">ambiguous_bases</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">column</span> <span class="o">==</span> <span class="n">ambig_base</span>
+                <span class="n">split_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">mapped_base</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">:</span>
+                    <span class="n">base_count</span><span class="p">[</span><span class="n">mapped_base</span><span class="p">]</span> <span class="o">+=</span> <span class="n">split_count</span>
+
+            <span class="k">return</span> <span class="n">base_count</span>
+
+        <span class="k">def</span> <span class="nf">minor_allele_frequency</span><span class="p">(</span><span class="n">column</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Calculates the minor allele frequency for a given column of SNP data.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                column (numpy.ndarray): A numpy array of bases.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                float: The minor allele frequency for the given column.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">counts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">count_bases</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+            <span class="n">valid_bases</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">}</span>
+            <span class="n">counts</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">base</span><span class="p">:</span> <span class="n">count</span> <span class="k">for</span> <span class="n">base</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">valid_bases</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">counts</span> <span class="ow">or</span> <span class="nb">all</span><span class="p">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                <span class="k">return</span> <span class="mi">0</span>
+
+            <span class="n">sorted_counts</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="nb">sorted</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">total</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sorted_counts</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">total</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">0</span>
+            <span class="n">freqs</span> <span class="o">=</span> <span class="n">sorted_counts</span> <span class="o">/</span> <span class="n">total</span>
+            <span class="k">return</span> <span class="n">freqs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">freqs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+
+        <span class="c1"># Calculate MAF for each column in alignment_array</span>
+        <span class="n">maf</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span>
+            <span class="n">minor_allele_frequency</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">alignment_array</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">maf</span> <span class="o">&gt;=</span> <span class="n">maf_threshold</span>
+
+    <span class="k">def</span> <span class="nf">_calculate_minor_allele_counts</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">exclude_heterozygous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the minor allele counts (MAC) for each locus in the alignment.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            exclude_heterozygous (bool, optional): Whether to exclude heterozygous sites from the MAC calculation. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: An array containing the minor allele count for each locus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alignment_array</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">alignment</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span> <span class="p">:][</span>
+                <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nremover</span><span class="o">.</span><span class="n">loci_indices</span>
+            <span class="p">]</span>
+            <span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Ensure alignment_array is not empty before continuing</span>
+        <span class="k">if</span> <span class="n">alignment_array</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;No samples remain in the alignment. Try adjusting the filtering parameters.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">alignment_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">count_bases</span><span class="p">(</span><span class="n">column</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Count occurrences of A, C, G, and T in a SNP data column, distributing heterozygous counts across alleles.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                column (numpy.ndarray): A numpy array of bases.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                Dict[str, int]: A dictionary with counts of &#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39;.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">base_count</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+            <span class="k">if</span> <span class="n">exclude_heterozygous</span><span class="p">:</span>
+                <span class="n">valid_bases</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">valid_bases</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">valid_bases</span><span class="p">:</span>
+                <span class="n">base_count</span><span class="p">[</span><span class="n">base</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">column</span> <span class="o">==</span> <span class="n">base</span><span class="p">)</span>
+
+            <span class="n">ambiguous_bases</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">base</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span><span class="o">.</span><span class="n">ambiguous_dna_values</span><span class="p">[</span><span class="n">base</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span><span class="o">.</span><span class="n">ambiguous_dna_values</span>
+            <span class="p">}</span>
+
+            <span class="k">for</span> <span class="n">ambig_base</span><span class="p">,</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">ambiguous_bases</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">column</span> <span class="o">==</span> <span class="n">ambig_base</span>
+                <span class="n">split_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">mapped_base</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">:</span>
+                    <span class="n">base_count</span><span class="p">[</span><span class="n">mapped_base</span><span class="p">]</span> <span class="o">+=</span> <span class="n">split_count</span>
+
+            <span class="k">return</span> <span class="n">base_count</span>
+
+        <span class="k">def</span> <span class="nf">minor_allele_count</span><span class="p">(</span><span class="n">column</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Calculates the minor allele count for a given column of SNP data.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                column (np.ndarray): A numpy array of bases.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                int: The minor allele count for the given column.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">counts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">count_bases</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+            <span class="n">valid_bases</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">}</span>
+            <span class="n">counts</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">base</span><span class="p">:</span> <span class="n">count</span> <span class="k">for</span> <span class="n">base</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">valid_bases</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">counts</span> <span class="ow">or</span> <span class="nb">all</span><span class="p">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                <span class="k">return</span> <span class="mi">0</span>
+
+            <span class="c1"># Sort the allele counts and return the second highest (minor allele count)</span>
+            <span class="n">sorted_counts</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="nb">sorted</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">sorted_counts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_counts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+
+        <span class="c1"># Calculate MAC for each column (locus) in the alignment_array</span>
+        <span class="n">mac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">minor_allele_count</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">alignment_array</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mac</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

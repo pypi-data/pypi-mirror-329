@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.utils.misc &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.utils.misc</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.utils.misc</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">snpio.utils.logging</span> <span class="kn">import</span> <span class="n">LoggerManager</span>
+
+
+<div class="viewcode-block" id="IUPAC">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.misc.IUPAC">[docs]</a>
+<span class="k">class</span> <span class="nc">IUPAC</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to store IUPAC ambiguity data and provide helper functions.</span>
+
+<span class="sd">    This class stores IUPAC ambiguity data and provides helper functions to convert between genotype and IUPAC ambiguity codes.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        gt2iupac (Dict[str, str]): A dictionary of genotype to IUPAC ambiguity codes.</span>
+
+<span class="sd">        iupac2gt (Dict[str, str]): A dictionary of IUPAC ambiguity codes to genotype.</span>
+
+<span class="sd">        int_iupac_dict (Dict[str, int]): A dictionary of IUPAC ambiguity codes to integers.</span>
+
+<span class="sd">        onehot_dict (Dict[str, List[float]]): A dictionary of IUPAC ambiguity codes to one-hot encoded vectors.</span>
+
+<span class="sd">        ambiguous_dna_values (Dict[str, str]): A dictionary of IUPAC ambiguity values.</span>
+
+<span class="sd">        multilab_value (float): The value to use for multilabel data.</span>
+
+<span class="sd">        logger (Optional[logging.Logger]): A logger object for logging messages.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; iupac_data = IUPAC()</span>
+<span class="sd">        &gt;&gt;&gt; print(iupac_data.gt2iupac)</span>
+<span class="sd">        &gt;&gt;&gt; # Outputs: {&#39;1/1&#39;: &#39;A&#39;, &#39;2/2&#39;: &#39;C&#39;, &#39;3/3&#39;: &#39;G&#39;, &#39;4/4&#39;: &#39;T&#39;, &#39;1/2&#39;: &#39;M&#39;, &#39;1/3&#39;: &#39;R&#39;, &#39;1/4&#39;: &#39;W&#39;, &#39;2/3&#39;: &#39;S&#39;, &#39;2/4&#39;: &#39;Y&#39;, &#39;3/4&#39;: &#39;K&#39;, &#39;-9/-9&#39;: &#39;N&#39;, &#39;-1/-1&#39;: &#39;N&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">multilab_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the IUPACData class.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            multilab_value (float, optional): The value to use for multilabel data. Defaults to 1.0.</span>
+
+<span class="sd">            logger (Optional[logging.Logger], optional): A logger object for logging messages. Defaults to None.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If `multilab_value` is not between 0 and 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">multilab_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">multilab_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gt2iupac</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gt2iupac</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iupac2gt</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_iupac2gt</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">int_iupac_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_int_iupac_dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onehot_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_onehot_dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ambiguous_dna_values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_iupac_ambiguous</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logman</span> <span class="o">=</span> <span class="n">LoggerManager</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logman</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">multilab_value</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">multilab_value</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid multilabel value: </span><span class="si">{</span><span class="n">multilab_value</span><span class="si">}</span><span class="s2">. Must be &gt; 0 and &lt;= 1.&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IUPAC.get_iupac_int_map">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.misc.IUPAC.get_iupac_int_map">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_iupac_int_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a dictionary of IUPAC ambiguity codes to integers.</span>
+
+<span class="sd">        This method returns a dictionary of IUPAC ambiguity codes to integers. The keys are the IUPAC ambiguity codes and the values are the corresponding integers. The integer values are used to encode the IUPAC ambiguity codes. The integer values are assigned as follows: A=1, C=2, G=3, T=4, R=5, Y=6, S=7, W=8, K=9, M=10, B=11, D=12, H=13, V=14, N=15, -=16, ?=16, .=16.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, int]: A dictionary of IUPAC ambiguity codes to integers.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; iupac_data = IUPAC()</span>
+<span class="sd">            &gt;&gt;&gt; print(iupac_data.get_iupac_int_map())</span>
+<span class="sd">            &gt;&gt;&gt; # Outputs: {&#39;A&#39;: 1, &#39;C&#39;: 2, &#39;G&#39;: 3, &#39;T&#39;: 4, &#39;R&#39;: 5, &#39;Y&#39;: 6, &#39;S&#39;: 7, &#39;W&#39;: 8, &#39;K&#39;: 9, &#39;M&#39;: 10, &#39;B&#39;: 11, &#39;D&#39;: 12, &#39;H&#39;: 13, &#39;V&#39;: 14, &#39;N&#39;: 15, &#39;-&#39;: 16, &#39;?&#39;: 16, &#39;.&#39;: 16}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+            <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+            <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+            <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+            <span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
+            <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+            <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+            <span class="s2">&quot;-&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+            <span class="s2">&quot;?&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+            <span class="s2">&quot;.&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="IUPAC.get_iupac_ambiguous">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.misc.IUPAC.get_iupac_ambiguous">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_iupac_ambiguous</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a dictionary of IUPAC ambiguity values.</span>
+
+<span class="sd">        This dictionary contains the IUPAC ambiguity values for DNA sequences. The keys are the IUPAC ambiguity codes and the values are the corresponding DNA bases or ambiguity codes as strings.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, str]: A dictionary of IUPAC ambiguity values.</span>
+
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; iupac_data = IUPAC()</span>
+<span class="sd">            &gt;&gt;&gt; print(iupac_data.ambiguous_dna_values)</span>
+<span class="sd">            &gt;&gt;&gt; # Outputs: {&#39;A&#39;: &#39;A&#39;, &#39;C&#39;: &#39;C&#39;, &#39;G&#39;: &#39;G&#39;, &#39;T&#39;: &#39;T&#39;, &#39;M&#39;: &#39;AC&#39;, &#39;R&#39;: &#39;AG&#39;, &#39;W&#39;: &#39;AT&#39;, &#39;S&#39;: &#39;CG&#39;, &#39;Y&#39;: &#39;CT&#39;, &#39;K&#39;: &#39;GT&#39;, &#39;V&#39;: &#39;ACG&#39;, &#39;H&#39;: &#39;ACT&#39;, &#39;D&#39;: &#39;AGT&#39;, &#39;B&#39;: &#39;CGT&#39;, &#39;X&#39;: &#39;GATC&#39;, &#39;N&#39;: &#39;GATC&#39;}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="s2">&quot;AC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="s2">&quot;AG&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;AT&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;CG&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="s2">&quot;CT&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="s2">&quot;GT&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="s2">&quot;ACG&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="s2">&quot;ACT&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="s2">&quot;AGT&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="s2">&quot;CGT&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="s2">&quot;GATC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;GATC&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="IUPAC.get_gt2iupac">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.misc.IUPAC.get_gt2iupac">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_gt2iupac</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a dictionary of genotype to IUPAC ambiguity codes.&quot;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, str]: A dictionary of genotype to IUPAC ambiguity codes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;1/1&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;2/2&quot;</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;3/3&quot;</span><span class="p">:</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;4/4&quot;</span><span class="p">:</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1/2&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>  <span class="c1"># A/C</span>
+            <span class="s2">&quot;1/3&quot;</span><span class="p">:</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span>  <span class="c1"># A/G</span>
+            <span class="s2">&quot;1/4&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span>  <span class="c1"># A/T</span>
+            <span class="s2">&quot;2/3&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span>  <span class="c1"># C/G</span>
+            <span class="s2">&quot;2/4&quot;</span><span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>  <span class="c1"># C/T</span>
+            <span class="s2">&quot;3/4&quot;</span><span class="p">:</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>  <span class="c1"># G/T</span>
+            <span class="s2">&quot;-9/-9&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span>  <span class="c1"># Missing data</span>
+            <span class="s2">&quot;-1/-1&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span>  <span class="c1"># Missing data</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="IUPAC.get_iupac2gt">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.misc.IUPAC.get_iupac2gt">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_iupac2gt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a dictionary of IUPAC ambiguity codes to genotype.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, str]: A dictionary of IUPAC ambiguity codes to genotype.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;1/1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;2/2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="s2">&quot;3/3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="s2">&quot;4/4&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="s2">&quot;1/2&quot;</span><span class="p">,</span>  <span class="c1"># A/C</span>
+            <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="s2">&quot;1/3&quot;</span><span class="p">,</span>  <span class="c1"># A/G</span>
+            <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;1/4&quot;</span><span class="p">,</span>  <span class="c1"># A/T</span>
+            <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;2/3&quot;</span><span class="p">,</span>  <span class="c1"># C/G</span>
+            <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="s2">&quot;2/4&quot;</span><span class="p">,</span>  <span class="c1"># C/T</span>
+            <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="s2">&quot;3/4&quot;</span><span class="p">,</span>  <span class="c1"># G/T</span>
+            <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;-9/-9&quot;</span><span class="p">,</span>  <span class="c1"># Missing data</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="IUPAC.get_int_iupac_dict">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.misc.IUPAC.get_int_iupac_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_int_iupac_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a dictionary of IUPAC ambiguity codes to integers.</span>
+
+<span class="sd">        This dictionary is used to convert IUPAC ambiguity codes to integers. It differs from the `get_iupac_int_map` function in that it only includes the main IUPAC codes and not the extended codes.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, int]: A dictionary of IUPAC ambiguity codes to integers.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; iupac_data = IUPAC()</span>
+<span class="sd">            &gt;&gt;&gt; print(iupac_data.int_iupac_dict)</span>
+<span class="sd">            &gt;&gt;&gt; # Outputs: {&#39;A&#39;: 0, &#39;T&#39;: 1, &#39;G&#39;: 2, &#39;C&#39;: 3, &#39;W&#39;: 4, &#39;R&#39;: 5, &#39;M&#39;: 6, &#39;K&#39;: 7, &#39;Y&#39;: 8, &#39;S&#39;: 9, &#39;N&#39;: -9}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+            <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+            <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">9</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="IUPAC.get_onehot_dict">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.misc.IUPAC.get_onehot_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_onehot_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a dictionary of IUPAC ambiguity codes to one-hot encoded vectors.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, List[float]]: A dictionary of IUPAC ambiguity codes to one-hot encoded vectors</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">val</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multilab_value</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+            <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+            <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+            <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">val</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+            <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">val</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+            <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">val</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">val</span><span class="p">],</span>
+            <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+            <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">val</span><span class="p">],</span>
+            <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">val</span><span class="p">],</span>
+            <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="p">}</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve attribute by dictionary-like access.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str): The attribute to retrieve.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str | List[float]: The attribute value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> is not a valid attribute of IUPAC.&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set attribute by dictionary-like access.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str): The attribute to set.</span>
+<span class="sd">            value (str | List[float]): The value to set the attribute to.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            KeyError: If the attribute is not a valid attribute of IUPAC.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; iupac_data = IUPAC()</span>
+<span class="sd">            &gt;&gt;&gt; iupac_data[&quot;multilab_value&quot;] = 0.5</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> is not a valid attribute of IUPAC.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unambiguous summary for debugging.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string representation of the IUPAC class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;IUPAC(gt2iupac=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gt2iupac</span><span class="si">}</span><span class="s2">, iupac2gt=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">iupac2gt</span><span class="si">}</span><span class="s2">, int_iupac_dict=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">int_iupac_dict</span><span class="si">}</span><span class="s2">, onehot_dict=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">onehot_dict</span><span class="si">}</span><span class="s2">, ambiguous_dna_values=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ambiguous_dna_values</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;User-friendly representation of the IUPAC dictionaries.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string describing the IUPAC class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;IUPAC class with dictionaries for genotype and ambiguity data.&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the attribute exists for dictionary-like access.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str): The attribute to check for.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the attribute exists, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the number of main data dictionaries.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[int]: The number of main data dictionaries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">attr</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">),</span> <span class="nb">dict</span><span class="p">)]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over main dictionary attributes.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Generator[str, Dict[str, Dict[str, str | List[float]]]]: A generator of main dictionary attributes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="validate_input_type">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.misc.validate_input_type">[docs]</a>
+<span class="k">def</span> <span class="nf">validate_input_type</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]],</span> <span class="n">return_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;array&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates the input type and returns it as a specified type.</span>
+
+<span class="sd">    This function checks if the input `X` is a pandas DataFrame, numpy array, or a list of lists. It then converts `X` to the specified `return_type` and returns it.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X (pandas.DataFrame, numpy.ndarray, or List[List[int]]): The input data to validate and convert.</span>
+
+<span class="sd">        return_type (str, optional): The type of the returned object. Supported options include: &quot;df&quot; (DataFrame), &quot;array&quot; (numpy array), and &quot;list&quot;. Defaults to &quot;array&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame, numpy.ndarray, or List[List[int]]: The input data converted to the desired return type.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: If `X` is not of type pandas.DataFrame, numpy.ndarray, or List[List[int]].</span>
+
+<span class="sd">        ValueError: If an unsupported `return_type` is provided. Supported types are &quot;df&quot;, &quot;array&quot;, and &quot;list&quot;.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; X = [[1, 2, 3], [4, 5, 6]]</span>
+<span class="sd">        &gt;&gt;&gt; print(validate_input_type(X, &quot;df&quot;))  4</span>
+<span class="sd">        &gt;&gt;&gt; # Outputs: a DataFrame with the data from `X`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;X must be of type pandas.DataFrame, numpy.ndarray, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;or List[List[int]], but got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">return_type</span> <span class="o">==</span> <span class="s2">&quot;array&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="n">return_type</span> <span class="o">==</span> <span class="s2">&quot;df&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">return_type</span> <span class="o">==</span> <span class="s2">&quot;list&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">X</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Unsupported return type provided: </span><span class="si">{</span><span class="n">return_type</span><span class="si">}</span><span class="s2">. Supported types &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;are &#39;df&#39;, &#39;array&#39;, and &#39;list&#39;&quot;</span>
+        <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

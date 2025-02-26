@@ -1,0 +1,1338 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.read_input package &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=859da57e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=ca842793"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="snpio.utils package" href="snpio.utils.html" />
+    <link rel="prev" title="snpio.analysis package" href="snpio.analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SNPio
+              <img src="_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">snpio</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="snpio.html">snpio package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="snpio.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="snpio.filtering.html">snpio.filtering package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.plotting.html">snpio.plotting package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.io.html">snpio.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.analysis.html">snpio.analysis package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">snpio.read_input package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.utils.html">snpio.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.popgenstats.html">snpio.popgenstats package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="snpio.html#module-snpio">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">snpio</a></li>
+          <li class="breadcrumb-item"><a href="snpio.html">snpio package</a></li>
+      <li class="breadcrumb-item active">snpio.read_input package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/btmartin721/SNPio/blob/master/docs/source/snpio.read_input.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="snpio-read-input-package">
+<h1>snpio.read_input package<a class="headerlink" href="#snpio-read-input-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="snpio-read-input-genotype-data-module">
+<h2>snpio.read_input.genotype_data module<a class="headerlink" href="#snpio-read-input-genotype-data-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.read_input.genotype_data.</span></span><span class="sig-name descname"><span class="pre">GenotypeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popmapfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_popmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">18</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_despine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'snpio'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loci_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>A class for handling and analyzing genotype data.</p>
+<p>The GenotypeData class is intended as a parent class for the file reader classes, such as VCFReader, StructureReader, and PhylipReader. It provides common methods and attributes for handling genotype data, such as reading population maps, subsetting data, and generating missingness reports.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt>GenotypeData handles the following characters as missing data:</dt><dd><ul class="simple">
+<li><p>‘N’</p></li>
+<li><p>‘-’</p></li>
+<li><p>‘?’</p></li>
+<li><p>‘.’</p></li>
+</ul>
+</dd>
+</dl>
+<p>If using PHYLIP or STRUCTURE formats, all sites will be forced to be biallelic. If multiple alleles are needed, you must use a VCF file.</p>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">inputs</span></span></dt>
+<dd><p>GenotypeData keyword arguments as a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">num_snps</span></span></dt>
+<dd><p>Number of SNPs in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">num_inds</span></span></dt>
+<dd><p>Number of individuals in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">populations</span></span></dt>
+<dd><p>Population IDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Union[str, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">popmap</span></span></dt>
+<dd><p>Dictionary object with SampleIDs as keys and popIDs as values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">popmap_inverse</span></span></dt>
+<dd><p>Inverse dictionary of popmap, where popIDs are keys and lists of sampleIDs are values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">samples</span></span></dt>
+<dd><p>Sample IDs in input order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">snpsdict</span></span></dt>
+<dd><p>Dictionary with SampleIDs as keys and lists of genotypes as values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">snp_data</span></span></dt>
+<dd><p>Genotype data as a 2D list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">loci_indices</span></span></dt>
+<dd><p>Column indices for retained loci in filtered alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">sample_indices</span></span></dt>
+<dd><p>Row indices for retained samples in the alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">ref</span></span></dt>
+<dd><p>List of reference alleles of length num_snps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">alt</span></span></dt>
+<dd><p>List of alternate alleles of length num_snps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">iupac_mapping</span></span></dt>
+<dd><p>Mapping of allele tuples to IUPAC codes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">reverse_iupac_mapping</span></span></dt>
+<dd><p>Mapping of IUPAC codes to allele tuples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">missing_vals</span></span></dt>
+<dd><p>List of missing value characters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">replace_vals</span></span></dt>
+<dd><p>List of missing value replacements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[pd.NA]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">logger</span></span></dt>
+<dd><p>Logger object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">debug</span></span></dt>
+<dd><p>If True, display debug messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_kwargs</span></span></dt>
+<dd><p>Plotting keyword arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">supported_filetypes</span></span></dt>
+<dd><p>List of supported filetypes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">kwargs</span></span></dt>
+<dd><p>GenotypeData keyword arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">chunk_size</span></span></dt>
+<dd><p>Chunk size for reading in large files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_format</span></span></dt>
+<dd><p>Format to save report plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_fontsize</span></span></dt>
+<dd><p>Font size for plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_dpi</span></span></dt>
+<dd><p>Resolution in dots per inch for plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_despine</span></span></dt>
+<dd><p>If True, remove the top and right spines from plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">show_plots</span></span></dt>
+<dd><p>If True, display plots in the console.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">prefix</span></span></dt>
+<dd><p>Prefix to use for output directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">verbose</span></span></dt>
+<dd><p>If True, display verbose output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">read_popmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.read_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Read population map from file to map samples to populations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">subset_with_popmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.subset_with_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Subset popmap and samples based on population criteria.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">write_popmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.write_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Write the population map to a file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">missingness_reports</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.missingness_reports"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generate missingness reports and plots.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_make_snpsdict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData._make_snpsdict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Make a dictionary with SampleIDs as keys and a list of SNPs associated with the sample as the values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_genotype_to_iupac</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData._genotype_to_iupac"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert a genotype string to its corresponding IUPAC code.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_iupac_to_genotype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData._iupac_to_genotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert an IUPAC code to its corresponding genotype string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">calc_missing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.calc_missing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate missing value statistics based on a DataFrame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create a deep copy of the GenotypeData object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">read_popmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.read_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Read in a popmap file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">missingness_reports</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.missingness_reports"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create missingness reports from GenotypeData object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_report2file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData._report2file"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Write a DataFrame to a CSV file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_genotype_to_iupac</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData._genotype_to_iupac"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert a genotype string to its corresponding IUPAC code.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_iupac_to_genotype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData._iupac_to_genotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert an IUPAC code to its corresponding genotype string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_reverse_iupac_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.get_reverse_iupac_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create a reverse mapping from IUPAC codes to allele tuples.</p>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gd</span> <span class="o">=</span> <span class="n">GenotypeData</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="s2">&quot;data.vcf&quot;</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="s2">&quot;vcf&quot;</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="s2">&quot;popmap.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">snp_data</span><span class="p">)</span>
+<span class="go">[[&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39;], [&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39;], [&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39;]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">num_snps</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">num_inds</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">populations</span><span class="p">)</span>
+<span class="go">[&#39;pop1&#39;, &#39;pop2&#39;, &#39;pop2&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">popmap</span><span class="p">)</span>
+<span class="go">{&#39;sample1&#39;: &#39;pop1&#39;, &#39;sample2&#39;: &#39;pop2&#39;, &#39;sample3&#39;: &#39;pop2&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gd</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
+<span class="go">[&#39;sample1&#39;, &#39;sample2&#39;, &#39;sample3&#39;]</span>
+</pre></div>
+</div>
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Get list of alternate alleles of length num_snps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of alternate alleles of length num_snps.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">calc_missing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.calc_missing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate missing value statistics based on a DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – Input DataFrame containing genotype data.</p></li>
+<li><p><strong>use_pops</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, calculate statistics per population. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A tuple of missing value statistics:</p>
+<ul class="simple">
+<li><p>loc (pd.Series): Missing value proportions per locus.</p></li>
+<li><p>ind (pd.Series): Missing value proportions per individual.</p></li>
+<li><p>poploc (Optional[pd.DataFrame]): Missing value proportions per population and locus. Only returned if use_pops=True.</p></li>
+<li><p>poptot (Optional[pd.Series]): Missing value proportions per population. Only returned if use_pops=True.</p></li>
+<li><p>indpop (Optional[pd.DataFrame]): Missing value proportions per individual and population. Only returned if use_pops=True.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[pd.Series, pd.Series, Optional[pd.DataFrame], Optional[pd.Series], Optional[pd.DataFrame]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create a deep copy of the GenotypeData or VCFReader object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A new object with the same attributes as the original.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>GenotypeData or VCFReader</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_population_indices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.get_population_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create a mapping from population IDs to sample indices.</p>
+<p>This method creates a dictionary with population IDs as keys and lists of sample indices as values. The sample indices are used to subset the genotype data by population.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary with population IDs as keys and lists of sample indices as values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_reverse_iupac_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.get_reverse_iupac_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Creates a reverse mapping from IUPAC codes to allele tuples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mapping of IUPAC codes to allele tuples</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, Tuple[str, str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Get GenotypeData keyword arguments as a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>GenotypeData keyword arguments as a dictionary.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">load_aln</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.load_aln"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loci_indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em></dt>
+<dd><p>Boolean array for retained loci in filtered alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Boolean array of loci indices, with True for retained loci and False for excluded loci.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – If the loci_indices attribute is not a numpy.ndarray or list.</p></li>
+<li><p><strong>TypeError</strong> – If the loci_indices attribute is not a numpy.dtype ‘bool’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">missingness_reports</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bar_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gray'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heatmap_palette</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'magma'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.missingness_reports"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generate missingness reports and plots.</p>
+<p>The function will write several comma-delimited report files:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>individual_missingness.csv: Missing proportions per individual.</p></li>
+<li><p>locus_missingness.csv: Missing proportions per locus.</p></li>
+<li><p>population_missingness.csv: Missing proportions per population (only generated if popmapfile was passed to GenotypeData).</p></li>
+<li><p>population_locus_missingness.csv: Table of per-population and per-locus missing data proportions.</p></li>
+</ol>
+</div></blockquote>
+<p>A file missingness.&lt;plot_format&gt; will also be saved. It contains the following subplots:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Barplot with per-individual missing data proportions.</p></li>
+<li><p>Barplot with per-locus missing data proportions.</p></li>
+<li><p>Barplot with per-population missing data proportions (only if popmapfile was passed to GenotypeData).</p></li>
+<li><p>Heatmap showing per-population + per-locus missing data proportions (only if popmapfile was passed to GenotypeData).</p></li>
+<li><p>Stacked barplot showing missing data proportions per individual.</p></li>
+<li><p>Stacked barplot showing missing data proportions per population (only if popmapfile was passed to GenotypeData).</p></li>
+</ol>
+</div></blockquote>
+<p>If popmapfile was not passed to GenotypeData, then the subplots and report files that require populations are not included.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – Output file prefix for the missingness report. Defaults to None.</p></li>
+<li><p><strong>zoom</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, zoom in to the missing proportion range on some of the plots. If False, the plot range is fixed at [0, 1]. Defaults to True.</p></li>
+<li><p><strong>bar_color</strong> (<em>str</em><em>, </em><em>optional</em>) – Color of the bars on the non-stacked bar plots. Can be any color supported by matplotlib. See the matplotlib.pyplot.colors documentation. Defaults to ‘gray’.</p></li>
+<li><p><strong>heatmap_palette</strong> (<em>str</em><em>, </em><em>otpional</em>) – Color palette for the heatmap plot. Defaults to ‘magma’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_inds</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em></dt>
+<dd><p>Number of individuals (samples) in dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of individuals (samples) in input data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_snps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em></dt>
+<dd><p>Number of snps (loci) in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of SNPs (loci) per individual.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">popmap</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Dictionary object with SampleIDs as keys and popIDs as values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary with SampleIDs as keys and popIDs as values</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">popmap_inverse</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Inverse popmap dictionary with populationIDs as keys and lists of sampleIDs as values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Inverse dictionary of popmap, where popIDs are keys and lists of sampleIDs are values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">populations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Population IDs as a list of strings or integers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Population IDs.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Union[str, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">read_popmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.read_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Read population map from file to map samples to populations.</p>
+<p>Makes use of the ReadPopmap class to read in the popmap file and validate the samples against the alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Sets the following attributes:</dt><dd><ul class="simple">
+<li><p>samples</p></li>
+<li><p>populations</p></li>
+<li><p>popmap</p></li>
+<li><p>popmap_inverse</p></li>
+<li><p>sample_indices</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ref</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Get list of reference alleles of length num_snps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of reference alleles of length num_snps.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em></dt>
+<dd><p>Row indices for retained samples in alignemnt.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Boolean array of sample indices, with True for retained samples and False for excluded samples.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – If the sample_indices attribute is not a numpy.ndarray or list.</p></li>
+<li><p><strong>TypeError</strong> – If the sample_indices attribute is not a numpy.dtype ‘bool’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">samples</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>List of sample IDs in input order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Sample IDs in input order.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">set_alignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snp_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loci_indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.set_alignment"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Set the alignment data and sample IDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>snp_data</strong> (<em>np.ndarray</em>) – 2D array of genotype data.</p></li>
+<li><p><strong>samples</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of sample IDs.</p></li>
+<li><p><strong>sample_indices</strong> (<em>np.ndarray</em>) – Boolean array of sample indices.</p></li>
+<li><p><strong>loci_indices</strong> (<em>np.ndarray</em>) – Boolean array of locus indices.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is used to set the alignment data and sample IDs after filtering.</p>
+<dl class="simple">
+<dt>The method updates the following attributes:</dt><dd><ul class="simple">
+<li><p>snp_data</p></li>
+<li><p>samples</p></li>
+<li><p>populations</p></li>
+<li><p>popmap</p></li>
+<li><p>popmap_inverse</p></li>
+<li><p>sample_indices</p></li>
+<li><p>loci_indices</p></li>
+<li><p>num_inds</p></li>
+<li><p>num_snps</p></li>
+<li><p>prefix</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snp_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em></dt>
+<dd><p>Get the genotypes as a 2D list of shape (n_samples, n_loci).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>2D array of IUPAC encoded genotype data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – If the snp_data attribute is not a numpy.ndarray, pandas.DataFrame, or list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snpsdict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Dictionary with Sample IDs as keys and lists of genotypes as values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary with sample IDs as keys and lists of genotypes as values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">subset_with_popmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_popmap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.subset_with_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Subset popmap and samples based on population criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>my_popmap</strong> (<em>ReadPopmap</em>) – ReadPopmap instance.</p></li>
+<li><p><strong>samples</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of sample IDs.</p></li>
+<li><p><strong>force</strong> (<em>bool</em>) – If True, force the subsetting. If False, raise an error if the samples don’t align.</p></li>
+<li><p><strong>include_pops</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – List of populations to include. If provided, only samples belonging to these populations will be retained.</p></li>
+<li><p><strong>exclude_pops</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – List of populations to exclude. If provided, samples belonging to these populations will be excluded.</p></li>
+<li><p><strong>return_indices</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, return the indices for samples. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Boolean array of <cite>sample_indices</cite> if return_indices is True. Otherwise, None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">write_popmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data.html#GenotypeData.write_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Write the population map to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Output file path.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AttributeError</strong> – If the samples attribute is not defined.</p></li>
+<li><p><strong>AttributeError</strong> – If the popmap attribute is not defined.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-read-input-genotype-data-base-module">
+<h2>snpio.read_input.genotype_data_base module<a class="headerlink" href="#snpio-read-input-genotype-data-base-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.read_input.genotype_data_base.</span></span><span class="sig-name descname"><span class="pre">BaseGenotypeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data_base.html#BaseGenotypeData"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_ref_alt_alleles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/genotype_data_base.html#BaseGenotypeData.get_ref_alt_alleles"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Determine the most common, second most common, and less common alleles in each column of a 2D numpy array, excluding ‘N’, ‘.’, ‘?’, and ‘-’ alleles. The reference allele is determined by frequency and by the fewest number of heterozygous genotypes. If tied, a random allele is selected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>np.ndarray</em>) – A 2D numpy array where each column represents different SNP data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>Most common alleles (ref).</p></li>
+<li><p>Second most common alleles (alt).</p></li>
+<li><p>Less common alleles (for potential multi-allelic sites).</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[np.ndarray, np.ndarray, List[np.ndarray]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-read-input-popmap-file-module">
+<h2>snpio.read_input.popmap_file module<a class="headerlink" href="#snpio-read-input-popmap-file-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.read_input.popmap_file.</span></span><span class="sig-name descname"><span class="pre">ReadPopmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Class to read and parse a population map file.</p>
+<p>Population map file should contain two comma or whitespace-delimited columns, with one being the SampleIDs and the other being the associated populationIDs. There should either not be a header line in the popmap file, in which case the column order should be sampleIDs and then populationIDs.</p>
+<p>Alternatively, tthe header line should contain exactly one of the accepted sampleID column names (‘sampleid’ or ‘sampleids’) and exactly one of the accepted populationID column names (‘populationid’, ‘populationids’, ‘popid’, or ‘popids’).</p>
+<p>The population map file should not contain any duplicate SampleIDs.</p>
+<p class="rubric">Example</p>
+<p>Example population map file format:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">sampleID,populationID</span>
+<span class="pre">Sample1,Population1</span>
+<span class="pre">Sample2,Population1</span>
+<span class="pre">Sample3,Population2</span>
+<span class="pre">Sample4,Population2</span>
+<span class="pre">`</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snpio.read_input.popmap_file</span> <span class="kn">import</span> <span class="n">ReadPopmap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pm</span> <span class="o">=</span> <span class="n">ReadPopmap</span><span class="p">(</span><span class="s2">&quot;popmap.txt&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pm</span><span class="o">.</span><span class="n">get_pop_counts</span><span class="p">(</span><span class="n">genotype_data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pm</span><span class="o">.</span><span class="n">validate_popmap</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pm</span><span class="o">.</span><span class="n">subset_popmap</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Population1&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pm</span><span class="o">.</span><span class="n">write_popmap</span><span class="p">(</span><span class="s2">&quot;subset_popmap.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">pm</span><span class="o">.</span><span class="n">popmap</span><span class="p">)</span>
+<span class="go">{&#39;Sample1&#39;: &#39;Population1&#39;, &#39;Sample2&#39;: &#39;Population1&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">pm</span><span class="o">.</span><span class="n">inverse_popmap</span><span class="p">):</span>
+<span class="go">{&#39;Population1&#39;: [&#39;Sample1&#39;, &#39;Sample2&#39;]}</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filename</span></span></dt>
+<dd><p>Filename for the population map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">verbose</span></span></dt>
+<dd><p>Verbosity setting (True or False). If True, enables verbose output. If False, suppresses verbose output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_popdict</span></span></dt>
+<dd><p>Dictionary with SampleIDs as keys and the corresponding population ID as values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_sample_indices</span></span></dt>
+<dd><p>Boolean array representing the subset samples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">logger</span></span></dt>
+<dd><p>Logger object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logging</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">read_popmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap.read_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Read a population map file from disk into a dictionary object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">write_popmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap.write_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Write the population map dictionary to a file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_pop_counts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap.get_pop_counts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Print out unique population IDs and their counts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">validate_popmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap.validate_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Validate that all alignment sample IDs are present in the population map.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">subset_popmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap.subset_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Subset the population map based on inclusion and exclusion criteria.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_infer_delimiter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap._infer_delimiter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Infer the delimiter of a given file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_infer_header</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap._infer_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Infer whether the file has a header.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_is_numeric</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap._is_numeric"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Check if a string can be converted to a float.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_validate_pop_subset_lists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap._validate_pop_subset_lists"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Validates the elements in the given list to ensure they are all of type str.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_flip_dictionary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap._flip_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Flip the keys and values of a dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_pop_counts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap.get_pop_counts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Print out unique population IDs and their counts.</p>
+<p>Prints the unique population IDs along with their respective counts. It also generates a plot of the population counts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>genotype_data</strong> (<em>GenotypeData</em>) – GenotypeData object containing the alignment data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">popmap</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Get the population dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary with SampleIDs as keys and the corresponding population ID as values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">popmap_flipped</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Associate unique populations with lists of SampleIDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary with unique populations as keys and lists of associated SampleIDs as values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">read_popmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap.read_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Read a population map file from disk into a dictionary object.</p>
+<p>The dictionary will have SampleIDs as keys and the associated population ID as the values. The population map file should contain two comma or whitespace-delimited columns, with one being the SampleIDs and the other being the associated populationIDs. There should either not be a header line in the popmap file, in which case the column order should be sampleIDs and then populationIDs. Alternatively, the header line should contain exactly one of the accepted sampleID column names (‘sampleid’ or ‘sampleids’) and exactly one of the accepted populationID column names (‘populationid’, ‘populationids’, ‘popid’, or ‘popids’). The population map file should not contain any duplicate SampleIDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – Raises an exception if the population map file is not found on disk.</p></li>
+<li><p><strong>ValueError</strong> – Raises an exception if the population map file is empty or if the data cannot be correctly loaded from the file.</p></li>
+<li><p><strong>AssertionError</strong> – Raises an exception if the population map file is empty or if the data cannot be correctly loaded from the file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method will be executed upon initialization of the ReadPopmap object.</p>
+<p>The population map file should contain two comma or whitespace-delimited columns, with one being the SampleIDs and the other being the associated populationIDs.</p>
+<p>There should either not be a header line in the popmap file, in which case the column order should be sampleIDs and then populationIDs.</p>
+<p>Alternatively, the header line should contain exactly one of the accepted sampleID column names (‘sampleid’ or ‘sampleids’) and exactly one of the accepted populationID column names (‘populationid’, ‘populationids’, ‘popid’, or ‘popids’).</p>
+<p>The population map file should not contain any duplicate SampleIDs.</p>
+<p>The dictionary will have SampleIDs as keys and the associated population ID as the values.</p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em></dt>
+<dd><p>Get the indices of the subset samples from the population map as a boolean array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Boolean array representing the subset samples.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">subset_popmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap.subset_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Subset the population map based on inclusion and exclusion criteria.</p>
+<p>Subsets the population map by including only the specified populations (include) and excluding the specified populations (exclude).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>samples</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of samples from alignment.</p></li>
+<li><p><strong>include</strong> (<em>List</em><em>[</em><em>str</em><em>] or </em><em>None</em>) – List of populations to include in the subset.
+The populations to include in the subset of the population map.</p></li>
+<li><p><strong>exclude</strong> (<em>List</em><em>[</em><em>str</em><em>] or </em><em>None</em>) – List of populations to exclude from the subset of the population map.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – Raises an exception if populations are present in both include and exclude lists.</p></li>
+<li><p><strong>TypeError</strong> – Raises an exception if include or exclude arguments are not lists.</p></li>
+<li><p><strong>ValueError</strong> – Raises an exception if the population map is empty after subsetting.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">validate_popmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap.validate_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Validate that all alignment sample IDs are present in the population map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>samples</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of SampleIDs present in the alignment.
+The list of SampleIDs to be validated against the population map.</p></li>
+<li><p><strong>force</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, return a subset dictionary without the keys that weren’t found. If False, return a boolean indicating whether all keys were found. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If force is False, returns True if all alignment samples are present in the population map and all population map samples are present in the alignment. Returns False otherwise. If force is True, returns a subset of the population map containing only the samples present in the alignment.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[bool, Dict[str, str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">write_popmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/read_input/popmap_file.html#ReadPopmap.write_popmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Write the population map dictionary to a file.</p>
+<p>Writes the population map dictionary, where SampleIDs are keys and the associated population ID are values, to the specified output file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>output_file</strong> (<em>str</em>) – The filename of the output file to write the population map.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="snpio.analysis.html" class="btn btn-neutral float-left" title="snpio.analysis package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="snpio.utils.html" class="btn btn-neutral float-right" title="snpio.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

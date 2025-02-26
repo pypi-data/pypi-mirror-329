@@ -1,0 +1,874 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting Started &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=859da57e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=ca842793"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Example script" href="example_script.html" />
+    <link rel="prev" title="Welcome to SNPio’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SNPio
+              <img src="_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#importing-snpio">Importing SNPio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#important-notes">Important Notes:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-population-map-file">The Population Map File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-genotype-data">Reading Genotype Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vcfreader">VCFReader:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#phylipreader">PhylipReader:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#structurereader">StructureReader:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key-methods-in-vcfreader-phylipreader-and-structurereader">Key Methods in VCFReader, PhylipReader, and StructureReader</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#other-genotypedata-methods">Other GenotypeData Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filtering-genotype-data-with-nremover2">Filtering Genotype Data with NRemover2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#key-methods-in-nremover2">Key Methods in NRemover2:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#additional-methods-in-nremover2">Additional Methods in NRemover2:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#genotypedata-properties">GenotypeData Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#genotype-encoding-with-genotypeencoder">Genotype Encoding with GenotypeEncoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#population-genetics-analysis-with-popgenstatistics">Population Genetics Analysis with PopGenStatistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-and-parsing-phylogenetic-treeparser">Loading and Parsing Phylogenetic TreeParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#benchmarking-the-performance">Benchmarking the Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting Started</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/btmartin721/SNPio/blob/master/docs/source/getting_started.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
+<a class="img-responsive reference internal image-reference" href="_images/snpio_logo.png"><img alt="SNPio Logo, decorative image." class="img-responsive align-center" src="_images/snpio_logo.png" style="width: 800.0px; height: 400.0px;" />
+</a>
+<p>This guide provides an overview of how to get started with the SNPio library. It covers the basic steps to read, manipulate, and analyze genotype data using the VCFReader, PhylipReader, StructureReader, and NRemover2 classes. SNPio is designed to simplify the process of handling genotype data and preparing it for downstream analysis, such as population genetics, phylogenetics, and machine learning. The library supports various file formats, including VCF, PHYLIP, and STRUCTURE, and provides tools for filtering, encoding, and visualizing genotype data. This guide will help you get up and running with SNPio quickly and efficiently.</p>
+<p><code class="docutils literal notranslate"><span class="pre">VCFReader</span></code>, <code class="docutils literal notranslate"><span class="pre">PhylipReader</span></code>, and <code class="docutils literal notranslate"><span class="pre">StructureReader</span></code> classes are used to read genotype data from VCF, PHYLIP, and STRUCTURE files, respectively. These classes load the data into a <code class="docutils literal notranslate"><span class="pre">GenotypeData</span></code> object that has various useful methods and properties.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">NRemover2</span></code> class is used to filter genotype data based on various criteria, such as missing data, minor allele count, minor allele frequency, and more. The <code class="docutils literal notranslate"><span class="pre">GenotypeEncoder</span></code> class is used to encode genotype data into different formats, such as one-hot encoding, integer encoding, and 0-1-2 encoding, for downstream analysis and machine learning tasks.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Plotting</span></code> class provides methods to visualize genotype data, such as running principal component analysis (PCA) and generating missing data reports. The <code class="docutils literal notranslate"><span class="pre">PopGenStatistics</span></code> class is used to perform population genetic analyses on SNP datasets, such as D-statistics, Fst outliers, heterozygosity, nucleotide diversity, and Analysis of Molecular Variance (AMOVA).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">TreeParser</span></code> class is used to load and parse phylogenetic trees in Newick and NEXUS formats. It can read and parse tree files, modify tree structures, draw trees, and save trees in different formats.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">PopGenStatistics</span></code> class is designed to perform a suite of population genetic analyses on SNP datasets. It supports calculations such as D-statistics, Fst outliers, heterozygosity, nucleotide diversity, and Analysis of Molecular Variance (AMOVA). These analyses are essential for understanding genetic structure, diversity, and differentiation within and between populations.</p>
+<p>Below is a step-by-step guide to using SNPio to read, filter, encode genotype data for analysis, and calculate population genetic statistics. The guide covers the basic steps to get started with SNPio and provides examples of how to use the main classes and methods in the library.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>Before using SNPio, ensure it is installed in your Python environment. You can install it using pip. In the project root directory (the directory containing pyproject.toml), type the below command into your terminal.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>We recommend using a virtual environment to manage your Python packages. If you do not have a virtual environment set up, you can create one using the following command and then activate it and install SNPio:</p>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>snpio_env
+<span class="nb">source</span><span class="w"> </span>snpio_env/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>snpio
+</pre></div>
+</div>
+<p>This will create a virtual environment named <code class="docutils literal notranslate"><span class="pre">snpio_env</span></code> and activate it. You can then install SNPio in this virtual environment using the pip command mentioned above.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>SNPio does not support Windows operating systems at the moment. We recommend using a Unix-based operating system such as Linux or MacOS. If you have Windows, you can use the Windows Subsystem for Linux (WSL) to run SNPio, which runs a Linux distribution on Windows.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We aim to support anaconda environments in the future. For now, we recommend using a virtual environment with <code class="docutils literal notranslate"><span class="pre">pip</span></code> to install SNPio.</p>
+</div>
+</section>
+<section id="importing-snpio">
+<h2>Importing SNPio<a class="headerlink" href="#importing-snpio" title="Link to this heading"></a></h2>
+<p>To start using SNPio, import the necessary modules:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the SNPio modules.</span>
+<span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">NRemover2</span><span class="p">,</span> <span class="n">VCFReader</span><span class="p">,</span> <span class="n">PhylipReader</span><span class="p">,</span> <span class="n">StructureReader</span><span class="p">,</span> <span class="n">Plotting</span><span class="p">,</span> <span class="n">GenotypeEncoder</span><span class="p">,</span> <span class="n">PopGenStatistics</span><span class="p">,</span> <span class="n">TreeParser</span>
+</pre></div>
+</div>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define input filenames</span>
+<span class="n">vcf</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span>
+<span class="n">popmap</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span>
+
+<span class="c1"># Load the genotype data from a VCF file</span>
+<span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">vcf</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmap</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">plot_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio_example&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also include or exclude any populations from the analysis by using the <code class="docutils literal notranslate"><span class="pre">include_pops</span></code> and <code class="docutils literal notranslate"><span class="pre">exclude_pops</span></code> parameters in the reader classes. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only include the populations &quot;ON&quot;, &quot;DS&quot;, &quot;EA&quot;, &quot;GU&quot;, and &quot;TT&quot;</span>
+<span class="c1"># Exclude the populations &quot;MX&quot;, &quot;YU&quot;, and &quot;CH&quot;</span>
+<span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">vcf</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmap</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">plot_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio_example&quot;</span><span class="p">,</span> <span class="n">include_pops</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span> <span class="s2">&quot;DS&quot;</span><span class="p">,</span> <span class="s2">&quot;EA&quot;</span><span class="p">,</span> <span class="s2">&quot;GU&quot;</span><span class="p">],</span> <span class="n">exclude_pops</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;MX&quot;</span><span class="p">,</span> <span class="s2">&quot;YU&quot;</span><span class="p">,</span> <span class="s2">&quot;CH&quot;</span><span class="p">,</span> <span class="s2">&quot;OG&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">include_pops</span></code> and <code class="docutils literal notranslate"><span class="pre">exclude_pops</span></code> parameters are optional and can be used to filter the populations included in the analysis. If both parameters are provided, the populations in <code class="docutils literal notranslate"><span class="pre">include_pops</span></code> will be included, and the populations in <code class="docutils literal notranslate"><span class="pre">exclude_pops</span></code> will be excluded. However, populations cannot overlap between lists.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you provide both parameters, the populations in <code class="docutils literal notranslate"><span class="pre">include_pops</span></code> will take precedence.</p>
+</div>
+</section>
+<section id="important-notes">
+<h2>Important Notes:<a class="headerlink" href="#important-notes" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt>The <code class="docutils literal notranslate"><span class="pre">VCFReader</span></code>, <code class="docutils literal notranslate"><span class="pre">PhylipReader</span></code>, <code class="docutils literal notranslate"><span class="pre">StructureReader</span></code>, <code class="docutils literal notranslate"><span class="pre">NRemover2</span></code>, <code class="docutils literal notranslate"><span class="pre">PopGenStatistics</span></code>, and <code class="docutils literal notranslate"><span class="pre">GenotypeEncoder</span></code> classes treat the following characters as missing data:</dt><dd><ul class="simple">
+<li><p>“N”</p></li>
+<li><p>“.”</p></li>
+<li><p>“?”</p></li>
+<li><p>“-”</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">VCFReader</span></code> class can read both uncompressed and compressed VCF files (gzipped). If your input file is in PHYLIP or STRUCTURE format, it will be forced to be biallelic. To handle more than two alleles per site, use the VCF format. However, also note that many of the analyses implemented in <code class="docutils literal notranslate"><span class="pre">PopGenStatistics</span></code> and <code class="docutils literal notranslate"><span class="pre">NRemover2</span></code> are designed for biallelic and diploid data.</p>
+</div>
+</section>
+<section id="the-population-map-file">
+<h2>The Population Map File<a class="headerlink" href="#the-population-map-file" title="Link to this heading"></a></h2>
+<p>To use <code class="docutils literal notranslate"><span class="pre">VCFReader</span></code>, <code class="docutils literal notranslate"><span class="pre">PhylipReader</span></code>, or <code class="docutils literal notranslate"><span class="pre">StructureReader</span></code>, you can optionally use a population map (popmap) file. This is a simple two-column, whitespace-delimited or comma-delimited file with SampleIDs in the first column and the corresponding PopulationIDs in the second column. It can optionally contain a header line, with the first column labeled “SampleID” and the second column labeled “PopulationID” (case-insensitive). The population IDs can be any string, such as “Population1”, “Population2”, etc, or an integer. SampleIDs must match the sample names in the alignment file.</p>
+<p>For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Sample1,Population1
+Sample2,Population1
+Sample3,Population2
+Sample4,Population2
+</pre></div>
+</div>
+<p>Or, with a header:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>SampleID,PopulationID
+Sample1,Population1
+Sample2,Population1
+Sample3,Population2
+Sample4,Population2
+</pre></div>
+</div>
+<p>The population map file is used to assign samples to populations and is useful for filtering and visualizing genotype data by population. If you do not provide a population map file, the samples will be treated as a single population.</p>
+<p>The population map file can be provided as an argument to the reader classes. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vcf</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span>
+<span class="n">popmap</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span>
+
+<span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">vcf</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmap</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">plot_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio_example&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">force_popmap</span></code> parameter in the reader classes is used to force the population map file to align with the samples in the alignment without an error. If set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, the population map file must match the samples in the alignment exactly, and if they do not match, an error will be raised. If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the population map file will be forced to align with the samples in the alignment by removing extra samples, anc vice versa. This parameter is set to <code class="docutils literal notranslate"><span class="pre">False</span></code> by default.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">verbose</span></code> parameter in the reader classes is used to print additional information about the genotype data and filtering steps. If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the reader classes will print information about the genotype data, such as the number of samples, loci, and populations, and the filtering steps applied. This parameter is set to <code class="docutils literal notranslate"><span class="pre">False</span></code> by default.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">plot_format</span></code>, <code class="docutils literal notranslate"><span class="pre">plot_fontsize</span></code>, <code class="docutils literal notranslate"><span class="pre">plot_dpi</span></code>, and <code class="docutils literal notranslate"><span class="pre">despine</span></code> parameters in the reader classes are used to customize the output plots generated by the reader classes. See API documentation for more details.</p>
+</div>
+</section>
+<section id="reading-genotype-data">
+<h2>Reading Genotype Data<a class="headerlink" href="#reading-genotype-data" title="Link to this heading"></a></h2>
+<p>SNPio provides readers for different file formats. Here are examples of how to read genotype data from various file formats: VCF, PHYLIP, and STRUCTURE.</p>
+<section id="vcfreader">
+<h3>VCFReader:<a class="headerlink" href="#vcfreader" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vcf</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span>
+<span class="n">popmap</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span>
+
+<span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">vcf</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmap</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">plot_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio_example&quot;</span><span class="p">,</span> <span class="n">exclude_pops</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;MX&quot;</span><span class="p">,</span> <span class="s2">&quot;YU&quot;</span><span class="p">,</span> <span class="s2">&quot;CH&quot;</span><span class="p">],</span> <span class="n">include_pops</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span> <span class="s2">&quot;DS&quot;</span><span class="p">,</span> <span class="s2">&quot;EA&quot;</span><span class="p">,</span> <span class="s2">&quot;GU&quot;</span><span class="p">,</span> <span class="s2">&quot;TT&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This will read the genotype data from a VCF file and apply the population map if provided.</p>
+</section>
+<section id="phylipreader">
+<h3>PhylipReader:<a class="headerlink" href="#phylipreader" title="Link to this heading"></a></h3>
+<p>If you would like to read a Phylip file, you can use the <code class="docutils literal notranslate"><span class="pre">PhylipReader</span></code> class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">phylip</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/phylip_files/phylogen_subset14K.phy&quot;</span>
+<span class="n">popmap</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span>
+
+<span class="n">gd</span> <span class="o">=</span> <span class="n">PhylipReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">phylip</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmap</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">plot_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio_example&quot;</span><span class="p">,</span> <span class="n">exclude_pops</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;MX&quot;</span><span class="p">,</span> <span class="s2">&quot;YU&quot;</span><span class="p">,</span> <span class="s2">&quot;CH&quot;</span><span class="p">],</span> <span class="n">include_pops</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span> <span class="s2">&quot;DS&quot;</span><span class="p">,</span> <span class="s2">&quot;EA&quot;</span><span class="p">,</span> <span class="s2">&quot;GU&quot;</span><span class="p">,</span> <span class="s2">&quot;TT&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This will read the genotype data from a PHYLIP file and apply the population map (if provided).</p>
+</section>
+<section id="structurereader">
+<h3>StructureReader:<a class="headerlink" href="#structurereader" title="Link to this heading"></a></h3>
+<p>If you would like to read in a Structure file, you can use the <code class="docutils literal notranslate"><span class="pre">StructureReader</span></code> class. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">structure</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/structure_files/phylogen_subset14K.str&quot;</span>
+<span class="n">popmap</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span>
+
+<span class="n">gd</span> <span class="o">=</span> <span class="n">StructureReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmap</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">plot_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio_example&quot;</span><span class="p">,</span> <span class="n">exclude_pops</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;MX&quot;</span><span class="p">,</span> <span class="s2">&quot;YU&quot;</span><span class="p">,</span> <span class="s2">&quot;CH&quot;</span><span class="p">],</span> <span class="n">include_pops</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span> <span class="s2">&quot;DS&quot;</span><span class="p">,</span> <span class="s2">&quot;EA&quot;</span><span class="p">,</span> <span class="s2">&quot;GU&quot;</span><span class="p">,</span> <span class="s2">&quot;TT&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This will read the genotype data from a STRUCTURE file and apply the population map (if provided).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">StructureReader</span></code> class will automatically detect the format of the STRUCTURE file. It can be in one-line or two-line format (see STRUCTURE documentation), and can optionally contain population information in the file as the second tab-delimited column. If the population information is not provided in the STRUCTURE file, you can provide a population map file to assign samples to populations.</p>
+</div>
+</section>
+<section id="key-methods-in-vcfreader-phylipreader-and-structurereader">
+<h3>Key Methods in VCFReader, PhylipReader, and StructureReader<a class="headerlink" href="#key-methods-in-vcfreader-phylipreader-and-structurereader" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>Function/Method</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VCFReader</span></code></p></td>
+<td><p>Reads and writes genotype data from/ to a
+VCF file and applies a population map if
+provided.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">write_vcf</span></code></p></td>
+<td><p>Writes the filtered or modified genotype
+data back to a VCF file
+(for all three readers).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PhylipReader</span></code></p></td>
+<td><p>Reads and writes genotype data from/ to a
+PHYLIP file and applies a population map.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">write_phylip</span></code></p></td>
+<td><p>Writes the filtered or modified genotype
+data back to a PHYLIP file (for
+PhylipReader).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">StructureReader</span></code></p></td>
+<td><p>Reads and writes genotype data from/ to a
+STRUCTURE file and applies a population
+map (if provided).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">write_structure</span></code></p></td>
+<td><p>Writes the filtered or modified genotype
+data. back to a STRUCTURE file
+(for StructureReader).</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">write_vcf</span></code>, <code class="docutils literal notranslate"><span class="pre">write_phylip</span></code>, and <code class="docutils literal notranslate"><span class="pre">write_structure</span></code> methods are used to write the filtered or modified genotype data back to a VCF, PHYLIP, or STRUCTURE file, respectively.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">write_vcf</span></code>, <code class="docutils literal notranslate"><span class="pre">write_phylip</span></code>, and <code class="docutils literal notranslate"><span class="pre">write_structure</span></code> methods can be used to write the filtered or modified genotype data back to a new file. The new file will contain the filtered or modified genotype data based on the filtering criteria applied.</p>
+</div>
+</section>
+</section>
+<section id="other-genotypedata-methods">
+<h2>Other GenotypeData Methods<a class="headerlink" href="#other-genotypedata-methods" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">GenotypeData</span></code> along with the <code class="docutils literal notranslate"><span class="pre">Plotting</span></code> classes have several useful methods for working with genotype data:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Plotting.run_pca()</span></code>: Runs principal component analysis (PCA) on the genotype data and plots the results. The PCA plot can help visualize the genetic structure of the populations in the dataset, with each point representing an individual. Individuals are colored by missing data proportion, and populations are represented by different shapes. A 2-dimensional PCA plot is generated by default, but you can specify three PCA axes as well. For example:</p></li>
+</ol>
+<figure class="img-responsive align-default" id="id1">
+<img alt="PCA Plot with samples colored by missing data proportion and populations represented by different shapes." src="_images/pca_missingness.png" />
+<figcaption>
+<p><span class="caption-text">Figure 1: PCA Plot with samples colored by missing data proportion and populations represented by different shapes. The plot shows the genetic structure of the populations in the dataset, with each point representing an individual. The individuals are colored by the proportion of missing data, and the populations are represented by different shapes.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="2">
+<li><p><code class="docutils literal notranslate"><span class="pre">GenotypeData.missingness_reports()</span></code>: Generates missing data reports and plots for the dataset. The reports include the proportion of missing data per individual, per locus, and per population. These reports can help you identify samples, loci, or populations with high levels of missing data. For example:</p></li>
+</ol>
+<figure class="img-responsive align-default" id="id2">
+<img alt="Missing Data Report with Plots Depicting Missing Data Proportion per Sample, Locus, and Population." src="_images/missingness_report.png" />
+<figcaption>
+<p><span class="caption-text">Figure 2: Missing Data Report with Plots Depicting Missing Data Proportion per Sample, Locus, and Population. The plots show the proportion of missing data per sample, per locus, and per population, which can help identify samples, loci, or populations with high levels of missing data.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="3">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">GenotypeData</span></code> class will automatically create a plot showing the number of inidviduals present in each population, if a <code class="docutils literal notranslate"><span class="pre">popmapfile</span></code> is provided. For example:</p></li>
+</ol>
+<figure class="img-responsive align-default" id="id3">
+<img alt="Population Counts Bar Plot" src="_images/population_counts.png" />
+<figcaption>
+<p><span class="caption-text">Figure 3: Population Counts (left) and proportion (right) Bar Plots, with the median number of individuals per population indicated by the dashed horizontal lines. The plot shows the number of individuals present in each population, with the median number of individuals per population indicated by the dashed horizontal line.</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="filtering-genotype-data-with-nremover2">
+<h2>Filtering Genotype Data with NRemover2<a class="headerlink" href="#filtering-genotype-data-with-nremover2" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">NRemover2</span></code> class provides a variety of filtering methods to clean your genotype data. Here is an example of how to apply filters to remove samples and loci with too much missing data, monomorphic sites, singletons, minor allele count (MAC), minor allele frequency (MAF), and more:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply filters to remove samples and loci with too much missing data</span>
+<span class="n">gd_filt</span> <span class="o">=</span> <span class="n">nrm</span><span class="o">.</span><span class="n">filter_missing_sample</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_missing</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span> <span class="o">.</span><span class="n">filter_missing_pop</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_mac</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">filter_monomorphic</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">filter_singletons</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">filter_biallelic</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+<span class="c1"># Write the filtered VCF to a new file</span>
+<span class="n">gd_filt</span><span class="o">.</span><span class="n">write_vcf</span><span class="p">(</span><span class="s2">&quot;filtered_output.vcf&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="key-methods-in-nremover2">
+<h3>Key Methods in NRemover2:<a class="headerlink" href="#key-methods-in-nremover2" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>Function/Method</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">filter_missing_sample</span></code></p></td>
+<td><p>Filters samples with missing data above the
+threshold.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filter_missing</span></code></p></td>
+<td><p>Filters loci with missing data above the
+threshold.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">filter_missing_pop</span></code></p></td>
+<td><p>Filters loci where missing data for any
+population is above the threshold.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filter_mac</span></code></p></td>
+<td><p>Filters loci with a minor allele count below
+the threshold.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">filter_maf</span></code></p></td>
+<td><p>Filters loci with a minor allele frequency
+below the threshold.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filter_monomorphic</span></code></p></td>
+<td><p>Filters monomorphic loci (sites with only one
+allele).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">filter_singletons</span></code></p></td>
+<td><p>Filters singletons (sites with only one
+occurrence of an allele).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filter_biallelic</span></code></p></td>
+<td><p>Filters biallelic loci (sites with only two
+alleles).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">thin_loci</span></code></p></td>
+<td><p>Thins loci by removing loci within <code class="docutils literal notranslate"><span class="pre">size</span></code>
+bases of each other on the same locus or
+chromosome.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filter_linked</span></code></p></td>
+<td><p>Filters loci that are linked within a specified
+distance.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">random_subset_loci</span></code></p></td>
+<td><p>Randomly selects <code class="docutils literal notranslate"><span class="pre">size</span></code> number of loci from
+the input dataset.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">resolve</span></code></p></td>
+<td><p>Applies the filters and returns the filtered
+GenotypeData object.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You must call <code class="docutils literal notranslate"><span class="pre">resolve()</span></code> at the end of the filtering chain to apply the filters and return the filtered GenotypeData object. The <code class="docutils literal notranslate"><span class="pre">resolve()</span></code> method is required to finalize the filtering process and return the filtered dataset.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">exclude_heterozygous</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">filter_monomorphic</span></code>, <code class="docutils literal notranslate"><span class="pre">filter_singletons</span></code>, and <code class="docutils literal notranslate"><span class="pre">filter_biallelic</span></code> methods allows you to exclude heterozygous genotypes from the filtering process. By default, heterozygous genotypes are included in the filtering process.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">thin_loci</span></code> and <code class="docutils literal notranslate"><span class="pre">filter_linked</span></code> are only available for VCFReader and not for PhylipReader and StructureReader. These methods are used to thin loci by removing loci within a specified distance of each other on the same locus or chromosome, as defined in the VCF file. The <code class="docutils literal notranslate"><span class="pre">thin_loci</span></code> method removes loci within a specified distance of each other, while the <code class="docutils literal notranslate"><span class="pre">filter_linked</span></code> method filters loci that are linked within a specified distance.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">filter_linked(size)</span></code> method might yield a limited number of loci with unlinked SNP data. It is recommended to use this method with caution and check the output carefully.</p>
+</div>
+</section>
+<section id="additional-methods-in-nremover2">
+<h3>Additional Methods in NRemover2:<a class="headerlink" href="#additional-methods-in-nremover2" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">search_thresholds()</span></code> searches a range of filtering thresholds for all missing data, minor allele frequency (MAF), and minor allele count (MAC) filters. This method helps you find the optimal thresholds for your dataset. It will plot the threshold search results so you can visualize the impact of different thresholds on the dataset.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">search_thresholds()</span></code>, you can specify the thresholds to search for and the order in which to apply the filters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize NRemover2 with GenotypeData object</span>
+<span class="n">nrm</span> <span class="o">=</span> <span class="n">NRemover2</span><span class="p">(</span><span class="n">gd</span><span class="p">)</span>
+
+<span class="c1"># Specify filtering thresholds and order of filters</span>
+<span class="n">nrm</span><span class="o">.</span><span class="n">search_thresholds</span><span class="p">(</span><span class="n">thresholds</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">maf_thresholds</span><span class="o">=</span><span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">],</span> <span class="n">mac_thresholds</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">filter_order</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;filter_missing_sample&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_missing&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_missing_pop&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_mac&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_monomorphic&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_singletons&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_biallelic&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">search_thresholds()</span></code> method will search across thresholds for missing data, MAF, MAC, and the boolean filters based on the specified thresholds and filter order. It will plot the results so you can visualize the impact of different thresholds on the dataset.</p>
+<p>Below are example plots that are created when running the <code class="docutils literal notranslate"><span class="pre">search_thresholds()</span></code> method:</p>
+<figure class="img-responsive align-default" id="id4">
+<img alt="Boolean Filtering Results" src="_images/filtering_results_bool.png" />
+<figcaption>
+<p><span class="caption-text">Figure 4: Filtering Results for Boolean Filtering Methods (Singletons, Monomorphic Sites, and Biallelic Sites), where loci that are monomorphic, singletons, or non-biallelic are removed.</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="img-responsive align-default" id="id5">
+<img alt="Minor Allele Count Filtering Results" src="_images/filtering_results_mac.png" />
+<figcaption>
+<p><span class="caption-text">Figure 5: Filtering Results for Minor Allele Count (MAC), where loci with MAC below the threshold are removed.</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="img-responsive align-default" id="id6">
+<img alt="Minor Allele Frequency Filtering Results" src="_images/filtering_results_maf.png" />
+<figcaption>
+<p><span class="caption-text">Figure 6: Filtering Results for Minor Allele Frequency (MAF), where loci with MAF below the threshold are removed.</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="img-responsive align-default" id="id7">
+<img alt="Missing Data Filtering Results for Loci and Samples" src="_images/filtering_results_missing_loci_samples.png" />
+<figcaption>
+<p><span class="caption-text">Figure 7: Missing Data Filtering Results for Loci (columns) and Samples (rows), where any loci or samples with missing data exceeding the user-provided threshold are removed.</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="img-responsive align-default" id="id8">
+<img alt="Missing Data Filtering Results for Populations" src="_images/filtering_results_missing_population.png" />
+<figcaption>
+<p><span class="caption-text">Figure 8: Missing Data Filtering Results for Populations, where any loci with missing data above the threshold for any given population are removed.</span><a class="headerlink" href="#id8" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">search_thresholds()</span></code> method is incompatible with both <code class="docutils literal notranslate"><span class="pre">thin_loci(size)</span></code> and <code class="docutils literal notranslate"><span class="pre">filter_linked()</span></code> being in the filter_order list.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">search_thresholds()</span></code> method can be called either before or after any other filtering, but note that it will reset the filtering chain to the original state. If you call <code class="docutils literal notranslate"><span class="pre">search_thresholds()</span></code> after applying other filters, it will reset the filtering chain to the original state and apply the search across the specified thresholds.</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">plot_sankey_filtering_report()</span></code> generates a Sankey plot to visualize how SNPs are filtered at each step of the pipeline. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">NRemover2</span><span class="p">,</span> <span class="n">VCFReader</span>
+
+<span class="n">vcf</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span>
+<span class="n">popmap</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span>
+
+<span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">vcf</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmap</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">plot_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio_example&quot;</span><span class="p">)</span>
+
+<span class="c1"># Initialize NRemover2.</span>
+<span class="n">nrm</span> <span class="o">=</span> <span class="n">NRemover2</span><span class="p">(</span><span class="n">gd</span><span class="p">)</span>
+
+<span class="c1"># Apply filters to remove samples and loci.</span>
+<span class="n">gd_filt</span> <span class="o">=</span> <span class="n">nrm</span><span class="o">.</span><span class="n">filter_missing_sample</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_missing</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_missing_pop</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_mac</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">filter_monomorphic</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">filter_singletons</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">filter_biallelic</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+<span class="n">nrm</span><span class="o">.</span><span class="n">plot_sankey_filtering_report</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This will automatically track the number of loci at each filtering step and generate a Sankey plot to visualize the filtering process. The Sankey plot shows how many loci are removed at each step of the filtering process. For example:</p>
+<figure class="img-responsive align-default" id="id9">
+<img alt="Sankey Plot Depicting Loci Removed at Each Filtering Step" src="_images/nremover_sankey_plot.png" />
+<figcaption>
+<p><span class="caption-text">Figure 9: Sankey Plot Depicting Loci Retained and Removed at Each Filtering Step. The green bands represent the number of loci remaining after each filtering step, and the red bands represent the number of loci removed at each filtering step. The bands are proportional to the number of loci retained or removed at each step. The order of the filtering steps is dynamic based on the order of the filters applied in the filtering chain.</span><a class="headerlink" href="#id9" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">plot_sankey_filtering_report()</span></code> must be called after filtering and calling the <code class="docutils literal notranslate"><span class="pre">resolve()</span></code> method to generate the Sankey plot. It is also incompatible with <code class="docutils literal notranslate"><span class="pre">thin_loci()</span></code>, <code class="docutils literal notranslate"><span class="pre">filter_linked()</span></code>, and <code class="docutils literal notranslate"><span class="pre">random_subset_loci()</span></code> being in the filter_order list.</p>
+<p><code class="docutils literal notranslate"><span class="pre">plot_sankey_filtering_report()</span></code> also only plots loci removed at each filtering step and does not plot samples removed. It is designed to visualize the filtering process for loci only.</p>
+</div>
+</section>
+</section>
+<section id="genotypedata-properties">
+<h2>GenotypeData Properties<a class="headerlink" href="#genotypedata-properties" title="Link to this heading"></a></h2>
+<p>Once genotype data is loaded using any of the readers, you can access several useful properties from the <code class="docutils literal notranslate"><span class="pre">GenotypeData</span></code> object:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>Attribute</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_snps</span></code></p></td>
+<td><p>Number of SNPs or loci in the dataset.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">num_inds</span></code></p></td>
+<td><p>Number of individuals in the dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">populations</span></code></p></td>
+<td><p>List of populations in the dataset.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">popmap</span></code></p></td>
+<td><p>Mapping of SampleIDs to PopulationIDs.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">popmap_inverse</span></code></p></td>
+<td><p>Dictionary with population IDs as keys and lists of
+samples as values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">samples</span></code></p></td>
+<td><p>List of samples in the dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">snpsdict</span></code></p></td>
+<td><p>Dictionary with sampleIDs as keys and genotypes as
+values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">loci_indices</span></code></p></td>
+<td><p>Numpy array with boolean values indicating the loci
+that passed the filtering criteria set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sample_indices</span></code></p></td>
+<td><p>Numpy array with boolean values indicating the
+samples that passed the filtering criteria set to
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">snp_data</span></code></p></td>
+<td><p>2D numpy array of SNP data of shape (num_inds,
+num_snps).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ref</span></code></p></td>
+<td><p>List of reference alleles for each locus.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alt</span></code></p></td>
+<td><p>List of alternate alleles for each locus.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">inputs</span></code></p></td>
+<td><p>Dictionary of input parameters used to load the
+genotype data.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="genotype-encoding-with-genotypeencoder">
+<h2>Genotype Encoding with GenotypeEncoder<a class="headerlink" href="#genotype-encoding-with-genotypeencoder" title="Link to this heading"></a></h2>
+<p>SNPio also includes the GenotypeEncoder class for encoding genotype data into formats useful for downstream analysis and commonly used for machine and deep learning tasks.</p>
+<p>The GenotypeEncoder class provides three encoding properties:</p>
+<p><code class="docutils literal notranslate"><span class="pre">genotypes_onehot</span></code>: Encodes genotype data into one-hot encoding, where each possible biallelic IUPAC genotype is represented by a one-hot vector. Heterozygotes are represented as multi-label vectors as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">onehot_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">genotypes_int</span></code>: Encodes genotype data into integer encoding, where each possible biallelic IUPAC genotype is represented by an integer as follows: as follows: <code class="docutils literal notranslate"><span class="pre">A=0,</span> <span class="pre">T=1,</span> <span class="pre">G=2,</span> <span class="pre">C=3,</span> <span class="pre">W=4,</span> <span class="pre">R=5,</span> <span class="pre">M=6,</span> <span class="pre">K=7,</span> <span class="pre">Y=8,</span> <span class="pre">S=9,</span> <span class="pre">N=-9</span></code>. Missing values are represented as -9.</p>
+<p><code class="docutils literal notranslate"><span class="pre">genotypes_012</span></code>: Encodes genotype data into 0-1-2 encoding, where 0 represents the homozygous reference genotype, 1 represents the heterozygous genotype, and 2 represents the homozygous alternate genotype. Missing values are represented as -9.</p>
+<p>Example Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">VCFReader</span><span class="p">,</span> <span class="n">GenotypeEncoder</span>
+
+<span class="n">vcf</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span>
+<span class="n">popmap</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span>
+
+<span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">vcf</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmap</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">plot_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio_example&quot;</span><span class="p">)</span>
+
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">GenotypeEncoder</span><span class="p">(</span><span class="n">gd</span><span class="p">)</span>
+
+<span class="c1"># Convert genotype data to one-hot encoding</span>
+<span class="n">gt_ohe</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">genotypes_onehot</span>
+
+<span class="c1"># Convert genotype data to integer encoding</span>
+<span class="n">gt_int</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">genotypes_int</span>
+
+<span class="c1"># Convert genotype data to 0-1-2 encoding.</span>
+<span class="n">gt_012</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">genotypes_012</span>
+</pre></div>
+</div>
+<p>The GenotypeEncoder allows you to seamlessly convert genotype data into formats often used by machine and deep learning workflows.</p>
+<p>You can also inversely convert the encoded data back to the original genotypes by just setting the GenotypeEncoder properties to a new value. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert one-hot encoded data back to genotypes</span>
+<span class="n">encoder</span><span class="o">.</span><span class="n">genotypes_onehot</span> <span class="o">=</span> <span class="n">gt_ohe</span>
+
+<span class="c1"># Convert integer encoded data back to genotypes</span>
+<span class="n">encoder</span><span class="o">.</span><span class="n">genotypes_int</span> <span class="o">=</span> <span class="n">gt_int</span>
+
+<span class="c1"># Convert 0-1-2 encoded data back to genotypes</span>
+<span class="n">encoder</span><span class="o">.</span><span class="n">genotypes_012</span> <span class="o">=</span> <span class="n">gt_012</span>
+</pre></div>
+</div>
+<p>This will automatically update the original genotype data in the GenotypeData object and convert it to the original format stored in the <code class="docutils literal notranslate"><span class="pre">snp_data</span></code> property of the GenotypeData object.</p>
+</section>
+<section id="population-genetics-analysis-with-popgenstatistics">
+<h2>Population Genetics Analysis with PopGenStatistics<a class="headerlink" href="#population-genetics-analysis-with-popgenstatistics" title="Link to this heading"></a></h2>
+<p>The <cite>PopGenStatistics</cite> class is designed to perform a suite of population genetic analyses on SNP datasets. It supports calculations such as D-statistics, Fst outliers, heterozygosity, nucleotide diversity, and Analysis of Molecular Variance (AMOVA). These analyses facilitate understanding of the genetic structure, diversity, and differentiation within and between populations.</p>
+<p>The <cite>PopGenStatistics</cite> class provides several methods for calculating population genetic statistics and performing analyses on genotype data:</p>
+<table class="responsive-table docutils align-default" id="id10">
+<caption><span class="caption-text">PopGenStatistics Core Methods</span><a class="headerlink" href="#id10" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Class Method</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Supported Algorithm(s)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">calculate_d_statistics</span></code></p></td>
+<td><p>Calculates D-statistics and saves them as CSV.</p></td>
+<td><p>Patterson’s, partitioned, and D-foil D-statistics.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">detect_fst_outliers</span></code></p></td>
+<td><p>Identifies Fst outliers. Supports one-tailed &amp; two-tailed P-values.</p></td>
+<td><p>DBSCAN clustering, Traditional bootstrapping.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">summary_statistics</span></code></p></td>
+<td><p>Calculates several population genetic summary statistics.</p></td>
+<td><p>Observed heterozygosity (Ho), Expected heterozygosity (He), Nucleotide diversity (Pi), Weir and Cockerham’s Fst.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">amova</span></code></p></td>
+<td><p>Conducts AMOVA with bootstrapping and parallel computation.</p></td>
+<td><p>Hierarchical AMOVA, variance components, Phi statistics.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">neis_genetic_distance</span></code></p></td>
+<td><p>Computes Nei’s genetic distance between population pairs.</p></td>
+<td><p>Nei’s genetic distance.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Here is an example of how to use the <cite>PopGenStatistics</cite> class to perform population genetic analyses:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">VCFReader</span><span class="p">,</span> <span class="n">PopGenStatistics</span>
+
+<span class="n">vcf</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span>
+<span class="n">popmap</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span>
+
+<span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">vcf</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmap</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">plot_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio_example&quot;</span><span class="p">)</span>
+
+<span class="n">pgs</span> <span class="o">=</span> <span class="n">PopGenStatistics</span><span class="p">(</span><span class="n">gd</span><span class="p">)</span>
+
+<span class="c1"># Calculate summary statistics.</span>
+<span class="n">summary_stats</span> <span class="o">=</span> <span class="n">pgs</span><span class="o">.</span><span class="n">summary_statistics</span><span class="p">(</span><span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">save_plots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Calculate D-statistics.</span>
+<span class="n">dstats_df</span><span class="p">,</span> <span class="n">overall_results</span> <span class="o">=</span> <span class="n">pgs</span><span class="o">.</span><span class="n">calculate_d_statistics</span><span class="p">(</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;patterson&quot;</span><span class="p">,</span>
+    <span class="n">population1</span><span class="o">=</span><span class="s2">&quot;EA&quot;</span><span class="p">,</span>
+    <span class="n">population2</span><span class="o">=</span><span class="s2">&quot;GU&quot;</span><span class="p">,</span>
+    <span class="n">population3</span><span class="o">=</span><span class="s2">&quot;TT&quot;</span><span class="p">,</span>
+    <span class="n">outgroup</span><span class="o">=</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span>
+    <span class="n">num_bootstraps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">max_individuals_per_pop</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># NOTE: Takes a while to run.</span>
+<span class="n">amova_results</span> <span class="o">=</span> <span class="n">pgs</span><span class="o">.</span><span class="n">amova</span><span class="p">(</span>
+    <span class="n">regionmap</span><span class="o">=</span><span class="p">{</span>
+      <span class="s2">&quot;EA&quot;</span><span class="p">:</span> <span class="s2">&quot;Eastern&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;GU&quot;</span><span class="p">:</span> <span class="s2">&quot;Eastern&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;TT&quot;</span><span class="p">:</span> <span class="s2">&quot;Eastern&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;TC&quot;</span><span class="p">:</span> <span class="s2">&quot;Eastern&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;DS&quot;</span><span class="p">:</span> <span class="s2">&quot;Ornate&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">nei_dist_df</span><span class="p">,</span> <span class="n">nei_pvals_df</span> <span class="o">=</span> <span class="n">pgs</span><span class="o">.</span><span class="n">neis_genetic_distance</span><span class="p">(</span><span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="n">summary_stats</span> <span class="o">=</span> <span class="n">pgs</span><span class="o">.</span><span class="n">summary_statistics</span><span class="p">(</span><span class="n">save_plots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">df_fst_outliers_boot</span><span class="p">,</span> <span class="n">df_fst_outlier_pvalues_boot</span> <span class="o">=</span> <span class="n">pgs</span><span class="o">.</span><span class="n">detect_fst_outliers</span><span class="p">(</span>
+    <span class="n">correction_method</span><span class="o">=</span><span class="s2">&quot;bonf&quot;</span><span class="p">,</span>
+    <span class="n">use_bootstrap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">tail_direction</span><span class="o">=</span><span class="s2">&quot;upper&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">df_fst_outliers_dbscan</span><span class="p">,</span> <span class="n">df_fst_outlier_pvalues_dbscan</span> <span class="o">=</span> <span class="n">pgs</span><span class="o">.</span><span class="n">detect_fst_outliers</span><span class="p">(</span>
+    <span class="n">correction_method</span><span class="o">=</span><span class="s2">&quot;bonf&quot;</span><span class="p">,</span> <span class="n">use_bootstrap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>PopGenStatistics</cite> class provides a comprehensive suite of methods for calculating population genetic statistics and performing analyses on genotype data. These methods can help you understand the genetic structure, diversity, and differentiation within and between populations, and identify outliers and patterns in the data.</p>
+<p>Below is an example of the output from the <cite>neis_genetic_distance</cite> method:</p>
+<figure class="img-responsive align-default" id="id11">
+<img alt="Nei's Genetic Distance Matrix" src="_images/nei%27s_genetic_distance.png" />
+<figcaption>
+<p><span class="caption-text">Figure 10: Nei’s Genetic Distance Matrix, with the genetic distance between population pairs indicated by the heatmap. The plot shows the genetic distance between population pairs, with the genetic distance values indicated by the heatmap colors.</span><a class="headerlink" href="#id11" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The summary statistics method generates a summary report with observed heterozygosity (Ho), expected heterozygosity (He), nucleotide diversity (Pi), and Weir and Cockerham’s Fst values for each population. The report includes plots of the summary statistics for each population, which can help you visualize the genetic diversity and differentiation within and between populations. Below is an example figure generated by the <cite>summary_statistics</cite> method:</p>
+<figure class="img-responsive align-default" id="id12">
+<img alt="Summary Statistics Report with Observed Heterozygosity, Expected Heterozygosity, and Nucleotide Diversity, per-locus and for the overall means." src="_images/summary_statistics.png" />
+<figcaption>
+<p><span class="caption-text">Figure 11: Summary Statistics Report, with observed heterozygosity (Ho), expected heterozygosity (He), and nucleotide diversity (Pi) plotted per-locus (left panel) and with the overal means (right panel). The plot shows the genetic diversity and differentiation within and between populations, with the summary statistics values indicated by the line and bar plots.</span><a class="headerlink" href="#id12" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The D-statistics method calculates Patterson’s D-statistics, partitioned D-statistics, and D-foil D-statistics for the specified population groups. The method returns a DataFrame with the D-statistics values and overall results for the analysis. Below are three example visualizations made by the <cite>calculate_d_statistics</cite> method:</p>
+<figure class="img-responsive align-default" id="id13">
+<img alt="D-statistics Distribution Histogram Plot" src="_images/d_statistics_distribution.png" />
+<figcaption>
+<p><span class="caption-text">Figure 12: D-statistics Distribution Histogram Plot, with the overall distribution of D-statistic values visualized and with the mean indicated by the vertical line.</span><a class="headerlink" href="#id13" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="img-responsive align-default" id="id14">
+<img alt="D-statistics Significance Counts Bar Plot" src="_images/d_statistics_significance_counts.png" />
+<figcaption>
+<p><span class="caption-text">Figure 13: D-statistics Significance Counts Bar Plot, with the number of significant and non-significant D-statistics values indicated for each multiple comparison test correction method (None, Bonferroni, FDR).</span><a class="headerlink" href="#id14" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Below is an example of the plot made by the <cite>detect_fst_outliers</cite> method:</p>
+<figure class="img-responsive align-default" id="id15">
+<img alt="Fst Outlier SNPs Heatmap" src="_images/outlier_snps_heatmap.png" />
+<figcaption>
+<p><span class="caption-text">Figure 14: Fst Outlier SNPs Heatmap, with the Fst values for each SNP visualized as a heatmap. The plot shows the Fst values for each SNP, with the Fst values indicated by the heatmap colors.</span><a class="headerlink" href="#id15" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Finally, below is a plot depicting the results of the per-population pairwise Fst analysis:</p>
+<figure class="img-responsive align-default" id="id16">
+<img alt="Pairwise Fst Heatmap" src="_images/fst_between_populations_heatmap.png" />
+<figcaption>
+<p><span class="caption-text">Figure 15: Pairwise Fst Heatmap, with the pairwise Fst values between populations visualized as a heatmap. The plot shows the pairwise Fst values between populations, with the Fst values indicated by the heatmap colors.</span><a class="headerlink" href="#id16" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="loading-and-parsing-phylogenetic-treeparser">
+<h2>Loading and Parsing Phylogenetic TreeParser<a class="headerlink" href="#loading-and-parsing-phylogenetic-treeparser" title="Link to this heading"></a></h2>
+<p>SNPio also provides a <code class="docutils literal notranslate"><span class="pre">TreeParser</span></code> class to load and parse phylogenetic trees in Newick and NEXUS formats. The <code class="docutils literal notranslate"><span class="pre">TreeParser</span></code> class can read and parse tree files, modify tree structures, draw trees, and save trees in different formats. You can use the <code class="docutils literal notranslate"><span class="pre">TreeParser</span></code> class to analyze and visualize phylogenetic trees and extract relevant information for downstream analysis.</p>
+<p>Here are some examples of how to load and parse a phylogenetic tree using the <code class="docutils literal notranslate"><span class="pre">TreeParser</span></code> class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">TreeParser</span><span class="p">,</span> <span class="n">VCFReader</span>
+
+<span class="n">vcf</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span>
+<span class="n">popmap</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span>
+
+<span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">vcf</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmap</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">plot_fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">plot_dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">despine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;snpio_example&quot;</span><span class="p">)</span>
+
+<span class="c1"># Load a phylogenetic tree from a Newick file</span>
+<span class="n">tp</span> <span class="o">=</span> <span class="n">TreeParser</span><span class="p">(</span><span class="n">genotype_data</span><span class="o">=</span><span class="n">gd</span><span class="p">,</span> <span class="n">treefile</span><span class="o">=</span><span class="s2">&quot;snpio/example_data/trees/test.tre&quot;</span><span class="p">,</span> <span class="n">siterates</span><span class="o">=</span><span class="s2">&quot;snpio/example_data/trees/test14K.rates&quot;</span><span class="p">,</span> <span class="n">qmatrix</span><span class="o">=</span><span class="s2">&quot;snpio/example_data/trees/test.iqtree&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">tree</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">read_tree</span><span class="p">()</span>
+
+<span class="n">tree</span><span class="o">.</span><span class="n">draw</span><span class="p">();</span> <span class="c1"># Draw the tree</span>
+
+<span class="c1"># Save the tree in Newick format</span>
+<span class="n">tp</span><span class="o">.</span><span class="n">write_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;snpio/example_data/trees/test_newick.tre&quot;</span><span class="p">)</span>
+
+<span class="c1"># Save the tree in NEXUS format</span>
+<span class="n">tp</span><span class="o">.</span><span class="n">write_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;snpio/example_data/trees/test_nexus.nex&quot;</span><span class="p">,</span> <span class="n">nexus</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Returns the tree in Newick format as a string</span>
+<span class="n">tp</span><span class="o">.</span><span class="n">write_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># Get the tree stats. Returns a dictionary of tree stats.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">tree_stats</span><span class="p">())</span>
+
+<span class="c1"># Reroot the tree at any nodes containing the string &#39;EA&#39; in the sampleID.</span>
+<span class="c1"># Use the &#39;~&#39; character to specify a regular expression pattern to match.</span>
+<span class="n">tp</span><span class="o">.</span><span class="n">reroot_tree</span><span class="p">(</span><span class="s2">&quot;~EA&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get a distance matrix between all nodes in the tree.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">get_distance_matrix</span><span class="p">())</span>
+
+<span class="c1"># Get the Rate Matrix Q from the Qmatrix file.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">qmat</span><span class="p">)</span>
+
+<span class="c1"># Get the Site Rates from the Site Rates file.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">site_rates</span><span class="p">)</span>
+
+<span class="c1"># Get a subtree with only the samples containing &#39;EA&#39; in the sampleID.</span>
+<span class="c1"># Use the &#39;~&#39; character to specify a regular expression pattern to select all</span>
+<span class="c1"># tips containing the pattern.</span>
+<span class="n">subtree</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">get_subtree</span><span class="p">(</span><span class="s2">&quot;~EA&quot;</span><span class="p">)</span>
+
+<span class="c1"># Prune the tree to remove samples containing &#39;ON&#39; in the sampleID.</span>
+<span class="n">pruned_tree</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">prune_tree</span><span class="p">(</span><span class="s2">&quot;~ON&quot;</span><span class="p">)</span>
+
+<span class="c1"># Write the subtree and pruned tree. Returns a Newick string if &#39;save_path&#39;</span>
+<span class="c1"># is None. Otherwise saves it to &#39;save_path&#39;.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">write_tree</span><span class="p">(</span><span class="n">subtree</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">write_tree</span><span class="p">(</span><span class="n">pruned_tree</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">TreeParser</span></code> class provides several methods for working with phylogenetic trees, including reading, writing, and modifying trees. You can use these methods to analyze and manipulate phylogenetic trees for your research and analysis tasks.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">TreeParser</span></code> class also provides methods for calculating tree statistics, rerooting trees, getting distance matrices, and extracting subtrees based on sample IDs. These methods can help you analyze and visualize phylogenetic trees and extract relevant information for downstream analysis.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Rate</span> <span class="pre">matrix</span> <span class="pre">Q</span></code> and <code class="docutils literal notranslate"><span class="pre">Site</span> <span class="pre">Rates</span></code> can be accessed from the Qmatrix and Site Rates files, respectively. These matrices can be used to calculate evolutionary distances and rates between samples in the phylogenetic tree. The <code class="docutils literal notranslate"><span class="pre">siterates</span></code> file can be output by IQ-TREE or specified as a one-column file with the rates for each site in the alignment (header optional). The <code class="docutils literal notranslate"><span class="pre">qmatrix</span></code> file can be obtained from the IQ-TREE standard output (‘.iqtree’ file) or from a stand-alone Qmatrix file with the rate matrix Q. In the latter case, the file should be a tab-delimited or comma-delimited file with the rate matrix Q with substitution rates in the order: “A, “C”, “G”, “T”. A header line is optional.</p>
+<p>The rate matrix and site rates objects can be accessed by their corresponding properties:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tp.qmat</span></code>: Rate matrix Q.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tp.site_rates</span></code>: Site rates.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">TreeParser</span></code> class is designed to simplify the process of working with phylogenetic trees and extracting relevant information for downstream analysis. You can use the <code class="docutils literal notranslate"><span class="pre">TreeParser</span></code> class to load, parse, and manipulate phylogenetic trees in Newick and NEXUS formats, and extract tree statistics, distance matrices, and subtrees based on sample IDs. For more information on the <code class="docutils literal notranslate"><span class="pre">TreeParser</span></code> class and its methods, please refer to the API documentation.</p>
+</section>
+<section id="benchmarking-the-performance">
+<h2>Benchmarking the Performance<a class="headerlink" href="#benchmarking-the-performance" title="Link to this heading"></a></h2>
+<p>You can benchmark the filtering performance using the Benchmark class to visualize how thresholds affect the dataset, if you have installed the snpio dev requirements:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>snpio<span class="o">[</span>dev<span class="o">]</span>
+</pre></div>
+</div>
+<p>Then, you can use the Benchmark class to plot performance metrics for your filtered genotype data after the <code class="docutils literal notranslate"><span class="pre">resolve()</span></code> method is called. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">snpio.utils.benchmarking</span> <span class="kn">import</span> <span class="n">Benchmark</span>
+
+<span class="n">Benchmark</span><span class="o">.</span><span class="n">plot_performance</span><span class="p">(</span><span class="n">nrm</span><span class="o">.</span><span class="n">genotype_data</span><span class="p">,</span> <span class="n">nrm</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">resource_data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function will plot performance metrics for your filtered genotype data and for the <code class="docutils literal notranslate"><span class="pre">VCFReader</span></code> class, giving insights into data quality changes.</p>
+<p>The Benchmark class is designed to help you evaluate the performance of your filtering process and visualize the impact of different thresholds on the dataset. For more information on the Benchmark class and how to use it, see the API documentation.</p>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
+<p>This guide provides an overview of how to get started with the SNPio library. It covers the basic steps to read, manipulate, and analyze genotype data using the VCFReader, PhylipReader, StructureReader, and NRemover2 classes. SNPio is designed to simplify the process of handling genotype data and preparing it for downstream analysis, such as population genetics, phylogenetics, and machine learning. The library supports various file formats, including VCF, PHYLIP, and STRUCTURE, and provides tools for filtering, encoding, and visualizing genotype data. This guide will help you get up and running with SNPio quickly and efficiently.</p>
+<p>For more information on the SNPio library, please refer to this API documentation and examples provided in the repository. If you have any questions or feedback, please feel free to reach out to the developers. We hope you find SNPio useful for your bioinformatic analyses!</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The SNPio library is under active development, and we welcome contributions from the community. If you would like to contribute to the project, please check the GitHub repository for open issues and submit a pull request. We appreciate your support and feedback!</p>
+</div>
+<p>If you encounter any issues or have any questions about the SNPio library, please feel free to reach out to the developers or open an issue on the GitHub repository. We are here to help and improve the library based on your feedback.</p>
+<p>The SNPio library is licensed under the GPL3 License, and we encourage you to use it for your research and analysis tasks. If you find the library useful, please cite it in your publications. We appreciate your support and feedback! We hope you find SNPio useful for your research and analysis tasks! Thank you for using SNPio!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to SNPio’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="example_script.html" class="btn btn-neutral float-right" title="Example script" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

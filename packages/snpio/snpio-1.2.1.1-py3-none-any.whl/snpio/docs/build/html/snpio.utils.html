@@ -1,0 +1,902 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.utils package &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=859da57e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=ca842793"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="snpio.popgenstats package" href="snpio.popgenstats.html" />
+    <link rel="prev" title="snpio.read_input package" href="snpio.read_input.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SNPio
+              <img src="_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">snpio</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="snpio.html">snpio package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="snpio.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="snpio.filtering.html">snpio.filtering package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.plotting.html">snpio.plotting package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.io.html">snpio.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.analysis.html">snpio.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.read_input.html">snpio.read_input package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">snpio.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.popgenstats.html">snpio.popgenstats package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="snpio.html#module-snpio">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">snpio</a></li>
+          <li class="breadcrumb-item"><a href="snpio.html">snpio package</a></li>
+      <li class="breadcrumb-item active">snpio.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/btmartin721/SNPio/blob/master/docs/source/snpio.utils.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="snpio-utils-package">
+<h1>snpio.utils package<a class="headerlink" href="#snpio-utils-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="snpio-utils-misc-module">
+<h2>snpio.utils.misc module<a class="headerlink" href="#snpio-utils-misc-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.misc.</span></span><span class="sig-name descname"><span class="pre">IUPAC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multilab_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/misc.html#IUPAC"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to store IUPAC ambiguity data and provide helper functions.</p>
+<p>This class stores IUPAC ambiguity data and provides helper functions to convert between genotype and IUPAC ambiguity codes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">gt2iupac</span></span></dt>
+<dd><p>A dictionary of genotype to IUPAC ambiguity codes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">iupac2gt</span></span></dt>
+<dd><p>A dictionary of IUPAC ambiguity codes to genotype.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">int_iupac_dict</span></span></dt>
+<dd><p>A dictionary of IUPAC ambiguity codes to integers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">onehot_dict</span></span></dt>
+<dd><p>A dictionary of IUPAC ambiguity codes to one-hot encoded vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, List[float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">ambiguous_dna_values</span></span></dt>
+<dd><p>A dictionary of IUPAC ambiguity values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">multilab_value</span></span></dt>
+<dd><p>The value to use for multilabel data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">logger</span></span></dt>
+<dd><p>A logger object for logging messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[logging.Logger]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iupac_data</span> <span class="o">=</span> <span class="n">IUPAC</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">iupac_data</span><span class="o">.</span><span class="n">gt2iupac</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Outputs: {&#39;1/1&#39;: &#39;A&#39;, &#39;2/2&#39;: &#39;C&#39;, &#39;3/3&#39;: &#39;G&#39;, &#39;4/4&#39;: &#39;T&#39;, &#39;1/2&#39;: &#39;M&#39;, &#39;1/3&#39;: &#39;R&#39;, &#39;1/4&#39;: &#39;W&#39;, &#39;2/3&#39;: &#39;S&#39;, &#39;2/4&#39;: &#39;Y&#39;, &#39;3/4&#39;: &#39;K&#39;, &#39;-9/-9&#39;: &#39;N&#39;, &#39;-1/-1&#39;: &#39;N&#39;}</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_gt2iupac</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/misc.html#IUPAC.get_gt2iupac"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a dictionary of genotype to IUPAC ambiguity codes.”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of genotype to IUPAC ambiguity codes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_int_iupac_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/misc.html#IUPAC.get_int_iupac_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a dictionary of IUPAC ambiguity codes to integers.</p>
+<p>This dictionary is used to convert IUPAC ambiguity codes to integers. It differs from the <cite>get_iupac_int_map</cite> function in that it only includes the main IUPAC codes and not the extended codes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of IUPAC ambiguity codes to integers.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, int]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iupac_data</span> <span class="o">=</span> <span class="n">IUPAC</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">iupac_data</span><span class="o">.</span><span class="n">int_iupac_dict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Outputs: {&#39;A&#39;: 0, &#39;T&#39;: 1, &#39;G&#39;: 2, &#39;C&#39;: 3, &#39;W&#39;: 4, &#39;R&#39;: 5, &#39;M&#39;: 6, &#39;K&#39;: 7, &#39;Y&#39;: 8, &#39;S&#39;: 9, &#39;N&#39;: -9}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_iupac2gt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/misc.html#IUPAC.get_iupac2gt"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a dictionary of IUPAC ambiguity codes to genotype.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of IUPAC ambiguity codes to genotype.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_iupac_ambiguous</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/misc.html#IUPAC.get_iupac_ambiguous"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a dictionary of IUPAC ambiguity values.</p>
+<p>This dictionary contains the IUPAC ambiguity values for DNA sequences. The keys are the IUPAC ambiguity codes and the values are the corresponding DNA bases or ambiguity codes as strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of IUPAC ambiguity values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, str]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iupac_data</span> <span class="o">=</span> <span class="n">IUPAC</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">iupac_data</span><span class="o">.</span><span class="n">ambiguous_dna_values</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Outputs: {&#39;A&#39;: &#39;A&#39;, &#39;C&#39;: &#39;C&#39;, &#39;G&#39;: &#39;G&#39;, &#39;T&#39;: &#39;T&#39;, &#39;M&#39;: &#39;AC&#39;, &#39;R&#39;: &#39;AG&#39;, &#39;W&#39;: &#39;AT&#39;, &#39;S&#39;: &#39;CG&#39;, &#39;Y&#39;: &#39;CT&#39;, &#39;K&#39;: &#39;GT&#39;, &#39;V&#39;: &#39;ACG&#39;, &#39;H&#39;: &#39;ACT&#39;, &#39;D&#39;: &#39;AGT&#39;, &#39;B&#39;: &#39;CGT&#39;, &#39;X&#39;: &#39;GATC&#39;, &#39;N&#39;: &#39;GATC&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_iupac_int_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/misc.html#IUPAC.get_iupac_int_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a dictionary of IUPAC ambiguity codes to integers.</p>
+<p>This method returns a dictionary of IUPAC ambiguity codes to integers. The keys are the IUPAC ambiguity codes and the values are the corresponding integers. The integer values are used to encode the IUPAC ambiguity codes. The integer values are assigned as follows: A=1, C=2, G=3, T=4, R=5, Y=6, S=7, W=8, K=9, M=10, B=11, D=12, H=13, V=14, N=15, -=16, ?=16, .=16.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of IUPAC ambiguity codes to integers.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, int]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iupac_data</span> <span class="o">=</span> <span class="n">IUPAC</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">iupac_data</span><span class="o">.</span><span class="n">get_iupac_int_map</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Outputs: {&#39;A&#39;: 1, &#39;C&#39;: 2, &#39;G&#39;: 3, &#39;T&#39;: 4, &#39;R&#39;: 5, &#39;Y&#39;: 6, &#39;S&#39;: 7, &#39;W&#39;: 8, &#39;K&#39;: 9, &#39;M&#39;: 10, &#39;B&#39;: 11, &#39;D&#39;: 12, &#39;H&#39;: 13, &#39;V&#39;: 14, &#39;N&#39;: 15, &#39;-&#39;: 16, &#39;?&#39;: 16, &#39;.&#39;: 16}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_onehot_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/misc.html#IUPAC.get_onehot_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a dictionary of IUPAC ambiguity codes to one-hot encoded vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of IUPAC ambiguity codes to one-hot encoded vectors</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, List[float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">snpio.utils.misc.</span></span><span class="sig-name descname"><span class="pre">validate_input_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'array'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/misc.html#validate_input_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Validates the input type and returns it as a specified type.</p>
+<p>This function checks if the input <cite>X</cite> is a pandas DataFrame, numpy array, or a list of lists. It then converts <cite>X</cite> to the specified <cite>return_type</cite> and returns it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>pandas.DataFrame</em><em>, </em><em>numpy.ndarray</em><em>, or </em><em>List</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em>) – The input data to validate and convert.</p></li>
+<li><p><strong>return_type</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of the returned object. Supported options include: “df” (DataFrame), “array” (numpy array), and “list”. Defaults to “array”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input data converted to the desired return type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame, numpy.ndarray, or List[List[int]]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <cite>X</cite> is not of type pandas.DataFrame, numpy.ndarray, or List[List[int]].</p></li>
+<li><p><strong>ValueError</strong> – If an unsupported <cite>return_type</cite> is provided. Supported types are “df”, “array”, and “list”.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">validate_input_type</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="s2">&quot;df&quot;</span><span class="p">))</span>  <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Outputs: a DataFrame with the data from `X`.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="snpio-utils-sequence-tools-module">
+<h2>snpio.utils.sequence_tools module<a class="headerlink" href="#snpio-utils-sequence-tools-module" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">snpio.utils.sequence_tools.</span></span><span class="sig-name descname"><span class="pre">count_alleles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vcf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/sequence_tools.html#count_alleles"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Counts the total number of unique alleles in a list of genotypes.</p>
+<p>This function takes a list of IUPAC or VCF-style (e.g. 0/1) genotypes and returns the total number of unique alleles. The genotypes can be in VCF or STRUCTURE-style format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of IUPAC or VCF-style genotypes.</p></li>
+<li><p><strong>vcf</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the genotypes are in VCF format. If False, the genotypes are in STRUCTURE-style format. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The total number of unique alleles in the list.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A/A&#39;</span><span class="p">,</span> <span class="s1">&#39;A/T&#39;</span><span class="p">,</span> <span class="s1">&#39;T/T&#39;</span><span class="p">,</span> <span class="s1">&#39;A/A&#39;</span><span class="p">,</span> <span class="s1">&#39;A/T&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">count_alleles</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">vcf</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Outputs: 2</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function removes any instances of “-9”, “-”, “N”, -9, “.”, “?” before counting the alleles.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">snpio.utils.sequence_tools.</span></span><span class="sig-name descname"><span class="pre">get_iupac_caseless</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/sequence_tools.html#get_iupac_caseless"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Split IUPAC code to two primary characters, assuming diploidy.</p>
+<p>Gives all non-valid ambiguities as N.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>char</strong> (<em>str</em>) – Base to expand into diploid list.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of the two expanded alleles.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">snpio.utils.sequence_tools.</span></span><span class="sig-name descname"><span class="pre">get_major_allele</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vcf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/sequence_tools.html#get_major_allele"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns the most common alleles in a list.</p>
+<p>This function takes a list of genotypes for one sample and returns the most common alleles in descending order. The alleles can be in VCF or STRUCTURE-style format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of genotypes for one sample.</p></li>
+<li><p><strong>num</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of elements to return. If None, all elements are returned. Defaults to None.</p></li>
+<li><p><strong>vcf</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the alleles are in VCF format. If False, the alleles are in STRUCTURE-style format. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The most common alleles in descending order.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A/A&#39;</span><span class="p">,</span> <span class="s1">&#39;A/T&#39;</span><span class="p">,</span> <span class="s1">&#39;T/T&#39;</span><span class="p">,</span> <span class="s1">&#39;A/A&#39;</span><span class="p">,</span> <span class="s1">&#39;A/T&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">get_major_allele</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">vcf</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>  <span class="c1"># Outputs: [&#39;A&#39;, &#39;T&#39;]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function uses the Counter class from the collections module to count the occurrences of each allele.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">snpio.utils.sequence_tools.</span></span><span class="sig-name descname"><span class="pre">get_revComp_caseless</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/sequence_tools.html#get_revComp_caseless"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns the reverse complement of a nucleotide, while preserving case.</p>
+<p>This function takes a nucleotide character and returns its reverse complement according to the standard DNA base pairing rules. It also handles IUPAC ambiguity codes. The case of the input character is preserved in the output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>char</strong> (<em>str</em>) – The nucleotide character to be reverse complemented. Can be uppercase or lowercase.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The reverse complement of the input character, with the same case.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">char</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">get_revComp_caseless</span><span class="p">(</span><span class="n">char</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Outputs: &#39;t&#39;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The function supports the following IUPAC ambiguity codes: R (A/G), Y (C/T), S (G/C), W (A/T), K (G/T), M (A/C), B (C/G/T), D (A/G/T), H (A/C/T), V (A/C/G). It also supports N (any base) and - (gap).</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">snpio.utils.sequence_tools.</span></span><span class="sig-name descname"><span class="pre">remove_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bad_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/sequence_tools.html#remove_items"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Removes items from a list based on another list.</p>
+<p>This function takes a list and removes any items that are present in a second list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_list</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – The list from which items are to be removed.</p></li>
+<li><p><strong>bad_list</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – The list containing items to be removed from the first list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The first list with any items present in the second list removed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Any]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">all_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bad_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">remove_items</span><span class="p">(</span><span class="n">all_list</span><span class="p">,</span> <span class="n">bad_list</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Outputs: [&#39;a&#39;, &#39;c&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">snpio.utils.sequence_tools.</span></span><span class="sig-name descname"><span class="pre">seqCounter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/sequence_tools.html#seqCounter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns a dictionary of character counts in a DNA sequence.</p>
+<p>This function takes a DNA sequence and returns a dictionary where the keys are nucleotide characters and the values are their counts in the sequence. It also handles IUPAC ambiguity codes. The function is case-sensitive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seq</strong> (<em>str</em>) – The DNA sequence to be counted.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary where the keys are nucleotide characters and the values are their counts in the sequence. The dictionary also includes a ‘VAR’ key, which is the sum of the counts of all IUPAC ambiguity codes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, int]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">seq</span> <span class="o">=</span> <span class="s1">&#39;ATGCRYSWKMBDHVN&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">seqCounter</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+<span class="go">{&#39;A&#39;: 1, &#39;N&#39;: 1, &#39;-&#39;: 0, &#39;C&#39;: 1, &#39;G&#39;: 1, &#39;T&#39;: 1, &#39;R&#39;: 1, &#39;Y&#39;: 1, &#39;S&#39;: 1, &#39;W&#39;: 1, &#39;K&#39;: 1, &#39;M&#39;: 1, &#39;B&#39;: 1, &#39;D&#39;: 1, &#39;H&#39;: 1, &#39;V&#39;: 1, &#39;VAR&#39;: 10}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function supports the following IUPAC ambiguity codes: R (A/G), Y (C/T), S (G/C), W (A/T), K (G/T), M (A/C), B (C/G/T), D (A/G/T), H (A/C/T), V (A/C/G). It also supports N (any base) and - (gap).</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">snpio.utils.sequence_tools.</span></span><span class="sig-name descname"><span class="pre">simplifySeq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/sequence_tools.html#simplifySeq"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Simplifies a DNA sequence by replacing all nucleotides and IUPAC ambiguity codes with asterisks.</p>
+<p>This function takes a DNA sequence and returns a simplified version where all nucleotides (A, C, G, T) and IUPAC ambiguity codes (R, Y, S, W, K, M, B, D, H, V) are replaced with asterisks (*). The function is case-insensitive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seq</strong> (<em>str</em>) – The DNA sequence to be simplified.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The simplified sequence, where all nucleotides and IUPAC ambiguity codes are replaced with asterisks (*).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">seq</span> <span class="o">=</span> <span class="s1">&#39;ATGCRYSWKMBDHVN&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">simplifySeq</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Outputs: &#39;*************&#39;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function supports the following IUPAC ambiguity codes: R (A/G), Y (C/T), S (G/C), W (A/T), K (G/T), M (A/C), B (C/G/T), D (A/G/T), H (A/C/T), V (A/C/G).</p>
+</div>
+</dd></dl>
+
+</section>
+<section id="snpio-utils-custom-exceptions-module">
+<h2>snpio.utils.custom_exceptions module<a class="headerlink" href="#snpio-utils-custom-exceptions-module" title="Link to this heading"></a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.custom_exceptions.</span></span><span class="sig-name descname"><span class="pre">AlignmentError</span></span><a class="reference internal" href="_modules/snpio/utils/custom_exceptions.html#AlignmentError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base class for exceptions related to alignment file handling.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.custom_exceptions.</span></span><span class="sig-name descname"><span class="pre">AlignmentFileNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/custom_exceptions.html#AlignmentFileNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AlignmentError</span></code></p>
+<p>Raised when an alignment file is not found.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.custom_exceptions.</span></span><span class="sig-name descname"><span class="pre">AlignmentFormatError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/custom_exceptions.html#AlignmentFormatError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AlignmentError</span></code></p>
+<p>Raised when an alignment file has an invalid format.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.custom_exceptions.</span></span><span class="sig-name descname"><span class="pre">NoValidAllelesError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/custom_exceptions.html#NoValidAllelesError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Custom exception raised when no valid alleles are found in a SNP column.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.custom_exceptions.</span></span><span class="sig-name descname"><span class="pre">PhylipAlignmentSampleMismatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_list_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snp_data_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/custom_exceptions.html#PhylipAlignmentSampleMismatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AlignmentFormatError</span></code></p>
+<p>Raised when samples in the alignment file do not match the expected number of samples.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.custom_exceptions.</span></span><span class="sig-name descname"><span class="pre">SequenceLengthError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/custom_exceptions.html#SequenceLengthError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AlignmentFormatError</span></code></p>
+<p>Raised when sequences in the alignment file have unequal lengths.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.custom_exceptions.</span></span><span class="sig-name descname"><span class="pre">StructureAlignmentSampleMismatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_list_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snp_data_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/custom_exceptions.html#StructureAlignmentSampleMismatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AlignmentFormatError</span></code></p>
+<p>Raised when samples in the alignment file do not match the expected number of samples.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.custom_exceptions.</span></span><span class="sig-name descname"><span class="pre">UnsupportedFileTypeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filetype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/custom_exceptions.html#UnsupportedFileTypeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Custom exception to check if the given file type is supported.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filetype</span></span></dt>
+<dd><p>The type of the file being checked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">message</span></span></dt>
+<dd><p>Explanation of the error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">supported_types</span></span></dt>
+<dd><p>List of supported file types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-utils-benchmarking-module">
+<h2>snpio.utils.benchmarking module<a class="headerlink" href="#snpio-utils-benchmarking-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.benchmarking.</span></span><span class="sig-name descname"><span class="pre">Benchmark</span></span><a class="reference internal" href="_modules/snpio/utils/benchmarking.html#Benchmark"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">measure_execution_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/benchmarking.html#Benchmark.measure_execution_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Decorator to measure the execution time of a function.</p>
+<p>This method is a decorator that measures the execution time of a function and adds the performance data to the resource_data dictionary of the object that the function is called on. The decorator also measures the CPU load and memory footprint of the function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>Callable</em>) – The function to be decorated.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The decorated function. The wrapper function measures the execution time of the decorated function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plot_performance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#8C56E3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(18,</span> <span class="pre">10)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/benchmarking.html#Benchmark.plot_performance"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plots the performance metrics: CPU Load, Memory Footprint, and Execution Time.</p>
+<p>Takes a dictionary of performance data and plots the metrics for each of the methods. The resulting plot is saved in a .png file in the <code class="docutils literal notranslate"><span class="pre">&lt;prefix_output/gtdata/plots/performance</span></code> directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genotype_data</strong> (<em>GenotypeData</em>) – Initialized GenotypeData object to use.</p></li>
+<li><p><strong>resource_data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Dictionary with performance data. Keys are method names, and values are dictionaries with keys ‘cpu_load’, ‘memory_footprint’, and ‘execution_time’.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em>, </em><em>optional</em>) – Color to be used in the plot. Should be a valid color string. Defaults to “#8C56E3”.</p></li>
+<li><p><strong>figsize</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>optional</em>) – Size of the figure. Should be a tuple of two integers. Defaults to (18, 10).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None. The function saves the plot to a file.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The plot is saved in the <code class="docutils literal notranslate"><span class="pre">&lt;prefix_output/gtdata/plots/performance</span></code> directory.</p>
+<p>The plot is saved in <cite>genotype_data.plot_format</cite> format.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-utils-logging-module">
+<h2>snpio.utils.logging module<a class="headerlink" href="#snpio-utils-logging-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.logging.</span></span><span class="sig-name descname"><span class="pre">LoggerManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_console</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%(asctime)s</span> <span class="pre">-</span> <span class="pre">%(levelname)s</span> <span class="pre">-</span> <span class="pre">%(name)s</span> <span class="pre">-</span> <span class="pre">%(funcName)s</span> <span class="pre">-</span> <span class="pre">%(message)s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%Y-%m-%d</span> <span class="pre">%H:%M:%S'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/logging.html#LoggerManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A modular and fully-featured logger class for managing logging across modules.</p>
+<p>This class sets up a logger with the specified name, log file, and logging level. It supports logging to both stdout and a file, with customizable formats and date formats.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">logger_manager</span> <span class="o">=</span> <span class="n">LoggerManager</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_module&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;my_prefix&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger_manager</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="s2">&quot;my_module&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;This is an info message.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;This is a debug message.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;This is a warning message.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;This is an error message.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;This is a critical message.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger_manager</span><span class="o">.</span><span class="n">set_level</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger_manager</span><span class="o">.</span><span class="n">remove_handler</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">name</span></span></dt>
+<dd><p>The name of the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">logger</span></span></dt>
+<dd><p>The configured logger instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/logging.html#LoggerManager.get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns the logger instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">set_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/logging.html#LoggerManager.set_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Sets the logging level.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/logging.html#LoggerManager.add_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Adds a logging handler.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">remove_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/logging.html#LoggerManager.remove_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Removes a logging handler.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/logging.html#LoggerManager.add_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Adds a logging handler if it’s not already added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>handler</strong> (<em>logging.Handler</em>) – The handler to add.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">change_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/logging.html#LoggerManager.change_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Changes the name of the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_name</strong> (<em>str</em>) – The new name for the logger.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/logging.html#LoggerManager.get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns the logger instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The configured logger.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">remove_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/logging.html#LoggerManager.remove_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Removes a logging handler if it exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>handler</strong> (<em>logging.Handler</em>) – The handler to remove.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">set_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/logging.html#LoggerManager.set_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Sets the logging level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>level</strong> (<em>str</em>) – The new logging level.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-utils-results-exporter-module">
+<h2>snpio.utils.results_exporter module<a class="headerlink" href="#snpio-utils-results-exporter-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.utils.results_exporter.</span></span><span class="sig-name descname"><span class="pre">ResultsExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'snpio_output'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/results_exporter.html#ResultsExporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Handles exporting statistical results to JSON and/or CSV files.</p>
+<p>This class can save results to JSON or CSV files. If a dictionary contains nested sub-dictionaries or DataFrames, it properly separates them, ensuring JSON remains valid and DataFrames are saved as separate CSVs.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">capture_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/results_exporter.html#ResultsExporter.capture_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Decorator to capture function results and save them to files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>Callable</em>) – The function whose results should be captured.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Wrapped function that automatically saves its output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em></dt>
+<dd><p>Returns the directory where results are saved.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">save_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/utils/results_exporter.html#ResultsExporter.save_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Save results to an appropriate format (JSON or CSV).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Any</em>) – Data to be saved (DataFrame, dictionary, list of tuples, etc.).</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Base filename without extension.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="snpio.read_input.html" class="btn btn-neutral float-left" title="snpio.read_input package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="snpio.popgenstats.html" class="btn btn-neutral float-right" title="snpio.popgenstats package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

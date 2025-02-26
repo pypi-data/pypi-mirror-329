@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.utils.sequence_tools &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.utils.sequence_tools</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.utils.sequence_tools</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+
+<div class="viewcode-block" id="remove_items">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.sequence_tools.remove_items">[docs]</a>
+<span class="k">def</span> <span class="nf">remove_items</span><span class="p">(</span><span class="n">all_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">bad_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes items from a list based on another list.</span>
+
+<span class="sd">    This function takes a list and removes any items that are present in a second list.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        all_list (List[Any]): The list from which items are to be removed.</span>
+
+<span class="sd">        bad_list (List[Any]): The list containing items to be removed from the first list.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[Any]: The first list with any items present in the second list removed.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; all_list = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; bad_list = [&#39;b&#39;, &#39;d&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; print(remove_items(all_list, bad_list))</span>
+<span class="sd">        &gt;&gt;&gt; # Outputs: [&#39;a&#39;, &#39;c&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># using list comprehension to perform the task</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_list</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bad_list</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="count_alleles">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.sequence_tools.count_alleles">[docs]</a>
+<span class="k">def</span> <span class="nf">count_alleles</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">vcf</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Counts the total number of unique alleles in a list of genotypes.</span>
+
+<span class="sd">    This function takes a list of IUPAC or VCF-style (e.g. 0/1) genotypes and returns the total number of unique alleles. The genotypes can be in VCF or STRUCTURE-style format.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        l (List[str]): A list of IUPAC or VCF-style genotypes.</span>
+
+<span class="sd">        vcf (bool, optional): If True, the genotypes are in VCF format. If False, the genotypes are in STRUCTURE-style format. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The total number of unique alleles in the list.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; l = [&#39;A/A&#39;, &#39;A/T&#39;, &#39;T/T&#39;, &#39;A/A&#39;, &#39;A/T&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; print(count_alleles(l, vcf=True))</span>
+<span class="sd">        &gt;&gt;&gt; # Outputs: 2</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The function removes any instances of &quot;-9&quot;, &quot;-&quot;, &quot;N&quot;, -9, &quot;.&quot;, &quot;?&quot; before counting the alleles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">vcf</span><span class="p">:</span>
+            <span class="n">all_items</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">all_items</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_iupac_caseless</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">all_items</span> <span class="o">=</span> <span class="n">remove_items</span><span class="p">(</span><span class="n">all_items</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;-9&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_items</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="get_major_allele">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.sequence_tools.get_major_allele">[docs]</a>
+<span class="k">def</span> <span class="nf">get_major_allele</span><span class="p">(</span>
+    <span class="n">l</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">num</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">vcf</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the most common alleles in a list.</span>
+
+<span class="sd">    This function takes a list of genotypes for one sample and returns the most common alleles in descending order. The alleles can be in VCF or STRUCTURE-style format.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        l (List[str]): A list of genotypes for one sample.</span>
+
+<span class="sd">        num (int, optional): The number of elements to return. If None, all elements are returned. Defaults to None.</span>
+
+<span class="sd">        vcf (bool, optional): If True, the alleles are in VCF format. If False, the alleles are in STRUCTURE-style format. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[str]: The most common alleles in descending order.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; l = [&#39;A/A&#39;, &#39;A/T&#39;, &#39;T/T&#39;, &#39;A/A&#39;, &#39;A/T&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; print(get_major_allele(l, vcf=True))  # Outputs: [&#39;A&#39;, &#39;T&#39;]</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The function uses the Counter class from the collections module to count the occurrences of each allele.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">vcf</span><span class="p">:</span>
+            <span class="n">all_items</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">all_items</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_iupac_caseless</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+    <span class="n">c</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">all_items</span><span class="p">)</span>  <span class="c1"># requires collections import</span>
+
+    <span class="c1"># List of tuples with [(allele, count), ...] in order of</span>
+    <span class="c1"># most to least common</span>
+    <span class="n">rets</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+    <span class="c1"># Returns two most common non-ambiguous bases</span>
+    <span class="c1"># Makes sure the least common base isn&#39;t N or -9</span>
+    <span class="k">if</span> <span class="n">vcf</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rets</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;-9&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rets</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">]]</span></div>
+
+
+
+<div class="viewcode-block" id="get_iupac_caseless">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.sequence_tools.get_iupac_caseless">[docs]</a>
+<span class="k">def</span> <span class="nf">get_iupac_caseless</span><span class="p">(</span><span class="n">char</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split IUPAC code to two primary characters, assuming diploidy.</span>
+
+<span class="sd">    Gives all non-valid ambiguities as N.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        char (str): Base to expand into diploid list.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[str]: List of the two expanded alleles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lower</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">char</span><span class="o">.</span><span class="n">islower</span><span class="p">():</span>
+        <span class="n">lower</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">char</span> <span class="o">=</span> <span class="n">char</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">iupac</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;-&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;-9&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">iupac</span><span class="p">[</span><span class="n">char</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">lower</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">ret</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+
+<div class="viewcode-block" id="get_revComp_caseless">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.sequence_tools.get_revComp_caseless">[docs]</a>
+<span class="k">def</span> <span class="nf">get_revComp_caseless</span><span class="p">(</span><span class="n">char</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the reverse complement of a nucleotide, while preserving case.</span>
+
+<span class="sd">    This function takes a nucleotide character and returns its reverse complement according to the standard DNA base pairing rules. It also handles IUPAC ambiguity codes. The case of the input character is preserved in the output.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        char (str): The nucleotide character to be reverse complemented. Can be uppercase or lowercase.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The reverse complement of the input character, with the same case.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; char = &#39;a&#39;</span>
+<span class="sd">        &gt;&gt;&gt; print(get_revComp_caseless(char))</span>
+<span class="sd">        &gt;&gt;&gt; # Outputs: &#39;t&#39;</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        - The function supports the following IUPAC ambiguity codes: R (A/G), Y (C/T), S (G/C), W (A/T), K (G/T), M (A/C), B (C/G/T), D (A/G/T), H (A/C/T), V (A/C/G). It also supports N (any base) and - (gap).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lower</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">char</span><span class="o">.</span><span class="n">islower</span><span class="p">():</span>
+        <span class="n">lower</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">char</span> <span class="o">=</span> <span class="n">char</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">char</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">lower</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+
+<div class="viewcode-block" id="simplifySeq">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.sequence_tools.simplifySeq">[docs]</a>
+<span class="k">def</span> <span class="nf">simplifySeq</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simplifies a DNA sequence by replacing all nucleotides and IUPAC ambiguity codes with asterisks.</span>
+
+<span class="sd">    This function takes a DNA sequence and returns a simplified version where all nucleotides (A, C, G, T) and IUPAC ambiguity codes (R, Y, S, W, K, M, B, D, H, V) are replaced with asterisks (*). The function is case-insensitive.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        seq (str): The DNA sequence to be simplified.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The simplified sequence, where all nucleotides and IUPAC ambiguity codes are replaced with asterisks (*).</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; seq = &#39;ATGCRYSWKMBDHVN&#39;</span>
+<span class="sd">        &gt;&gt;&gt; print(simplifySeq(seq))</span>
+<span class="sd">        &gt;&gt;&gt; # Outputs: &#39;*************&#39;</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The function supports the following IUPAC ambiguity codes: R (A/G), Y (C/T), S (G/C), W (A/T), K (G/T), M (A/C), B (C/G/T), D (A/G/T), H (A/C/T), V (A/C/G).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[ACGT]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">temp</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="s2">&quot;RYSWKMBDHV&quot;</span><span class="p">,</span> <span class="s2">&quot;**********&quot;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="seqCounter">
+<a class="viewcode-back" href="../../../snpio.utils.html#snpio.utils.sequence_tools.seqCounter">[docs]</a>
+<span class="k">def</span> <span class="nf">seqCounter</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a dictionary of character counts in a DNA sequence.</span>
+
+<span class="sd">    This function takes a DNA sequence and returns a dictionary where the keys are nucleotide characters and the values are their counts in the sequence. It also handles IUPAC ambiguity codes. The function is case-sensitive.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        seq (str): The DNA sequence to be counted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, int]: A dictionary where the keys are nucleotide characters and the values are their counts in the sequence. The dictionary also includes a &#39;VAR&#39; key, which is the sum of the counts of all IUPAC ambiguity codes.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; seq = &#39;ATGCRYSWKMBDHVN&#39;</span>
+<span class="sd">        &gt;&gt;&gt; print(seqCounter(seq))</span>
+<span class="sd">        {&#39;A&#39;: 1, &#39;N&#39;: 1, &#39;-&#39;: 0, &#39;C&#39;: 1, &#39;G&#39;: 1, &#39;T&#39;: 1, &#39;R&#39;: 1, &#39;Y&#39;: 1, &#39;S&#39;: 1, &#39;W&#39;: 1, &#39;K&#39;: 1, &#39;M&#39;: 1, &#39;B&#39;: 1, &#39;D&#39;: 1, &#39;H&#39;: 1, &#39;V&#39;: 1, &#39;VAR&#39;: 10}</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The function supports the following IUPAC ambiguity codes: R (A/G), Y (C/T), S (G/C), W (A/T), K (G/T), M (A/C), B (C/G/T), D (A/G/T), H (A/C/T), V (A/C/G). It also supports N (any base) and - (gap).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;-&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">seq</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">d</span><span class="p">[</span><span class="s2">&quot;VAR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;W&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;M&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;B&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;D&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;H&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;V&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
