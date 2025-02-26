@@ -1,0 +1,101 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-ast
+      - id: check-byte-order-marker
+      - id: check-builtin-literals
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-yaml
+      - id: debug-statements
+      - id: detect-aws-credentials
+        args:
+          - --allow-missing-credentials
+      - id: detect-private-key
+      - id: double-quote-string-fixer
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: pretty-format-json
+        args:
+          - --autofix
+      - id: requirements-txt-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.8.3
+    hooks:
+      - id: bandit
+        exclude: |
+          (?x)(
+              ^tests/
+          )
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.10.1
+    hooks:
+      - id: isort
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
+    hooks:
+      - id: pyupgrade
+        args:
+          - --py311-plus
+  - repo: local
+    hooks:
+      - id: pyright
+        entry: pyright
+        language: system
+        name: pyright
+        types:
+          - python
+  - repo: local
+    hooks:
+      - id: pyright-submodules
+        entry: pyright
+        language: system
+        name: pyright-submodules
+        # pre-commit types_or and types with multiple values don't work for submodules
+        types:
+          - directory
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.7
+    hooks:
+      - id: ruff
+        args:
+          - --fix
+        types_or:
+          - python
+          - pyi
+      - id: ruff-format
+        types_or:
+          - python
+          - pyi
+  - repo: local
+    hooks:
+      - id: ruff-submodules
+        entry: ruff
+        args:
+          - check
+          - --fix
+        language: system
+        name: ruff-submodules
+        # pre-commit types_or and types with multiple values don't work for submodules
+        types:
+          - directory
+      - id: ruff-format-submodules
+        entry: ruff
+        args:
+          - format
+        language: system
+        name: ruff-format-submodules
+        # pre-commit types_or and types with multiple values don't work for submodules
+        types:
+          - directory
