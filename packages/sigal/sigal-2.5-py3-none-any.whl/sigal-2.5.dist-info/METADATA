@@ -1,0 +1,95 @@
+Metadata-Version: 2.2
+Name: sigal
+Version: 2.5
+Summary: Simple static gallery generator
+Author-email: Simon Conseil <contact@saimon.org>
+License: MIT License
+Project-URL: repository, https://github.com/saimn/sigal
+Project-URL: documentation, http://sigal.saimon.org/en/latest/
+Keywords: gallery,static,generator,image,video,galleria
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Multimedia :: Graphics :: Viewers
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.9
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+Requires-Dist: blinker
+Requires-Dist: click
+Requires-Dist: Jinja2>=2.7
+Requires-Dist: Markdown
+Requires-Dist: Pillow>=8.0.0
+Requires-Dist: pilkit
+Requires-Dist: natsort
+Provides-Extra: all
+Requires-Dist: brotli; extra == "all"
+Requires-Dist: feedgenerator; extra == "all"
+Requires-Dist: zopfli; extra == "all"
+Requires-Dist: cryptography; extra == "all"
+Requires-Dist: pillow-heif; extra == "all"
+Provides-Extra: tests
+Requires-Dist: pytest; extra == "tests"
+Requires-Dist: pytest-cov; extra == "tests"
+Provides-Extra: docs
+Requires-Dist: Sphinx>=4.1.0; extra == "docs"
+Requires-Dist: furo; extra == "docs"
+Requires-Dist: cryptography; extra == "docs"
+
+Sigal - Simple Static Gallery Generator
+=======================================
+
+.. image:: https://github.com/saimn/sigal/workflows/Run%20unit%20tests/badge.svg
+   :target: https://github.com/saimn/sigal/actions
+   :alt: CI Status
+
+.. image:: https://codecov.io/gh/saimn/sigal/branch/main/graph/badge.svg
+   :target: https://codecov.io/gh/saimn/sigal
+   :alt: codecov.io
+
+Sigal is yet another simple static gallery generator. It's written in Python
+and it allows to build a static gallery of images with the following features:
+
+* Process directories recursively.
+* Generate HTML pages using Jinja2_ templates.
+* Relative links for a portable output.
+* Support themes, videos, EXIF tags, zip download.
+* Parallel processing.
+* MIT licensed.
+
+The idea behind Sigal is to ease the use of the javascript libraries like
+galleria_. These libraries do a great job to display the images, Sigal does
+what is missing: resize images, create thumbnails, generate HTML pages.
+
+Sigal requires Python 3.9+.
+
+Links
+-----
+
+* Latest documentation on the website_
+* Source, issues and pull requests on GitHub_
+* Releases on PyPI_
+
+Themes & Demo
+-------------
+
+Sigal comes with three themes, based on the colorbox_, galleria_ and photoswipe_
+Javascript libraries:
+
+- `colorbox demo`_
+- `galleria demo`_
+- `photoswipe demo`_
+
+.. _website: http://sigal.saimon.org/
+.. _GitHub: https://github.com/saimn/sigal/
+.. _PyPI: https://pypi.org/project/sigal/
+.. _galleria: https://github.com/GalleriaJS/galleria
+.. _colorbox: http://www.jacklmoore.com/colorbox
+.. _photoswipe: http://photoswipe.com
+.. _galleria demo: http://saimon.org/sigal-demo/galleria/
+.. _colorbox demo: http://saimon.org/sigal-demo/colorbox/
+.. _photoswipe demo: http://saimon.org/sigal-demo/photoswipe/
+.. _Jinja2: https://palletsprojects.com/p/jinja/
