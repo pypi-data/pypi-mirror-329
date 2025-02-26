@@ -1,0 +1,96 @@
+Metadata-Version: 2.2
+Name: french_public_holidays
+Version: 0.5.7
+Summary: Get French public holidays from the French government API
+Home-page: https://github.com/tsnaketech/french-public-holidays
+Author: SnakeTech
+Author-email: repo@snaketech.net
+License: MIT
+Project-URL: Source, https://github.com/tsnaketech/french-public-holidays
+Project-URL: Issues, https://github.com/tsnaketech/french-public-holidays/issues
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Natural Language :: French
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: configparser
+Requires-Dist: httpx
+Requires-Dist: pydantic
+Requires-Dist: python-dotenv
+Requires-Dist: PyYAML
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: project-url
+Dynamic: requires-dist
+Dynamic: summary
+
+# French Public Holidays
+
+A Python library for handling French public holidays.
+
+## Installation
+
+```bash
+pip install french-public-holidays
+```
+
+## Usage
+
+```python
+from french_public_holidays import FrenchPublicHolidays
+
+fph = FrenchPublicHolidays()
+
+# Check if a date is a French public holiday
+is_holiday = fph.is_holiday('2023-07-14')
+print(is_holiday)  # True (Bastille Day)
+
+# Get the name of the holiday
+holiday_name = fph.get_holiday_name('2023-07-14')
+print(holiday_name)  # 'Fête nationale'
+
+# Get all holidays for a specific year
+holidays_2023 = fph.get_holidays(2023)
+print(holidays_2023)
+```
+
+### CLI
+
+The library also comes with a CLI tool that can be used for extract public holidays in export file.
+
+```bash
+python -m french_public_holidays -c .\config.yaml
+```
+
+or
+
+```bash
+french-public-holidays --config .\config.yaml
+```
+
+
+## Features
+
+- Accurately calculates French public holidays including moveable ones (Easter Monday, Ascension Day, etc.)
+- Handles regional specifics (Alsace-Moselle, DOM-TOM)
+- Works with date strings
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Support
+
+If you have any questions or need support, please open an issue on the GitHub repository.
