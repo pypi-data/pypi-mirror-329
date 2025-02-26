@@ -1,0 +1,44 @@
+[build-system]
+requires = [
+    "setuptools>=75",
+    "setuptools-scm>=8.0",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+snplib = ["*.pl"]
+
+[project]
+name = "snplib"
+version = "1.1.10"
+description = "Snptools is a tool for Single Nucleotide Polymorphism (SNP) data processing"
+authors = [
+    {name = "Igor", email = "igor.loschinin@gmail.com"}
+]
+license = {text = "GNU"}
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy>=2.2.3",
+    "pandas>=2.2.3",
+    "six>=1.17.0",
+    "swifter>=1.4.0",
+    "xlrd>=2.0.1",
+    "XlsxWriter>=3.2.2",
+    "openpyxl>=3.1.5",
+    "pydantic>=2.10.6",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/IgorekLoschinin/snptools"
