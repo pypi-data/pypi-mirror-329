@@ -1,0 +1,33 @@
+[project]
+name = "remote-inria"
+description = "Remote Inria: A CLI tool for remotely interacting with Inria computing resources."
+readme = "README.md"
+
+version = "1.7.4"
+authors = [
+    { name = "Gaétan Lepage", email = "gaetan.lepage@inria.fr" }
+]
+urls = { project = "https://gitlab.inria.fr/galepage/remi" }
+license = { text = "GNU General Public License v3.0" }
+keywords = [ "machine learning" ]
+
+classifiers=[
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+dependencies = [
+    "pyyaml",
+    "click",
+    "termcolor"
+]
+
+[project.scripts]
+remi = "remi.cli:remi"
