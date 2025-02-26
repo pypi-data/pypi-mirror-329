@@ -1,0 +1,145 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "p99-bluesky"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+description = "p99 sandbox"
+dependencies = [
+    #Things that are neeeded for running
+    "blueapi",
+    "ophyd",
+    "dls-dodal",
+    "ophyd-async",
+    "bluesky",
+
+
+    #usefull stuff for testing or running without blue api
+    "jupyter",
+    "ipython",
+    "matplotlib",
+    "numpy",
+    "pyepics",
+]
+dynamic = ["version"]
+license.file = "LICENSE"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[project.optional-dependencies]
+dev = [
+    "copier",
+    "myst-parser",
+    "pipdeptree",
+    "pre-commit",
+    "pydata-sphinx-theme>=0.12",
+    "pyright",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "sphinx-autobuild",
+    "sphinx-copybutton",
+    "sphinx-design",
+    "autodoc-pydantic",
+    "sphinxcontrib-mermaid",
+    "sphinxcontrib-openapi",
+    "sphinx-click",
+    "tox-direct",
+    "types-mock",
+    "pytest-asyncio",
+    "super_state_machine",
+    #===========================
+    "h5py",
+    "ipython",
+    "ipywidgets",
+    "numpydoc",
+    "pickleshare",
+    "pyside6",
+    "pytest-faulthandler",
+    "pytest-rerunfailures",
+    "pytest-timeout",
+    "types-pyyaml",
+    "softioc",
+    "cothread",
+
+]
+
+[project.scripts]
+p99-bluesky = "p99_bluesky.__main__:main"
+
+[project.urls]
+GitHub = "https://github.com/DiamondLightSource/p99-bluesky"
+
+[[project.authors]] # Further authors may be added by duplicating this section
+email = "raymond.fan@diamond.ac.uk"
+name = "Raymond Fan"
+
+
+[tool.setuptools_scm]
+write_to = "src/p99_bluesky/_version.py"
+
+[tool.pyright]
+reportMissingImports = false # Ignore missing stubs in imported modules
+
+[tool.pytest.ini_options]
+# Run pytest with all our checkers, and don't spam us with massive tracebacks on error
+addopts = """
+    --tb=native -vv --doctest-modules --doctest-glob="*.rst"
+    """
+filterwarnings = ["error", "ignore::pytest.PytestUnraisableExceptionWarning"]
+# https://iscinumpy.gitlab.io/post/bound-version-constraints/#watch-for-warnings
+# Doctest python code in docs, python code in src docstrings, test functions in tests
+testpaths = "docs src tests"
+
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+data_file = "/tmp/p99_bluesky.coverage"
+
+[tool.coverage.paths]
+# Tests are run from installed location, map back to the src directory
+source = ["src", "**/site-packages/"]
+
+# tox must currently be configured via an embedded ini string
+# See: https://github.com/tox-dev/tox/issues/999
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+skipsdist=True
+
+[testenv:{pre-commit,type-checking,tests,docs}]
+# Don't create a virtualenv for the command, requires tox-direct plugin
+direct = True
+passenv = *
+allowlist_externals =
+    pytest
+    pre-commit
+    pyright
+    sphinx-build
+    sphinx-autobuild
+commands =
+    pre-commit: pre-commit run --all-files {posargs}
+    type-checking: pyright src tests {posargs}
+    tests: pytest --cov=p99_bluesky --cov-report term --cov-report xml:cov.xml {posargs}
+    docs: sphinx-{posargs:build -EW --keep-going} -T docs build/html
+"""
+
+[tool.ruff]
+src = ["src", "tests"]
+line-length = 90
+lint.select = [
+    "B",  # flake8-bugbear - https://docs.astral.sh/ruff/rules/#flake8-bugbear-b
+    "C4", # flake8-comprehensions - https://docs.astral.sh/ruff/rules/#flake8-comprehensions-c4
+    "E",  # pycodestyle errors - https://docs.astral.sh/ruff/rules/#error-e
+    "F",  # pyflakes rules - https://docs.astral.sh/ruff/rules/#pyflakes-f
+    "W",  # pycodestyle warnings - https://docs.astral.sh/ruff/rules/#warning-w
+    "I",  # isort - https://docs.astral.sh/ruff/rules/#isort-i
+    "UP", # pyupgrade - https://docs.astral.sh/ruff/rules/#pyupgrade-up
+]
