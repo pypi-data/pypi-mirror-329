@@ -1,0 +1,62 @@
+Metadata-Version: 2.2
+Name: fastxmltodict
+Version: 1.24.1
+Summary: A fast and lightweight library for converting XML to a Python dictionary.
+Author: MichaelScofield
+License: MIT
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Dynamic: requires-python
+
+# fastxmltodict
+
+`fastxmltodict` is a lightweight and fast library for converting XML into a Python dictionary.
+
+## Installation
+
+You can install the library using pip:
+
+```sh
+pip install fastxmltodict
+```
+
+## Usage
+
+Example of converting XML to a dictionary:
+
+```python
+from fastxmltodict import parse
+
+xml_data = """
+<note>
+    <to>John</to>
+    <from>Jane</from>
+    <message>Hello, World!</message>
+</note>
+"""
+
+result = parse(xml_data)
+print(result)
+```
+
+Output:
+
+```json
+{
+    "note": {
+        "to": "John",
+        "from": "Jane",
+        "message": "Hello, World!"
+    }
+}
+```
+
+## Features
+- Recursive XML to dictionary conversion
+- Support for element attributes
+- Easy to use
+
+## License
+
+This project is licensed under the MIT License. You are free to use, modify, and distribute it under the terms of this license.
+
