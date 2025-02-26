@@ -1,0 +1,53 @@
+Metadata-Version: 2.2
+Name: bababel
+Version: 0.4.1
+Summary: A messaging consumer library for handling and processing messages efficiently.
+Author-email: Gustavo Delai Onzi Da Silva <gustavodelai11@gmail.com>
+License: MIT
+Project-URL: Homepage, https://github.com/GustavoDelaiOnzi/bababel
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pika<2.0,>=1.3.2
+Requires-Dist: nanoid<3.0,>=2.0.0
+Provides-Extra: dev
+Requires-Dist: pytest<9.0,>=8.3.4; extra == "dev"
+Requires-Dist: flake8<8.0,>=7.1.1; extra == "dev"
+Requires-Dist: black<26.0,>=25.1.0; extra == "dev"
+Requires-Dist: isort<7.0,>=6.0.0; extra == "dev"
+Requires-Dist: commitizen<5.0,>=4.2.1; extra == "dev"
+Requires-Dist: pre-commit<5.0,>=4.1.0; extra == "dev"
+Requires-Dist: pytest<9.0,>=8.3.4; extra == "dev"
+Requires-Dist: pytest-mock<4.0,>=3.14.0; extra == "dev"
+Requires-Dist: pytest-cov<7.0,>=6.0.0; extra == "dev"
+Requires-Dist: twine<7.0,>=6.1.0; extra == "dev"
+Requires-Dist: build<2.0,>=1.2.2; extra == "dev"
+
+A messaging consumer library for handling and processing messages efficiently.
+It is meant to simplify message publishing and processing.
+
+In the current ver version you can only send tasks to a exchange:
+
+Example usage:
+
+    from bababel.bababel_app import BababelApp
+    from bababel.task.task import Task
+
+    # Sample Bababel Task
+    class SampleTask(Task):
+        def run(self, xpto):
+            return xpto
+
+    # Declare the BababelApp
+    app = BababelApp(host='localhost',
+                     port=5672,
+                     username='guest',
+                     password='guest')
+
+    # Declare the task
+    task = SampleTask(app=app)
+
+    # Send message to the consumer (to be implemented)
+    # The consumer will execute task.run with the parameters given in the send method
+    task.send(message='xpto', code=123)
+
+This project uses conventional commits 1.0.0
