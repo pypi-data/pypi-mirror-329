@@ -1,0 +1,64 @@
+image:
+  roxauto/python-ci
+
+  # - export
+
+stages:
+  - docker_images
+  - test_stage
+  - docs_stage
+
+pytest:
+  stage: test_stage
+  before_script:
+    - python --version
+    - cat /build_date.txt
+    - pip install .
+  script:
+    - pylint -E src
+    - mypy src
+  # skipt tests, now done locally with `invoke ci`.
+  #  - pytest -v tests
+  artifacts:
+    when: on_success
+    expire_in: 5 days
+  # rules:
+  #   - changes:
+  #       - src/**/*
+
+pages:
+  image: sjev/mkdocs
+  stage: docs_stage
+  script:
+    - mkdocs build -d public
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week
+  rules:
+    - changes:
+        - "*.md"
+        - docs/**/*
+        - "mkdocs.yml"
+        - ".gitlab-ci.yml"
+
+# release is done manually - use invoke release
+
+# build docker containers
+build_images:
+  stage: docker_images
+  image: docker:latest
+
+  services:
+    - docker:dind
+
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    # ---- main image
+    - docker build -t $CI_REGISTRY_IMAGE  ./docker
+    - docker push $CI_REGISTRY_IMAGE
+  when: manual
+  # rules:
+  #   - changes:
+  #       - "docker/**/*"
