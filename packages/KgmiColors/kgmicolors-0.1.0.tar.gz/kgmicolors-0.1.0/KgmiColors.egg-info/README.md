@@ -1,0 +1,3 @@
+# Kgmi  : Un nouveau package qui permet de gérer les couleurs comme vous le voulez
+
+Semblable a d'autre mais pas le même...
