@@ -1,0 +1,71 @@
+Metadata-Version: 2.2
+Name: cursor-manager
+Version: 1.0.0
+Summary: Cursor IDE Manager
+Author: ovftank
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: requests
+Requires-Dist: tqdm
+Requires-Dist: psutil
+Requires-Dist: questionary
+Requires-Dist: rich
+Requires-Dist: typer
+Requires-Dist: pywin32
+
+# Cursor Manager CLI
+
+Tool quản lý Cursor IDE, hỗ trợ:
+
+- Reset ID máy
+- Tắt tự động cập nhật
+- Xóa cache
+- Tải Cursor v0.44.11
+- Tắt Cursor
+
+## Cài đặt
+
+### Từ PyPI
+
+~~~bash
+pip install cursor-manager
+~~~
+
+### Từ Source
+
+~~~bash
+git clone https://github.com/ovftank/cursor-manager.git
+cd cursor-manager
+pip install -e .
+~~~
+
+## Sử dụng
+
+Chạy trực tiếp (menu tương tác):
+
+~~~bash
+cursor-manager
+~~~
+
+Hoặc sử dụng các lệnh:
+
+~~~bash
+cursor-manager --help              # Xem hướng dẫn
+cursor-manager info               # Xem phiên bản Cursor
+cursor-manager reset             # Reset ID và thông tin máy
+cursor-manager tat-update        # Tắt tự động cập nhật
+cursor-manager status            # Xem trạng thái chi tiết
+cursor-manager tai               # Tải Cursor v0.44.11
+cursor-manager xoa-cache         # Xóa cache của Cursor
+cursor-manager kill              # Tắt tất cả tiến trình Cursor
+~~~
+
+## Yêu cầu
+
+- Python ≥ 3.10
+- Windows
+- Quyền Administrator (cho một số tính năng)
+
+## License
+
+MIT
