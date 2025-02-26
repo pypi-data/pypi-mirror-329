@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ app_title }}{{ app_title_extension }}</title>
+    <link rel="icon" type="image/x-icon" href="./static/images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script>
+
+        // Set global template variables before importing other files in case they use them
+        window.app_title = "{{ app_title }}";
+        window.app_title_extension = "{{ app_title_extension }}";
+        window.logo_image_url = "{{ logo_image_url }}";
+        window.api_key = "{{ api_key }}"
+
+    </script>
+    <script src="static/js/Header.js" type="module"></script>
+    <script src="static/js/FileDrop.js" type="module"></script>
+    <link rel="stylesheet" href="static/css/base.css">
+</head>
+<body>
+    <k-header></k-header>
+    <div class="content__wrapper container">
+        <div class="row">
+            <h2 class="mb-5">Upload your data for prediction, after you’ve corrected the results upload the file to keep improving the model.</h2>
+        </div>
+        <div class="row">
+            <k-file-drop class="col-6" mode="predict"></k-file-drop>
+            <k-file-drop class="col-6" mode="train"></k-file-drop>
+        </div>
+    </div>
+</body>
+</html>

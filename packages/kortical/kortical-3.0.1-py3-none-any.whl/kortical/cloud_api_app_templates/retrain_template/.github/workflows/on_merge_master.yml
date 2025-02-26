@@ -1,0 +1,90 @@
+name: Deploy to Integration (On Merge Master)
+
+on:
+  # Run on any pull request that is pushed to master / main
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  deploy_to_first_environment:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out the repository
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install requirements
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          pip install -e .
+      - name: Create Challenger Environment
+        run: |
+          eval $(ssh-agent)
+          # Add a private key if you need to. eg: to access a private git repo with pip
+          # ssh-add ~/.ssh/id_rsa
+          source venv/bin/activate
+          kortical config init -q
+          kortical config set system_url <placeholder_if_you_see_this_did_you_setup_the_git_hooks>
+          kortical config credentials from_string -q ${{ secrets.KORTICAL_CREDENTIALS }}
+          kortical project select <placeholder_if_you_see_this_did_you_setup_the_git_hooks>
+          # kortical_component_config is updated via pre-commit hook
+          
+          # Create challenger database/environment
+          python local/create_challenger.py github${{ github.run_id }} <placeholder_if_you_see_this_did_you_setup_the_git_hooks> "config/component_config.yml"
+          kortical environment select github${{ github.run_id }}
+          
+          kortical app deploy --all
+          kortical environment wait-for-components
+      - name: Run API Tests Challenger
+        run: |
+          source venv/bin/activate
+          pytest -m "api"
+      - name: App Logs
+        if: always()
+        run: |
+          source venv/bin/activate
+          for i in k8s/*.yml; do
+            APP_NAME=`basename ${i%%.*}`
+            echo "Getting component version ID for app [$APP_NAME]"
+            kortical component logs $APP_NAME
+          done
+      - name: Promote Challenger to Integration
+        run: |
+          source venv/bin/activate
+          for i in k8s/*.yml; do
+            APP_NAME=`basename ${i%%.*}`
+            echo "Getting component version ID for app [$APP_NAME]"
+            COMPONENT_VERSION_ID=`kortical component get-version-id $APP_NAME --app`
+            echo "Setting default app version for app [$APP_NAME], Component version ID [$COMPONENT_VERSION_ID]"
+            kortical app set-default-version $APP_NAME $COMPONENT_VERSION_ID
+          done
+          # -f allows us to force the operation
+          kortical environment promote -f
+          kortical environment select Integration
+          kortical environment wait-for-components
+      - name: Run Tests Integration
+        run: |
+          source venv/bin/activate
+          pytest -m "smoke"
+      - name: App Logs
+        if: always()
+        run: |
+          source venv/bin/activate
+          for i in k8s/*.yml; do
+            APP_NAME=`basename ${i%%.*}`
+            echo "Getting component version ID for app [$APP_NAME]"
+            kortical component logs $APP_NAME
+          done
+      - name: Delete Challenger Environment
+        if: always()
+        run: |
+          source venv/bin/activate
+          python local/delete_challenger.py github${{ github.run_id }}

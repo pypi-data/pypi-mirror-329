@@ -1,0 +1,46 @@
+kind: Service
+metadata:
+  name: celery-redis-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: celery-redis
+  ports:
+    - name: redis
+      protocol: TCP
+      port: 6379
+      targetPort: 6379
+---
+kind: StatefulSet
+metadata:
+  name: celery-redis
+  labels:
+    app: celery-redis
+spec:
+  selector:
+    matchLabels:
+      app: celery-redis
+  securityContext:
+    runAsUser: kortical
+  replicas: 1
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: celery-redis
+    spec:
+      terminationGracePeriodSeconds: 1
+      containers:
+        - name: celery-redis
+          image: redis:6.2.5
+          ports:
+            - containerPort: 6379
+              name: redis
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 5
+            timeoutSeconds: 4
+            failureThreshold: 30
+            periodSeconds: 5

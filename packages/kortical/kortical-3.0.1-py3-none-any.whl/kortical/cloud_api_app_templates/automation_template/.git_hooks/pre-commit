@@ -1,0 +1,187 @@
+#!/usr/bin/env python3
+
+import logging
+import os
+import platform
+import sys
+import re
+import subprocess
+from difflib import ndiff
+from pathlib import Path
+try:
+    from kortical import api
+    from kortical import config
+    from kortical.api.project import Project
+    from kortical.api.project import Environment
+    from kortical.cli.helpers.component_helpers import display_list_component_instances
+    from kortical.helpers.exceptions import KorticalKnownException
+    from kortical.helpers.print_helpers import print_info, print_title, print_question, print_success, display_list, format_question, print_warning, print_error
+except Exception as e:
+    print("Ensure that you have enabled your venv that includes the kortical package, before running git commit, if you want kortical pre-commit checks to run.")
+    exit(0)
+
+
+def find_git_root_directory():
+    git_folder = '.git'
+    current_directory = os.getcwd()
+    while True:
+        path = os.path.join(current_directory, git_folder)
+        if os.path.isdir(path):
+            return current_directory
+        path = Path(current_directory)
+        current_directory = str(path.parent.absolute())
+        if path.root == current_directory:
+            print_error(f'Could not find [{git_folder}] in any parent directory.')
+            exit(1)
+
+
+def initialise_api_and_get_key_variables():
+    try:
+        api.init()
+        system_url = config.get('system_url')
+        project = Project.get_selected_project(throw=False)
+        environment = Environment.get_selected_environment(project)
+    except KorticalKnownException as e:
+        print_error(str(e))
+        print_question(
+            f"Given this error kortical pre-commit checks will not run, do you still want to proceed with this commit? [y/n]")
+        response = input()
+        if not response or response.lower()[0] != 'y':
+            exit(1)
+        else:
+            exit(0)
+
+    if system_url is None:
+        print_warning(f"""Please ensure that you've got an active kortical config that's pointing to a kortical system.
+
+    You can create intialize kortical config with the following command [kortical config init].""")
+        print_question(f"Are you sure you want to continue without this setup? [y/n]")
+        response = input()
+        if not response or response.lower()[0] != 'y':
+            exit(1)
+        else:
+            exit(0)
+    if project is None:
+        print_warning(f"""Please ensure that you've selected a project before committing to this repo. In order for the continuous integration to work, it needs a project to run in.
+
+        You can create a project using the command [kortical project create <project_name>].
+
+        You can select an existing project using the command [kortical project select <project_name>]""")
+        print_question(f"Are you sure you want to continue without this setup? [y/n]")
+        response = input()
+        if not response or response.lower()[0] != 'y':
+            exit(1)
+        else:
+            exit(0)
+
+    print_title(f"system_url [{system_url}], project [{project}], environment [{environment}]")
+
+    first_environment = project.list_environments()[0]
+
+    return system_url, project, environment, first_environment
+
+
+def rationalise_github_workflows(root_folder, system_url, project, environment, first_environment):
+    variables = {
+        r'(kortical config set system_url )(.*)(\n)': system_url,
+        r'(kortical project select )(.*)(\n)': f'"{project.name}"',
+        r'(--from=)(.*)( --component-config="config/component_config\.yml")': first_environment.id
+    }
+    workflow_files = [
+        ".github/workflows/continuous_integration.yml",
+        ".github/workflows/on_merge_master.yml",
+        ".github/workflows/promote_to_uat.yml",
+        ".github/workflows/promote_to_production.yml"
+    ]
+    show_message = True
+    for workflow_file in workflow_files:
+        workflow_file_full_path = os.path.join(root_folder, workflow_file)
+        with open(workflow_file_full_path, 'r') as f:
+            workflow_file_text_original = f.read()
+        workflow_file_text = workflow_file_text_original
+
+        first_replace = "<system_url>" in workflow_file_text
+
+        for regex, value in variables.items():
+            workflow_file_text = re.sub(regex, f"\\g<1>{value}\\g<3>", workflow_file_text)
+
+        if workflow_file_text_original != workflow_file_text:
+            if show_message:
+                print_info("Updating github workflows to point to the selected system and project")
+                show_message = False
+            with open(workflow_file_full_path, 'w') as f:
+                f.write(workflow_file_text)
+            subprocess.run(['git', 'add', workflow_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def rationalise_component_config(root_folder, system_url, project, environment, first_environment):
+
+    if not environment.is_challenger():
+        print_warning(f"Environment [{environment}] is not a challenger environment!!")
+
+    component_config_cloud = environment.get_component_config()
+    component_config_local_file_path = os.path.join('config', 'component_config.yml')
+    component_config_local_file_path_full = os.path.join(root_folder, component_config_local_file_path)
+    if os.path.isfile(component_config_local_file_path_full):
+        with open(component_config_local_file_path_full, 'r') as f:
+            component_config_local = f.read()
+        diff = ndiff(component_config_local.splitlines(keepends=True), component_config_cloud.splitlines(keepends=True))
+        diff = list(diff)
+        has_diff = not all([x[0] == ' ' for x in diff])
+        if has_diff:
+            display_list_component_instances(project, environment)
+            print_title(f"Diff for component config in environment [{environment.name}] and [{component_config_local_file_path}]")
+            print_info(''.join(diff), end="")
+            print_title("--------")
+            print_info(f"It looks like you've modified some components in your environment [{environment.name}] since your last commit.")
+            print_question(f"Would you like to overwrite your local component_config with the one from [{environment.name}]? [y/n] (If in doubt yes is probably the right answer)")
+            response = input()
+            if not response or response.lower()[0] != 'y':
+                return
+            with open(component_config_local_file_path_full, 'w') as f:
+                f.write(component_config_cloud)
+            print_success(f"Component config file saved to [{component_config_local_file_path_full}].")
+            subprocess.run(['git', 'add', component_config_local_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        else:
+            print_info("No component_config changes detected")
+    else:
+        # If file does not exist
+        display_list_component_instances(project, environment)
+        print_title(f"Component config for environment [{environment.name}]")
+        print_info(component_config_cloud)
+        print_title("--------")
+        print_info(f"""We did not find a component_config file at [{component_config_local_file_path}].
+        
+This likely means it's your first time doing a commit for this app. The component config stores all of the components and versions that are expected to run with this commit of the code. Once this commit is merged to master, all of the component versions listed here will be promoted to envionment [{first_environment}], so it's important that we're saving the config from the right environment.""")
+        print_question(f"Is this environment [{environment}], the environment you've been deployed this app in for development / testing and validatated that it's working correctly? [y/n]")
+        response = input()
+        if not response or response.lower()[0] != 'y':
+            print_warning(f"Warning if you continue, you will not save a component config and continuous integration will not work, do you want to continue? [y/n]")
+            response = input()
+            if not response or response.lower()[0] != 'y':
+                exit(1)
+            else:
+                return
+
+        with open(component_config_local_file_path_full, 'w') as f:
+            f.write(component_config_cloud)
+        print_success(f"Component config file saved to [{component_config_local_file_path_full}].")
+        subprocess.run(['git', 'add', component_config_local_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+if __name__ == '__main__':
+    # ensure that we can get user input
+    if platform.system() == 'Windows':
+        sys.stdin = open('CON:', mode='r', encoding=sys.stdin.encoding)
+    else:
+        sys.stdin = open("/dev/tty", "r")
+
+    # stop spam logging from DEBUG
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger()
+    logger.setLevel(level=logging.INFO)
+
+    root_folder = find_git_root_directory()
+    system_url, project, environment, first_environment = initialise_api_and_get_key_variables()
+    rationalise_github_workflows(root_folder, system_url, project, environment, first_environment)
+    rationalise_component_config(root_folder, system_url, project, environment, first_environment)

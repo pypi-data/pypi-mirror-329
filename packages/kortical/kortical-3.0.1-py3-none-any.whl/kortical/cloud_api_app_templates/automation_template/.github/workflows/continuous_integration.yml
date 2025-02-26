@@ -1,0 +1,81 @@
+name: Continuous Integration / Deployment
+
+on:
+  # Run on any pull request
+  pull_request:
+
+jobs:
+  run_tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out the repository
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install requirements
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          pip install -e .
+      - name: Initialise Kortical Package / CLI
+        run: |
+          source venv/bin/activate
+          kortical config init -q
+          echo "Configuring system_url"
+          kortical config set system_url <placeholder_if_you_see_this_did_you_setup_the_git_hooks>
+          echo "Configuring credentials"
+          kortical config credentials from_string -q ${{ secrets.KORTICAL_CREDENTIALS }}
+          kortical project select <placeholder_if_you_see_this_did_you_setup_the_git_hooks>
+      - name: Create Challenger Environment
+        run: |
+          eval $(ssh-agent)
+          # Add a private key if you need to. eg: to access a private git repo with pip
+          # ssh-add ~/.ssh/id_rsa
+          source venv/bin/activate
+          # We run unit tests before creating a challenger environment, so fast tests run quickly allowing for faster error discovery
+          echo "Creating challenger environment [github_${{ github.run_id }}]"
+          # kortical_component_config is updated via pre-commit hook
+          kortical environment challenger create github${{ github.run_id }} --from=<placeholder_if_you_see_this_did_you_setup_the_git_hooks> --component-config="config/component_config.yml"
+          # automatically selects challenger environment
+          kortical app deploy
+          kortical environment wait-for-components
+      - name: Run Unit Tests
+        run: |
+          source venv/bin/activate
+          # This line runs all the pytests, if you want to use a different test framework replace this line
+          pytest -m "unit"
+      - name: Run Integration Tests
+        run: |
+          source venv/bin/activate
+          pytest -m "integration"
+      - name: Save component config file with known good versions
+        run: |
+          source venv/bin/activate
+          kortical component save-config "config/component_config.yml"
+      - name: Commit components config file with known good versions
+        uses: test-room-7/action-update-file@v1
+        with:
+          file-path: config/component_config.yml
+          commit-msg: Update kortical components file
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref }}
+      - name: App Logs
+        if: always()
+        run: |
+          source venv/bin/activate
+          for i in k8s/*.yml; do
+            APP_NAME=`basename ${i%%.*}`
+            echo "Getting component version ID for app [$APP_NAME]"
+            kortical component logs $APP_NAME
+          done
+      - name: Delete Challenger Environment
+        if: always()
+        run: |
+          source venv/bin/activate
+          kortical environment delete -f github${{ github.run_id }}

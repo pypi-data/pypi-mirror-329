@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ app_title }}{{ app_title_extension }}</title>
+    <script>
+
+        // Set global template variables before importing other files in case they use them
+        window.app_title = "{{ app_title }}";
+        window.app_title_extension = "{{ app_title_extension }}";
+        window.logo_image_url = "{{ logo_image_url }}";
+
+    </script>
+    <style>
+
+        :root {
+            --colour-1: {{ colour1 }};
+            --colour-2: {{ colour2 }};
+            --background-colour: {{ background_colour }};
+        }
+
+        html {
+            height: 100%;
+            color: #ff8800
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+
+    </style>
+    <script src="static/js/Header.js" type="module"></script>
+    <script src="static/js/Article.js" type="module"></script>
+    <script src="static/js/Tags.js" type="module"></script>
+</head>
+
+<body>
+<k-header></k-header>
+<div style="display: flex; flex-direction: row; flex-grow: 1; width: auto">
+    <k-article></k-article><k-tags></k-tags>
+</div>
+</body>
+</html>

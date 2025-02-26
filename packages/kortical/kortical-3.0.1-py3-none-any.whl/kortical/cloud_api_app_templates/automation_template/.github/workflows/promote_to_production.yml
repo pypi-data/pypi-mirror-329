@@ -1,0 +1,45 @@
+name: Promote to Production
+
+on: workflow_dispatch
+
+jobs:
+  run_tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out the repository
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Requirements
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          pip install -e .
+      - name: Initialise Kortical Package / CLI
+        run: |
+          source venv/bin/activate
+          kortical config init -q
+          echo "Configuring system_url"
+          kortical config set system_url <placeholder_if_you_see_this_did_you_setup_the_git_hooks>
+          echo "Configuring credentials"
+          kortical config credentials from_string -q ${{ secrets.KORTICAL_CREDENTIALS }}
+          kortical project select <placeholder_if_you_see_this_did_you_setup_the_git_hooks>
+      - name: Promote UAT to Production
+        run: |
+          source venv/bin/activate
+          kortical environment select UAT
+          # -f allows us to force the operation
+          kortical environment promote -f
+          kortical environment select Production
+          kortical environment wait-for-components
+      - name: Run Smoke Tests On Production
+        run: |
+          source venv/bin/activate
+          # Run a limited set of tests marked with the smoke_test using the test decorator @pytest.mark.smoke_test on the appropriate tests
+          pytest -m "smoke"

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ app_title }}{{ app_title_extension }}</title>
+    <link rel="icon" type="image/x-icon" href="./static/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/css/styles.css">
+    <script>
+
+        // Set global template variables before importing other files in case they use them
+        window.app_title = "{{ app_title }}";
+        window.app_title_extension = "{{ app_title_extension }}";
+        window.logo_image_url = "{{ logo_image_url }}";
+
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <k-header></k-header>
+        <k-message-list></k-message-list>
+        <div class="user-input-wrap">
+            <k-user-input></k-user-input>
+        </div>
+    </div>
+    <script src="./static/js/main.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+from kortical.config.kortical_config import get, set
