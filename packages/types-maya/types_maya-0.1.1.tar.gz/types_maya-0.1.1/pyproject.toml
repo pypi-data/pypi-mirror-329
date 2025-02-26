@@ -1,0 +1,77 @@
+[project]
+name = "types-maya"
+description = "External type annotations for Autodesk Maya Python API"
+readme = "README.md"
+authors = [{ name = "Thibaud Gambier" }]
+requires-python = ">=3.8"
+dependencies = []
+dynamic = ["version"]
+license = { file = "LICENSE" }
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Typing :: Stubs Only",
+]
+urls.Repository = "https://github.com/tahv/types-maya"
+urls.PyPI = "https://pypi.org/project/types-maya"
+
+[dependency-groups]
+dev = [
+  { include-group = "mypy" },
+  { include-group = "pyright" },
+]
+mypy = ["mypy>=1.4.1"]
+pyright = ["pyright>=1.1.393"]
+
+[build-system]
+requires = ["setuptools>=64", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+local_scheme = "no-local-version"
+
+[tool.uv]
+required-version = ">=0.5.8"
+default-groups = []
+
+[tool.mypy]
+files = ["src"]
+disallow_untyped_defs = true
+check_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+warn_return_any = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+show_error_codes = true
+
+[tool.ruff]
+src = ["src"]
+include = ["src/**/*.py", "**/pyproject.toml"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+flake8-tidy-imports.ban-relative-imports = "all"
+pydocstyle.convention = "google"
+isort.required-imports = ["from __future__ import annotations"]
+ignore = [
+  "A002",   # Function argument is shadowing a Python builtin
+  "COM812", # Missing trailing comma
+  "D100",   # Missing docstring in public module
+  "D103",   # Missing docstring in public function
+  "D104",   # Missing docstring in public package
+  "D105",   # Missing docstring in magic method
+  "D107",   # Missing docstring in `__init__`
+  "FIX002", # Line contains TODO, consider resolving the issue
+  "N802",   # Function name should be lowercase
+  "PD",     # panda-vet linter
+  "SIM300", # Yoda condition detected
+  "TD002",  # Missing author in TODO
+  "TD003",  # Missing issue link on the line following this TODO
+  "N803",   # Argument name should be lowercase
+  "N815",   # Variable in class scope should not be mixedCase
+  "PYI011", # Only simple default values allowed for typed arguments
+]
