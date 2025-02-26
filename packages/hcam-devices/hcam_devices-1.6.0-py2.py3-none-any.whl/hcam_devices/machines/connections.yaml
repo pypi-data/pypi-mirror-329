@@ -1,0 +1,47 @@
+statechart:
+  name: A connection handler
+  description: |
+    Designed to handle connection and error status for devices.
+
+    This machine expects a device object in it's initial context.
+    The device object should implement try_connect and disconnect methods.
+
+    The machine is designed to send connect and disconnect events to a
+    second, bound, state machine.
+  preamble: |
+    setdefault('name', 'anon')  
+    setdefault('twait', 2)  
+  root state:
+    name: active
+    initial: offline
+    states:
+      - name: offline
+        transitions:
+          - target: connecting
+            guard: after(twait) and device.try_connect()
+
+      - name: connecting
+        transitions:
+          - target: online
+            guard: after(twait)
+
+      - name: online
+        on entry: |
+          print('{} connected'.format(name))
+          # enable connected motors/sensors etc
+          send('enable')
+        transitions:
+          - target: disconnecting
+            event: disconnect
+            action: |
+              print('{} disconnecting'.format(name))
+              # disable connected motors/sensors etc
+              send('disable')
+
+      - name: disconnecting
+        transitions:
+          - target: offline
+            guard: after(twait)
+            action: |
+              # disconnect from device
+              device.disconnect()            

@@ -1,0 +1,121 @@
+statechart:
+  name: A simple motor controller
+  description: |
+    Connection is handled by a separate connection handler that is bound to this machine.
+
+    This machine expects a "device" object in it's initial context.
+    The device object should implement move, home, stop, and poll methods.
+    The poll method must return a tuple of position, moving status
+  preamble: |
+    setdefault('current', 0)
+    setdefault('target', 0)
+    setdefault('poll_time', 1)
+    moving = False
+  root state:
+    name: active
+    parallel states:
+      - name: motorController
+        initial: disabled
+        states:
+          - name: disabled
+            transitions:
+              - target: enabled
+                event: enable
+
+          - name: enabled
+            initial: init
+            transitions:
+              - target: disabled
+                event: disable
+            states:
+              - name: init
+                transitions:
+                  - target: homing
+                    event: home
+                    guard: device.home()
+                    action: |
+                      moving = True
+
+                  - target: homed
+                    guard: after(poll_time) and hasattr(device, 'homed') and device.homed()
+                    action: |
+                      try:
+                          current, _ = device.poll()
+                          target = current
+                      except:
+                          pass
+
+              - name: homing
+                transitions:
+                  - target: homing
+                    guard: after(poll_time)
+                    action: |
+                      try:
+                          current, moving = device.poll()
+                      except:
+                          pass
+                  - target: homed
+                    guard: not moving
+                    action: |
+                      try:
+                          current, _ = device.poll()
+                          target = current
+                      except:
+                          pass
+
+              - name: homed
+                transitions:
+                  - target: homing
+                    event: home
+                    guard: device.home()
+                    action: |
+                      moving = True
+                initial: inpos
+                states:
+                  - name: inpos
+                    on entry: |
+                      current = target
+                    transitions:
+                      - target: outpos
+                        event: positionSet
+                        action: target = event.position
+                        guard: event.position != current
+                        # dummy transition back to ourselves if we get a move command
+                      - target: inpos
+                        event: move
+                  - name: outpos
+                    transitions:
+                      - target: moving
+                        event: move
+                        guard: device.move(target)
+                        action: |
+                          moving = True
+                  - name: moving
+                    transitions:
+                      - target: moving
+                        guard: after(poll_time)
+                        action: |
+                          try:
+                              current, moving = device.poll()
+                          except:
+                              pass
+                      - target: stopped
+                        event: stop
+                        guard: device.stop()
+                        action: moving = False
+                      - target: inpos
+                        priority: 1
+                        guard: device.on_target()
+                        action: moving = False
+                  - name: stopped
+                    on entry: current, _ = device.poll()
+                    transitions:
+                      - target: outpos
+                        event: positionSet
+                        action: target = event.position
+                      - target: moving
+                        event: move
+                        guard: device.move(target)
+                        action: moving = True
+                      - target: stopped
+                        event: stop

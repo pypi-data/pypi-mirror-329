@@ -1,0 +1,19 @@
+#!python
+import sys
+from hcam_devices.gtc.corba import TelescopeServer
+import omniORB
+
+ts = TelescopeServer()
+if not ts.ready:
+    print("gtc_archive_ingest: telescope server not ready")
+    sys.exit(1)
+
+try:
+    # set long timeout for this command (1 hour in milliseconds)
+    omniORB.setClientCallTimeout(ts._server, int(3600 * 1000))
+    ts._server.transferObservationDataFromHIPERToGCS()
+except Exception as e:
+    print("gtc_archive_ingest: failed to transfer data: ", e)
+    sys.exit(1)
+
+sys.exit(0)

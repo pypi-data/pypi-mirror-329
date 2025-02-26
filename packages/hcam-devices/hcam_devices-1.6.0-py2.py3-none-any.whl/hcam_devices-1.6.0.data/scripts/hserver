@@ -1,0 +1,33 @@
+#!python
+import argparse
+import os
+
+from autobahn.twisted.component import Component, run
+
+from hcam_devices.components import NGCComponent
+
+URL = os.getenv("WAMP_SERVER", "192.168.1.2")
+
+transport_cfg = dict(
+    type="websocket",
+    url="ws://{}:8080/ws".format(URL),
+    max_retries=-1,
+    max_retry_delay=30,
+)
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-e", "--emulate", help="use emulated hardware", action="store_true"
+)
+args = parser.parse_args()
+if args.emulate:
+    print("EMULATION MODE")
+
+ngc = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=NGCComponent,
+    extra=dict(name="NGC", emulate=args.emulate),
+)
+
+run([ngc])

@@ -1,0 +1,57 @@
+statechart:
+  name: A basic device sensor with setpoint control
+  description: |
+    Connection is handled by a separate connection handler that is bound to this machine.
+
+    This machine expects a method in it's initial context called "read". This returns
+    a value. We also need a method called "write", which
+    accepts a single value and updates the setpoint. Finally, to ensure the setpoint
+    is correct on connection, we need a method called "read_setpoint".
+  preamble: |
+    setdefault('poll_time', 2)
+    setdefault('value', 0)
+    setdefault('target', 0)
+    last_read = time
+    setdefault('name', 'anon')
+  root state:
+    name: active
+    initial: disabled
+    states:
+      - name: disabled
+        transitions:
+        - target: enabled
+          event: enable
+
+      - name: enabled
+        on entry: |
+            try:
+              target = read_setpoint()
+            except Exception as err:
+              print('cannot read setpoint for {}\n{}'.format(name, err)) 
+              # send disconnect message to connection handler
+              send('disconnect') 
+        transitions:
+          - target: disabled
+            event: disable
+
+          - target: enabled
+            guard: after(poll_time)
+            action: |
+              try:
+                value = read()
+              except Exception as err:
+                print('cannot read value for {}\n{}'.format(name, err))
+                # send disconnect message to connection handler
+                send('disconnect')
+              else:
+                last_read = time
+
+          - target: enabled
+            event: targetSet
+            priority: 1
+            action: |
+              target = event.target
+              write(target)
+
+
+

@@ -1,0 +1,41 @@
+statechart:
+  name: A basic device sensor for reading values only
+  description: |
+    Connection is handled by a separate connection handler that is bound to this machine.
+
+    This machine expects a method in it's initial context called "read_value". This returns
+    a value. There is also a method expected called "read_alarm". The latter is optional.
+  preamble: |
+    setdefault('poll_time', 2)
+    setdefault('value', 0)
+    alarm = False
+    setdefault('read_alarm', lambda *args: False)
+    last_read = time 
+    setdefault('name', 'anon')
+  root state:
+    name: active
+    initial: disabled
+    states:
+      - name: disabled
+        transitions:
+        - target: enabled
+          event: enable
+
+      - name: enabled
+        transitions:
+          - target: disabled
+            event: disable
+
+          - target: enabled
+            guard: after(poll_time)
+            action: |
+              try:
+                value = read_value()
+                alarm = read_alarm()
+              except Exception as err:
+                print('cannot read value for {}\n{}'.format(name, err))
+                # send disconnect message to connection handler
+                send('disconnect')
+              else:
+                last_read = time
+

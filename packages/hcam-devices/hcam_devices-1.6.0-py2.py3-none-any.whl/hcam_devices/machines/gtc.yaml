@@ -1,0 +1,135 @@
+statechart:
+  name: GTC Telescope state
+  description: |
+    The GTC environment uses a CORBA server to handle language agnostic RPC
+    calls to devices on the network. We use this CORBA server to check the
+    telescope status, request offsets and check when the telescope is in position.
+
+    An instance of hcam_devices.gtc.corba.TelescopeServer, named "server" is expected in the
+    initial context.
+  preamble: |
+    telpars = None
+    rack_temp = None
+    humidity = None
+    m1_temp = None
+    last_read = time
+  root state:
+    name: active
+    initial: offline
+    states:
+      - name: offline
+        transitions:
+          - target: online
+            guard: after(10) and server.ready
+          - target: offline
+            priority: 1
+            guard: after(240)
+            action: |
+              try:
+                server.establish_connection()
+              except:
+                pass
+
+      - name: online
+        initial: in position
+        transitions:
+          - target: offline
+            priority: 1
+            guard: after(60) and not server.ready
+
+          - guard: idle(5)
+            action: |
+              try:
+                telpars = server.getTelescopeParams()
+                humidity = server.getHumidity()
+                rack_temp = server.getCabinetTemperature1()
+                m1_temp = server.getM1Temperature()
+                last_read = time
+              except:
+                pass
+        states:
+          - name: offsetting
+            on exit: print('telescope ready')
+            transitions:
+              - target: in position history
+                guard: after(0.2) and server.in_position(verbose=True)
+
+          - name: in position
+            initial: nodding disabled
+
+            transitions:
+              - target: offsetting
+                event: do_offset
+                action: |
+                  raoff = event.raoff
+                  decoff = event.decoff
+                  print('sending offsets to telescope: ', raoff, decoff)
+                  try:
+                    server.requestTelescopeOffset(raoff, decoff)
+                    send('notify_autoguider', raoff=raoff, decoff=decoff)
+                  except Exception as err:
+                    print('offsets failed: ' + str(err))
+
+              - target: in position
+                event: do_guide_step
+                action: |
+                  raoff = event.raoff
+                  decoff = event.decoff
+                  print('sending guide offset to telescope: ', raoff, decoff)
+                  try:
+                    server.requestTelescopeOffset(raoff, decoff)
+                  except Exception as err:
+                    print('guide offset failed: ' + str(err))
+
+            states:
+              # make a deep history state, which means we re-enter sub-states in the same setup
+              # eg after an offset we will return to nodding disabled/enabled as appropriate
+              - name: in position history
+                type: deep history
+
+              - name: nodding disabled
+                transitions:
+                  - target: nodding enabled
+                    event: start_nodding
+                    action: |
+                      send('clear_offsets')
+                      print('dithering enabled')
+                  - target: nodding disabled
+                    event: stop_nodding
+
+              - name: nodding enabled
+                initial: idle
+                transitions:
+                  - target: nodding disabled
+                    event: stop_nodding
+                    action: |
+                      print('dithering disabled')
+
+                states:
+                  - name: idle
+                    transitions:
+                      - target: waiting_for_frame
+                        guard: after(0.05)
+                        action: |
+                          send('trigger_exposure')
+                          print('starting exposure')
+
+                  - name: waiting_for_frame
+                    transitions:
+                      - target: nodding
+                        event: frame_written
+                        action: |
+                          raoff = event.raoff
+                          decoff = event.decoff
+                          print('sending offsets to telescope: ', raoff, decoff)
+                          try:
+                            server.requestTelescopeOffset(raoff, decoff)
+                            send('notify_autoguider', raoff=raoff, decoff=decoff)
+                          except Exception as err:
+                            print('offsets failed: ' + str(err))
+
+                  - name: nodding
+                    on exit: print('telescope ready')
+                    transitions:
+                      - target: idle
+                        guard: after(0.2) and server.in_position(verbose=True)
