@@ -1,0 +1,230 @@
+Metadata-Version: 2.2
+Name: JWST_FOV_plotter
+Version: 0.4.1
+Summary: Simple tools to easily represent JWST FOVs.
+Home-page: https://gitlab.com/parrabalh/jwst_fov_plots
+Author: Pablo Arrabal Haro
+Author-email: parrabalh@gmail.com
+License: LICENSE
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: astropy
+Requires-Dist: matplotlib
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: shapely
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+**_JWST FOV Plotter_** is a very simple package created to facilitate representing the apertures
+of the different James Webb Space Telescope instruments on the sky projection.
+
+It allows to easily plot any FOV configuration by only specifying some central pointing
+coordinates, rotation angle and any selection of instruments/apertures. Moreover, the
+pointing coordinates and rotation angle can be given in the ideal coordinate system of any specific
+instrument.
+
+Additionally, the package includes a function to quickly generate DS9 region files.
+
+**Useful Links:**
+
+[JWST Field of View](https://jwst-docs.stsci.edu/jwst-observatory-hardware/jwst-field-of-view)
+
+[JWST Instrument Ideal Coordinate Systems](https://jwst-docs.stsci.edu/jwst-observatory-functionality/jwst-instrument-ideal-coordinate-systems)
+
+**Installation:**
+
+Through pip:
+
+`pip install --upgrade JWST_FOV_plotter` (make sure to install version 0.4.0 or higher for updated SIAF information and package compatibility with Python versions above 3.8)
+
+Alternatively, you can download the source code, move to the package folder and run:
+
+`python setup.py install`
+
+**Description and instructions:**
+
+The package essentially consists of only two main functions:
+
+- _plot_JWST_FOVs (ra, dec, fovs=None, ax=None, ref_instr='NIRCam', rot=0, instr_to_plot=['NIRCam', 'NIRSpec', 'MIRI', 'NIRISS'], colormap=None, color=None, NIRCam_long_wl=True, NIRCam_short_wl=True, NIRCam_coron=True, NIRSpec_MSA=True, NIRSpec_IFU=True, NIRSpec_fixed_slits=True, MIRI_imag=True, MIRI_IFU=True, MIRI_4QPM=True, MIRI_Lyot=True, MIRI_slit=True, NIRISS_WFSS=True, NIRISS_AMI=True, **kwargs):_
+
+`plot_JWST_FOVs` receives a pair of `ra`, `dec` coordinates in degrees, a counterclockwise rotation angle in degrees `rot`,
+the name of the instrument to use as reference for the pointing `ref_instr` (default: 'NIRCam') and a matplotlib axes `ax` to plot the resulting FOV. If no `ax` is specified, it will use the current axis from matplotlib at the time of calling the function, but it is advisable to specify the `ax`, specially when plotting on top of a background .fits image.
+
+The function uses the values from the SIAF table available in the [JWST FOV documentation](https://jwst-docs.stsci.edu/jwst-observatory-hardware/jwst-field-of-view). That table contains the geometry of all the different apertures in the V2V3 coordinate system. If desired, a different V2V3 apertures table can be used instead (`fovs='my_own_SIAF_table.csv'`). The given table must be in .csv or .fits format, and it must include at least all the columns present in the [original SIAF table](https://jwst-docs.stsci.edu/jwst-observatory-hardware/jwst-field-of-view). The default V2V3 FOV geometry will be updated in future versions of the package in the event of any future official modification of the values previously given.
+
+By default, all the JWST apertures are represented. In order to remove any of them, a set of boolean variables is available. Setting any of them to `False` will remove its corresponding aperture from the final plot (e.g., `NIRCam_long_wl=False`). These are all the available options:
+
+| Optional argument | Aperture |
+| ------ | ------ |
+| `NIRCam_long_wl` | NIRCam long wavelength detectors |
+| `NIRCam_short_wl` | NIRCam short wavelength detectors |
+| `NIRCam_coron` | NIRCam coronagraph masks |
+| `NIRSpec_MSA` | NIRSpec MSA |
+| `NIRSpec_IFU` | NIRSpec IFU |
+| `NIRSpec_fixed_slits` | NIRSpec fixed slits |
+| `MIRI_imag` | MIRI imaging |
+| `MIRI_IFU` | MIRI IFU |
+| `MIRI_4QPM` | MIRI 4QPM coronagraphs |
+| `MIRI_Lyot` | MIRI Lyot coronagraph |
+| `MIRI_slit` | MIRI slit of the LRS |
+| `NIRISS_WFSS` | NIRISS WFSS |
+| `NIRISS_AMI` | NIRISS AMI |
+
+To turn off all the apertures of any instruments, it exists the option of just removing their name from the `instr_to_plot` argument (default: `['NIRCam', 'NIRSpec', 'MIRI', 'NIRISS']`). In this way, by setting `instr_to_plot=['NIRCam', 'MIRI']`, for example, the function would only plot the FOV of those two instruments without needing to switch off all the individual apertures of the other unwanted instruments with the booleans listed above.
+
+Any extra matplotlib plotting parameters can also be added to the arguments of `plot_JWST_FOVs`. As some particularly useful examples, inputing a matplotlib transparency `alpha` value will plot shaded filled regions instead of just the edges of the apertures, while specifying a small value for `linewidth` will plot thinner edges.
+
+In addition to plotting the FOV in the corresponding matplotlib figure, the function also returns a `pandas.DataFrame` object with the resulting geometry of the plotted FOV in ICRS coordinates.
+
+- _create_ds9_region (out_name, ra, dec, fovs=None, ref_instr='NIRCam', rot=0, instr_to_plot=['NIRCam', 'NIRSpec', 'MIRI', 'NIRISS'], colormap=None, color=None, NIRCam_long_wl=True, NIRCam_short_wl=True, NIRCam_coron=True, NIRSpec_MSA=True, NIRSpec_IFU=True, NIRSpec_fixed_slits=True, MIRI_imag=True, MIRI_IFU=True, MIRI_4QPM=True, MIRI_Lyot=True, MIRI_slit=True, NIRISS_WFSS=True, NIRISS_AMI=True, extra_params=''):_
+
+`create_ds9_region` generates a DS9 region file named `out_name` from a pair of `ra`, `dec` coordinates in degrees, a counterclockwise rotation angle in degrees `rot` and the name of the instrument to use as reference for the pointing `ref_instr` (default: 'NIRCam').
+
+Indeed, the way `create_ds9_region` works is essentially identical to how `plot_JWST_FOVs` does, the main difference being that this time no axis `ax` is required since the function is not going to plot on a figure. Instead, an output file name must be specified for the DS9 region file to be created.
+
+By default, the region files generated will include one aperture per line in the form of a polygon constitued by 4 vertices plus a color parameter. Any extra DS9 region parameters can be added at the end of each line passing them in `str` format through the `extra_params` argument (e.g., `extra_params='dash=1 highlite=1 width=2'`).
+
+In addition to generating the DS9 region file with the corresponding JWST FOV, the function also returns a `pandas.DataFrame` object with the resulting geometry of the plotted FOV in ICRS coordinates (exactly identical to that returned by `plot_JWST_FOVs`).
+
+# **Complete example script**
+
+The script below gives an overview of the different utilities in **_JWST_FOV_plotter_**.
+In this example, we plot a .fits as background image making use of the [`astropy`](https://docs.astropy.org/en/stable/index.html) package and the [`matplotlib.pyplot.imshow`](https://matplotlib.org/3.3.4/api/_as_gen/matplotlib.pyplot.imshow.html) function.
+Some arbitrary JWST FOVs are represented in top of the background image using the `JWST_FOV_plotter.plotter.plot_JWST_FOVs` function.
+In the last part of the script, we show how to create a DS9 region file with our pointig FOVs through the `JWST_FOV_plotter.plotter.create_ds9_region` function, as well as how to save the pointing FOV geometry in ICRS coordinates to a .csv table if desired.
+
+```
+# Complete example of the use of plot_JWST_FOVs and create_ds9_region to
+# represent JWST FOVs over a background .fits image and make ds9 regions of any
+# desired JWST aperture, respectively.
+
+###############################################################################
+# Importing functions and libraries.
+
+import matplotlib.pyplot as plt
+from astropy.io import fits
+from astropy import wcs
+from JWST_FOV_plotter.plotter import plot_JWST_FOVs, create_ds9_region, radec_FOV
+
+###############################################################################
+# Plotting example.
+###############################################################################
+
+# Loading .fits image to be plotted as background (if desired).
+ima = fits.open('F160W_aegis_3dhst_example_image.fits')
+
+# Loading WCS information from the image header.
+w = wcs.WCS(ima[0].header)
+
+# Creating the figure.
+fig = plt.figure()
+
+# Defining axes.
+# Remove the projection=w argument if not using a background .fits image.
+ax = fig.add_subplot(111, projection=w)
+ax.set_xlabel('RA')
+ax.set_ylabel('Dec')
+
+# Plotting .fits image.
+# WARNING: To save compilation time, remove the interpolation='None'
+# argument (or set it to any other value among those supported by imshow)
+# to carry out quick tests before plotting the final image.
+
+ax.imshow(ima[0].data, cmap='Greys', origin='lower', interpolation='None',
+          vmin=0, vmax=0.01)
+
+#####################
+# Plotting JWST FOVs.
+
+# Setting reference instrument for the pointing.
+# Possible values: 'NIRCam', 'NIRSpec', 'MIRI', 'NIRISS'
+ref_inst = 'NIRSpec'
+
+# Pointing coordinates in degrees.
+ra = 215.069306
+dec = 52.9483236
+
+# APA angle of the reference instrument in degrees.
+ang = 110
+
+# Remove the transform=ax.get_transform('icrs') argument if not using a
+# background .fits image.
+
+plot_JWST_FOVs(ra, dec, rot=ang, ax=ax, ref_instr=ref_inst,
+               transform=ax.get_transform('icrs'))
+
+# More JWST FOVs.
+# This time, we will not plot NIRSpec nor NIRISS, and will also skip the
+# NIRCam coronagraph apertures, for example.
+# Adding an alpha value (between 0-1) will plot shaded areas instead of only
+# contours.
+
+plot_JWST_FOVs(ra, dec, rot=ang-15, ax=ax, ref_instr=ref_inst,
+               instr_to_plot=['NIRCam', 'MIRI'], NIRCam_coron=False,
+               linewidth=0.2, alpha=0.3, color='magenta',
+               transform=ax.get_transform('icrs'))
+
+# Saving plot.
+plt.savefig('My_JWST_FOVs_test.pdf')
+plt.close(fig)
+ima.close()
+
+
+###########################################################################
+# DS9 region file creation example.
+###########################################################################
+
+# For simplicity, we will use the same ra, dec, ang and ref_inst previously
+# defined in the script.
+
+# Creating the DS9 region file with some arbitrary optional arguments.
+create_ds9_region('My_JWST_FOV_DS9_region.reg', ra, dec, rot=ang,
+                  ref_instr=ref_inst,
+                  instr_to_plot=['NIRCam', 'MIRI'], NIRCam_coron=False)
+
+
+###############################################################################
+# Saving pointing apertures to a .csv table.
+###############################################################################
+
+# If you want to save your pointing FOV geometry in ICRS coordinates to a
+# .csv table for other purposes, you can get it this way.
+
+radec_fovs = create_ds9_region('My_JWST_FOV_DS9_region.reg', ra, dec,
+                               rot=ang, ref_instr=ref_inst, NIRCam_coron=False,
+                               instr_to_plot=['NIRCam', 'MIRI'])
+
+radec_fovs.to_csv('My_pointing_FOV.csv', index=False)
+
+# Alternatively, you could also just call the intermediate function radec_FOV,
+# which generates the same DataFrame without plotting anything.
+radec_fovs_2 = radec_FOV(ra, dec, rot=ang, ref_instr=ref_inst,
+                         NIRCam_coron=False, instr_to_plot=['NIRCam', 'MIRI'])
+
+radec_fovs_2.to_csv('My_pointing_FOV_2.csv', index=False)
+
+```
+
+**Example matplotlib image generated by the code shown above:**
+
+![](./examples/JWST_FOV_plotter_example.png)
+
+**Example DS9 region generated by the code shown above:**
+
+![](/examples/JWST_FOV_plotter_DS9_region_example.png)
+
+
+I hope this simple package can make your life easier and save you some time. In case of needing any help using it, do not hesitate to contact me at parrabalh@gmail.com or pablo.arrabalharo@nasa.gov.
