@@ -1,0 +1,145 @@
+[project]
+authors = []
+requires-python = "<4.0,>=3.9"
+dependencies = []
+name = "langchain-openwebui"
+version = "0.0.1"
+description = "LangChain openwebui"
+readme = "README.md"
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+repository = "https://www.github.com/langchain-ai/langchain"
+
+[dependency-groups]
+lint = [
+    "ruff<1.0.0,>=0.5.0",
+]
+dev = [
+    "langchain-core",
+    "langchain-text-splitters",
+    "langchain-community",
+    "langchain",
+    "langchain-openai",
+    "ipykernel<7.0.0,>=6.29.2",
+]
+codespell = [
+    "codespell<3.0.0,>=2.2.0",
+]
+typing = []
+test = [
+    "langchain-experimental @ git+https://github.com/langchain-ai/langchain-experimental.git#subdirectory=libs/experimental",
+    "langchain-anthropic",
+    "langchain-aws @ git+https://github.com/langchain-ai/langchain-aws.git#subdirectory=libs/aws",
+    "langchain-chroma",
+    "langchain-fireworks",
+    "langchain-google-vertexai @ git+https://github.com/langchain-ai/langchain-google.git#subdirectory=libs/vertexai",
+    "langchain-groq",
+    "langchain-mistralai",
+    "langchain-together @ git+https://github.com/langchain-ai/langchain-together.git#subdirectory=libs/together",
+    "langchain-unstructured @ git+https://github.com/langchain-ai/langchain-unstructured.git#subdirectory=libs/unstructured",
+    "langgraph",
+    "jupyter<2.0.0,>=1.1.1",
+    "click<9.0.0,>=8.1.7",
+    "aiofiles<25.0.0,>=24.1.0",
+    "faiss-cpu<2.0.0,>=1.7.4",
+    "grandalf<1.0,>=0.8",
+    "lark<2.0.0,>=1.1.9",
+    "pandas<3,>=2",
+    "rank-bm25<1.0.0,>=0.2.2",
+    "tabulate<1.0.0,>=0.9.0",
+    "unstructured[md]<1.0.0,>=0.16.11; python_version < \"3.13\"",
+    "wikipedia<2.0.0,>=1.4.0",
+    "pypdf<6.0.0,>=5.0.0",
+    "vcrpy<7.0.0,>=6.0.1",
+]
+
+[tool.uv.sources.langchain-core]
+path = "./libs/core"
+editable = true
+
+[tool.uv.sources.langchain-text-splitters]
+path = "./libs/text-splitters"
+editable = true
+
+[tool.uv.sources.langchain-tests]
+path = "./libs/standard-tests"
+editable = true
+
+[tool.uv.sources.langchain-community]
+path = "./libs/community"
+editable = true
+
+[tool.uv.sources.langchain]
+path = "./libs/langchain"
+editable = true
+
+[tool.uv.sources.langchain-openai]
+path = "./libs/partners/openai"
+editable = true
+
+[tool.uv.sources.langchain-anthropic]
+path = "./libs/partners/anthropic"
+editable = true
+
+[tool.uv.sources.langchain-chroma]
+path = "./libs/partners/chroma"
+editable = true
+
+[tool.uv.sources.langchain-fireworks]
+path = "./libs/partners/fireworks"
+editable = true
+
+[tool.uv.sources.langchain-groq]
+path = "./libs/partners/groq"
+editable = true
+
+[tool.uv.sources.langchain-mistralai]
+path = "./libs/partners/mistralai"
+editable = true
+
+[tool.codespell]
+skip = ".git,*.pdf,*.svg,*.pdf,*.yaml,*.ipynb,poetry.lock,*.min.js,*.css,package-lock.json,example_data,_dist,examples,templates,*.trig"
+ignore-regex = ".*(Stati Uniti|Tense=Pres).*"
+ignore-words-list = "momento,collison,ned,foor,reworkd,parth,whats,aapply,mysogyny,unsecure,damon,crate,aadd,symbl,precesses,accademia,nin,cann"
+
+[tool.ruff]
+extend-include = [
+    "*.ipynb",
+]
+extend-exclude = [
+    "docs/docs/expression_language/why.ipynb",
+]
+
+[tool.ruff.lint]
+select = [
+    "D",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"**/{cookbook,docs}/*" = [
+    "E402",
+    "F401",
+    "F811",
+    "F841",
+]
+"!libs/langchain/langchain/model_laboratory.py" = [
+    "D",
+]
+"cookbook/gymnasium_agent_simulation.ipynb" = [
+    "F821",
+]
+"docs/docs/integrations/document_loaders/tensorflow_datasets.ipynb" = [
+    "F821",
+]
+
+[build-system]
+requires = [
+    "pdm-backend",
+]
+build-backend = "pdm.backend"
