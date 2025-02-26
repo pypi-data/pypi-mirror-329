@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dnetwork"
+authors = [
+    {name = "Dnetwork-Team", email = "webdev2123@gmail.com"},
+]
+description = "My project demo"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["one", "two"]
+license = {text = "MIT License"}
+classifiers = [
+    "Framework :: Django",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "gql",
+    "requests-toolbelt",
+    "pytest",
+    "pytest-mock",
+    "pytest-cov",
+    "importlib-metadata; python_version > '3.7'",
+]
+version = "0.1.4.9"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-mock",
+    "pytest-cov",
+    "black",
+    "mypy",
+    "ruff",
+]
+test = [
+    "pytest",
+    "pytest-mock",
+    "pytest-cov",
+]
+build = ["build"]
+
+# Uncomment if needed
+# [project.scripts]
+# my-script = "my_package.module:function"
