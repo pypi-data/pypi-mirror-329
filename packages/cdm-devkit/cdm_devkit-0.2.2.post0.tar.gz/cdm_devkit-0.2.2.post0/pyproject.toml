@@ -1,0 +1,77 @@
+[tool.poetry]
+name = "cdm-devkit"
+version = "0.2.2-post0"
+description = "Developer tools for CdM processors"
+authors = [
+    "CdM Processors",
+    "Nikolay Repin <n.repin@g.nsu.ru>",
+    "Timofey Khrapovitskiy <vuki03@mail.ru>",
+    "Ilya Merzlyakov <ilyamerzlakov@gmail.com>",
+    "Mikhail Krasnikov <m.krasnikov1@g.nsu.ru>",
+    "Nikita Tatarinov <n.tatarinov@g.nsu.ru>",
+    "Nikita Korotkov <n.korotkov@g.nsu.ru>",
+    "Dmitriy Vashurin <kapkekes@yandex.ru>",
+    "Andrey Melnikov <a.melnikov4@g.nsu.ru>"
+]
+
+maintainers = [
+    "Nikolay Repin <n.repin@g.nsu.ru>"
+]
+
+readme = "README.md"
+homepage = "https://github.com/cdm-processors/cdm-devkit"
+
+classifiers = [
+    "Topic :: Software Development :: Assemblers",
+    "Topic :: Software Development :: Disassemblers",
+    "Topic :: Software Development :: Debuggers",
+    "Topic :: System :: Emulators",
+    "Topic :: System :: Hardware",
+]
+
+packages = [
+    { include = "cocas" },
+    { include = "synthm" },
+    { include = "cocodump" },
+    { include = "cocoemu_server_wrapper", from = "cocoemu-server" }
+]
+
+[tool.poetry.scripts]
+cocas = 'cocas.main:main'
+synthm = 'synthm.main:main'
+cocodump = 'cocodump.main:main'
+cocoemu-server = 'cocoemu_server_wrapper.wrapper:main'
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bitstruct = "^8.14.1"
+antlr4-python3-runtime = "4.13.*"
+websocket-server = "^0.6.4"
+colorama = "^0.4.4"
+
+[tool.poetry.group.dev.dependencies]
+antlr4-tools = "^0.2"
+ruff = "^0.0.253"
+strictyaml = "^1.6.2"
+pytest = "^7.2.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests"
+]
+
+[tool.ruff]
+select = ["E", "F", "I"]
+exclude = [
+    "cocas/assembler/generated",
+    "cocas/object_file/generated",
+    "logisim/cdm8e"
+]
+line-length = 120
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
