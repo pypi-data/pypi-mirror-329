@@ -1,0 +1,24 @@
+# laonlp_spellchecker - Lao NLP Spell Checker
+
+[![Python Version](https://img.shields.io/badge/python-3.6%2B-blue)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+`laonlp_spellchecker` is a simple **Lao NLP spell-checker** that automatically corrects misspelled Lao words using a pre-built dictionary and edit distance algorithms. 
+
+---
+
+## 🚀 **Features**
+✅ Lao spell-checking using **SymSpell**  
+✅ Fast and lightweight spell correction  
+✅ Easy to install and use  
+✅ Supports **custom word dictionaries**  
+
+---
+
+## 🔧 **Installation**
+### Install from PyPI (if published)
+```bash
+pip install laonlp-spellchecker
+```
+
+

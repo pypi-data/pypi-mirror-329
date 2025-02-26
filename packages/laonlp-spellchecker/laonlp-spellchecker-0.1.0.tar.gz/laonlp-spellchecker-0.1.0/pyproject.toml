@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "laonlp-spellchecker"
+version = "0.1.0"
+description = "A Lao NLP library for spell-checking"
+readme = "readme.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Khonepaseuth SOUNAKHEN", email = "khonepaserth@fe-nuol.edu.la"}
+]
+requires-python = ">=3.6"
+dependencies = [
+    "symspellpy"
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/laonlp"
+Repository = "https://github.com/yourusername/laonlp"
+Issues = "https://github.com/yourusername/laonlp/issues"
+
+[tool.setuptools]
+packages = ["laonlp_spellchecker"]
+
+[tool.setuptools.package-data]
+# You can specify additional files here, such as your 'lao_words.txt' if needed
+lao_words = ["lao_words.txt"]
