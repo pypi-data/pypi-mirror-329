@@ -1,0 +1,42 @@
+Metadata-Version: 2.1
+Name: core_federated_search_app
+Version: 2.14.0
+Summary: Federated search backend for the curator core project
+Home-page: https://github.com/usnistgov/core_federated_search_app
+Author: NIST IT Lab
+Author-email: itl_inquiries@nist.gov
+License-File: LICENSE.md
+Requires-Dist: Django
+Requires-Dist: django-oauth-toolkit==2.4.*
+Requires-Dist: djangorestframework
+Requires-Dist: django-simple-menu
+Requires-Dist: requests
+Requires-Dist: core-main-app==2.14.*
+Requires-Dist: core-explore-common-app==2.14.*
+
+=========================
+Core Federated Search App
+=========================
+
+Federated search backend for the curator core project.
+
+Quick start
+===========
+
+1. Add "core_federated_search_app" to your INSTALLED_APPS setting
+-----------------------------------------------------------------
+
+.. code:: python
+
+    INSTALLED_APPS = [
+      'oauth2_provider',
+      'core_federated_search_app',
+    ]
+
+2. Include the core_federated_search_app URLconf in your project urls.py
+------------------------------------------------------------------------
+
+.. code:: python
+
+    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    url(r'^federated/search/', include("core_federated_search_app.urls")),
