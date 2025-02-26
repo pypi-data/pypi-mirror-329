@@ -1,0 +1,58 @@
+stages:
+  - pre-commit
+  - build
+  - test
+  - deploy
+
+precommit-job:
+  image: python:3.11-bookworm
+  stage: pre-commit
+  before_script:
+    - python -m venv ci-venv
+    - source ci-venv/bin/activate
+    - pip install --upgrade pip
+    - pip install pre-commit
+  script:
+    - pre-commit run --all
+
+build-job:
+  image: python:3.11-bookworm
+  stage: build
+  before_script:
+    - apt update
+    - apt install -y cppzmq-dev libboost-dev libboost-python-dev libtango-dev libomniorb4-dev
+    - python -m venv ci-venv
+    - source ci-venv/bin/activate
+    - pip install --upgrade pip
+  script:
+    - pip install build wheel setuptools_scm
+    - python -m build
+  artifacts:
+    paths:
+      - dist/
+
+unit-test-job:
+  image: python:3.11-bookworm
+  stage: test
+  before_script:
+    - apt update
+    - apt install -y cppzmq-dev libboost-dev libboost-python-dev libtango-dev libomniorb4-dev
+    - python -m venv ci-venv
+    - source ci-venv/bin/activate
+    - pip install --upgrade pip
+  script:
+    - pip install '.[test]'
+    - pytest -v
+
+deploy:
+  image: python:3.11-bookworm
+  stage: deploy
+  only:
+    - tags
+  before_script:
+    - python -m venv ci-venv
+    - source ci-venv/bin/activate
+    - pip install --upgrade pip
+    - pip install twine
+  script:
+    - twine upload dist/* -u __token__ -p $PYPI_API_TOKEN

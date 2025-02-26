@@ -1,0 +1,35 @@
+[build-system]
+
+requires = ["setuptools", "setuptools_scm", "build"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "src/graylogger/_version.py"
+
+[project]
+dynamic = ["version"]
+name = "tangods-graylogger"
+dependencies = [
+  "pytango",
+  "requests",
+]
+authors = [
+  {name = "Antonio Bartalesi", email = "antonio.bartalesi@gmail.com"},
+]
+description = "A tango device server to catch logs on the old log4tango API and send them to Graylogger using GELF and HTTP."
+readme = "README.md"
+classifiers = [
+"License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+]
+
+[project.urls]
+repository = "https://gitlab.com/ABartalesi/graylogger-tangods"
+
+[project.scripts]
+Graylogger = "graylogger:main"
+Logproducer = "logproducer:main"
