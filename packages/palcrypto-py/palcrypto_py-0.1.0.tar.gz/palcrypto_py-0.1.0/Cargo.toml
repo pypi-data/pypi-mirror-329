@@ -1,0 +1,18 @@
+[package]
+name = "palcrypto-py"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "palcrypto_py"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+pyo3 = "0.23.3"
+palcrypto-rs = { version = "0.2.3" }
+
+
+[[bin]]
+name = "stub_gen"
+path = "src/bin/stub_gen.rs"
