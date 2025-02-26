@@ -1,0 +1,75 @@
+[tool.poetry]
+name = "asbestos"
+version = "1.6.0"
+description = "An easy way to mock Snowflake connections in Python!"
+authors = ["Joe Kaufeld <jkaufeld@spoton.com>", "SpotOn <opensource@spoton.com>"]
+readme = "README.md"
+packages = [{include = "asbestos"}]
+exclude = ["stub"]
+repository = "https://github.com/spotoninc/asbestos"
+documentation = "https://spotoninc.github.io/asbestos"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Database",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Testing :: Mocking",
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.13.2"
+seed-isort-config = "^2.2.0"
+pdbpp = "^0.10.3"
+ruff = "^0.4.8"
+pre-commit = "^3.7.1"
+black = "^24.4.2"
+pytest = "^8.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+line_length = 88
+skip_gitignore = "True"
+
+[tool.seed-isort-config]
+known_third_party = ["pytest"]
+
+[tool.pytest.ini_options]
+python_files = "tests.py test_*.py"
+
+[tool.ruff]
+exclude = [
+    ".git",
+    ".venv",
+]
+ignore = [
+    "ANN002",
+    "ANN003",
+    "ANN101",
+    "ANN401",
+]
+line-length = 90
+select = [
+    "ANN",
+    "C9",
+    "E",
+    "F",
+    "W",
+]
+
+[tool.ruff.mccabe]
+max-complexity = 8
