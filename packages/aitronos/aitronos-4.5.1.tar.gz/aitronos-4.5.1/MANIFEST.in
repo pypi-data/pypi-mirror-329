@@ -1,0 +1,46 @@
+# Include essential package files
+include requirements.txt
+include README.md
+include config.template.json
+
+# Include CLI resources
+recursive-include aitronos/cli/commands/resources *
+
+# Global exclusions
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude *.so
+global-exclude .git*
+global-exclude .DS_Store
+global-exclude *.egg-info
+global-exclude *.egg
+global-exclude *.whl
+global-exclude dist/*
+global-exclude build/*
+
+# Exclude virtual environments
+prune venv
+prune .venv
+prune env
+prune .env
+prune */venv
+prune */env
+prune test_*/venv
+prune test_*/env
+
+# Exclude development files
+prune .git
+prune .github
+prune .idea
+prune .vscode
+prune tests
+prune docs
+prune examples
+prune */test_*
+prune test_*
+
+# Exclude template virtual environments
+recursive-exclude */template/venv *
+recursive-exclude */templates/venv *
+recursive-exclude */template/env *
+recursive-exclude */templates/env * 
