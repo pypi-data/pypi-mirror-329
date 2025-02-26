@@ -1,0 +1,95 @@
+Metadata-Version: 2.2
+Name: idvpackage
+Version: 1.10.60
+Summary: This repository contains a Python program designed to execute Optical Character Recognition (OCR) and Facial Recognition on images.
+Home-page: 
+Author: Fahad Patel
+Author-email: fahadpatel1403@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: setuptools
+Requires-Dist: google-cloud-vision
+Requires-Dist: opencv-python-headless
+Requires-Dist: Pillow
+Requires-Dist: numpy
+Requires-Dist: cmake
+Requires-Dist: face-recognition
+Requires-Dist: googletrans==3.1.0a0
+Requires-Dist: rapidfuzz
+Requires-Dist: pycountry
+Requires-Dist: hijri_converter
+Requires-Dist: pytesseract
+Requires-Dist: gender-guesser
+Requires-Dist: deep-translator
+Requires-Dist: dlib==19.24.2
+Requires-Dist: deepface
+Requires-Dist: tf-keras
+Requires-Dist: facenet-pytorch
+Requires-Dist: scikit-image
+Requires-Dist: psutil
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# IDV Package with Isolated Liveness Detection
+
+This project implements an IDV (Identity Verification) package with an isolated liveness detection service. The architecture separates resource-intensive ML operations into a dedicated microservice for better resource management and scalability.
+
+## Project Structure
+
+```
+.
+├── idvpackage/           # Main IDV package
+│   ├── ocr.py           # OCR and document processing
+│   └── ...              # Other IDV components
+│
+└── liveness_api/        # Isolated Liveness Detection Service
+    ├── app/
+    │   ├── main.py      # FastAPI application
+    │   └── liveness_detector.py  # ML model handling
+    ├── spoof_resources/ # ML model resources
+    ├── Dockerfile       # Container configuration
+    └── requirements.txt # Service dependencies
+```
+
+## Architecture
+
+The project uses a microservices architecture where:
+
+1. The main IDV package handles document processing and orchestration
+2. Liveness detection is offloaded to a separate service that:
+   - Manages its own memory and resources
+   - Can be scaled independently
+   - Provides GPU acceleration when available
+   - Handles cleanup of temporary resources
+
+## Deployment
+
+- The main IDV package can be installed as a Python package
+- The liveness detection service is deployed separately on Hugging Face Spaces
+- See `liveness_api/README.md` for detailed deployment instructions
+
+## Benefits
+
+- Improved resource management
+- Independent scaling of components
+- Better error isolation
+- Simplified maintenance
+- Optional GPU acceleration
+- Reduced memory pressure on main package
+
+## Usage
+
+1. Install the IDV package
+2. Deploy the liveness service
+3. Set the `LIVENESS_API_ENDPOINT` environment variable
+4. Use the IDV package as normal - it will automatically communicate with the liveness service
