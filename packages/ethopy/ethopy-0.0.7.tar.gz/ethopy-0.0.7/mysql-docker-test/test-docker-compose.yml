@@ -1,0 +1,21 @@
+version: '2.4'
+services:
+  test_mysql:
+    image: datajoint/mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=testpassword
+      - MYSQL_DATABASE=testdb
+      - MYSQL_USER=testuser
+      - MYSQL_PASSWORD=testpass
+    ports:
+      - '0.0.0.0:3306:3306'
+    command: [
+      '--bind-address=0.0.0.0',
+      '--skip-name-resolve'
+    ]
+    networks:
+      - test_net
+
+networks:
+  test_net:
+    driver: bridge
