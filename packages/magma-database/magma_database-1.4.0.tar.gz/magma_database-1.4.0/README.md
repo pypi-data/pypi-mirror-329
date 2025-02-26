@@ -1,0 +1,2 @@
+# magma-database
+ Database foundation

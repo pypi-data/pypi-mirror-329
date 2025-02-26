@@ -1,0 +1,49 @@
+[build-system]
+requires = ["flit_core>=3.4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name =  "magma-database"
+version = "1.4.0"
+authors = [
+    {name = "Martanto", email = "martanto@live.com"},
+    {name = "Devy Kamil Syahbana", email = "devy.syahbana@gmail.com"},
+    {name = "Syarif Abdul Manaf", email = "riefmof@gmail.com"},
+]
+description = "Database foundation for MAGMA packages."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["magma", "magma-indonesia", "volcanology", "volcano", "seismic", "database"]
+requires-python = ">=3.11"
+dependencies = [
+    "openpyxl>=3.1.0",
+    "numpy>=2.0.0",
+    "pandas>=2.2.2",
+    "cryptography>=43.0.0",
+    "pymysql>=1.1.0",
+    "peewee>=3.17.5",
+    "importlib-resources",
+    "python-dotenv>=1.0.1",
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.optional-dependencies]
+base = [
+    "openpyxl",
+    "numpy",
+    "pandas",
+    "cryptography",
+    "pymysql",
+    "peewee",
+    "importlib-resources",
+    "python-dotenv",
+]
+
+[project.urls]
+Homepage = "https://github.com/martanto/magma-database"
+Issues = "https://github.com/martanto/magma-database/issues"
