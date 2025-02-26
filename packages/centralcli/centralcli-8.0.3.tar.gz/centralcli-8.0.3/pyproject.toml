@@ -1,0 +1,131 @@
+[tool.poetry]
+name = "centralcli"
+version = "8.0.3"
+description = "A CLI for interacting with Aruba Central (Cloud Management Platform).  Facilitates bulk imports, exports, reporting.  A handy tool if you have devices managed by Aruba Central."
+license = "MIT"
+authors = ["Wade Wells (Pack3tL0ss) <wade@consolepi.org>"]
+maintainers = ["Wade Wells (Pack3tL0ss) <wade@consolepi.org>"]
+readme = "README.md"
+repository = "https://github.com/Pack3tL0ss/central-api-cli"
+documentation = "https://central-api-cli.readthedocs.org"
+keywords = [
+    "cli",
+    "Aruba",
+    "Aruba Networks",
+    "Aruba Central",
+    "HPE",
+    "API",
+    "RESTFUL",
+    "REST"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+]
+
+[tool.poetry.scripts]
+cencli = "centralcli.cli:app"
+
+[tool.poetry.dependencies]
+python = ">=3.8,<4.0"
+tabulate = ">=0.8"
+typer = ">=0.6,<0.11.0"
+pylibyaml = ">=0.1.0"
+PyYAML = ">=6"
+tinydb = ">=4"
+shellingham = ">=1"
+pendulum = ">=2"
+pycentral = ">=0.0.3"
+aiohttp = ">=3"
+asyncio = ">=3"
+rich = ">=10"
+tablib = ">=3"
+jinja2 = "*"
+pydantic = ">=2.0.0"
+ipaddress = "*"
+fuzzywuzzy = "*"
+levenshtein = "*"
+click = "<=7.1.2"
+uniplot = ">=0.13.0"
+eval_type_backport = { version = "*", python = "<3.10" }
+
+
+# Optional dependencies see tool.poetry.extras
+fastapi = {version = "*", optional = true}
+uvicorn = {version = "*", optional = true}
+psutil = {version = "*", optional = true}
+aiodns = {version = ">=3.2.0", markers = "platform_system != 'Windows'", optional = true}
+Brotli = {version = "*", markers = "platform_python_implementation == 'CPython'", optional = true}
+brotlicffi = {version = "*", markers = "platform_python_implementation != 'CPython'", optional = true}
+
+[tool.poetry.dev-dependencies]
+ruff = ">=0.8.0"
+pytest = ">=6"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore::DeprecationWarning"
+]
+
+[tool.ruff]
+line-length = 181
+# Enable the pycodestyle (`E`) and Pyflakes (`F`) rules by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+
+[tool.ruff.lint]
+select = ["E", "F", "W605"]
+ignore = ["E501"]  # ignore line too long
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+# fixable = ["ALL"]
+# unfixable = []
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+# Enable auto-formatting of code examples in docstrings. Markdown,
+# reStructuredText code/literal blocks and doctests are all supported.
+#
+# This is currently disabled by default, but it is planned for this
+# to be opt-out in the future.
+docstring-code-format = false
+
+# Set the line length limit used when formatting code snippets in
+# docstrings.
+#
+# This only has an effect when the `docstring-code-format` setting is
+# enabled.
+docstring-code-line-length = "dynamic"
+
+[tool.poetry.extras]
+hook-proxy = [
+    "fastapi",
+    "uvicorn",
+    "psutil",
+]
+speedups = [
+    "aiodns",
+    "Brotli",
+    "brotlicffi",
+]
