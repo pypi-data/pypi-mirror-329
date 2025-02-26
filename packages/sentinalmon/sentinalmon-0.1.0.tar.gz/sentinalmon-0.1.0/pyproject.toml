@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "sentinalmon"
+version = "0.1.0"
+description = ""
+authors = ["bdizen <bdizenweb@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+psutil = "^7.0.0"
+textual = "^2.1.1"
+typer = "^0.15.1"
+httpx = "^0.28.1"
+requests = "^2.32.3"
+uvicorn = "^0.34.0"
+fastapi = "^0.115.8"
+python-jose = "^3.4.0"
+passlib = "^1.7.4"
+
+[tool.poetry.scripts]
+pcmonitor = "mypcmonitor.main:app"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+isort = "^6.0.0"
+autoflake = "^2.3.1"
+pylint = "^3.3.4"
+flake8 = "^7.1.2"
+pydeps = "^3.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
