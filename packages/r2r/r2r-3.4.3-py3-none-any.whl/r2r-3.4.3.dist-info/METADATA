@@ -1,0 +1,201 @@
+Metadata-Version: 2.2
+Name: r2r
+Version: 3.4.3
+Summary: SciPhi R2R
+Author-email: Owen Colegrove <owen@sciphi.ai>
+License: MIT
+Requires-Python: <3.13,>=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: aiofiles<25.0.0,>=24.1.0
+Requires-Dist: alembic<2.0.0,>=1.13.3
+Requires-Dist: fastapi<0.115.0,>=0.114.0
+Requires-Dist: httpx<0.28.0,>=0.27.0
+Requires-Dist: openai<2.0.0,>=1.11.1
+Requires-Dist: posthog<4.0.0,>=3.5.0
+Requires-Dist: python-dotenv<2.0.0,>=1.0.1
+Requires-Dist: requests<3.0.0,>=2.31.0
+Requires-Dist: toml<0.11.0,>=0.10.2
+Requires-Dist: types-requests<3.0.0,>=2.31.0
+Requires-Dist: psycopg-binary<4.0.0,>=3.2.3
+Requires-Dist: types-aiofiles<25.0.0,>=24.1.0.20240626
+Requires-Dist: typing-extensions<5.0.0,>=4.12.2
+Requires-Dist: pydantic>=2.10.6
+Requires-Dist: python-json-logger>=3.2.1
+Provides-Extra: core
+Requires-Dist: aiohttp<4.0.0,>=3.10.10; extra == "core"
+Requires-Dist: aioshutil<2.0,>=1.5; extra == "core"
+Requires-Dist: aiosqlite<0.21.0,>=0.20.0; extra == "core"
+Requires-Dist: anthropic<0.46.0,>=0.45.1; extra == "core"
+Requires-Dist: apscheduler<4.0.0,>=3.10.4; extra == "core"
+Requires-Dist: asyncpg<0.30.0,>=0.29.0; extra == "core"
+Requires-Dist: azure-ai-inference<2.0.0,>=1.0.0b8; extra == "core"
+Requires-Dist: azure-ai-ml<2.0.0,>=1.24.0; extra == "core"
+Requires-Dist: bcrypt<5.0.0,>=4.1.3; extra == "core"
+Requires-Dist: beautifulsoup4<5.0.0,>=4.12.3; extra == "core"
+Requires-Dist: boto3<2.0.0,>=1.35.17; extra == "core"
+Requires-Dist: colorlog<7.0.0,>=6.9.0; extra == "core"
+Requires-Dist: docutils<0.22.0,>=0.21.2; extra == "core"
+Requires-Dist: epub<0.6.0,>=0.5.2; extra == "core"
+Requires-Dist: fsspec<2025.0.0,>=2024.6.0; extra == "core"
+Requires-Dist: future<2.0.0,>=1.0.0; extra == "core"
+Requires-Dist: google-auth<3.0.0,>=2.37.0; extra == "core"
+Requires-Dist: google-auth-oauthlib<2.0.0,>=1.2.1; extra == "core"
+Requires-Dist: google-genai<0.7.0,>=0.6.0; extra == "core"
+Requires-Dist: gunicorn<22.0.0,>=21.2.0; extra == "core"
+Requires-Dist: hatchet-sdk==0.47.0; extra == "core"
+Requires-Dist: litellm<2.0.0,>=1.58.2; extra == "core"
+Requires-Dist: markdown<4.0,>=3.6; extra == "core"
+Requires-Dist: msg-parser>=1.2.0; extra == "core"
+Requires-Dist: networkx<4.0,>=3.3; extra == "core"
+Requires-Dist: numpy<1.29.0,>=1.22.4; extra == "core"
+Requires-Dist: olefile<0.48,>=0.47; extra == "core"
+Requires-Dist: ollama<0.4.0,>=0.3.1; extra == "core"
+Requires-Dist: openpyxl<4.0.0,>=3.1.2; extra == "core"
+Requires-Dist: orgparse<0.5.0,>=0.4.20231004; extra == "core"
+Requires-Dist: pdf2image<2.0.0,>=1.17.0; extra == "core"
+Requires-Dist: pillow<12.0.0,>=11.1.0; extra == "core"
+Requires-Dist: pillow-heif<0.22.0,>=0.21.0; extra == "core"
+Requires-Dist: psutil<7.0.0,>=6.0.0; extra == "core"
+Requires-Dist: pydantic[email]<3.0.0,>=2.8.2; extra == "core"
+Requires-Dist: pyjwt<3.0.0,>=2.8.0; extra == "core"
+Requires-Dist: pynacl<2.0.0,>=1.5.0; extra == "core"
+Requires-Dist: pypdf<5.0.0,>=4.2.0; extra == "core"
+Requires-Dist: pypdf2<4.0.0,>=3.0.1; extra == "core"
+Requires-Dist: python-docx<2.0.0,>=1.1.0; extra == "core"
+Requires-Dist: python-multipart<0.0.19,>=0.0.9; extra == "core"
+Requires-Dist: python-pptx<2.0.0,>=1.0.1; extra == "core"
+Requires-Dist: pyyaml<7.0.0,>=6.0.1; extra == "core"
+Requires-Dist: sendgrid<7.0.0,>=6.11.0; extra == "core"
+Requires-Dist: sentry-sdk<3.0.0,>=2.20.0; extra == "core"
+Requires-Dist: sqlalchemy<3.0.0,>=2.0.30; extra == "core"
+Requires-Dist: striprtf<0.0.29,>=0.0.28; extra == "core"
+Requires-Dist: supabase<3.0.0,>=2.7.4; extra == "core"
+Requires-Dist: tiktoken<0.9.0,>=0.8.0; extra == "core"
+Requires-Dist: tokenizers==0.19; extra == "core"
+Requires-Dist: unstructured-client==0.25.5; extra == "core"
+Requires-Dist: uvicorn<0.28.0,>=0.27.0.post1; extra == "core"
+Requires-Dist: vecs<0.5.0,>=0.4.0; extra == "core"
+Requires-Dist: xlrd<3.0.0,>=2.0.1; extra == "core"
+
+![Screenshot 2025-01-30 at 5 11 34 PM](https://github.com/user-attachments/assets/16d32b31-4c7d-4e84-be19-24574b33527b)
+
+
+
+
+<h3 align="center">
+The most advanced AI retrieval system.
+
+Agentic Retrieval-Augmented Generation (RAG) with a RESTful API.
+</h3>
+
+<div align="center">
+   <div>
+      <h3>
+         <a href="https://app.sciphi.ai">
+            <strong>Sign up</strong>
+         </a> ·
+         <a href="https://r2r-docs.sciphi.ai/self-hosting/installation/overview">
+            <strong>Self Host</strong>
+      </h3>
+   </div>
+   <div>
+      <a href="https://r2r-docs.sciphi.ai/"><strong>Docs</strong></a> ·
+      <a href="https://github.com/SciPhi-AI/R2R/issues/new?assignees=&labels=&projects=&template=bug_report.md&title="><strong>Report Bug</strong></a> ·
+      <a href="https://github.com/SciPhi-AI/R2R/issues/new?assignees=&labels=&projects=&template=feature_request.md&title="><strong>Feature Request</strong></a> ·
+      <a href="https://discord.gg/p6KqD2kjtB"><strong>Discord</strong></a>
+   </div>
+   <br />
+   <p align="center">
+    <a href="https://r2r-docs.sciphi.ai"><img src="https://img.shields.io/badge/docs.sciphi.ai-3F16E4" alt="Docs"></a>
+    <a href="https://discord.gg/p6KqD2kjtB"><img src="https://img.shields.io/discord/1120774652915105934?style=social&logo=discord" alt="Discord"></a>
+    <a href="https://github.com/SciPhi-AI"><img src="https://img.shields.io/github/stars/SciPhi-AI/R2R" alt="Github Stars"></a>
+    <a href="https://github.com/SciPhi-AI/R2R/pulse"><img src="https://img.shields.io/github/commit-activity/w/SciPhi-AI/R2R" alt="Commits-per-week"></a>
+    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-purple.svg" alt="License: MIT"></a>
+    <a href="https://gurubase.io/g/r2r"><img src="https://img.shields.io/badge/Gurubase-Ask%20R2R%20Guru-006BFF" alt="Gurubase: R2R Guru"></a>
+  </p>
+</div>
+
+# About
+R2R (Reason to Retrieve) is the most advanced AI retrieval system, supporting Retrieval-Augmented Generation (RAG) with production-ready features. Built around a containerized RESTful API, R2R offers multimodal content ingestion, hybrid search functionality, knowledge graphs, and comprehensive user and document management.
+
+For a more complete view of R2R, check out the [full documentation](https://r2r-docs.sciphi.ai/).
+
+
+## Getting Started
+
+### [SciPhi Cloud](https://app.sciphi.ai)
+
+Access R2R through a deployment managed by the SciPhi team, which includes a generous free-tier. No credit card required.
+
+## Local
+
+Install and run R2R:
+
+```bash
+# Install the R2R package
+pip install r2r
+
+# Set necessary environment variables
+export OPENAI_API_KEY=sk-...
+
+# Run R2R in `light` mode
+python -m r2r.serve
+
+# Alternatively, run R2R in `full` mode
+# git clone git@github.com:SciPhi-AI/R2R.git . && cd R2R
+# export OPENAI_API_KEY=sk-...
+# export R2R_CONFIG_NAME=full
+
+# docker compose -f compose.full.yaml --profile postgres up -d
+# `--profile postgres` can be omitted when using external Postgres
+
+# Refer to docs for local LLM setup - https://r2r-docs.sciphi.ai/self-hosting/local-rag
+```
+
+## Key Features
+
+### Ingestion & Retrieval
+
+- **📁 [Multimodal Ingestion](https://r2r-docs.sciphi.ai/self-hosting/configuration/ingestion)**
+  Parse `.txt`, `.pdf`, `.json`, `.png`, `.mp3`, and more.
+- **🔍 [Hybrid Search](https://r2r-docs.sciphi.ai/documentation/search-and-rag)**
+  Combine semantic and keyword search with reciprocal rank fusion for enhanced relevancy.
+- **🔗 [Knowledge Graphs](https://r2r-docs.sciphi.ai/cookbooks/graphs)**
+  Automatically extract entities and relationships to build knowledge graphs.
+- **🤖 [Agentic RAG](https://r2r-docs.sciphi.ai/documentation/retrieval/reasoning_agent)**
+  R2R's powerful reasoning agent integrated with RAG.
+
+
+### Application Layer
+
+- 💻 **[Web Development](https://r2r-docs.sciphi.ai/cookbooks/web-dev)**
+  Building web apps using R2R.
+- 🔐 **[User Auth](https://r2r-docs.sciphi.ai/documentation/user-auth)**
+  Authenticating users.
+- 📂 **[Collections](https://r2r-docs.sciphi.ai/self-hosting/collections)**
+  Document collections management.
+- 🌐 **[Web Application](https://r2r-docs.sciphi.ai/cookbooks/web-dev)**
+  Connecting with the R2R Application.
+
+### Self-Hosting
+
+- 🐋 **[Docker](/self-hosting/installation/full/docker)**
+  Use Docker to easily deploy the full R2R system into your local environment
+- 🧩 **[Configuration](https://r2r-docs.sciphi.ai/self-hosting/configuration/overview)**
+  Set up your application using intuitive configuration files.
+
+## Community
+
+[Join our Discord](https://discord.gg/p6KqD2kjtB) to get support and connect with both the R2R team and other developers in the community. Whether you're encountering issues, looking for advice on best practices, or just want to share your experiences, we're here to help.
+
+## Contributing
+
+We welcome contributions of all sizes! Here's how you can help:
+
+- Open a PR for new features, improvements, or better documentation.
+- Submit a [feature request](https://github.com/SciPhi-AI/R2R/issues/new?assignees=&labels=&projects=&template=feature_request.md&title=) or [bug report](https://github.com/SciPhi-AI/R2R/issues/new?assignees=&labels=&projects=&template=bug_report.md&title=)
+
+### Our Contributors
+<a href="https://github.com/SciPhi-AI/R2R/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=SciPhi-AI/R2R" />
+</a>
