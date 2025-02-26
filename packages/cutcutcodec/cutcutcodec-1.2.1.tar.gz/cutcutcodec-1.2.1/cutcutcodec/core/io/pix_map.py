@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+
+"""Pixel format convertion to keep all accuracy and taking care colorspace.
+
+All available pixels format are accessible via ``ffmpeg -pix_fmts``.
+"""
+
+
+PIX_MAP = {
+    "0bgr": "bgr24",
+    "0rgb": "bgr24",
+    "abgr": "bgra",
+    "argb": "bgra",
+    "ayuv64be": "yuva444p16le", "ayuv64le": "yuva444p16le",
+    "bgr0": "bgr24",
+    "bgr24": "bgr24",
+    "bgr4": "gbrpf32le",  # not same bit depth in all channels
+    "bgr444be": "bgr24", "bgr444le": "bgr24",
+    "bgr48be": "bgr48le",
+    "bgr48le": "bgr48le",
+    "bgr4_byte": "gbrpf32le",  # not same bit depth in all channels
+    "bgr555be": "gbrpf32le", "bgr555le": "gbrpf32le",  # bit depth
+    "bgr565be": "gbrpf32le", "bgr565le": "gbrpf32le",  # bit depth
+    "bgr8": "gbrpf32le",  # not same bit depth in all channels
+    "bgra": "bgra",
+    "bgra64be": "bgra64le", "bgra64le": "bgra64le",
+    "gbrap": "bgra",
+    "gbrap10be": "bgra64le", "gbrap10le": "bgra64le",
+    "gbrap12be": "bgra64le", "gbrap12le": "bgra64le",
+    "gbrap14be": "bgra64le", "gbrap14le": "bgra64le",
+    "gbrap16be": "bgra64le", "gbrap16le": "bgra64le",
+    "gbrapf32be": "gbrapf32le", "gbrapf32le": "gbrapf32le",
+    "gbrp": "bgr24",
+    "gbrp10be": "bgr48le", "gbrp10le": "bgr48le",
+    "gbrp12be": "bgr48le", "gbrp12le": "bgr48le",
+    "gbrp14be": "bgr48le", "gbrp14le": "bgr48le",
+    "gbrp16be": "bgr48le", "gbrp16le": "bgr48le",
+    "gbrp9be": "bgr48le", "gbrp9le": "bgr48le",
+    "gbrpf32be": "gbrpf32le", "gbrpf32le": "gbrpf32le",
+    "gray": "gray",
+    "gray10be": "gray16le", "gray10le": "gray16le",
+    "gray12be": "gray16le", "gray12le": "gray16le",
+    "gray14be": "gray16le", "gray14le": "gray16le",
+    "gray16be": "gray16le", "gray16le": "gray16le",
+    "gray9be": "gray16le", "gray9le": "gray16le",
+    "grayf32be": "grayf32le", "grayf32le": "grayf32le",
+    "monow": "gray",  # black and white
+    "rgb0": "bgr24",
+    "rgb24": "bgr24",
+    "rgb4": "gbrpf32le",  # not same bit depth in all channels
+    "rgb444be": "bgr24", "rgb444le": "bgr24",
+    "rgb48be": "bgr48le", "rgb48le": "bgr48le",
+    "rgb4_byte": "gbrpf32le",  # not same bit depth in all channels
+    "rgb555be": "gbrpf32le",  "rgb555le": "gbrpf32le",  # bit depth
+    "rgb565be": "gbrpf32le", "rgb565le": "gbrpf32le",  # bit depth
+    "rgb8": "gbrpf32le",  # not same bit depth in all channels
+    "rgba": "bgra",
+    "rgba64be": "bgra64le", "rgba64le": "bgra64le",
+    "rgbaf16be": "gbrapf32le", "rgbaf16le": "gbrapf32le",
+    "rgbaf32be": "gbrapf32le", "rgbaf32le": "gbrapf32le",
+    "rgbf32be": "gbrpf32le", "rgbf32le": "gbrpf32le",
+    "uyvy422": "yuv444p",
+    "uyyvyy411": "yuv444p",
+    "vuya": "yuvA444p",
+    "ya16be": "yuva444p16le",
+    "ya16le": "yuva444p16le",
+    "ya8": "yuva444p",
+    "yuv410p": "yuv444p",
+    "yuv411p": "yuv444p",
+    "yuv420p": "yuv444p",
+    "yuv420p10be": "yuv444p16le", "yuv420p10le": "yuv444p16le",
+    "yuv420p12be": "yuv444p16le", "yuv420p12le": "yuv444p16le",
+    "yuv420p14be": "yuv444p16le", "yuv420p14le": "yuv444p16le",
+    "yuv420p16be": "yuv444p16le", "yuv420p16le": "yuv444p16le",
+    "yuv420p9be": "yuv444p16le", "yuv420p9le": "yuv444p16le",
+    "yuv422p": "yuv444p",
+    "yuv422p10be": "yuv444p16le", "yuv422p10le": "yuv444p16le",
+    "yuv422p12be": "yuv444p16le", "yuv422p12le": "yuv444p16le",
+    "yuv422p14be": "yuv444p16le", "yuv422p14le": "yuv444p16le",
+    "yuv422p16be": "yuv444p16le", "yuv422p16le": "yuv444p16le",
+    "yuv422p9be": "yuv444p16le", "yuv422p9le": "yuv444p16le",
+    "yuv440p": "yuv444p",
+    "yuv440p10be": "yuv444p16le", "yuv440p10le": "yuv444p16le",
+    "yuv440p12be": "yuv444p16le", "yuv440p12le": "yuv444p16le",
+    "yuv444p": "yuv444p",
+    "yuv444p10be": "yuv444p16le", "yuv444p10le": "yuv444p16le",
+    "yuv444p12be": "yuv444p16le", "yuv444p12le": "yuv444p16le",
+    "yuv444p14be": "yuv444p16le", "yuv444p14le": "yuv444p16le",
+    "yuv444p16be": "yuv444p16le", "yuv444p16le": "yuv444p16le",
+    "yuv444p9be": "yuv444p16le", "yuv444p9le": "yuv444p16le",
+    "yuva420p": "yuva444p",
+    "yuva420p10be": "yuva444p16le", "yuva420p10le": "yuva444p16le",
+    "yuva420p16be": "yuva444p16le", "yuva420p16le": "yuva444p16le",
+    "yuva420p9be": "yuva444p16le", "yuva420p9le": "yuva444p16le",
+    "yuva422p": "yuva444p",
+    "yuva422p10be": "yuva444p16le", "yuva422p10le": "yuva444p16le",
+    "yuva422p12be": "yuva444p16le", "yuva422p12le": "yuva444p16le",
+    "yuva422p16be": "yuva444p16le", "yuva422p16le": "yuva444p16le",
+    "yuva422p9be": "yuva444p16le", "yuva422p9le": "yuva444p16le",
+    "yuva444p": "yuva444p",
+    "yuva444p10be": "yuva444p16le", "yuva444p10le": "yuva444p16le",
+    "yuva444p12be": "yuva444p16le", "yuva444p12le": "yuva444p16le",
+    "yuva444p16be": "yuva444p16le", "yuva444p16le": "yuva444p16le",
+    "yuva444p9be": "yuva444p16le", "yuva444p9le": "yuva444p16le",
+    "yuvj411p": "yuv444p",
+    "yuvj420p": "yuv444p",
+    "yuvj422p": "yuv444p",
+    "yuvj440p": "yuv444p",
+    "yuvj444p": "yuv444p",
+    "yuvv422": "yuv444p",
+}

@@ -1,0 +1,177 @@
+Metadata-Version: 2.2
+Name: cutcutcodec
+Version: 1.2.1
+Summary: video editing software
+Author-email: "Robin RICHARD (robinechuca)" <serveurpython.oz@gmail.com>
+Maintainer-email: "Robin RICHARD (robinechuca)" <serveurpython.oz@gmail.com>
+License: Copyright © 2023 Robin RICHARD
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files of cutcutcodec, to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        
+Project-URL: Homepage, https://framagit.org/robinechuca/cutcutcodec/-/blob/main/README.rst
+Project-URL: Documentation, https://cutcutcodec.readthedocs.io/latest/
+Project-URL: Repository, https://framagit.org/robinechuca/cutcutcodec/
+Keywords: audio,effect,equation,ffmpeg,filtering,fractal,graph,movie,open source,video editing
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: GPU
+Classifier: Environment :: X11 Applications :: Qt
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: C
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Topic :: Multimedia :: Graphics :: Editors
+Classifier: Topic :: Multimedia :: Graphics :: Graphics Conversion
+Classifier: Topic :: Multimedia :: Sound/Audio :: Analysis
+Classifier: Topic :: Multimedia :: Sound/Audio :: Conversion
+Classifier: Topic :: Multimedia :: Sound/Audio :: Editors
+Classifier: Topic :: Multimedia :: Sound/Audio :: Mixers
+Classifier: Topic :: Multimedia :: Sound/Audio :: Players
+Classifier: Topic :: Multimedia :: Sound/Audio :: Sound Synthesis
+Classifier: Topic :: Multimedia :: Video :: Conversion
+Classifier: Topic :: Multimedia :: Video :: Display
+Classifier: Topic :: Multimedia :: Video :: Non-Linear Editor
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Topic :: Scientific/Engineering :: Image Processing
+Classifier: Topic :: Scientific/Engineering :: Image Recognition
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Software Development :: Code Generators
+Requires-Python: <3.14,>=3.11
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+Requires-Dist: av>=14.1.0
+Requires-Dist: black
+Requires-Dist: cairosvg
+Requires-Dist: click
+Requires-Dist: lightning
+Requires-Dist: networkx>=3.0
+Requires-Dist: numpy>=2.0
+Requires-Dist: opencv-contrib-python-headless
+Requires-Dist: pip>=23.0
+Requires-Dist: sympy>=1.10
+Requires-Dist: torch>=2.1
+Requires-Dist: tqdm
+Requires-Dist: unidecode
+Requires-Dist: wand
+Provides-Extra: doc
+Requires-Dist: ipykernel; extra == "doc"
+Requires-Dist: mathjax; extra == "doc"
+Requires-Dist: nbsphinx; extra == "doc"
+Requires-Dist: pandoc; extra == "doc"
+Requires-Dist: recommonmark; extra == "doc"
+Requires-Dist: sphinx==7.4.7; extra == "doc"
+Requires-Dist: sphinx-copybutton; extra == "doc"
+Requires-Dist: sphinx-inline-tabs; extra == "doc"
+Requires-Dist: sphinx-rtd-dark-mode; extra == "doc"
+Requires-Dist: sphinx-rtd-theme; extra == "doc"
+Requires-Dist: sphinxcontrib-video; extra == "doc"
+Requires-Dist: sphinxext-opengraph; extra == "doc"
+Provides-Extra: test
+Requires-Dist: pydocstyle<=6.1.1; extra == "test"
+Requires-Dist: pylama[all,toml]; extra == "test"
+Requires-Dist: pytest; extra == "test"
+
+.. rst syntax: https://deusyss.developpez.com/tutoriels/Python/SphinxDoc/
+.. version conv: https://peps.python.org/pep-0440/
+.. icons: https://specifications.freedesktop.org/icon-naming-spec/latest/ar01s04.html or https://www.pythonguis.com/faq/built-in-qicons-pyqt/
+.. pyqtdoc: https://www.riverbankcomputing.com/static/Docs/PyQt6/
+.. colors-spaces: https://trac.ffmpeg.org/wiki/colorspace
+
+.. image:: https://img.shields.io/badge/License-MIT-green.svg
+    :alt: [license MIT]
+    :target: https://opensource.org/licenses/MIT
+
+.. image:: https://img.shields.io/badge/linting-pylint-green
+    :alt: [linting: pylint]
+    :target: https://github.com/pylint-dev/pylint
+
+.. image:: https://img.shields.io/badge/tests-pass-green
+    :alt: [testing]
+    :target: https://docs.pytest.org/
+
+.. image:: https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue
+    :alt: [versions]
+    :target: https://framagit.org/robinechuca/cutcutcodec/-/blob/main/run_tests.sh
+
+.. image:: https://static.pepy.tech/badge/cutcutcodec
+    :alt: [downloads]
+    :target: https://www.pepy.tech/projects/cutcutcodec
+
+.. image:: https://readthedocs.org/projects/cutcutcodec/badge/?version=latest
+    :alt: [documentation]
+    :target: https://cutcutcodec.readthedocs.io/latest/
+
+Useful links:
+`Binary Installers <https://pypi.org/project/cutcutcodec>`_ |
+`Source Repository <https://framagit.org/robinechuca/cutcutcodec>`_ |
+`Online Documentation <https://cutcutcodec.readthedocs.io>`_ |
+
+
+Description
+===========
+
+This **video editing software** has been designed for speed and to implement some effects that are hard to find elsewhere.
+The kernel is written in python and C, so it's easy to integrate it in your own project (module ``cutcutcodec.core``).
+Although it allows you to fine-tune many parameters, it's smart enough to find the settings that are best suited to your project.
+
+This software is **light**, **fast** and **highly configurable** for the following reasons:
+
+#. Based on ffmpeg, this software supports an incredible number of formats and codecs.
+#. This software allows editing the assembly graph. Compared to a timeline, this representation permits to do everything.
+#. This software doesn't export the final video directly from the graphic interface. Instead, it generates a python script. You can edit this script yourself, giving you infinite possibilities!
+#. A complete test benchmark guarantees an excelent kernel reliability.
+#. Powered by `torch <https://pytorch.org/>`_ and written in C, this software efficiently exploits the CPU and GPU in order to make it very fast.
+#. Video export is performed without a graphical interface, releasing a large part of computer resources to speed up export.
+#. This software is able to optimize the assembly graph in order to limit calculation waste.
+#. The code is parallelised to take advantage of all the CPU threads, making it extremely fast.
+
+
+Features
+========
+
+Audio
+-----
+
+* General properties
+    #. Supports a large number of channels (mono, stereo, 5.1, 7.1, ...) with all sampeling rate.
+    #. Automatic detection of the optimal sample frequency.
+* Generation
+    #. White-noise generation.
+    #. Generate any audio signal from any equation.
+* Filters
+    #. Cutting, translate and concatenate.
+    #. Add multiple tracks.
+    #. Arbitrary equation on several channels of several tracks. (dynamic volume, mixing, wouawoua, ...)
+    #. Finite Impulse Response (FIR) invariant filter. (reverb, equalizer, echo, delay, volume, ...)
+    #. Denoising based on Winer filtering.
+    #. Hight quality anti aliasing low pass filter (based on FIR).
+
+Video
+-----
+
+* General properties
+    #. Unlimited support of all image resolutions. (FULL HD, 4K, 8K, ...)
+    #. No limit on fps. (60fps, 120fps, ...)
+    #. Automatic detection of the optimal resolution and fps.
+    #. Support for the alpha transparency layer.
+    #. Floating-point image calculation for greater accuracy.
+* Generation
+    #. White-noise generation.
+    #. Generate any video signal from any equation.
+    #. Mandelbrot fractal generation.
+* Filters
+    #. Cutting, translate and concatenate.
+    #. Resize and crop (high quality, no aliasing).
+    #. Overlaying video tracks (with transparency control).
+    #. Apply an arbitrary equation one several video streams.
