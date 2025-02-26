@@ -1,0 +1,34 @@
+[project]
+name = "overlap-integral"
+version = "0.1.5"
+description = "This package aims to compute the overlap integral between two probability density functions."
+long_description = "file: README.md"
+long_description_content_type = "text/markdown"
+authors = [{ name = "Matheus Bacigalupo Kiataki", email = "kiatakimatheus@gmail.com" }]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.11"
+homepage = "https://github.com/kiataki/overlap-integral"  # Substitua pelo seu nome de usuário no GitHub
+
+dependencies = [
+    "numpy>=1.21",
+    "scipy>=1.7",
+    "plotly>=5.3",
+    "kaleido==0.2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=3.8"]
+
+[tool.poetry]
+packages = [{ include = "overlap_integral", from = "src" }]
+include = ["README.md", "LICENSE"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project.urls]
+Homepage = "https://github.com/kiataki/"
+Documentation = "https://github.com/kiataki/overlap-integral/blob/main/README.md"
+Repository = "https://github.com/kiataki/overlap-integral"
