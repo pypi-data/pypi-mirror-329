@@ -1,0 +1,84 @@
+Metadata-Version: 2.1
+Name: chatmemory
+Version: 0.2.1
+Summary: The simple yet powerful long-term memory manager between AI and you💕
+Home-page: https://github.com/uezo/chatmemory
+Author: uezo
+Author-email: uezo@uezo.net
+Maintainer: uezo
+Maintainer-email: uezo@uezo.net
+License: Apache v2
+Classifier: Programming Language :: Python :: 3
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: fastapi==0.115.8
+Requires-Dist: openai==1.64.0
+Requires-Dist: uvicorn==0.34.0
+Requires-Dist: psycopg2-binary==2.9.10
+
+# ChatMemory
+
+The simple yet powerful long-term memory manager between AI and you💕
+
+
+## ✨ Features
+
+- **🌟 Extremely simple:** All code is contained in one file, making it easy to track memory management—just PostgreSQL is needed as your datastore.
+- **🔎 Intelligent Search & Answer:** Quickly retrieves context via vector search on summaries/knowledge, then uses detailed history if needed—returning both the answer and raw data.
+- **💬 Direct Answer:** Leverages an LLM to produce clear, concise answers that go beyond mere data retrieval, delivering ready-to-use responses.
+
+
+## 🚀 Quick start
+
+Install chatmemory.
+
+```sh
+pip install chatmemory
+```
+
+Create the server script (e.g.`server.py`) as following:
+
+```python
+from fastapi import FastAPI
+from chatmemory import ChatMemory
+
+cm = ChatMemory(
+    openai_api_key="YOUR_OPENAI_API_KEY",
+    llm_model="gpt-4o",
+    # Your PostgreSQL configurations
+    db_name="postgres",
+    db_user="postgres",
+    db_password="postgres",
+    db_host="127.0.0.1",
+    db_port=5432,
+)
+
+app = FastAPI()
+app.include_router(cm.get_router())
+```
+
+Start API server.
+
+```sh
+uvicorn server:app
+```
+
+That's all. Long-term memory management service is ready-to-use👍
+
+Go http://127.0.0.1:8000/docs to know the spec and try the APIs.
+
+
+## 🪄 How it works
+
+ChatMemory organizes conversation data into three primary entities:
+
+- **📜 History:** The raw conversation logs, storing every message exchanged.
+- **📑 Summary:** A concise overview generated from the detailed history using an LLM. This enables fast, lightweight processing by capturing the essence of a conversation.
+- **💡 Knowledge:** Additional, explicitly provided information that isn’t tied to the conversation log. This allows you to control and influence the answer independently.
+
+When a search query is received, ChatMemory works in two stages:
+
+1. **⚡ Lightweight Retrieval:** It first performs a vector-based search on the summaries and knowledge. This step quickly gathers relevant context and typically suffices for generating an answer.
+2. **🔍 Fallback Detailed Search:** If the initial results aren’t deemed sufficient, ChatMemory then conducts a vector search over the full conversation history. This retrieves detailed logs, enabling the system to refine and improve the answer.
+
+This two-step mechanism strikes a balance between speed and accuracy—leveraging the efficiency of summaries while still ensuring high-precision answers when more context is needed. Additionally, the explicit knowledge you provide helps guide the responses beyond just the conversation history.
