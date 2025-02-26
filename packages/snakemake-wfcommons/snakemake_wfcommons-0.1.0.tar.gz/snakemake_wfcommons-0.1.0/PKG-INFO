@@ -1,0 +1,34 @@
+Metadata-Version: 2.2
+Name: snakemake_wfcommons
+Version: 0.1.0
+Summary: Python tool to convert Snakemake metadata to wfcommons single JSON files
+Home-page: https://github.com/tud-zih-tools/snakemake-wfcommons
+Project-URL: Homepage, https://github.com/tud-zih-tools/snakemake-wfcommons
+Project-URL: Issues, https://github.com/tud-zih-tools/snakemake-wfcommons/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: BSD License
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: wfcommons==1.0
+Requires-Dist: snakemake
+Dynamic: home-page
+
+# Install
+
+```console
+$ pip install snakemake-wfcommons
+```
+
+# Integrate into Snakemake
+
+Call `wfcommons-converter` in the top-level `all` rule of your workflow to automatically convert the executed workflow into WfFormat like this:
+
+```snakemake
+rule all:
+    input:
+        <your finale result file>
+    shell:
+        "wfcommons-converter [<workflow-name.json>]"
+```

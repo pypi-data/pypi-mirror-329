@@ -1,0 +1,11 @@
+#!/usr/bin/python3
+
+# SPDX-FileCopyrightText: 2025 Technische Universität Dresden, Germany <tu-dresden.de/zih>
+# SPDX-License-Identifier: BSD-3-Clause
+
+import sys
+
+from snakemake_wfcommons import SnakemakeToWfFormat
+
+if __name__ == '__main__':
+    SnakemakeToWfFormat(output_json=sys.argv[1] if len(sys.argv) == 2 else None)
