@@ -1,0 +1,92 @@
+Metadata-Version: 2.4
+Name: ohttpy
+Version: 0.1a3
+Classifier: Programming Language :: Rust
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Programming Language :: Python :: 3
+Requires-Dist: httpx>=0.27,<0.99
+Requires-Dist: requests>=2.22,<2.99
+Summary: A package that allows for client-side OHTTP-wrapping over HTTP communication
+Author-email: Lorica Cybersecurity <support@loricacyber.com>
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown; charset=UTF-8; variant=GFM
+
+# `ohttpy` Package
+
+## Introduction
+This package allows for client-side OHTTP-wrapping over HTTP communication. It acheives this by providing drop-in replacement classes for `requests.Session` and `httpx.BaseTransport` classes that abstract the OHTTP layer.
+
+> **_NOTE:_** This package utilizes a [modified Rust library that implements OHTTP](https://github.com/microsoft/ohttp) and relies on the [chunked OHTTP protocol](https://datatracker.ietf.org/doc/draft-ietf-ohai-chunked-ohttp) which has not been ratified into a standard at the time of writing.
+
+> **_NOTE:_** At the time of writing, this package is currently under active development and therefore, only compatible with chunked-OHTTP gateways that advertise public keys in a specific fashion.
+
+## Requests Session Example
+To use OHTTP in a `requests.Session` setting, simply replace the object construction with `ohttp.Session`:
+```python
+import ohttpy
+
+# Create ohttpy session that inherits from requests.Session.
+session = ohttpy.Session()
+
+# Use session like a request.Session.
+response = session.post("http://ohttp-server/path/to/post", data="test data")
+print(response.text)
+
+```
+
+## HTTPX Transport Example
+To use OHTTP in a `httpx.Transport` setting, simply replace the object construction with `ohttp.Transport`:
+```python
+import httpx
+import ohttpy
+
+# Initialize httpx client with the ohttpy Transport that inherits from httpx.Transport
+httpx_client = httpx.Client(transport=ohttpy.Transport())
+
+# Use client as normal including chunked-encoding response support.
+method = "GET"
+url = "http://ohttp-server/path/to/get/"
+with httpx_client.stream(method, url) as resp:
+    print(resp.status_code)
+    print(resp.headers)
+    for chunk in resp.stream:
+        print(chunk.decode(), end="")
+```
+
+This is also applicable to clients that utilize `httpx` for their HTTP communication, for example `openai` client:
+```python
+import httpx
+import openai
+import ohttpy
+
+# Initialize httpx client with the ohttpy Transport that inherits from httpx.Transport
+httpx_client = httpx.Client(transport=ohttpy.Transport())
+base_url = "http://ohttp-server/v1"
+
+# Configure OpenAI client with httpx client
+client = openai.OpenAI(
+    api_key="OPENAI_API_KEY",
+    http_client=httpx_client, base_url=base_url)
+
+# Use OpenAI SDK as normal for example llama chat (includingg stream capability)
+is_stream=True
+chat_completion_stream = client.chat.completions.create(
+    model="meta-llama/Llama-3.2-3B-Instruct",
+    messages=[
+        {
+            "role": "user",
+            "content": "Create a song that captures the spirit and history of cybersecurity",
+        }
+    ],
+    temperature=0.2,
+    top_p=0.7,
+    max_tokens=1024,
+    stream=is_stream,
+)
+if is_stream:
+    for chunk in chat_completion_stream:
+        print(chunk.choices[0].delta.content or "", end="")
+else:
+    print(chat_completion_stream.choices[0].message.content)
+```
