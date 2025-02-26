@@ -1,0 +1,113 @@
+Metadata-Version: 2.2
+Name: controlled_vocabulary_utils
+Version: 0.3.0
+Summary: A package for evaluating values for terms in a controlled vocabulary.
+Home-page: https://github.com/jai-python3/controlled-vocabulary-utils
+Author: Jaideep Sundaram
+Author-email: jai.python3@gmail.com
+Keywords: controlled_vocabulary_utils
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.10
+License-File: AUTHORS.rst
+Requires-Dist: Click>=7.0
+Requires-Dist: PyYAML
+Requires-Dist: Rich
+Requires-Dist: singleton-decorator
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+===========================
+Controlled Vocabulary Utils
+===========================
+
+A package for evaluating values for terms in a controlled vocabulary.
+
+Usage
+-----
+
+
+Contents of the controlled vocabulary configuration file:
+
+.. code-block:: yaml
+
+    ---
+    format_version: 0.1.0
+    name: Controlled Vocabulary for Bioinformatics
+    description: TBD
+    terms:
+      - name: variant_effect_on_function
+        def: The effect that the variant has on the function of the gene.
+        datatype: string
+        accepted_values:
+          "loss": The variant has caused a loss of function.
+          "gain": The variant has caused a gain of function.
+      - name: region_of_transcript_affected
+        def: The region of the transcript that the variant affects.
+        datatype: string
+        accepted_values:
+          "start": The variant affects the start of the transcript.
+          "end": The variant affects the end of the transcript.
+          "whole transcript": The variant affects the whole transcript.
+          "overlapping end": The variant overlaps one end of the ends of the transcript.
+      - name: variant_status
+        def: TBD
+        alt_names:
+          - variant_qc_status
+        datatype: string
+        accepted_values:
+      - name: score
+        def: TBD
+        datatype: integer
+        accepted_values:
+          "10": "very low score"
+          "20": "low score"
+          "40": "mid-level score"
+      - name: zygosity
+        def: TBD
+        alt_names:
+          - zyg
+        datatype: string
+        accepted_values:
+          "heterozygous": "heterozygous"
+          "homozygous": "homozygous"
+          "mosaic": "mosaic"
+
+
+
+.. code-block:: python
+
+    from controlled_vocabulary_utils import CVValidationManager
+
+    config_file = "conf/controlled_vocabulary.yaml"
+
+    vm = ValidationManager(
+        config_file=config_file,
+        verbose=verbose,
+    )
+
+    term = "zygosity"
+    val = "mosaic"
+    if vm.is_valid(term, val):
+        print(f"'{val}' is a valid value for term '{term}'")
+    else:
+        print(f"'{val}' is NOT a valid value for term '{term}'")
+
+
+=======
+History
+=======
+
+0.1.0 (2025-02-22)
+------------------
+
+* First release on PyPI.
