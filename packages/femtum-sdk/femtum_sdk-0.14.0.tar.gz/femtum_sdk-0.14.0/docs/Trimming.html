@@ -1,0 +1,7900 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Femtum SDK</title>
+    <link rel="stylesheet" href="static/mystyles.css" />
+    <script src="static/fontawesome.js"></script>
+    <script src="static/lunr.js"></script>
+    <script src="static/theme.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="level pt-6 mb-5 pb-2 bottom-border">
+        <div class="level-left">
+          <p class="level-item has-text-centered is-size-3 has-text-weight-medium">
+            <a class="link is-info" href="index.html">
+              Femtum SDK
+            </a>
+          </p>
+        </div>
+
+        <div class="level-right">
+          
+          <form action="search.html" class="mr-2 has-text-centered">
+            <input type="text" name="query" class="input mr-3 navbar-search-query-input" placeholder="Search">
+            <input type="submit" class="button is-primary mr-5" value="Search" />
+          </form>
+          
+
+          <p class="level-item has-text-centered is-size-5">
+            <a href="https://github.com/Femtum/femtum" class="link is-info mr-5" target="_blank">
+              
+              <span class="icon">
+                <i class="fa-brands fa-github"></i>
+              </span>
+              
+              <span>Source</span>
+            </a>
+
+            <button class="theme-toggle" id="theme-toggle" title="Toggles light & dark" aria-label="auto" aria-live="polite" type="button">
+              <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                <mask class="moon" id="moon-mask">
+                  <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                  <circle cx="24" cy="10" r="6" fill="black" />
+                </mask>
+                <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
+                <g class="sun-beams" stroke="currentColor">
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </g>
+              </svg>
+            </button>
+          </p>
+        </div>
+      </nav>
+    </div>
+
+    <div id="main-content" class="container mb-6">
+  <p class="mb-2">
+    <a style="font-size: 0.9em" href="index.html">← Back to packages</a>
+  </p>
+  <h3 class="title is-3">
+    
+    Package <code>Trimming</code>
+    
+  </h3>
+
+  <div class="block">
+    
+    <p>
+      <a href="#service-Trimming.AttachmentService">
+        <span class="tag" style="min-width: 6em">Service</span>
+        <code>AttachmentService</code> 
+      </a>
+    </p>
+    
+    <p>
+      <a href="#service-Trimming.WaferService">
+        <span class="tag" style="min-width: 6em">Service</span>
+        <code>WaferService</code> 
+      </a>
+    </p>
+    
+    <p>
+      <a href="#service-Trimming.ReticleService">
+        <span class="tag" style="min-width: 6em">Service</span>
+        <code>ReticleService</code> 
+      </a>
+    </p>
+    
+    <p>
+      <a href="#service-Trimming.DieService">
+        <span class="tag" style="min-width: 6em">Service</span>
+        <code>DieService</code> 
+      </a>
+    </p>
+    
+    <p>
+      <a href="#service-Trimming.CircuitService">
+        <span class="tag" style="min-width: 6em">Service</span>
+        <code>CircuitService</code> 
+      </a>
+    </p>
+    
+    <p>
+      <a href="#service-Trimming.FunctionService">
+        <span class="tag" style="min-width: 6em">Service</span>
+        <code>FunctionService</code> 
+      </a>
+    </p>
+    
+    <p>
+      <a href="#service-Trimming.ResultService">
+        <span class="tag" style="min-width: 6em">Service</span>
+        <code>ResultService</code> 
+      </a>
+    </p>
+    
+    <p>
+      <a href="#service-Trimming.ProcessedCircuitService">
+        <span class="tag" style="min-width: 6em">Service</span>
+        <code>ProcessedCircuitService</code> 
+      </a>
+    </p>
+    
+    <p>
+      <a href="#service-Trimming.SweepService">
+        <span class="tag" style="min-width: 6em">Service</span>
+        <code>SweepService</code> 
+      </a>
+    </p>
+    
+
+    
+      
+      <p>
+        <a href="#message-Trimming.NewAttachment">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>NewAttachment</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.Attachment">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>Attachment</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.OptionalAttachment">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>OptionalAttachment</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.AttachmentsArray">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>AttachmentsArray</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.DeleteAttachmentRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>DeleteAttachmentRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.Tag">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>Tag</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.Wafer">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>Wafer</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.UpdateWaferRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>UpdateWaferRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.WafersFilterRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>WafersFilterRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ListByPageWafersRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ListByPageWafersRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.WafersPage">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>WafersPage</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.FindWaferByIdRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>FindWaferByIdRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.OptionalWafer">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>OptionalWafer</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.Reticle">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>Reticle</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.UpdateReticleRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>UpdateReticleRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ReticlesFilterRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ReticlesFilterRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ListByPageReticlesRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ListByPageReticlesRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ReticlesPage">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ReticlesPage</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.FindReticleByIdRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>FindReticleByIdRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.OptionalReticle">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>OptionalReticle</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.Die">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>Die</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.UpdateDieRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>UpdateDieRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.DiesFilterRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>DiesFilterRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ListByPageDiesRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ListByPageDiesRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.DiesPage">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>DiesPage</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.FindDieByIdRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>FindDieByIdRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.OptionalDie">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>OptionalDie</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.Circuit">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>Circuit</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.UpdateCircuitRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>UpdateCircuitRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.CircuitsFilterRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>CircuitsFilterRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ListByPageCircuitsRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ListByPageCircuitsRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.CircuitsPage">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>CircuitsPage</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.FindCircuitByIdRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>FindCircuitByIdRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.OptionalCircuit">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>OptionalCircuit</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.Function">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>Function</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.UpdateFunctionRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>UpdateFunctionRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ListByPageFunctionRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ListByPageFunctionRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.FunctionsPage">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>FunctionsPage</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.FindFunctionByIdRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>FindFunctionByIdRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.OptionalFunction">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>OptionalFunction</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.Result">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>Result</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.OptionalSpectrumResult">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>OptionalSpectrumResult</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.OptionalSingleNumberResult">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>OptionalSingleNumberResult</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.SpectrumResult">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>SpectrumResult</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.SingleNumberResult">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>SingleNumberResult</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ResultsFilterRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ResultsFilterRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ListByPageResultsRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ListByPageResultsRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ResultsPage">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ResultsPage</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.FindResultByIdRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>FindResultByIdRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.OptionalSingleResult">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>OptionalSingleResult</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.FindResultByRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>FindResultByRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.StoreSingleNumberRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>StoreSingleNumberRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.BatchDeleteResultRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>BatchDeleteResultRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ResultsArray">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ResultsArray</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ProcessedCircuit">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ProcessedCircuit</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ProcessedCircuitFilterRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ProcessedCircuitFilterRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ListByPageProcessedCircuitRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ListByPageProcessedCircuitRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.ProcessedCircuitPage">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>ProcessedCircuitPage</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.FindProcessedCircuitByIdRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>FindProcessedCircuitByIdRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.OptionalProcessedCircuit">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>OptionalProcessedCircuit</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.AddProcessedCircuitImageRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>AddProcessedCircuitImageRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.SweepRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>SweepRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.SweepOutput">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>SweepOutput</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.SweepInput">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>SweepInput</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.StoreSweepRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>StoreSweepRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.StoreSweepAfterShotRequest">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>StoreSweepAfterShotRequest</code> 
+        </a>
+      </p>
+      
+    
+      
+      <p>
+        <a href="#message-Trimming.SpectrumData">
+          <span class="tag" style="min-width: 6em">Message</span>
+          <code>SpectrumData</code> 
+        </a>
+      </p>
+      
+    
+
+    
+  </div>
+
+  <div class="block">
+      
+  </div>
+
+  
+
+  <div class="block">
+    <h3 class="title is-3">
+      Services
+    </h3>
+
+    
+    <div>
+      
+
+<h4 class="title is-4 type-heading" id="service-Trimming.AttachmentService">
+  <a href="#service-Trimming.AttachmentService" title="Trimming.AttachmentService">service AttachmentService</a>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/attachment.proto#L6">attachment.proto</a>
+  
+</h4>
+
+<div class="block content">
+  <p></p>
+</div>
+
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.AttachmentService-Delete">
+      <a href="#service-Trimming.AttachmentService-Delete">
+        rpc <code>Delete</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.DeleteAttachmentRequest"><span title="Trimming.DeleteAttachmentRequest">Trimming.DeleteAttachmentRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalAttachment"><span title="Trimming.OptionalAttachment">Trimming.OptionalAttachment</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+ 
+    </div>
+    
+    <div>
+      
+
+<h4 class="title is-4 type-heading" id="service-Trimming.WaferService">
+  <a href="#service-Trimming.WaferService" title="Trimming.WaferService">service WaferService</a>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/wafer.proto#L8">wafer.proto</a>
+  
+</h4>
+
+<div class="block content">
+  <p></p>
+</div>
+
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.WaferService-ListByPage">
+      <a href="#service-Trimming.WaferService-ListByPage">
+        rpc <code>ListByPage</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.ListByPageWafersRequest"><span title="Trimming.ListByPageWafersRequest">Trimming.ListByPageWafersRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.WafersPage"><span title="Trimming.WafersPage">Trimming.WafersPage</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.WaferService-FindById">
+      <a href="#service-Trimming.WaferService-FindById">
+        rpc <code>FindById</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindWaferByIdRequest"><span title="Trimming.FindWaferByIdRequest">Trimming.FindWaferByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalWafer"><span title="Trimming.OptionalWafer">Trimming.OptionalWafer</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.WaferService-Update">
+      <a href="#service-Trimming.WaferService-Update">
+        rpc <code>Update</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.UpdateWaferRequest"><span title="Trimming.UpdateWaferRequest">Trimming.UpdateWaferRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.Wafer"><span title="Trimming.Wafer">Trimming.Wafer</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.WaferService-Delete">
+      <a href="#service-Trimming.WaferService-Delete">
+        rpc <code>Delete</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindWaferByIdRequest"><span title="Trimming.FindWaferByIdRequest">Trimming.FindWaferByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalWafer"><span title="Trimming.OptionalWafer">Trimming.OptionalWafer</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+ 
+    </div>
+    
+    <div>
+      
+
+<h4 class="title is-4 type-heading" id="service-Trimming.ReticleService">
+  <a href="#service-Trimming.ReticleService" title="Trimming.ReticleService">service ReticleService</a>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/reticle.proto#L9">reticle.proto</a>
+  
+</h4>
+
+<div class="block content">
+  <p></p>
+</div>
+
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ReticleService-ListByPage">
+      <a href="#service-Trimming.ReticleService-ListByPage">
+        rpc <code>ListByPage</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.ListByPageReticlesRequest"><span title="Trimming.ListByPageReticlesRequest">Trimming.ListByPageReticlesRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.ReticlesPage"><span title="Trimming.ReticlesPage">Trimming.ReticlesPage</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ReticleService-FindById">
+      <a href="#service-Trimming.ReticleService-FindById">
+        rpc <code>FindById</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindReticleByIdRequest"><span title="Trimming.FindReticleByIdRequest">Trimming.FindReticleByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalReticle"><span title="Trimming.OptionalReticle">Trimming.OptionalReticle</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ReticleService-Update">
+      <a href="#service-Trimming.ReticleService-Update">
+        rpc <code>Update</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.UpdateReticleRequest"><span title="Trimming.UpdateReticleRequest">Trimming.UpdateReticleRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.Reticle"><span title="Trimming.Reticle">Trimming.Reticle</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ReticleService-Delete">
+      <a href="#service-Trimming.ReticleService-Delete">
+        rpc <code>Delete</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindReticleByIdRequest"><span title="Trimming.FindReticleByIdRequest">Trimming.FindReticleByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalReticle"><span title="Trimming.OptionalReticle">Trimming.OptionalReticle</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+ 
+    </div>
+    
+    <div>
+      
+
+<h4 class="title is-4 type-heading" id="service-Trimming.DieService">
+  <a href="#service-Trimming.DieService" title="Trimming.DieService">service DieService</a>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/die.proto#L10">die.proto</a>
+  
+</h4>
+
+<div class="block content">
+  <p></p>
+</div>
+
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.DieService-ListByPage">
+      <a href="#service-Trimming.DieService-ListByPage">
+        rpc <code>ListByPage</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.ListByPageDiesRequest"><span title="Trimming.ListByPageDiesRequest">Trimming.ListByPageDiesRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.DiesPage"><span title="Trimming.DiesPage">Trimming.DiesPage</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.DieService-FindById">
+      <a href="#service-Trimming.DieService-FindById">
+        rpc <code>FindById</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindDieByIdRequest"><span title="Trimming.FindDieByIdRequest">Trimming.FindDieByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalDie"><span title="Trimming.OptionalDie">Trimming.OptionalDie</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.DieService-Update">
+      <a href="#service-Trimming.DieService-Update">
+        rpc <code>Update</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.UpdateDieRequest"><span title="Trimming.UpdateDieRequest">Trimming.UpdateDieRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.Die"><span title="Trimming.Die">Trimming.Die</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.DieService-Delete">
+      <a href="#service-Trimming.DieService-Delete">
+        rpc <code>Delete</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindDieByIdRequest"><span title="Trimming.FindDieByIdRequest">Trimming.FindDieByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalDie"><span title="Trimming.OptionalDie">Trimming.OptionalDie</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+ 
+    </div>
+    
+    <div>
+      
+
+<h4 class="title is-4 type-heading" id="service-Trimming.CircuitService">
+  <a href="#service-Trimming.CircuitService" title="Trimming.CircuitService">service CircuitService</a>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/circuit.proto#L12">circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  <p></p>
+</div>
+
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.CircuitService-ListByPage">
+      <a href="#service-Trimming.CircuitService-ListByPage">
+        rpc <code>ListByPage</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.ListByPageCircuitsRequest"><span title="Trimming.ListByPageCircuitsRequest">Trimming.ListByPageCircuitsRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.CircuitsPage"><span title="Trimming.CircuitsPage">Trimming.CircuitsPage</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.CircuitService-FindById">
+      <a href="#service-Trimming.CircuitService-FindById">
+        rpc <code>FindById</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindCircuitByIdRequest"><span title="Trimming.FindCircuitByIdRequest">Trimming.FindCircuitByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalCircuit"><span title="Trimming.OptionalCircuit">Trimming.OptionalCircuit</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.CircuitService-Update">
+      <a href="#service-Trimming.CircuitService-Update">
+        rpc <code>Update</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.UpdateCircuitRequest"><span title="Trimming.UpdateCircuitRequest">Trimming.UpdateCircuitRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.Circuit"><span title="Trimming.Circuit">Trimming.Circuit</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.CircuitService-Delete">
+      <a href="#service-Trimming.CircuitService-Delete">
+        rpc <code>Delete</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindCircuitByIdRequest"><span title="Trimming.FindCircuitByIdRequest">Trimming.FindCircuitByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalCircuit"><span title="Trimming.OptionalCircuit">Trimming.OptionalCircuit</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+ 
+    </div>
+    
+    <div>
+      
+
+<h4 class="title is-4 type-heading" id="service-Trimming.FunctionService">
+  <a href="#service-Trimming.FunctionService" title="Trimming.FunctionService">service FunctionService</a>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/function.proto#L6">function.proto</a>
+  
+</h4>
+
+<div class="block content">
+  <p></p>
+</div>
+
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.FunctionService-ListByPage">
+      <a href="#service-Trimming.FunctionService-ListByPage">
+        rpc <code>ListByPage</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.ListByPageFunctionRequest"><span title="Trimming.ListByPageFunctionRequest">Trimming.ListByPageFunctionRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.FunctionsPage"><span title="Trimming.FunctionsPage">Trimming.FunctionsPage</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.FunctionService-FindBy">
+      <a href="#service-Trimming.FunctionService-FindBy">
+        rpc <code>FindBy</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindFunctionByIdRequest"><span title="Trimming.FindFunctionByIdRequest">Trimming.FindFunctionByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalFunction"><span title="Trimming.OptionalFunction">Trimming.OptionalFunction</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.FunctionService-Update">
+      <a href="#service-Trimming.FunctionService-Update">
+        rpc <code>Update</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.UpdateFunctionRequest"><span title="Trimming.UpdateFunctionRequest">Trimming.UpdateFunctionRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.Function"><span title="Trimming.Function">Trimming.Function</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.FunctionService-Delete">
+      <a href="#service-Trimming.FunctionService-Delete">
+        rpc <code>Delete</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindFunctionByIdRequest"><span title="Trimming.FindFunctionByIdRequest">Trimming.FindFunctionByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalFunction"><span title="Trimming.OptionalFunction">Trimming.OptionalFunction</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+ 
+    </div>
+    
+    <div>
+      
+
+<h4 class="title is-4 type-heading" id="service-Trimming.ResultService">
+  <a href="#service-Trimming.ResultService" title="Trimming.ResultService">service ResultService</a>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L12">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  <p></p>
+</div>
+
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ResultService-FindSweepById">
+      <a href="#service-Trimming.ResultService-FindSweepById">
+        rpc <code>FindSweepById</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindResultByIdRequest"><span title="Trimming.FindResultByIdRequest">Trimming.FindResultByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalSpectrumResult"><span title="Trimming.OptionalSpectrumResult">Trimming.OptionalSpectrumResult</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ResultService-FindSpectrumById">
+      <a href="#service-Trimming.ResultService-FindSpectrumById">
+        rpc <code>FindSpectrumById</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindResultByIdRequest"><span title="Trimming.FindResultByIdRequest">Trimming.FindResultByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalSpectrumResult"><span title="Trimming.OptionalSpectrumResult">Trimming.OptionalSpectrumResult</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ResultService-FindSingleSpectrumBy">
+      <a href="#service-Trimming.ResultService-FindSingleSpectrumBy">
+        rpc <code>FindSingleSpectrumBy</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindResultByRequest"><span title="Trimming.FindResultByRequest">Trimming.FindResultByRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalSpectrumResult"><span title="Trimming.OptionalSpectrumResult">Trimming.OptionalSpectrumResult</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ResultService-FindSingleNumberBy">
+      <a href="#service-Trimming.ResultService-FindSingleNumberBy">
+        rpc <code>FindSingleNumberBy</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindResultByRequest"><span title="Trimming.FindResultByRequest">Trimming.FindResultByRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalSingleNumberResult"><span title="Trimming.OptionalSingleNumberResult">Trimming.OptionalSingleNumberResult</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ResultService-FindById">
+      <a href="#service-Trimming.ResultService-FindById">
+        rpc <code>FindById</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindResultByIdRequest"><span title="Trimming.FindResultByIdRequest">Trimming.FindResultByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalSingleResult"><span title="Trimming.OptionalSingleResult">Trimming.OptionalSingleResult</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ResultService-ListByPage">
+      <a href="#service-Trimming.ResultService-ListByPage">
+        rpc <code>ListByPage</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.ListByPageResultsRequest"><span title="Trimming.ListByPageResultsRequest">Trimming.ListByPageResultsRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.ResultsPage"><span title="Trimming.ResultsPage">Trimming.ResultsPage</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ResultService-Delete">
+      <a href="#service-Trimming.ResultService-Delete">
+        rpc <code>Delete</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindResultByIdRequest"><span title="Trimming.FindResultByIdRequest">Trimming.FindResultByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalSingleResult"><span title="Trimming.OptionalSingleResult">Trimming.OptionalSingleResult</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ResultService-BatchDelete">
+      <a href="#service-Trimming.ResultService-BatchDelete">
+        rpc <code>BatchDelete</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.BatchDeleteResultRequest"><span title="Trimming.BatchDeleteResultRequest">Trimming.BatchDeleteResultRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.ResultsArray"><span title="Trimming.ResultsArray">Trimming.ResultsArray</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ResultService-StoreSingleNumber">
+      <a href="#service-Trimming.ResultService-StoreSingleNumber">
+        rpc <code>StoreSingleNumber</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.StoreSingleNumberRequest"><span title="Trimming.StoreSingleNumberRequest">Trimming.StoreSingleNumberRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.SingleNumberResult"><span title="Trimming.SingleNumberResult">Trimming.SingleNumberResult</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+ 
+    </div>
+    
+    <div>
+      
+
+<h4 class="title is-4 type-heading" id="service-Trimming.ProcessedCircuitService">
+  <a href="#service-Trimming.ProcessedCircuitService" title="Trimming.ProcessedCircuitService">service ProcessedCircuitService</a>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/processed_circuit.proto#L14">processed_circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  <p></p>
+</div>
+
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ProcessedCircuitService-ListByPage">
+      <a href="#service-Trimming.ProcessedCircuitService-ListByPage">
+        rpc <code>ListByPage</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.ListByPageProcessedCircuitRequest"><span title="Trimming.ListByPageProcessedCircuitRequest">Trimming.ListByPageProcessedCircuitRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.ProcessedCircuitPage"><span title="Trimming.ProcessedCircuitPage">Trimming.ProcessedCircuitPage</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ProcessedCircuitService-FindById">
+      <a href="#service-Trimming.ProcessedCircuitService-FindById">
+        rpc <code>FindById</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindProcessedCircuitByIdRequest"><span title="Trimming.FindProcessedCircuitByIdRequest">Trimming.FindProcessedCircuitByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalProcessedCircuit"><span title="Trimming.OptionalProcessedCircuit">Trimming.OptionalProcessedCircuit</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ProcessedCircuitService-AddImage">
+      <a href="#service-Trimming.ProcessedCircuitService-AddImage">
+        rpc <code>AddImage</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.AddProcessedCircuitImageRequest"><span title="Trimming.AddProcessedCircuitImageRequest">Trimming.AddProcessedCircuitImageRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalAttachment"><span title="Trimming.OptionalAttachment">Trimming.OptionalAttachment</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ProcessedCircuitService-GetImages">
+      <a href="#service-Trimming.ProcessedCircuitService-GetImages">
+        rpc <code>GetImages</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindProcessedCircuitByIdRequest"><span title="Trimming.FindProcessedCircuitByIdRequest">Trimming.FindProcessedCircuitByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.AttachmentsArray"><span title="Trimming.AttachmentsArray">Trimming.AttachmentsArray</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.ProcessedCircuitService-Delete">
+      <a href="#service-Trimming.ProcessedCircuitService-Delete">
+        rpc <code>Delete</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.FindProcessedCircuitByIdRequest"><span title="Trimming.FindProcessedCircuitByIdRequest">Trimming.FindProcessedCircuitByIdRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.OptionalProcessedCircuit"><span title="Trimming.OptionalProcessedCircuit">Trimming.OptionalProcessedCircuit</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+ 
+    </div>
+    
+    <div>
+      
+
+<h4 class="title is-4 type-heading" id="service-Trimming.SweepService">
+  <a href="#service-Trimming.SweepService" title="Trimming.SweepService">service SweepService</a>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/sweep.proto#L8">sweep.proto</a>
+  
+</h4>
+
+<div class="block content">
+  <p></p>
+</div>
+
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.SweepService-SweepReference">
+      <a href="#service-Trimming.SweepService-SweepReference">
+        rpc <code>SweepReference</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.SweepRequest"><span title="Trimming.SweepRequest">Trimming.SweepRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.SweepOutput"><span title="Trimming.SweepOutput">Trimming.SweepOutput</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.SweepService-SweepAfterShot">
+      <a href="#service-Trimming.SweepService-SweepAfterShot">
+        rpc <code>SweepAfterShot</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.SweepRequest"><span title="Trimming.SweepRequest">Trimming.SweepRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.SweepOutput"><span title="Trimming.SweepOutput">Trimming.SweepOutput</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.SweepService-StoreSweepReferenceShot">
+      <a href="#service-Trimming.SweepService-StoreSweepReferenceShot">
+        rpc <code>StoreSweepReferenceShot</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.StoreSweepRequest"><span title="Trimming.StoreSweepRequest">Trimming.StoreSweepRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.SweepOutput"><span title="Trimming.SweepOutput">Trimming.SweepOutput</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+
+<div class="box">
+  <div class="block">
+    <h5 class="title is-5" id="service-Trimming.SweepService-StoreSweepAfterShot">
+      <a href="#service-Trimming.SweepService-StoreSweepAfterShot">
+        rpc <code>StoreSweepAfterShot</code>
+      </a>
+    </h5>
+    Request: <code><a href="Trimming.html#message-Trimming.StoreSweepAfterShotRequest"><span title="Trimming.StoreSweepAfterShotRequest">Trimming.StoreSweepAfterShotRequest</span>
+    </a></code><br>
+    Response: <code><a href="Trimming.html#message-Trimming.SweepOutput"><span title="Trimming.SweepOutput">Trimming.SweepOutput</span>
+    </a></code><br>
+  </div>
+
+  
+</div>
+ 
+    </div>
+    
+  </div>
+
+  
+
+  
+
+    <h3 class="title is-3">
+      Messages
+    </h3>
+
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.NewAttachment">
+  <span>
+    <a href="#message-Trimming.NewAttachment" title="Trimming.NewAttachment">message NewAttachment</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/attachment.proto#L10">attachment.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        MimeType
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        BlobData
+      </td>
+      <td>
+        <code title="bytes">
+          
+            optional
+          
+          <span>bytes</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.Attachment">
+  <span>
+    <a href="#message-Trimming.Attachment" title="Trimming.Attachment">message Attachment</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/attachment.proto#L17">attachment.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        CreatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        UpdatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        MimeType
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        BlobData
+      </td>
+      <td>
+        <code title="bytes">
+          
+            optional
+          
+          <span>bytes</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.OptionalAttachment">
+  <span>
+    <a href="#message-Trimming.OptionalAttachment" title="Trimming.OptionalAttachment">message OptionalAttachment</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/attachment.proto#L28">attachment.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Attachment
+      </td>
+      <td>
+        <code title="Trimming.Attachment">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Attachment"><span title="Trimming.Attachment">Trimming.Attachment</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.AttachmentsArray">
+  <span>
+    <a href="#message-Trimming.AttachmentsArray" title="Trimming.AttachmentsArray">message AttachmentsArray</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/attachment.proto#L32">attachment.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Attachments
+      </td>
+      <td>
+        <code title="Trimming.Attachment">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Attachment"><span title="Trimming.Attachment">Trimming.Attachment</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.DeleteAttachmentRequest">
+  <span>
+    <a href="#message-Trimming.DeleteAttachmentRequest" title="Trimming.DeleteAttachmentRequest">message DeleteAttachmentRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/attachment.proto#L36">attachment.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.Tag">
+  <span>
+    <a href="#message-Trimming.Tag" title="Trimming.Tag">message Tag</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/tag.proto#L6">tag.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Key
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Value
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.Wafer">
+  <span>
+    <a href="#message-Trimming.Wafer" title="Trimming.Wafer">message Wafer</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/wafer.proto#L16">wafer.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        CreatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        UpdatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.UpdateWaferRequest">
+  <span>
+    <a href="#message-Trimming.UpdateWaferRequest" title="Trimming.UpdateWaferRequest">message UpdateWaferRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/wafer.proto#L26">wafer.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.WafersFilterRequest">
+  <span>
+    <a href="#message-Trimming.WafersFilterRequest" title="Trimming.WafersFilterRequest">message WafersFilterRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/wafer.proto#L32">wafer.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ListByPageWafersRequest">
+  <span>
+    <a href="#message-Trimming.ListByPageWafersRequest" title="Trimming.ListByPageWafersRequest">message ListByPageWafersRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/wafer.proto#L38">wafer.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        PageNumber
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        PageSize
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Filters
+      </td>
+      <td>
+        <code title="Trimming.WafersFilterRequest">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.WafersFilterRequest"><span title="Trimming.WafersFilterRequest">Trimming.WafersFilterRequest</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.WafersPage">
+  <span>
+    <a href="#message-Trimming.WafersPage" title="Trimming.WafersPage">message WafersPage</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/wafer.proto#L44">wafer.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Items
+      </td>
+      <td>
+        <code title="Trimming.Wafer">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Wafer"><span title="Trimming.Wafer">Trimming.Wafer</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Total
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Index
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Size
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.FindWaferByIdRequest">
+  <span>
+    <a href="#message-Trimming.FindWaferByIdRequest" title="Trimming.FindWaferByIdRequest">message FindWaferByIdRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/wafer.proto#L51">wafer.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.OptionalWafer">
+  <span>
+    <a href="#message-Trimming.OptionalWafer" title="Trimming.OptionalWafer">message OptionalWafer</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/wafer.proto#L55">wafer.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Wafer
+      </td>
+      <td>
+        <code title="Trimming.Wafer">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Wafer"><span title="Trimming.Wafer">Trimming.Wafer</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.Reticle">
+  <span>
+    <a href="#message-Trimming.Reticle" title="Trimming.Reticle">message Reticle</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/reticle.proto#L17">reticle.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        CreatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        UpdatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Wafer
+      </td>
+      <td>
+        <code title="Trimming.Wafer">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Wafer"><span title="Trimming.Wafer">Trimming.Wafer</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.UpdateReticleRequest">
+  <span>
+    <a href="#message-Trimming.UpdateReticleRequest" title="Trimming.UpdateReticleRequest">message UpdateReticleRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/reticle.proto#L28">reticle.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ReticlesFilterRequest">
+  <span>
+    <a href="#message-Trimming.ReticlesFilterRequest" title="Trimming.ReticlesFilterRequest">message ReticlesFilterRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/reticle.proto#L34">reticle.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        WaferId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ListByPageReticlesRequest">
+  <span>
+    <a href="#message-Trimming.ListByPageReticlesRequest" title="Trimming.ListByPageReticlesRequest">message ListByPageReticlesRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/reticle.proto#L40">reticle.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        PageNumber
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        PageSize
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Filters
+      </td>
+      <td>
+        <code title="Trimming.ReticlesFilterRequest">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.ReticlesFilterRequest"><span title="Trimming.ReticlesFilterRequest">Trimming.ReticlesFilterRequest</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ReticlesPage">
+  <span>
+    <a href="#message-Trimming.ReticlesPage" title="Trimming.ReticlesPage">message ReticlesPage</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/reticle.proto#L46">reticle.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Items
+      </td>
+      <td>
+        <code title="Trimming.Reticle">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Reticle"><span title="Trimming.Reticle">Trimming.Reticle</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Total
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Index
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Size
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.FindReticleByIdRequest">
+  <span>
+    <a href="#message-Trimming.FindReticleByIdRequest" title="Trimming.FindReticleByIdRequest">message FindReticleByIdRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/reticle.proto#L53">reticle.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.OptionalReticle">
+  <span>
+    <a href="#message-Trimming.OptionalReticle" title="Trimming.OptionalReticle">message OptionalReticle</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/reticle.proto#L57">reticle.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Reticle
+      </td>
+      <td>
+        <code title="Trimming.Reticle">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Reticle"><span title="Trimming.Reticle">Trimming.Reticle</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.Die">
+  <span>
+    <a href="#message-Trimming.Die" title="Trimming.Die">message Die</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/die.proto#L18">die.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        CreatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        UpdatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Reticle
+      </td>
+      <td>
+        <code title="Trimming.Reticle">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Reticle"><span title="Trimming.Reticle">Trimming.Reticle</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td>
+        Wafer
+      </td>
+      <td>
+        <code title="Trimming.Wafer">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Wafer"><span title="Trimming.Wafer">Trimming.Wafer</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.UpdateDieRequest">
+  <span>
+    <a href="#message-Trimming.UpdateDieRequest" title="Trimming.UpdateDieRequest">message UpdateDieRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/die.proto#L30">die.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.DiesFilterRequest">
+  <span>
+    <a href="#message-Trimming.DiesFilterRequest" title="Trimming.DiesFilterRequest">message DiesFilterRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/die.proto#L36">die.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        ReticleId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ListByPageDiesRequest">
+  <span>
+    <a href="#message-Trimming.ListByPageDiesRequest" title="Trimming.ListByPageDiesRequest">message ListByPageDiesRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/die.proto#L42">die.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        PageNumber
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        PageSize
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Filters
+      </td>
+      <td>
+        <code title="Trimming.DiesFilterRequest">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.DiesFilterRequest"><span title="Trimming.DiesFilterRequest">Trimming.DiesFilterRequest</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.DiesPage">
+  <span>
+    <a href="#message-Trimming.DiesPage" title="Trimming.DiesPage">message DiesPage</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/die.proto#L48">die.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Items
+      </td>
+      <td>
+        <code title="Trimming.Die">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Die"><span title="Trimming.Die">Trimming.Die</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Total
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Index
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Size
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.FindDieByIdRequest">
+  <span>
+    <a href="#message-Trimming.FindDieByIdRequest" title="Trimming.FindDieByIdRequest">message FindDieByIdRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/die.proto#L55">die.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.OptionalDie">
+  <span>
+    <a href="#message-Trimming.OptionalDie" title="Trimming.OptionalDie">message OptionalDie</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/die.proto#L59">die.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Die
+      </td>
+      <td>
+        <code title="Trimming.Die">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Die"><span title="Trimming.Die">Trimming.Die</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.Circuit">
+  <span>
+    <a href="#message-Trimming.Circuit" title="Trimming.Circuit">message Circuit</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/circuit.proto#L20">circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        CreatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        UpdatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Die
+      </td>
+      <td>
+        <code title="Trimming.Die">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Die"><span title="Trimming.Die">Trimming.Die</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td>
+        Reticle
+      </td>
+      <td>
+        <code title="Trimming.Reticle">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Reticle"><span title="Trimming.Reticle">Trimming.Reticle</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>8</td>
+      <td>
+        Wafer
+      </td>
+      <td>
+        <code title="Trimming.Wafer">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Wafer"><span title="Trimming.Wafer">Trimming.Wafer</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.UpdateCircuitRequest">
+  <span>
+    <a href="#message-Trimming.UpdateCircuitRequest" title="Trimming.UpdateCircuitRequest">message UpdateCircuitRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/circuit.proto#L33">circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.CircuitsFilterRequest">
+  <span>
+    <a href="#message-Trimming.CircuitsFilterRequest" title="Trimming.CircuitsFilterRequest">message CircuitsFilterRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/circuit.proto#L39">circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        DieId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ListByPageCircuitsRequest">
+  <span>
+    <a href="#message-Trimming.ListByPageCircuitsRequest" title="Trimming.ListByPageCircuitsRequest">message ListByPageCircuitsRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/circuit.proto#L45">circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        PageNumber
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        PageSize
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Filters
+      </td>
+      <td>
+        <code title="Trimming.CircuitsFilterRequest">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.CircuitsFilterRequest"><span title="Trimming.CircuitsFilterRequest">Trimming.CircuitsFilterRequest</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.CircuitsPage">
+  <span>
+    <a href="#message-Trimming.CircuitsPage" title="Trimming.CircuitsPage">message CircuitsPage</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/circuit.proto#L51">circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Items
+      </td>
+      <td>
+        <code title="Trimming.Circuit">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Circuit"><span title="Trimming.Circuit">Trimming.Circuit</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Total
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Index
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Size
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.FindCircuitByIdRequest">
+  <span>
+    <a href="#message-Trimming.FindCircuitByIdRequest" title="Trimming.FindCircuitByIdRequest">message FindCircuitByIdRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/circuit.proto#L58">circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.OptionalCircuit">
+  <span>
+    <a href="#message-Trimming.OptionalCircuit" title="Trimming.OptionalCircuit">message OptionalCircuit</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/circuit.proto#L62">circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Circuit
+      </td>
+      <td>
+        <code title="Trimming.Circuit">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Circuit"><span title="Trimming.Circuit">Trimming.Circuit</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.Function">
+  <span>
+    <a href="#message-Trimming.Function" title="Trimming.Function">message Function</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/function.proto#L14">function.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        CreatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        UpdatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        Version
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Language
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td>
+        Author
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>8</td>
+      <td>
+        Entrypoint
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.UpdateFunctionRequest">
+  <span>
+    <a href="#message-Trimming.UpdateFunctionRequest" title="Trimming.UpdateFunctionRequest">message UpdateFunctionRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/function.proto#L27">function.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Entrypoint
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ListByPageFunctionRequest">
+  <span>
+    <a href="#message-Trimming.ListByPageFunctionRequest" title="Trimming.ListByPageFunctionRequest">message ListByPageFunctionRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/function.proto#L33">function.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        PageNumber
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        PageSize
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.FunctionsPage">
+  <span>
+    <a href="#message-Trimming.FunctionsPage" title="Trimming.FunctionsPage">message FunctionsPage</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/function.proto#L38">function.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Items
+      </td>
+      <td>
+        <code title="Trimming.Function">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Function"><span title="Trimming.Function">Trimming.Function</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Total
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Index
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Size
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.FindFunctionByIdRequest">
+  <span>
+    <a href="#message-Trimming.FindFunctionByIdRequest" title="Trimming.FindFunctionByIdRequest">message FindFunctionByIdRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/function.proto#L45">function.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.OptionalFunction">
+  <span>
+    <a href="#message-Trimming.OptionalFunction" title="Trimming.OptionalFunction">message OptionalFunction</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/function.proto#L49">function.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Function
+      </td>
+      <td>
+        <code title="Trimming.Function">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Function"><span title="Trimming.Function">Trimming.Function</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.Result">
+  <span>
+    <a href="#message-Trimming.Result" title="Trimming.Result">message Result</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L30">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        CreatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        UpdatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        Type
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td>
+        Wafer
+      </td>
+      <td>
+        <code title="Trimming.Wafer">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Wafer"><span title="Trimming.Wafer">Trimming.Wafer</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>8</td>
+      <td>
+        Reticle
+      </td>
+      <td>
+        <code title="Trimming.Reticle">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Reticle"><span title="Trimming.Reticle">Trimming.Reticle</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>9</td>
+      <td>
+        Die
+      </td>
+      <td>
+        <code title="Trimming.Die">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Die"><span title="Trimming.Die">Trimming.Die</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>10</td>
+      <td>
+        Circuit
+      </td>
+      <td>
+        <code title="Trimming.Circuit">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Circuit"><span title="Trimming.Circuit">Trimming.Circuit</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>11</td>
+      <td>
+        DataJson
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.OptionalSpectrumResult">
+  <span>
+    <a href="#message-Trimming.OptionalSpectrumResult" title="Trimming.OptionalSpectrumResult">message OptionalSpectrumResult</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L47">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Result
+      </td>
+      <td>
+        <code title="Trimming.SpectrumResult">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.SpectrumResult"><span title="Trimming.SpectrumResult">Trimming.SpectrumResult</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.OptionalSingleNumberResult">
+  <span>
+    <a href="#message-Trimming.OptionalSingleNumberResult" title="Trimming.OptionalSingleNumberResult">message OptionalSingleNumberResult</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L51">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Result
+      </td>
+      <td>
+        <code title="Trimming.SingleNumberResult">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.SingleNumberResult"><span title="Trimming.SingleNumberResult">Trimming.SingleNumberResult</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.SpectrumResult">
+  <span>
+    <a href="#message-Trimming.SpectrumResult" title="Trimming.SpectrumResult">message SpectrumResult</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L55">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        WavelengthsArray
+      </td>
+      <td>
+        <code title="double">
+          
+            repeated
+          
+          <span>double</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        PowersArray
+      </td>
+      <td>
+        <code title="double">
+          
+            repeated
+          
+          <span>double</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        WaferName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        ReticleName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td>
+        DieName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>8</td>
+      <td>
+        CircuitName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>9</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.SingleNumberResult">
+  <span>
+    <a href="#message-Trimming.SingleNumberResult" title="Trimming.SingleNumberResult">message SingleNumberResult</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L69">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Value
+      </td>
+      <td>
+        <code title="double">
+          
+          <span>double</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Unit
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        WaferName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        ReticleName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td>
+        DieName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>8</td>
+      <td>
+        CircuitName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>9</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ResultsFilterRequest">
+  <span>
+    <a href="#message-Trimming.ResultsFilterRequest" title="Trimming.ResultsFilterRequest">message ResultsFilterRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L83">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        ResultName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        WaferName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        ReticleName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        DieName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        CircuitName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td>
+        WaferId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>8</td>
+      <td>
+        ReticleId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>9</td>
+      <td>
+        DieId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>10</td>
+      <td>
+        CircuitId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>11</td>
+      <td>
+        Type
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>12</td>
+      <td>
+        ProcessedCircuitId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ListByPageResultsRequest">
+  <span>
+    <a href="#message-Trimming.ListByPageResultsRequest" title="Trimming.ListByPageResultsRequest">message ListByPageResultsRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L101">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        PageNumber
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        PageSize
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Filters
+      </td>
+      <td>
+        <code title="Trimming.ResultsFilterRequest">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.ResultsFilterRequest"><span title="Trimming.ResultsFilterRequest">Trimming.ResultsFilterRequest</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        IncludeData
+      </td>
+      <td>
+        <code title="bool">
+          
+            optional
+          
+          <span>bool</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ResultsPage">
+  <span>
+    <a href="#message-Trimming.ResultsPage" title="Trimming.ResultsPage">message ResultsPage</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L109">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Items
+      </td>
+      <td>
+        <code title="Trimming.Result">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Result"><span title="Trimming.Result">Trimming.Result</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Total
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Index
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Size
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.FindResultByIdRequest">
+  <span>
+    <a href="#message-Trimming.FindResultByIdRequest" title="Trimming.FindResultByIdRequest">message FindResultByIdRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L116">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.OptionalSingleResult">
+  <span>
+    <a href="#message-Trimming.OptionalSingleResult" title="Trimming.OptionalSingleResult">message OptionalSingleResult</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L119">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Result
+      </td>
+      <td>
+        <code title="Trimming.Result">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.Result"><span title="Trimming.Result">Trimming.Result</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.FindResultByRequest">
+  <span>
+    <a href="#message-Trimming.FindResultByRequest" title="Trimming.FindResultByRequest">message FindResultByRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L123">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        WaferName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        ReticleName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        DieName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        CircuitName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        ResultName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        ShotNumber
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.StoreSingleNumberRequest">
+  <span>
+    <a href="#message-Trimming.StoreSingleNumberRequest" title="Trimming.StoreSingleNumberRequest">message StoreSingleNumberRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L133">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Value
+      </td>
+      <td>
+        <code title="double">
+          
+          <span>double</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Unit
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Name
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        WaferName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        ReticleName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        DieName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td>
+        CircuitName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>8</td>
+      <td>
+        ShotNumber
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>9</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.BatchDeleteResultRequest">
+  <span>
+    <a href="#message-Trimming.BatchDeleteResultRequest" title="Trimming.BatchDeleteResultRequest">message BatchDeleteResultRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L147">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Ids
+      </td>
+      <td>
+        <code title="string">
+          
+            repeated
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ResultsArray">
+  <span>
+    <a href="#message-Trimming.ResultsArray" title="Trimming.ResultsArray">message ResultsArray</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/result.proto#L150">result.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Items
+      </td>
+      <td>
+        <code title="Trimming.Result">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Result"><span title="Trimming.Result">Trimming.Result</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ProcessedCircuit">
+  <span>
+    <a href="#message-Trimming.ProcessedCircuit" title="Trimming.ProcessedCircuit">message ProcessedCircuit</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/processed_circuit.proto#L24">processed_circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        CreatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        UpdatedAt
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Wafer
+      </td>
+      <td>
+        <code title="Trimming.Wafer">
+          
+          <a href="Trimming.html#message-Trimming.Wafer"><span title="Trimming.Wafer">Trimming.Wafer</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        Reticle
+      </td>
+      <td>
+        <code title="Trimming.Reticle">
+          
+          <a href="Trimming.html#message-Trimming.Reticle"><span title="Trimming.Reticle">Trimming.Reticle</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Die
+      </td>
+      <td>
+        <code title="Trimming.Die">
+          
+          <a href="Trimming.html#message-Trimming.Die"><span title="Trimming.Die">Trimming.Die</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td>
+        Circuit
+      </td>
+      <td>
+        <code title="Trimming.Circuit">
+          
+          <a href="Trimming.html#message-Trimming.Circuit"><span title="Trimming.Circuit">Trimming.Circuit</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>8</td>
+      <td>
+        Results
+      </td>
+      <td>
+        <code title="Trimming.Result">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Result"><span title="Trimming.Result">Trimming.Result</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>9</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ProcessedCircuitFilterRequest">
+  <span>
+    <a href="#message-Trimming.ProcessedCircuitFilterRequest" title="Trimming.ProcessedCircuitFilterRequest">message ProcessedCircuitFilterRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/processed_circuit.proto#L38">processed_circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        WaferId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        ReticleId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        DieId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        CircuitId
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        WaferName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        ReticleName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td>
+        DieName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>8</td>
+      <td>
+        CircuitName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ListByPageProcessedCircuitRequest">
+  <span>
+    <a href="#message-Trimming.ListByPageProcessedCircuitRequest" title="Trimming.ListByPageProcessedCircuitRequest">message ListByPageProcessedCircuitRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/processed_circuit.proto#L49">processed_circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        PageNumber
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        PageSize
+      </td>
+      <td>
+        <code title="int32">
+          
+            optional
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Filters
+      </td>
+      <td>
+        <code title="Trimming.ProcessedCircuitFilterRequest">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.ProcessedCircuitFilterRequest"><span title="Trimming.ProcessedCircuitFilterRequest">Trimming.ProcessedCircuitFilterRequest</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.ProcessedCircuitPage">
+  <span>
+    <a href="#message-Trimming.ProcessedCircuitPage" title="Trimming.ProcessedCircuitPage">message ProcessedCircuitPage</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/processed_circuit.proto#L55">processed_circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Items
+      </td>
+      <td>
+        <code title="Trimming.ProcessedCircuit">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.ProcessedCircuit"><span title="Trimming.ProcessedCircuit">Trimming.ProcessedCircuit</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Total
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Index
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Size
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.FindProcessedCircuitByIdRequest">
+  <span>
+    <a href="#message-Trimming.FindProcessedCircuitByIdRequest" title="Trimming.FindProcessedCircuitByIdRequest">message FindProcessedCircuitByIdRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/processed_circuit.proto#L62">processed_circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.OptionalProcessedCircuit">
+  <span>
+    <a href="#message-Trimming.OptionalProcessedCircuit" title="Trimming.OptionalProcessedCircuit">message OptionalProcessedCircuit</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/processed_circuit.proto#L66">processed_circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Circuit
+      </td>
+      <td>
+        <code title="Trimming.ProcessedCircuit">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.ProcessedCircuit"><span title="Trimming.ProcessedCircuit">Trimming.ProcessedCircuit</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.AddProcessedCircuitImageRequest">
+  <span>
+    <a href="#message-Trimming.AddProcessedCircuitImageRequest" title="Trimming.AddProcessedCircuitImageRequest">message AddProcessedCircuitImageRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/processed_circuit.proto#L70">processed_circuit.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Attachment
+      </td>
+      <td>
+        <code title="Trimming.NewAttachment">
+          
+          <a href="Trimming.html#message-Trimming.NewAttachment"><span title="Trimming.NewAttachment">Trimming.NewAttachment</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.SweepRequest">
+  <span>
+    <a href="#message-Trimming.SweepRequest" title="Trimming.SweepRequest">message SweepRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/sweep.proto#L16">sweep.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        WaferName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        ReticleName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        DieName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        CircuitName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        ResultName
+      </td>
+      <td>
+        <code title="string">
+          
+            optional
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td>
+        SweepInput
+      </td>
+      <td>
+        <code title="Trimming.SweepInput">
+          
+            optional
+          
+          <a href="Trimming.html#message-Trimming.SweepInput"><span title="Trimming.SweepInput">Trimming.SweepInput</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.SweepOutput">
+  <span>
+    <a href="#message-Trimming.SweepOutput" title="Trimming.SweepOutput">message SweepOutput</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/sweep.proto#L27">sweep.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Id
+      </td>
+      <td>
+        <code title="string">
+          
+          <span>string</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        WavelengthsArray
+      </td>
+      <td>
+        <code title="double">
+          
+            repeated
+          
+          <span>double</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        PowersArray
+      </td>
+      <td>
+        <code title="double">
+          
+            repeated
+          
+          <span>double</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        Tags
+      </td>
+      <td>
+        <code title="Trimming.Tag">
+          
+            repeated
+          
+          <a href="Trimming.html#message-Trimming.Tag"><span title="Trimming.Tag">Trimming.Tag</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.SweepInput">
+  <span>
+    <a href="#message-Trimming.SweepInput" title="Trimming.SweepInput">message SweepInput</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/sweep.proto#L35">sweep.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        WavelengthStart_nm
+      </td>
+      <td>
+        <code title="double">
+          
+          <span>double</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        WavelengthStop_nm
+      </td>
+      <td>
+        <code title="double">
+          
+          <span>double</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        Sampling_pm
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td>
+        LaserSpeed_nm_per_s
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td>
+        LaserPower_dbm
+      </td>
+      <td>
+        <code title="double">
+          
+          <span>double</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.StoreSweepRequest">
+  <span>
+    <a href="#message-Trimming.StoreSweepRequest" title="Trimming.StoreSweepRequest">message StoreSweepRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/sweep.proto#L43">sweep.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Sweep
+      </td>
+      <td>
+        <code title="Trimming.SweepRequest">
+          
+          <a href="Trimming.html#message-Trimming.SweepRequest"><span title="Trimming.SweepRequest">Trimming.SweepRequest</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Data
+      </td>
+      <td>
+        <code title="Trimming.SpectrumData">
+          
+          <a href="Trimming.html#message-Trimming.SpectrumData"><span title="Trimming.SpectrumData">Trimming.SpectrumData</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.StoreSweepAfterShotRequest">
+  <span>
+    <a href="#message-Trimming.StoreSweepAfterShotRequest" title="Trimming.StoreSweepAfterShotRequest">message StoreSweepAfterShotRequest</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/sweep.proto#L48">sweep.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        Sweep
+      </td>
+      <td>
+        <code title="Trimming.SweepRequest">
+          
+          <a href="Trimming.html#message-Trimming.SweepRequest"><span title="Trimming.SweepRequest">Trimming.SweepRequest</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        Data
+      </td>
+      <td>
+        <code title="Trimming.SpectrumData">
+          
+          <a href="Trimming.html#message-Trimming.SpectrumData"><span title="Trimming.SpectrumData">Trimming.SpectrumData</span>
+    </a>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td>
+        ShotNumber
+      </td>
+      <td>
+        <code title="int32">
+          
+          <span>int32</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+      
+      <div class="block">
+        
+
+<h4 class="title is-4 type-heading" id="message-Trimming.SpectrumData">
+  <span>
+    <a href="#message-Trimming.SpectrumData" title="Trimming.SpectrumData">message SpectrumData</a>
+  
+  </span>
+  
+    <a class="type-source-link" href="https://github.com/Femtum/femtum/blob/main/proto/sweep.proto#L54">sweep.proto</a>
+  
+</h4>
+
+<div class="block content">
+  
+</div>
+
+<table class="table is-fullwidth is-hoverable is-bordered">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Description</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td>
+        WavelengthsArray
+      </td>
+      <td>
+        <code title="double">
+          
+            repeated
+          
+          <span>double</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td>
+        PowersArray
+      </td>
+      <td>
+        <code title="double">
+          
+            repeated
+          
+          <span>double</span>
+        </code>
+      </td>
+      <td class="content"></td>
+      
+    </tr>
+    
+    
+  </tbody>
+</table>
+ 
+      </div>
+      
+    
+
+  
+
+  
+
+</div>
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        
+          <p>© 2025 Femtum. All rights reserved.</p>
+        
+        <p>Built with <strong><a href="https://github.com/markvincze/sabledocs" target="_blank">sabledocs</a></strong>.</p>
+      </div>
+    </footer>
+  </body>
+</html>
