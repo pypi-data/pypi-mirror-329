@@ -1,0 +1,327 @@
+# Thingy
+
+Licence: GPL v3
+
+Author: John Skilleter v0.99
+
+Collection of shell utilities and configuration stuff for Linux and MacOS. Untested on other operating systems.
+
+Permanently (for the forseeable future!) in a beta stage - usable, with a few rough edges, and probably with bugs when used in way I'm not expecting!
+
+The following commands are documented in detail in the help output that can be displayed by running the command with the '--help' option.
+
+This README just contains a summary of the functionality of each command.
+
+# Git Repo Management
+
+## Multigit
+
+Multigit is a tool for managing a collection of related git working trees.
+
+This is intended for use in a situation where you have a collection of related git working trees organised in a directory hierarchy which aren't managed using git submodules or any other tool. It allows you to run git commands on multiple working trees at once, without navigating around the different working trees to do so and to select which working trees commands are run in.
+
+## Initialisation
+
+Start by running ensuring that the default branch (e.g. `main`) is checked out in each of the working trees and, in the top-level directory, run `multigit init` to create the configuration file which, by default is called `multigit.toml` - this is just a text file that sets the configuration for each working tree in terms of name, origin, default branch and location.
+
+## Multigit Command Line
+
+The multigit command line format is:
+
+    multigit OPTIONS COMMAND
+
+Where COMMAND is an internal multigit command if it starts with a `+` and is a git command otherwise (including the additional git commands described in this document).
+
+By default, when multigit is invoked with a git command, it runs a the command in each of the working trees selected by the command line options passed to multigit (if no options are specified then the command is run in *all* the working trees.
+
+The command takes a number of options that can be used to select the list of working trees that each of the subcommands that it supports runs in:
+
+`--repos REPO` / `-r REPO` Allows a list of working trees to be specfied, either by path, name or a wildcard matching either.
+
+`--modified` / `-m` Run only in working trees containing locally modified files
+
+`--branched` / `-b` Run only in working trees where the current branch that is checked out is NOT the default branch
+
+`--tag TAG` / `-t TAG` Run only in working trees that are tagged with the specified tag
+
+These options are AND-ed together, so specifying `--modified --branched --tag WOMBAT` will select only working trees that are modified AND branched AND tagged with `WOMBAT`, but the parameters to the `--repos` and `--tag` options are OR-ed together, so specifying `--tag WOMBAT --tag EMU` will select repos that are tagged as `WOMBAT` *OR* `EMU`.
+
+Multigit tags are stored in the configuration file, not within the working tree and each working tree can have multiple tags.
+
+## Multigit Commands
+
+Multigit supports a small list of subcommands, each of which are prefixed with a `+` to distinguish them from Git commands:
+
+`+init` - Create or update the configuration file
+
+`+dir` - Given the name of a working tree, output the location within the multigit tree of that working tree if the name matches uniquely, or the name of the directory where the multigit configuration file resides if no parameter is specified.
+
+`+config` - Print the name and location of the multigit configuration file.
+
+`+tag TAG` - If no tag specified list tags applied to the specified working trees. If a tag *is* specified, then *apply* the tag to the specified working trees.
+
+`+untag TAG` - Remove the tag from the specified working trees (do nothing if the tag is not applied in the first place).
+
+Any command *not* prefixed with `+` is run in each of the working trees (filtered by the various multigit options) as a git command.
+
+For example; `multigit -m commit -ab` would run `git commit -a` in each of the working trees that is branched and contains modified files.
+
+The `+dir` command can be used with shell aliases (or their equivalent in the user's shell of choice) to create an alias to run, for example, `cd (multigit +dir "$@")` (Bash) or `cd (multigit +dir $argv)` (for the Fish shell) that would cd to the top level directory.
+
+# Miscellaneous Git Utilities
+
+## gitprompt
+
+Output a string containing colour-coded shell nesting level, current directory and git working tree status (intended to be used in the shell prompt).
+
+# Git Extensions
+
+Due to the way that the git command works, these can be run as they were additional git subcommands, although, due to a limitation in git, the only things that does not work is the `--help` option where the command has to be run with a hyphen between `git` and the subcommand - for example `git ca --help` does not work, but `git-ca --help` does.
+
+## Branch Names
+
+Where one of the git extensions takes an existing branch name as a parameter, the branch name can be abbreviated and the abbreviated form is expanded according to the following rules:
+
+* If the specified branch name exactly matches an existing branch, tag or commit ID then that is used (this includes remote branches where appropriate, if no local branches match).
+* Otherwise, the branch name is compared to existing branches (again, including remote branches where appropriate, if no local branches match) and, if the specified name uniquely partially matches an existing branch (optionally using `*` and `?` wildcard characters) that branch is used. If it matches multiple branches than an error is reported.
+
+For example, given a repo with the following branches:
+
+        origin/wombat
+        origin/platypus
+        wombat
+        emu
+        battery
+        chaos
+
+Then:
+
+* 'emu' will match 'emu'
+* 'wombat' will match 'wombat' but not 'origin/wombat' since the local branch takes precedence
+* 'at' will match both 'wombat' and 'battery' and will report an error
+* 'pus' will match 'origin/platypus'
+
+This is most useful where branches contain ticket numbers so, for instance given a branch called `feature/SKIL-103` you can check it out using `git co 103` assuming no other local branches contain `103` in their name.
+
+Note that the concept of the default branch `DEFAULT` mentioned above *only* applies when using the `multigit` command, although some of the commands will treat branches called `master` or `main` as special cases (see the individual command documentation).
+
+## git ca
+
+Improved version of 'git commit --amend'. Updates files that are already in the commit and, optionally, adds and commits additional files.
+
+        usage: git-ca [-h] [--added] [--all] [--everything] [--ignored] [--patch] [--verbose] [--dry-run] [files ...]
+
+        positional arguments:
+          files             List of files to add to the commit
+
+        options:
+          -h, --help        show this help message and exit
+          --added, -A       Update files in the current commit, including files added with `git add`
+          --all, -a         Append all locally-modified, tracked files to the current commit
+          --everything, -e  Append all modified and untracked files to the current commit (implies `~--all`)
+          --ignored, -i     Include files normally hidden by `.gitignore`
+          --patch, -p       Use the interactive patch selection interface to chose which changes to commit.
+          --verbose, -v     Verbose mode
+          --dry-run, -D     Dry-run
+
+## git cleanup
+
+List or delete branches that have already been merged and delete tracking branches that are no longer on the remote.
+
+        git-cleanup [-h] [--delete] [--master MASTER] [--force] [--unmerged] [--yes] [--debug] [branches ...]
+
+        positional arguments:
+
+        branches              List of branches to check (default is all branches)
+
+        options:
+        -h, --help            show this help message and exit
+        --delete, -d          Delete all branches that have been merged
+        --master MASTER, -m MASTER, --main MASTER
+                              Specify the master branch (Attempts to read this from GitLab or defaults to "develop" if present or "master" or "main" otherwise
+        --force, -f           Allow protected branches (e.g. master) to be removed
+        --unmerged, -u        List branches that have NOT been merged
+        --yes, -y             Assume "yes" in response to any prompts (e.g. to delete branches)
+        --debug               Enable debug output
+
+## git co
+
+Equivalent to `git checkout` but with enhanced branch matching as described above. The command does not support the full range of options supported by the `git checkout` comamnd which should still be used where additional functionality is required.
+
+        git-co [-h] [--branch] [--update] [--rebase] [--force] [--exact] [--debug] branchname
+
+        positional arguments:
+
+        branchname    The branch name (or a partial name that matches uniquely against a local branch, remote branch, commit ID or tag)
+
+        options:
+        -h, --help    show this help message and exit
+        --branch, -b  Create the specified branch
+        --update, -u  If a remote branch exists, delete any local branch and check out the remote version
+        --rebase, -r  Rebase the branch onto its parent after checking it out
+        --force, -f   When using the update option, recreate the local branch even if it is owned by the current user (based on the author of the most recent commit)
+        --exact, -e   Do not use branch name matching - check out the branch as specified (if it exists)
+        --debug       Enable debug output
+
+## git parent
+
+Attempt to determine the parent branch for the specified branch (defaulting to the current one).
+
+## git update
+
+Update the repo from the remote, rebase branches against their parents, optionally run git cleanup
+
+## git wt
+
+Output the top level directory of the git working tree or return an error if we are not in a git working tree.
+
+## git review
+
+Console-based git change review tool.
+
+# General Commands
+
+## addpath
+
+Update a $PATH-type variable by adding or removing entries.
+
+## docker-purge
+
+Stop or kill docker instances and/or remove docker images.
+
+## ffind
+
+Simple file find utility - replaces the `find` command with something that is more human-friendly.
+
+## linecount
+
+Count lines of code in a directory tree organised by file type.
+
+## py-audit
+
+Query api.osv.dev to determine whether a specified version of a particular Python package is subject to known security vulnerabilities
+
+## readable
+
+Pipe for converting colour combinations to make them readable on a light background
+
+## remdir
+
+Recursively delete empty directories
+
+## rmdupe
+
+Search for duplicate files
+
+## rpylint
+
+Run pylint on all the Python source files in the current tree
+
+## s3-sync
+
+Synchronise files from S3 to local storage.
+
+## strreplace
+
+Simple search and replace utility for those times when trying to escape characters in a regexp to use sed is more hassle than it is worth.
+
+## tfm
+
+Console-based file-manager, similar to Midnight Commander but aiming to be better.
+
+## tfparse
+
+Read JSON Terraform output and convert back to human-readable text
+This allows multiple errors and warnings to be reported as there's
+no way of doing this directly from Terraform
+
+## trimpath
+
+Intelligently trim a path to fit a given width (used by gitprompt)
+
+## venv-create
+
+Create a script to create/update a virtual environment and run a python script in it.
+
+## xchmod
+
+Command to run chmod only on files that need it (only modifies files that don't have the required permissions already).
+
+## yamlcheck
+
+YAML validator - checks that a file is valid YAML (use yamllint to verify that it is nicely-formatted YAML).
+
+# Obsolescent Utilities
+
+These will be moved to the skilleter-extras package in due course.
+
+## borger
+
+Wrapper for the borg backup utility to make it easier to use with a fixed set of options.
+
+## consolecolours
+
+Display all available colours in the console.
+
+## diskspacecheck
+
+Check how much free space is available on all filesystems, ignoring read-only filesystems, /dev and tmpfs.
+
+Issue a warning if any are above 90% used.
+
+## gphotosync
+
+Utility for syncing photos from Google Photos to local storage
+
+## moviemover
+
+Search for files matching a wildcard in a directory tree and move them to an equivalent location in a different tree
+
+## phototidier
+
+Perform various tidying operations on a directory full of photos:
+
+* Remove leading '$' and '_' from filenames
+* Move files in hidden directories up 1 level
+* If the EXIF data in a photo indicates that it was taken on date that doesn't match the name of the directory it is stored in (in YYYY-MM-DD format) then it is moved to the correct directory, creating it if necessary.
+
+All move/rename operations are carried out safely with the file being moved having
+a numeric suffix added to the name if it conflicts with an existing file.
+
+## photodupe
+
+Search for duplicate images in a directory tree
+
+## splitpics
+
+Copy a directory full of pictures to a destination, creating subdiretories with a fixed number of pictures in each in the destination directory for use with FAT filesystems and digital photo frames.
+
+## sysmon
+
+Simple console system monitor
+
+## window-rename
+
+Monitor window titles and rename them to fit an alphabetical grouping in 'Appname - Document' format.
+
+# Obsolescent Commands
+
+These commands will probably be retired in future versions of Thingy
+
+## ggit
+
+Run a git command in all working trees under the current directory (superceded by multigit).
+
+## ggrep
+
+Run 'git grep' in all repos under the current directory (superceded by multigit).
+
+## GitLab Commands
+
+### git mr
+
+Push a feature branch to GitLab and create a merge request
+
+### gl
+
+Command line for GitLab
