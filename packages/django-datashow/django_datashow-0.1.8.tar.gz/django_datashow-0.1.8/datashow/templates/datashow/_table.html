@@ -1,0 +1,142 @@
+{% load i18n l10n datashow_tags humanize %}
+<div id="datashow-table-{{ table.id }}">
+    {% if filter_form.has_filter %}
+        <div class="row">
+            <div class="col-md-8">
+                <form method="get"
+                      action="."
+                      hx-boost="true"
+                      hx-target="#datashow-table-{{ table.id }}"
+                      hx-swap="show:none"
+                      class="mb-3">
+                    {% include "datashow/_filterform.html" with form=filter_form %}
+                    <div class="d-flex justify-content-end">
+                        {% if filter_form.is_filtered %}
+                            <a href="." class="btn btn-secondary me-3">{% translate "Reset" %}</a>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary">{% translate "Search" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    {% if facets %}
+        <div class="row">
+            {% for facet in facets %}
+                <div class="col-12">
+                    <h5>{{ facet.column.label }}</h5>
+                    <ul class="list-inline">
+                        {% for key, count, active in facet.keys %}
+                            <li class="list-inline-item">
+                                {% if active %}
+                                    <a href="?{% querystring facet.column.name %}"
+                                       class="badge text-bg-primary"
+                                       hx-boost="true"
+                                       title="{% blocktranslate count count=count %}{{ count }} row{% plural %}{{ count }} rows{% endblocktranslate %}"
+                                       hx-target="#datashow-table-{{ table.id }}"
+                                       hx-swap="show:none">
+                                        {{ key }}
+                                        <span class="visually-hidden">{% translate "remove filter" %}</span>
+                                        <span aria-hidden="true">&times;</span>
+                                    </a>
+                                {% else %}
+                                    <a href="?{% querystring facet.column.name key %}"
+                                       class="badge text-bg-secondary"
+                                       title="{% blocktranslate count count=count %}{{ count }} row{% plural %}{{ count }} rows{% endblocktranslate %}"
+                                       hx-boost="true"
+                                       hx-target="#datashow-table-{{ table.id }}"
+                                       hx-swap="show:none">{{ key }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="table-responsive">
+        <table id="datashow-table-{{ table.id }}"
+               class="table table-sm datashow-table"
+               data-rowcount="{{ table.row_count }}">
+            <thead>
+                <tr hx-boost="true" hx-target="#datashow-table-{{ table.id }}">
+                    {% for column, css in columns %}
+                        <th class="text-nowrap {{ css }} {% if column.sortable %}datashow-sortable{% endif %}">
+                            <span class="datashow-column-label">{{ column.label }}</span>
+                            {% if column.sortable %}
+                                {% spaceless %}
+                                    <span class="datashow-sort">
+                                        {% sort_queryparam column.name ascending=True as asc_sort %}
+                                        {% if asc_sort %}
+                                            <a href="?{{ asc_sort }}">
+                                                <span title="{% translate "sort ascending" %}" aria-hidden="true">↑</span>
+                                                <span class="visually-hidden">{% translate "sort ascending" %}</span>
+                                            </a>
+                                        {% else %}
+                                            <a class="datashow-sort-active"
+                                               href="?{% sort_queryparam column.name ascending=True remove=True %}">
+                                                <span title="{% translate "remove sort ascending" %}" aria-hidden="true">↑</span>
+                                                <span class="visually-hidden">{% translate "remove sort ascending" %}</span>
+                                            </a>
+                                        {% endif %}
+                                        {% sort_queryparam column.name ascending=False as desc_sort %}
+                                        {% if desc_sort %}
+                                            <a href="?{{ desc_sort }}">
+                                                <span title="{% translate "sort descending" %}"  aria-hidden="true">↓</span>
+                                                <span class="visually-hidden">{% translate "sort descending" %}</span>
+                                            </a>
+                                        {% else %}
+                                            <a class="datashow-sort-active"
+                                               href="?{% sort_queryparam column.name ascending=False remove=True %}">
+                                                <span title="{% translate "remove sort descending" %}" aria-hidden="true">↓</span>
+                                                <span class="visually-hidden">{% translate "remove sort descending" %}</span>
+                                            </a>
+                                        {% endif %}
+                                    </span>
+                                {% endspaceless %}
+                            {% endif %}
+                        </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in object_list %}
+                    <tr>
+                        {% for val, css, rendered, column in row %}
+                            <td data-colname="{{ column.label }}"
+                                data-val="{% localize off %}{{ val }}{% endlocalize %}">
+                                <span class="{{ css }}">{{ rendered }}</span>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% block datashow_table_footer %}
+    <p>
+        {% if filter_form.is_filtered %}
+            {% blocktrans with total_count=table.row_count|intcomma count=paginator.count|intcomma %}
+            Showing {{ count }} of {{ total_count }} rows.
+        {% endblocktrans %}
+        {% else %}
+            {% blocktrans with total_count=table.row_count|intcomma %}
+            Total of {{ total_count }} rows.
+            {% endblocktrans %}
+        {% endif %}
+    </p>
+    <div class="row mb-3">
+        <div class="col-md-8">
+            {% if paginator.num_pages > 1 %}
+                <div hx-boost="true" hx-target="#datashow-table-{{ table.id }}">{% include "datashow/pagination.html" %}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex justify-content-end">
+                <a href="{% url "datashow:dataset-table-export" slug=dataset.slug table_slug=table.slug %}?{% querystring %}"
+                   class="btn btn-sm btn-secondary">{% translate "Export view as CSV" %}</a>
+            </div>
+        </div>
+    </div>
+    {% endblock datashow_table_footer %}
+</div>
