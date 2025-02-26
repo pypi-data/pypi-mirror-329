@@ -1,0 +1,68 @@
+Metadata-Version: 2.2
+Name: ibwapi
+Version: 0.2.0
+Summary: A low level, lightweight client for interacting with the Infoblox WAPI
+Author-email: Ryan Bolger <ryan-oss@xyto.cc>
+Project-URL: Homepage, https://github.com/rmbolger/py-ibwapi
+Project-URL: Documentation, https://github.com/rmbolger/py-ibwapi
+Project-URL: Source, https://github.com/rmbolger/py-ibwapi
+Keywords: infoblox,nios,wapi,ddi,rest
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: System Administrators
+Classifier: Environment :: Web Environment
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Internet :: Name Service (DNS)
+Classifier: Topic :: System :: Networking
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+License-File: NOTICE
+Requires-Dist: requests>=2.32.2
+
+# ibwapi
+
+A low level, lightweight client for interacting with the Infoblox WAPI.
+
+```python
+>>> import ibwapi
+>>> wapi = ibwapi.Client(
+...     'grid.example.com',     # grid master FQDN
+...     ('admin','infoblox'),   # auth tuple
+...     wapi_version='2.13.4'   # WAPI version (optional)
+... )
+>>> resp = wapi.get(
+...     'record:a',                         # object type
+...     {'name:':'myhost.example.com'},     # filters
+...     return_fields=['default','comment'] # return fields
+... )
+>>> resp
+[{'_ref': 'record:a/ZG5zLmJpbmRfYSQuMS5uZXQuZHZvbHZlLmRzLGRjMSwxMC4xNy4xLjMx:myhost.example.com/Internal', 'comment': 'My Host', 'ipv4addr': '192.168.100.1', 'name': 'myhost.example.com', 'view': 'Internal'}]
+>>> wapi.update(
+...     resp[0]['_ref'],            # object ref
+...     {'comment':'New Comment'}   # updated fields
+... )
+'record:a/ZG5zLmJpbmRfYSQuMS5uZXQuZHZvbHZlLmRzLGRjMSwxMC4xNy4xLjMx:myhost.example.com/Internal'
+```
+
+## Installing and Supported Versions
+
+ibwapi is available on PyPI:
+
+```console
+$ python -m pip install ibwapi
+```
+
+This project depends on [Requests](https://requests.readthedocs.io/en/latest/), which is licensed under the Apache License 2.0. It will generally follow the Python versions supported by Requests which is currently 3.8+.
