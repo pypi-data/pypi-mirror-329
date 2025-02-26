@@ -1,0 +1,67 @@
+Metadata-Version: 2.2
+Name: svgl
+Version: 0.1.8
+Summary: Interact with the https://svgl.app/.
+Home-page: https://github.com/tsnaketech/svgl
+Author: SnakeTech
+Author-email: repo@snaketech.net
+License: MIT
+Project-URL: Source, https://github.com/tsnaketech/svgl
+Project-URL: Issues, https://github.com/tsnaketech/svgl/issues
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Natural Language :: French
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: httpx
+Requires-Dist: pydantic
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: project-url
+Dynamic: requires-dist
+Dynamic: summary
+
+# svgl
+
+A simple SVG library for interact with https://svgl.app/.
+
+Based on the API documentation: https://svgl.app/api.
+
+## Installation
+
+### Using setup.py
+
+```bash
+python -m pip install svgl
+```
+
+## Usage
+
+```python
+from svgl import SVGL
+
+svgl = SVGL()
+
+## Get information about the SVG
+coursera = svgl.svgs.search("coursera").get()
+
+## Download the SVG
+### Download the SVG to the current search
+svgl.svgs.search("poper").route.download()
+
+### Download the specific SVG to a specific output
+svgl.library("discord").output("archive/").download()
+
+### Get categories of the SVG
+categories = svgl.categories.get()
+```
+
+
