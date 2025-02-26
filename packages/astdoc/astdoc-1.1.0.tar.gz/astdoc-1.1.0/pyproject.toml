@@ -1,0 +1,76 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "astdoc"
+version = "1.1.0"
+description = "A library for parsing AST and extracting docstring information in Python."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "daizutabi", email = "daizutabi@gmail.com" }]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Documentation",
+  "Topic :: Software Development :: Documentation",
+]
+requires-python = ">=3.10"
+dependencies = ["markdown>=3"]
+
+[project.urls]
+Documentation = "https://github.com/daizutabi/astdoc"
+Source = "https://github.com/daizutabi/astdoc"
+Issues = "https://github.com/daizutabi/astdoc/issues"
+
+[dependency-groups]
+dev = [
+  "jinja2",
+  "pytest-clarity",
+  "pytest-cov",
+  "pytest-randomly",
+  "pytest-xdist",
+]
+
+[tool.pytest.ini_options]
+addopts = ["--doctest-modules", "--cov=astdoc", "--cov-report=lcov:lcov.info"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "except ImportError",
+  "if TYPE_CHECKING:",
+  "raise NotImplementedError",
+]
+skip_covered = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+exclude = ["tests/examples/*.py", "example/*.py"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+unfixable = ["F401"]
+ignore = [
+  "A005",
+  "ANN002",
+  "ANN003",
+  "ARG001",
+  "ARG002",
+  "D105",
+  "D203",
+  "D213",
+  "FBT001",
+  "FBT002",
+  "PERF401",
+  "PGH003",
+  "PLR2004",
+  "SIM102",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN", "ARG", "D", "FBT", "PLR", "RUF", "S"]
