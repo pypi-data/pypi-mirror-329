@@ -1,0 +1,35 @@
+[build-system]
+requires = ["maturin>=1.4,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "tabular_data_loader"
+version = "0.1.1"
+description = "A Rust-powered library for loading tabular data from CSV and Excel files"
+authors = [{ name = "Cristi Boboc", email = "cristi@cbsoft.ro" }]
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+readme = "README.md"
+license = { text = "MIT" }
+
+[project.urls]
+Changelog = "https://gitlab.com/bapp-cloud/packages/rust-tabular-loader/-/blob/main/CHANGELOG.md"
+Repository = "https://gitlab.com/bapp-cloud/packages/rust-tabular-loader"
+
+[project.optional-dependencies]
+dev = [
+    "openpyxl>=3.1.3",
+    "pytest>=7.0.0",
+]
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+python-source = "python"
+module-name = "tabular_data_loader.tabular_data_loader"

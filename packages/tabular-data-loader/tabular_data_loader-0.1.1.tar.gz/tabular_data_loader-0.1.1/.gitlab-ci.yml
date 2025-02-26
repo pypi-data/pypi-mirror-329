@@ -1,0 +1,47 @@
+stages:
+  - build
+  - publish
+
+variables:
+  # Disable cargo incremental builds for reproducibility
+  CARGO_INCREMENTAL: "0"
+
+build_wheels:
+  stage: build
+  image: quay.io/pypa/manylinux2014_x86_64
+  script:
+    # Install Rust toolchain (includes cargo)
+    - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    - export PATH=$HOME/.cargo/bin:$PATH
+    # Ensure Python 3.8 binaries are in PATH (adjust if using a different version)
+    - export PATH=/opt/python/cp38-cp38/bin:$PATH
+    # Upgrade pip and install maturin (with setuptools, wheel)
+    - /opt/python/cp38-cp38/bin/python -m pip install --upgrade pip setuptools wheel maturin
+    # Build wheels with the explicit manylinux tag
+    - maturin build --release --manylinux=2014
+  artifacts:
+    paths:
+      - target/wheels/*.whl
+  except:
+    - tags
+
+publish_to_pypi:
+  stage: publish
+  image: quay.io/pypa/manylinux2014_x86_64
+  script: |
+    # Install Rust (which provides Cargo)
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    export PATH=$HOME/.cargo/bin:$PATH
+    # Ensure Python 3.8 binaries are in PATH (adjust if using a different version)
+    export PATH=/opt/python/cp38-cp38/bin:$PATH
+    # Upgrade maturin using the manylinux Python interpreter
+    /opt/python/cp38-cp38/bin/python -m pip install --upgrade maturin
+    echo "MATURIN_PYPI_TOKEN starts with: ${MATURIN_PYPI_TOKEN:0:4}"
+    echo "MATURIN_PASSWORD starts with: ${MATURIN_PASSWORD:0:4}"
+    maturin publish --manylinux=2014
+  only:
+    - tags
+
+
+
+
