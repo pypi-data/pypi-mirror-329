@@ -1,0 +1,32 @@
+{% extends "datashow/base.html" %}
+{% load datashow_tags %}
+{% block title %}
+    {% if row_label %}
+        {{ row_label }}
+    {% else %}
+        {{ table.label }}
+    {% endif %}
+{% endblock title %}
+{% block content %}
+    {% block datashow_rowheader %}
+        {% block datashow_rowheader_breadcrumb %}
+            {% if dataset.default_table != table %}
+                <a href="{% url "datashow:dataset-table" slug=dataset.slug table_slug=table.slug %}">← {{ table.label }}</a>
+            {% else %}
+                <a href="{% url "datashow:dataset-index" slug=dataset.slug %}">← {{ table.label }}</a>
+            {% endif %}
+        {% endblock datashow_rowheader_breadcrumb %}
+        {% if row_label %}<h1>{{ row_label }}</h1>{% endif %}
+        {% if row_description %}<div>{{ row_description|markdownify }}</div>{% endif %}
+    {% endblock datashow_rowheader %}
+    {% block datashow_rowbody %}
+        <dl>
+            {% for rendered in row %}
+                <dt>{{ rendered.column.label }}</dt>
+                <dd>
+                    {{ rendered.formatted_value }}
+                </dd>
+            {% endfor %}
+        </dl>
+    {% endblock datashow_rowbody %}
+{% endblock content %}
