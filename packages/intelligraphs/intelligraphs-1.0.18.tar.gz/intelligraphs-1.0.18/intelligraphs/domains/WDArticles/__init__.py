@@ -1,0 +1,1 @@
+from intelligraphs.domains.WDArticles.relations import relations

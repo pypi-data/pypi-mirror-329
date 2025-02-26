@@ -1,0 +1,1 @@
+from intelligraphs.domains.SynTIPR.relations import relations
