@@ -1,0 +1,83 @@
+Metadata-Version: 2.2
+Name: cumd
+Version: 1.6.0
+Summary: Church Slavonic extensions to Markdown
+Author-email: Mike Kroutikov <pgmmpk@gmail.com>
+Maintainer-email: Mike Kroutikov <pgmmpk@gmail.com>
+License: MIT
+Project-URL: Homepage, https://github.com/slavonic/cumd/
+Project-URL: Source, https://github.com/slavonic/cumd/
+Keywords: church slavonic,markdown
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Religion
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3 :: Only
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: markdown>=3.7
+Requires-Dist: lxml
+Requires-Dist: lxmlx
+
+# cumd
+
+Church Slavonic dialect of Markdown
+
+## Markup
+
+1. Use `=` symbol to mark red spans, for example: `=Слава и ныне=`
+2. Use `+` to mark expanded font: `+Священник глаголет:+`
+3. Use leading tilda to mark first letter of a word red: `~Христос рождается`
+4. For pagebreak anchors use `<<5: л. 3 об.>>` or simply ``<<5>>`` when label is the same 
+   as the page number
+5. Use leading curcumflex symbol to mark bukvitsa: `^Вначале было Слово`
+6. For verse numbering use `((и))`
+7. For footnote use `[[footnote text]]` (Attention: this is likely to change)
+
+This package provides two commands:
+
+* `cumd` - renders markdown into html
+* `cuxml` - converts Ponomar XML into markdown
+
+## cumd
+
+```bash
+usage: cumd [-h] [--html] [--simplified] [--extensions EXTENSIONS] input output
+
+Converts CU markdown to HTML
+
+positional arguments:
+  input                 File name of the input *.md file
+  output                File name of the output *.html file
+
+options:
+  -h, --help            show this help message and exit
+  --html                Set to generate viewable HTML
+  --simplified, -s      Set to generate HTML without custom tags
+  --extensions EXTENSIONS, -e EXTENSIONS
+                        List of comma-separated extensions to enable. For example -e footnotes,math
+```
+
+## cuxml
+
+```bash
+usage: cuxml [-h] input output
+
+Converts XML to cu-flavored markdown
+
+positional arguments:
+  input       input XML file
+  output      output Markdown file
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
