@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="default_metric" model="ir.metric" forcecreate="True">
+    <field name="name">last_update_incoming_mail</field>
+    <field name="description">Result will be 1 if the fetch was more than 30 days ago.</field>
+    <field name="type">gauge</field>
+    <field name="model_id" eval="ref('base.model_ir_cron')"/>
+    <field name="domain">['&amp;',['nextcall','&lt;=',(datetime.datetime.now() - datetime.timedelta(days=2)).strftime('%Y-%m-%d')],['id','=',6]]</field>
+  </record>
+</odoo>
