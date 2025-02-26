@@ -1,0 +1,51 @@
+[project]
+name = "radnn"
+version = "0.0.8"
+description = "Rapid Deep Neural Networks"
+readme = "README.md"
+authors = [
+    {name = "Pantelis I. Kaplanoglou", email = "pikaplanoglou@ihu.gr"}
+]
+
+requires-python = ">=3.7"
+license = {file = "LICENSE.txt"}
+classifiers=[
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Topic :: Software Development",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Development Status :: 2 - Pre-Alpha",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+"numpy >= 1.26.4",
+"matplotlib >= 3.8.4",
+"pandas >= 2.2.1",
+"scikit-learn >= 1.4.2"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/pikaplan/radnn"
+"Documentation" = "https://radnn.readthedocs.io/"
+
+[build-system]
+requires = [
+    "setuptools>=54",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+
+[tool.setuptools]
+packages = {find = {where = ["src"]}}
+
+[tool.setuptools.package-dir]
+"" = "src"
+
