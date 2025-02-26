@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  # This trigger the workflow when a pull request is merged into main AND pyproject.toml was updated.
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "pyproject.toml"
+    types:
+      - closed
+  # This trigger the workflow on tag creation
+  create:
+    tags:
+      - "v*"
+
+permissions:
+  id-token: write
+  contents: write # Required to create releases
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+    # Only run if the pull request was merged.
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2 # Changed to a released tag instead of a commit SHA
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: python -m pip install uv
+
+      - name: Get Version from pyproject.toml
+        id: get_version
+        run: |
+          VERSION=$(grep -oP 'version = "\K[^"]+' pyproject.toml)
+          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Detected version: ${VERSION}"
+
+      - name: Build Package
+        run: uv build
+
+      - name: Publish Package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          release_name: Release v${{ steps.get_version.outputs.VERSION }}
+          body: |
+            Release of version ${{ steps.get_version.outputs.VERSION }}
+          draft: false
+          prerelease: false

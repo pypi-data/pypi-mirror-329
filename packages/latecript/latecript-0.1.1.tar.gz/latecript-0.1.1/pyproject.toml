@@ -1,0 +1,37 @@
+[project.scripts]
+latecript = "latecript:main"
+
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+
+
+[project]
+name = "latecript"
+version = "0.1.1"
+description = "Latecript: transcript and translate audio from you input audio devices in real-time using Speechmatics API."
+readme = "README.md"
+authors = [
+    { name = "aelouass" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "asyncio>=3.4.3",
+    "certifi>=2025.1.31",
+    "pip-system-certs>=4.0",
+    "pyaudio>=0.2.14",
+    "pydantic>=2.10.6",
+    
+    "sounddevice>=0.5.1",
+    "soundfile>=0.13.1",
+    "speechmatics-python>=3.0.2",
+    "textual>=1.0.0",
+    "tqdm>=4.67.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.9.7",
+]
+
