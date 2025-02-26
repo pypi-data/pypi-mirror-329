@@ -1,0 +1,32 @@
+[project]
+name = "balisage"
+version = "0.1.1"
+description = "Generate HTML using an intuitive Python interface."
+readme = "readme.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+data = [
+    "pandas>=2.2.3",
+]
+formatting = [
+    "beautifulsoup4>=4.13.3",
+]
+
+[dependency-groups]
+dev = [
+    "pandas>=2.2.3",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.9.7",
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+pythonpath = [
+    "src/",
+]
+testpaths = [
+    "tests/",
+]
