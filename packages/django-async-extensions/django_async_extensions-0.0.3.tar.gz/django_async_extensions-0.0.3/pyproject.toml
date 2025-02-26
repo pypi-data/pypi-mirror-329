@@ -1,0 +1,75 @@
+[project]
+name = "django-async-extensions"
+version = "0.0.3"
+description = "provide async capable stuff for django"
+authors = [
+    {name = "amirreza",email = "amir.rsf1380@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python",
+    "Environment :: Web Environment",
+    "Development Status :: 4 - Beta" ,
+    "Topic :: Utilities",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Framework :: AsyncIO"
+]
+dependencies = [
+    "django >= 4.2",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+ruff = "^0.9.4"
+pre-commit = "^4.1.0"
+pytest = "^8.3.4"
+pytest-asyncio = "^0.25.3"
+pytest-django = "^4.9.0"
+pytest-subtests = "^0.14.1"
+pytest-mock = "^3.14.0"
+psycopg = {extras = ["binary", "pool"], version = "^3.2.4"}
+
+[tool.poetry.urls]
+Homepage = "https://github.com/amirreza8002/django-async-extensions"
+Source = "https://github.com/amirreza8002/django-async-extensions"
+Issues = "https://github.com/amirreza8002/django-async-extensions/issues"
+Documentation = "https://django-async-extensions.readthedocs.io/en/latest/"
+
+[tool.poetry.group.doc.dependencies]
+mkdocs = "^1.6.1"
+
+
+[tool.poetry.group.ipython.dependencies]
+ipython = "^8.32.0"
+
+[tool.ruff.lint]
+select = ["T201", "E", "F", "S", "DJ"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402", "F401", "F403"]
+"test*" = ["S101", "S105", "DJ008"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
