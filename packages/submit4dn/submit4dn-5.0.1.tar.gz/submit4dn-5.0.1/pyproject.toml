@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "Submit4DN"
+version = "5.0.1"
+description = "Utility package for submitting data to the 4DN Data Portal"
+authors = ["4DN-DCIC Team <support@4dnucleome.org>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/4dn-dcic/Submit4DN"
+repository = "https://github.com/4dn-dcic/Submit4DN"
+packages = [
+  { include="wranglertools", from="." }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.13"
+python-magic = ">=0.4.12,<1"
+attrs = "^22.2"
+openpyxl = "^3.1.2"
+dcicutils = "^8.13.0"
+# awscli is not directly imported but is required for aws cp operation
+awscli = "^1.27"
+
+[tool.poetry.dev-dependencies]
+flake8 = ">=3.9.2"
+pytest = ">=7.2.2"
+pytest-cov = ">=4.0.0"
+pytest-mock = ">=3.10.0"
+
+[tool.poetry.scripts]
+import_data = "wranglertools.import_data:main"
+get_field_info = "wranglertools.get_field_info:main"
+
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
