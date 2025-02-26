@@ -1,0 +1,198 @@
+{
+    "tokenizer": {
+        "nominal_case": {
+            "summary": "Nominal case",
+            "description": "This is a nominal case. For more details on what is the vanilla version of the tokenizer or not, please read the documentation : https://france-travail.github.io/happy_vllm/",
+            "value": {
+                "text": "This is a text example",
+                "with_tokens_str": true,
+                "vanilla": true
+            }
+        }
+    },
+    "vllm_tokenizer": {
+        "completions": {
+            "summary": "Completion",
+            "description": "Completion case from vllm tokenizer request, check https://github.com/vllm-project/vllm/blob/1a36287b89f337057ebeb5d1bee30567e985b444/vllm/entrypoints/openai/protocol.py#L729C1-L729C17",
+            "value": {
+                "model": "my_model",
+                "prompt": "This is a text example",
+                "add_special_tokens": true
+            }
+        },
+        "chat_completions": {
+            "summary": "Chat completion",
+            "description": "Chat completion case from vllm tokenizer request, check https://github.com/vllm-project/vllm/blob/1a36287b89f337057ebeb5d1bee30567e985b444/vllm/entrypoints/openai/protocol.py#L729C1-L729C17",
+            "value": {
+                "model": "my_model",
+                "messages": [
+                    "This is a text example",
+                    "and another"
+                ],
+                "add_special_tokens": true,
+                "add_generation_prompt": true
+            }
+        }
+    },
+    "decode": {
+        "nominal_case": {
+            "summary": "Nominal case",
+            "description": "Decode a list of token ids. It is the inverse of the endpoint tokenizer. For more details on what is the vanilla version of the tokenizer or not, please read the documentation : https://france-travail.github.io/happy_vllm/",
+            "value": {
+                "token_ids": [
+                    1,
+                    17162,
+                    28725,
+                    910,
+                    460,
+                    368,
+                    1550
+                ],
+                "with_tokens_str": true,
+                "vanilla": true
+            }
+        }
+    },
+    "vllm_decode": {
+        "nominal_case": {
+            "summary": "Nominal case",
+            "description": "Decode a list of token ids. It is the inverse of the endpoint tokenizer. For more details on what is the vanilla version of the tokenizer or not, please read the documentation : https://france-travail.github.io/happy_vllm/",
+            "value": {
+                "tokens": [
+                    "1",
+                    "17162",
+                    "28725",
+                    "910",
+                    "460",
+                    "368",
+                    "1550"
+                ],
+                "model": "my_model"
+            }
+        }
+    },
+    "split_text": {
+        "nominal_case": {
+            "summary": "Nominal case",
+            "description": "In this example, the separators are the default separators.",
+            "value": {
+                "text": "Hey, how are you ? I am clearly fine. And you ? Exceptionally good, thanks for asking.",
+                "num_tokens_in_chunk": 4,
+                "separators": [".", "!", "?", "|", " .", " !", " ?", " |"]
+              }
+        }
+    },
+    "metadata_text": {
+        "nominal_case": {
+            "summary": "Nominal case",
+            "description": "A nominal case",
+            "value": {
+                "text": "Hey, how are you ?",
+                "truncation_side": "left",
+                "max_length": 2
+              }
+        }
+    },
+    "completions": {
+        "Nominal case": {
+            "summary": "Nominal case",
+            "description": "The nominal case where we we use all default values",
+            "value": {
+                "prompt": "This is a prompt example. Please complete it with a joke. JOKE:",
+                "model": "my_model"
+            }
+        },
+        "simple_case": {
+            "summary": "Simple case",
+            "description": "A simple case where we use some vLLM sampling parameters",
+            "value": {
+                "prompt": "This is a prompt example. Please complete it with a joke. JOKE:",
+                "model": "my_model",
+                "repetition_penalty": 1.1,
+                "temperature": 0.5,
+                "top_p": 0.8,
+                "max_tokens": 100
+            }
+        },
+        "choices": {
+            "summary": "Use of guided choices",
+            "description": "How to use `guided_choice`. In this example, the LLM will answer one of the three proposed responses, even if the choices are not present in the prompt",
+            "value": {
+                "prompt": "Was was the occupation of Ada Lovelace ?",
+                "model": "my_model",
+                "temperature": 0,
+                "guided_choice": [
+                    "mathematician",
+                    "astronaut",
+                    "show writer"
+                ]
+            }
+        },
+        "guided_json": {
+            "summary": "Use of guided_json with a json schema",
+            "description": "How to use `guided_json` with a json schema. In this example, we are not obligated to put in the prompt what json we are expecting even if it may help the LLM answer correctly. For more complex json schema, please read the corresponding documentation : https://json-schema.org/",
+            "value": {
+                "prompt": "Describe Ada Lovelace. Your answer should be in form of a json with the keywords name, age, is_alive, height_in_meters, names_of_children.",
+                "model": "my_model",
+                "temperature": 0,
+                "repetition_penalty": 1,
+                "top_p": 0.8,
+                "max_tokens": 100,
+                "guided_json": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "age": {
+                            "type": "integer"
+                        },
+                        "is_alive": {
+                            "type": "boolean"
+                        },
+                        "height_in_meters": {
+                            "type": "number"
+                        },
+                        "names_of_children": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "age",
+                        "is_alive",
+                        "height_in_meters",
+                        "names_of_children"
+                    ]
+                }
+            }
+        }
+    },
+    "chat_completions": {
+        "nominal_case": {
+            "summary": "Nominal case",
+            "description": "A nominal case",
+            "value": {
+                "messages": [{
+                    "role": "system",
+                    "content": "You are a helpful assistant."
+                }, {
+                    "role": "user",
+                    "content": "Who won the world series in 2020?"
+                }, {
+                    "role":
+                    "assistant",
+                    "content":
+                    "The Los Angeles Dodgers won the World Series in 2020."
+                }, {
+                    "role": "user",
+                    "content": "Where was it played?"
+                }],
+                "model": "my_model"
+              }
+        }
+    }
+}

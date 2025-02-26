@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=41"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "happy_vllm"
+authors = [
+  {email = "drosdadssocle.00620@francetravail.fr"},
+  {name = "Agence Data Services FT"}
+]
+description = "happy_vllm is a REST API for vLLM, production ready"
+license = {file="LICENSE"}
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "vllm>=0.7.3,<1.0",
+    "fastapi>=0.115.8,<1.0",
+    "pydantic_settings>=2.8.0,<3.0",
+    "uvicorn[standard]>=0.34.0,<1.0",
+    "prometheus_client>=0.21.1,<1.0",
+    "numpy>=1.26.4,<2.0",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+keywords = ["production", "transformers", "api-rest", "serving", "mlops", "llm", "llm-serving", "vllm"]
+
+dynamic = ["version"]
+
+[project.urls]
+Repository = "https://github.com/France-Travail/happy_vllm"
+Documentation = "https://france-travail.github.io/happy_vllm"
+
+[tool.setuptools.dynamic]
+version = {file = "version.txt"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["happy_vllm*"]
+
+[project.scripts]
+happy-vllm = "happy_vllm.launch:main"
+
+[project.optional-dependencies]
+test = ["httpx>=0.23,<1.0", "pytest>=8.2.0,<9.0", "pytest-cov>=5.0.0,<6.0", "mypy>=1.7.1,<2.0", "pytest-asyncio>=0.23.7,<1.0", "asgi-lifespan>=2.0.0,<3.0.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --cov=happy_vllm"
+filterwarnings = [
+    "ignore:The hookimpl CovPlugin.pytest_",
+    "ignore:IPython could not be loaded!"
+]
+
+[tool.isort]
+profile = "black"
+
+[tool.setuptools.package-data]
+"happy_vllm.routers.schemas.examples" = ["*.json"]
