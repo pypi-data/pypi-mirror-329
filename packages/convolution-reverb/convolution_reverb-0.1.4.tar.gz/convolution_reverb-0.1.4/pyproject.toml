@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "convolution-reverb"
+version = "0.1.4"
+description = "A Python package for applying convolution reverb to audio files using PyTorch"
+readme = "README.md"
+authors = [{name = "Your Name", email = "your.email@example.com"}]
+license = {file = "LICENSE"}
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+keywords = ["audio", "reverb", "convolution", "pytorch", "torchaudio"]
+dependencies = [
+    "torch>=2.0.0",
+    "torchaudio>=2.0.0",
+]
+requires-python = ">=3.8"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/convolution-reverb"
+Repository = "https://github.com/yourusername/convolution-reverb.git"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["convolution_reverb*"] 

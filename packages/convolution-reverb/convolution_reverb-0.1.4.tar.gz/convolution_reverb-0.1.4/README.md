@@ -1,0 +1,104 @@
+# Convolution Reverb
+
+A Python package for applying convolution reverb to audio files using PyTorch. This package provides an efficient implementation of convolution reverb using FFT-based convolution.
+
+## Installation
+
+Install the package using pip:
+
+```bash
+pip install convolution-reverb
+```
+
+
+## Requirements
+
+- Python >= 3.8
+- PyTorch >= 2.0.0
+- torchaudio >= 2.0.0
+
+See `requirements.txt`.
+
+I think you need `sox` as well (see https://anaconda.org/conda-forge/sox)
+
+## Usage
+
+### Basic Usage
+
+```python
+from convolution_reverb import apply_reverb
+import torchaudio
+
+# Load audio files
+audio_path = "path/to/your/audio.wav"
+ir_path = "path/to/your/impulse_response.wav"
+output_path = "output.wav"
+
+# Apply reverb
+original, convolved, sample_rate = apply_reverb(
+    audio_path=audio_path,
+    ir_path=ir_path,
+    output_path=output_path,
+)
+```
+
+### Working with Tensors Directly
+
+If you're already working with audio tensors in PyTorch:
+
+```python
+import torch
+import torchaudio
+from convolution_reverb import apply_reverb
+
+# Load a sample audio, impulse response
+audio_wav, audio_wav_sr = torchaudio.load("path/to/your/audio.wav")
+ir_tensor, ir_sr = torchaudio.load("path/to/your/impulse_response.wav")
+
+# Apply reverb
+original, convolved, sr = apply_reverb(
+    audio_wav=audio_tensor,
+    audio_wav_sr=audio_wav_sr,
+    ir_wav=ir_tensor,
+    ir_wav_sr=ir_sr,
+    output_path=output_path,
+)
+```
+
+## API Reference
+
+### apply_reverb
+
+```python
+apply_reverb(
+    audio_path: Union[str, None] = None,
+    audio_wav: Union[torch.Tensor, None] = None,
+    audio_wav_sr: Union[int, None] = None,
+    ir_path: Union[str, None] = None,
+    ir_wav: Union[torch.Tensor, None] = None,
+    ir_wav_sr: Union[int, None] = None,
+    output_path: Union[str, None] = None,
+    use_partitioned: bool = True,
+    block_size: Optional[int] = None,
+    normalize: bool = False
+) -> Tuple[torch.Tensor, torch.Tensor, int]
+```
+
+#### Parameters:
+- `audio_path`: Path to the input audio file
+- `audio_wav`: Input audio as a torch.Tensor (n_channels, n_samples)
+- `audio_wav_sr`: Sampling rate of the input audio tensor
+- `ir_path`: Path to the impulse response file
+- `ir_wav`: Impulse response as a torch.Tensor (n_channels, n_samples)
+- `ir_wav_sr`: Sampling rate of the impulse response tensor
+- `output_path`: Path where the output audio will be saved
+- `use_partitioned`: If True, uses partitioned convolution (overlap‑add) to avoid potential numerical precision issues with large FFT blocks. Recommended for long audio signals.
+- `block_size`: Block size (in samples) for partitioned convolution. If not provided and use_partitioned is True, defaults to 10 seconds of audio.
+- `normalize`: Whether to normalize the output audio
+
+#### Returns:
+- Tuple containing:
+  - Original audio waveform (torch.Tensor)
+  - Convolved audio waveform (torch.Tensor)
+  - Sample rate (int)
+  
