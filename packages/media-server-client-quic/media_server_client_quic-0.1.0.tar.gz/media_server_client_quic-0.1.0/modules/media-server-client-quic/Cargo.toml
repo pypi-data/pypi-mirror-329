@@ -1,0 +1,17 @@
+[package]
+name = "media-server-client-quic"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "media_server_client_quic"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+media-server-quic = { path = "../media-server-quic" }
+pyo3-bytes = "0.1.2"
+pyo3 = { version = "0.23.4", features = [ "auto-initialize", "macros"] }
+tokio = { version = "1.0", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+protobuf-types = { path = "../protobuf-types" }

@@ -1,0 +1,31 @@
+[package]
+name = "nvcodec"
+version = "0.1.1"
+authors = ["Ming Yang <ymviv@qq.com>"]
+description = "Rust safe wrapper for NVIDIA Video Codec SDK"
+repository = "https://github.com/vivym/nvcodec-rs"
+
+keywords = ["nvcodec", "cuda", "ffi"]
+license = "MIT/Apache-2.0"
+edition = "2021"
+
+[dependencies]
+ffmpeg-next = {version = "7.1.0"}
+flume = "0.11"
+futures = "0.3"
+thiserror = "2.0.11"
+tracing = "0.1"
+
+image = "0.25.5"
+
+nvcodec-sys = { path = "../nvcodec-sys" }
+cuda-rs = { path="../cuda-rs" }
+npp = {path = "../npp"}
+
+indicatif = "0.17.11"
+tokio = { version = "1.43", features = ["full"] }
+anyhow = "1.0.95"
+dashmap = "6.1.0"
+protobuf-types = {path = "../../protobuf-types"}
+[dev-dependencies]
+
