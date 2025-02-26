@@ -1,0 +1,1 @@
+from intelligraphs.domains.WDMovies.relations import relations
