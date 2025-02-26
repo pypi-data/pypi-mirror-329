@@ -1,0 +1,73 @@
+Metadata-Version: 2.2
+Name: nrp-devtools
+Version: 12.0.2
+Summary: NRP repository development tools
+Author-email: Miroslav Simek <miroslav.simek@cesnet.cz>
+Requires-Python: <3.13,>=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: setuptools
+Requires-Dist: pip
+Requires-Dist: wheel
+Requires-Dist: click
+Requires-Dist: aenum
+Requires-Dist: pydash
+Requires-Dist: PyYAML
+Requires-Dist: dacite
+Requires-Dist: ruamel.yaml
+Requires-Dist: case-converter
+Requires-Dist: cryptography
+Requires-Dist: copier
+Requires-Dist: copier_templates_extensions
+Requires-Dist: pycountry
+Requires-Dist: uv
+Requires-Dist: tomli
+Requires-Dist: tomli-w
+Requires-Dist: requirements-parser
+Requires-Dist: tqdm
+Requires-Dist: watchdog
+Requires-Dist: psutil
+Requires-Dist: oarepo-tools
+Requires-Dist: minio
+Requires-Dist: redis
+Requires-Dist: psycopg[binary]
+Requires-Dist: pika
+Requires-Dist: opensearch-py
+Requires-Dist: pytest
+Requires-Dist: oarepo-tools
+Requires-Dist: flask
+Requires-Dist: lxml
+
+# NRP repository development tools
+
+This tool is used to setup and run an Invenio based NRP instance.
+
+## Prerequisites
+
+- Python 3.12
+- node version 21 or greater, npm version 7, 8 or 10
+- imagemagick and development packages for imagemagick
+- standard build tools (gcc, make, ...), on ubuntu build-essential
+- Docker 20.10.10+ and docker-compose 1.17.0+ (or OrbStack on Mac)
+- git
+
+## Creating a new repository
+
+1. Download the installer
+
+```bash
+curl -sSL https://raw.githubusercontent.com/oarepo/nrp-devtools/rdm-12/nrp-installer.sh
+```
+
+2. Run the installer with a directory where the repository will be created
+
+```bash
+bash nrp-installer.sh my-repo
+```
+
+After asking a couple of questions, the installer will create the
+repository in the `my-repo` directory.
+
+It will also initialize git version control system and commit the initial
+sources.
+
+3. Go to the my-repo directory and see the README.md file there for further instructions
