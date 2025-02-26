@@ -1,0 +1,38 @@
+name: Create GitHub Release
+
+on:
+    push:
+        tags:
+            - "*" # This is triggered when someone pushes a tag (ex. v1.0.0)
+
+jobs:
+    create-release:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.x"
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  python -m pip install build
+
+            - name: Build distribution
+              run: |
+                  python -m build
+
+            - name: Debug dist/
+              run: ls -la dist/
+
+            - name: Create Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  files: |
+                      dist/*
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub automatically generates a token for authentication
