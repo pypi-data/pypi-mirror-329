@@ -1,0 +1,299 @@
+#! /usr/bin/env python
+import argparse
+import os
+from multiprocessing import Pool, freeze_support
+
+from autobahn.twisted.component import Component, run
+from hcam_drivers.config import load_config
+from hcam_widgets.globals import Container
+from twisted.internet import reactor
+from twisted.python import log
+
+from hcam_devices.components import (
+    CCDComponent,
+    CompoArmComponent,
+    CompoComponent,
+    CompoLensComponent,
+    FlowSensorComponent,
+    FocalPlaneSlideComponent,
+    GPSComponent,
+    GTCCoolingComponent,
+    MeerstetterComponent,
+    PressureComponent,
+    RackComponent,
+    RackPCComponent,
+)
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-e", "--emulate", help="use emulated hardware", action="store_true"
+)
+args = parser.parse_args()
+EMULATE = args.emulate
+
+g = Container(telescope_names=["GTC", "WHT"])
+# load config
+g.cpars = dict()
+load_config(g)
+
+URL = os.getenv("WAMP_SERVER", "192.168.1.2")
+transport_cfg = dict(
+    type="websocket",
+    url="ws://{}:8080/ws".format(URL),
+    max_retries=-1,
+    max_retry_delay=30,
+)
+
+ccd1 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=CCDComponent,
+    extra=dict(
+        name="ccd1",
+        peltier_topic="hipercam.meerstetter1",
+        emulate=EMULATE,
+        pressure_topic="hipercam.pressure1",
+        pen_number=1,
+        peltier_channel=1,
+    ),
+)
+ccd2 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=CCDComponent,
+    extra=dict(
+        name="ccd2",
+        peltier_topic="hipercam.meerstetter1",
+        emulate=EMULATE,
+        pressure_topic="hipercam.pressure2",
+        pen_number=2,
+        peltier_channel=2,
+    ),
+)
+ccd3 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=CCDComponent,
+    extra=dict(
+        name="ccd3",
+        peltier_topic="hipercam.meerstetter1",
+        emulate=EMULATE,
+        pressure_topic="hipercam.pressure3",
+        pen_number=3,
+        peltier_channel=3,
+    ),
+)
+ccd4 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=CCDComponent,
+    extra=dict(
+        name="ccd4",
+        peltier_topic="hipercam.meerstetter2",
+        emulate=EMULATE,
+        pressure_topic="hipercam.pressure4",
+        pen_number=4,
+        peltier_channel=1,
+    ),
+)
+ccd5 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=CCDComponent,
+    extra=dict(
+        name="ccd5",
+        peltier_topic="hipercam.meerstetter2",
+        emulate=EMULATE,
+        pressure_topic="hipercam.pressure5",
+        pen_number=5,
+        peltier_channel=2,
+    ),
+)
+
+p1 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=PressureComponent,
+    extra=dict(
+        name="pressure1",
+        host=g.cpars["termserver_ip"],
+        port=g.cpars["vacuum_ports"][0],
+        emulate=EMULATE,
+    ),
+)
+p2 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=PressureComponent,
+    extra=dict(
+        name="pressure2",
+        host=g.cpars["termserver_ip"],
+        port=g.cpars["vacuum_ports"][1],
+        emulate=EMULATE,
+    ),
+)
+p3 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=PressureComponent,
+    extra=dict(
+        name="pressure3",
+        host=g.cpars["termserver_ip"],
+        port=g.cpars["vacuum_ports"][2],
+        emulate=EMULATE,
+    ),
+)
+p4 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=PressureComponent,
+    extra=dict(
+        name="pressure4",
+        host=g.cpars["termserver_ip"],
+        port=g.cpars["vacuum_ports"][3],
+        emulate=EMULATE,
+    ),
+)
+p5 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=PressureComponent,
+    extra=dict(
+        name="pressure5",
+        host=g.cpars["termserver_ip"],
+        port=g.cpars["vacuum_ports"][4],
+        emulate=EMULATE,
+    ),
+)
+
+ms1 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=MeerstetterComponent,
+    extra=dict(
+        name="meerstetter1",
+        host=g.cpars["meerstetter_ip"][0],
+        port=50000,
+        emulate=EMULATE,
+    ),
+)
+ms2 = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=MeerstetterComponent,
+    extra=dict(
+        name="meerstetter2",
+        host=g.cpars["meerstetter_ip"][1],
+        port=50000,
+        emulate=EMULATE,
+    ),
+)
+
+flow = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=FlowSensorComponent,
+    extra=dict(name="flow", host=g.cpars["honeywell_ip"], port=502, emulate=EMULATE),
+)
+
+slide = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=FocalPlaneSlideComponent,
+    extra=dict(
+        name="slide",
+        host=g.cpars["termserver_ip"],
+        port=g.cpars["slide_port"],
+        emulate=EMULATE,
+    ),
+)
+
+compo_arms = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=CompoArmComponent,
+    extra=dict(name="compo_arms", port=g.cpars["esp301_port"], emulate=EMULATE),
+)
+
+compo_lens = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=CompoLensComponent,
+    extra=dict(
+        name="compo_lens",
+        host=g.cpars["termserver_ip"],
+        port=g.cpars["compo_stage_port"],
+        emulate=EMULATE,
+    ),
+)
+
+compo = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=CompoComponent,
+    extra=dict(
+        name="compo", arm_topic="hipercam.compo_arms", lens_topic="hipercam.compo_lens"
+    ),
+)
+
+rack = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=RackComponent,
+    extra=dict(name="rack", emulate=EMULATE),
+)
+
+gps = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=GPSComponent,
+    extra=dict(name="gps", emulate=EMULATE),
+)
+
+chiller = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=GTCCoolingComponent,
+    extra=dict(name="chiller", emulate=EMULATE),
+)
+
+rackpc = Component(
+    transports=transport_cfg,
+    realm="realm1",
+    session_factory=RackPCComponent,
+    extra=dict(name="rackpc", emulate=EMULATE),
+)
+
+components = [
+    ccd1,
+    ccd2,
+    ccd3,
+    ccd4,
+    ccd5,
+    p1,
+    p2,
+    p3,
+    p4,
+    p5,
+    ms1,
+    ms2,
+    flow,
+    slide,
+    compo_lens,
+    compo_arms,
+    compo,
+    rack,
+    gps,
+    chiller,
+    rackpc,
+]
+# run each component in it's own Python process
+if __name__ == "__main__":
+    freeze_support()
+    pool_size = len(components)
+    with Pool(pool_size) as pool:
+        try:
+            pool.map(run, [[comp] for comp in components])
+        except KeyboardInterrupt:
+            pool.terminate()
+        pool.join()

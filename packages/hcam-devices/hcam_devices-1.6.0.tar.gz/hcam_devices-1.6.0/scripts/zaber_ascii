@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+import socket
+import time
+
+
+def send(s, cmd):
+    s.send((cmd + "\r\n").encode())
+    time.sleep(0.5)
+    return s.recv(1024).decode()
+
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.settimeout(10)
+# connect to remote host through terminal server
+s.connect(("192.168.1.3", 10008))
+
+carry_on = True
+while carry_on:
+    try:
+        command = input(">")
+        response = send(s, command)
+        print(response)
+    except KeyboardInterrupt:
+        carry_on = False
+        print("Exiting")
+
+s.close()

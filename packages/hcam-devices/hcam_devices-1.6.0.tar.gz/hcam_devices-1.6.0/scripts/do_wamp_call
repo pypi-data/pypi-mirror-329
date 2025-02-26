@@ -1,0 +1,63 @@
+#! /usr/bin/env python
+from twisted.internet.defer import inlineCallbacks
+
+from autobahn.twisted.wamp import ApplicationSession
+from autobahn.twisted.component import Component, run
+
+
+class CallComponent(ApplicationSession):
+    """
+    An application component using the time service.
+    """
+    def __init__(self, config):
+        super(CallComponent, self).__init__(config)
+        self.debug = config.extra.get('debug', False)
+        self.cmd = config.extra['call']
+        self.args = config.extra['args']
+
+    @inlineCallbacks
+    def onJoin(self, details):
+        if self.debug:
+            print("attached to WAMP router")
+        try:
+            if self.debug:
+                print('performing call {}'.format(self.cmd))
+            if self.args:
+                result = yield self.call(self.cmd, *self.args)
+            else:
+                result = yield self.call(self.cmd)
+        except Exception as e:
+            print(e.error_message())
+        else:
+            if self.debug:
+                print('call completed with result:')
+            print('Result: ', result)
+        self.leave()
+
+    def onDisconnect(self):
+        if self.debug:
+            print('detached from WAMP router')
+
+
+if __name__ == '__main__':
+    import sys
+    import os
+
+    cmd = sys.argv[1]
+    if len(sys.argv) > 2:
+        args = sys.argv[2:]
+    else:
+        args = ()
+
+    URL = os.getenv('WAMP_SERVER', "192.168.1.2")
+
+    transport_cfg = dict(
+        type='websocket',
+        url='ws://{}:8080/ws'.format(URL),
+        max_retries=-1,
+        max_retry_delay=30,
+    )
+    comp = Component(transports=transport_cfg, realm='realm1',
+                     session_factory=CallComponent,
+                     extra={'call': cmd, 'args': args})
+    run([comp], log_level=None)
