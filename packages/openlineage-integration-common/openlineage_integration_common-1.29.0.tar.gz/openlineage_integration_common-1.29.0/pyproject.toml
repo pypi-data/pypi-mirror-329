@@ -1,0 +1,16 @@
+[tool.ruff]
+line-length = 110
+select = [
+    "F",
+    "E",
+    "W",
+    "I001"
+]
+target-version = "py37"
+ignore-init-module-imports = true
+src = ["openlineage", "tests"]
+namespace-packages = ["openlineage/common"]
+
+[tool.pytest.ini_options]
+# suspending GreatExpectations from tests
+addopts = "-p no:warnings --ignore=tests/great_expectations"
