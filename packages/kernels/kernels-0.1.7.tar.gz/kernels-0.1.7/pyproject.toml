@@ -1,0 +1,40 @@
+[project]
+name = "kernels"
+version = "0.1.7"
+description = "Download cuda kernels"
+authors = [
+  { name = "OlivierDehaene", email = "olivier@huggingface.co" },
+  { name = "Daniel de Kok", email = "daniel@huggingface.co" },
+  { name = "David Holtz", email = "david@huggingface.co" },
+  { name = "Nicolas Patry", email = "nicolas@huggingface.co" },
+]
+readme = "README.md"
+requires-python = ">= 3.9"
+dependencies = [
+  "huggingface-hub>=0.26.3",
+  "packaging>=24.2",
+  "tomli>=2.0.1; python_version<'3.11'",
+  "torch>=2.4",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+  "pytest >=8",
+  # Whatever version is compatible with pytest.
+  "pytest-benchmark",
+]
+
+[project.scripts]
+kernels = "kernels.cli:main"
+
+[project.entry-points."egg_info.writers"]
+"kernels.lock" = "kernels.lockfile:write_egg_lockfile"
+
+#[build-system]
+#requires = ["torch", "huggingface_hub", "numpy", "tomli;python_version<='3.10'"]
+#build-backend = "kernels.build"
+#backend-path = ["src"]
