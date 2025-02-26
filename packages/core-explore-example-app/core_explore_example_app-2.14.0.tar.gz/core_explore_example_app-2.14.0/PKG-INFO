@@ -1,0 +1,41 @@
+Metadata-Version: 2.1
+Name: core_explore_example_app
+Version: 2.14.0
+Summary: Exploration by example for the curator core project
+Home-page: https://github.com/usnistgov/core_explore_example_app
+Author: NIST IT Lab
+Author-email: itl_inquiries@nist.gov
+License-File: LICENSE.md
+Requires-Dist: celery
+Requires-Dist: Django
+Requires-Dist: djangorestframework
+Requires-Dist: django-simple-menu
+Requires-Dist: core-main-app==2.14.*
+Requires-Dist: core-explore-common-app==2.14.*
+Requires-Dist: core-parser-app==2.14.*
+
+========================
+Core Explore Example App
+========================
+
+Exploration by example for the curator core project.
+
+Quick start
+===========
+
+1. Add "core_explore_example_app" to your INSTALLED_APPS setting
+----------------------------------------------------------------
+
+.. code:: python
+
+    INSTALLED_APPS = [
+      ...
+      'core_explore_example_app',
+    ]
+
+2. Include the core_explore_example_app URLconf in your project urls.py
+-----------------------------------------------------------------------
+
+.. code:: python
+
+    url(r'^explore/example/', include('core_explore_example_app.urls')),
