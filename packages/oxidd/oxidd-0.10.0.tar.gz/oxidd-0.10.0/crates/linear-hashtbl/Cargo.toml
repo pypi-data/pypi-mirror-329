@@ -1,0 +1,26 @@
+[package]
+name = "linear-hashtbl"
+version = "0.1.1"
+edition = "2021"
+description = "Linear probing hash table"
+categories = ["data-structures"]
+keywords = ["hashmap", "hash"]
+
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+
+
+[dependencies]
+allocator-api2 = { version = "0.2", default-features = false, features = [
+  "alloc",
+], optional = true }
+
+
+[features]
+default = []
+
+allocator-api2 = ["dep:allocator-api2"]
+
+nightly = ["allocator-api2?/nightly"]

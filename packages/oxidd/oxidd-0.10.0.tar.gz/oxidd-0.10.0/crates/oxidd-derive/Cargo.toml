@@ -1,0 +1,33 @@
+[package]
+name = "oxidd-derive"
+version = "0.10.0"
+edition = "2021"
+description = "Derive macros for OxiDD"
+readme = "README.md"
+
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+
+
+[lib]
+proc-macro = true
+
+
+[dependencies]
+syn = "2.0"
+quote = "1.0"
+proc-macro2 = "1.0"
+proc-macro-error = { version = "1.0", default-features = false }
+
+[dev-dependencies]
+oxidd-core.workspace = true
+oxidd-test-utils.workspace = true
+trybuild = "1.0"
+
+
+[features]
+default = []
+
+nightly-ui-tests = []

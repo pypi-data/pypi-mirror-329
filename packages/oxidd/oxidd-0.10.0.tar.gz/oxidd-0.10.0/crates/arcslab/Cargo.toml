@@ -1,0 +1,27 @@
+[package]
+name = "arcslab"
+version = "0.1.1"
+edition = "2021"
+description = "Slab, but with reference counted items"
+
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+
+
+[dependencies]
+
+# strict provenance polyfill
+# (TODO: remove this once the `strict_provenance` feature becomes stable)
+sptr = "0.3"
+
+# fast alternative Mutex & RwLock implementation
+parking_lot = "0.12"
+
+# `CachePadded`
+crossbeam-utils = { version = "0.8", default-features = false }
+
+[target.'cfg(all(not(miri), target_os = "linux"))'.dependencies]
+# `madvise`
+libc = { version = "0.2.153", default-features = false }

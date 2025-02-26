@@ -1,0 +1,49 @@
+[package]
+name = "oxidd-manager-index"
+version = "0.10.0"
+edition = "2021"
+description = "Index-based manager implementation for OxiDD"
+readme = "README.md"
+
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+
+
+[dependencies]
+oxidd-core.workspace = true
+
+# fast alternative Mutex & RwLock implementation
+parking_lot = "0.12"
+
+# hash table for the unique table
+linear-hashtbl.workspace = true
+
+# fast hash function
+#
+# Note that there is a performance regression with 2.0, see
+# https://github.com/rust-lang/rustc-hash/issues/45
+rustc-hash = "1.1"
+
+# bit vectors
+bitvec = "1"
+
+# thread pool
+rayon = "1.10"
+
+# `CachePadded`
+crossbeam-utils = { version = "0.8", default-features = false }
+
+
+[features]
+default = []
+
+## Report garbage collections to stderr
+statistics = []
+
+## Check that `Edge` is never dropped via its `Drop` implementation. This is
+## done by adding a function call to a non-existing external function to the
+## `Drop` implementation. So if the check fails, there will be a weird linker
+## error. Using this feature in unoptimized builds may cause false positives.
+static_leak_check = []

@@ -1,0 +1,128 @@
+[project]
+name = "oxidd"
+version = "0.10.0"
+description = "Decision Diagrams"
+requires-python = ">=3.9"
+keywords = ["Decision Diagrams", "BDD", "ZBDD", "ZDD"]
+authors = [{ name = "OxiDD Contributors", email = "info@oxidd.net" }]
+maintainers = [{ name = "Nils Husung", email = "nils@oxidd.net" }]
+readme = "bindings/python/README.md"
+
+dependencies = ["typing-extensions ~= 4.0"]
+
+# see https://pypi.org/classifiers/
+classifiers = [
+  "Development Status :: 4 - Beta",
+
+  "License :: OSI Approved :: MIT License",
+  "License :: OSI Approved :: Apache Software License",
+
+  "Programming Language :: C",
+  "Programming Language :: C++",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Rust",
+
+  "Topic :: Scientific/Engineering",
+
+  "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://oxidd.net"
+Documentation = "https://oxidd.net/api/python/dev/getting-started.html"
+Repository = "https://github.com/OxiDD/oxidd"
+Issues = "https://github.com/OxiDD/oxidd/issues"
+
+[project.optional-dependencies]
+# spell-checker:ignore pydata
+dev = ["mypy ~= 1.13", "pyright ~= 1.1", "ruff ~= 0.7"]
+docs = ["Sphinx ~= 8.0", "pydata-sphinx-theme ~= 0.16"]
+test = ["pytest >= 8.0"]
+
+
+[build-system]
+requires = ["maturin ~= 1.8.0"]
+build-backend = "maturin"
+
+[tool.maturin]
+# spell-checker:ignore auditwheel,sdist
+python-source = "bindings/python"
+include = ["bindings/python/oxidd/_oxidd.pyi", { path = "LICENSE*", format = ["sdist", "wheel"] }]
+exclude = [
+  "bindings/python/oxidd/tests/**",
+  "crates/oxidd-ffi-python/build.rs",
+  "crates/oxidd-ffi-python/stub_gen/**",
+]
+module-name = "oxidd._oxidd"
+manifest-path = "crates/oxidd-ffi-python/Cargo.toml"
+auditwheel = "check"
+
+
+[tool.pyright]
+include = ["bindings/python"]
+pythonVersion = "3.9"
+typeCheckingMode = "strict"
+
+[tool.mypy]
+packages = ["oxidd"]
+python_version = "3.9"
+strict = true
+
+[tool.ruff]
+target-version = "py39"
+
+[tool.ruff.lint]
+# spell-checker:ignore dunder
+select = [
+  # Pyflakes
+  "F",
+  # pycodestyle
+  "E",
+  # isort
+  "I",
+  # pep8-naming
+  "N",
+  # pydocstyle
+  "D",
+  # pyupgrade
+  "UP",
+  # flake8
+  "B",
+  "FA",
+  "PIE",
+  "Q",
+  "RET",
+  "SIM",
+  # pylint
+  "PLE",
+  # ruff
+  "RUF",
+]
+ignore = [
+  "D203",   # one-blank-line-before-class
+  "D213",   # multi-line-summary-second-line
+  "D401",   # non-imperative-mood
+  "D413",   # blank-line-after-last-section
+  "D415",   # ends-in-punctuation (we have ends-in-period)
+  "RUF001", # ambiguous-unicode-character-string
+  "RUF002", # ambiguous-unicode-character-docstring
+  "RUF003", # ambiguous-unicode-character-comment
+  "RUF022", # unsorted-dunder-all (order is relevant for docs)
+]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint.per-file-ignores]
+"_oxidd.pyi" = ["E501"] # ignore too long lines
+
+
+[tool.pytest.ini_options]
+# spell-checker:ignore testpaths
+testpaths = ["bindings/python/oxidd"]
