@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "colav_protobuf"
+dynamic = ["version"]
+description = "A package for working with the COLAV protobuf format"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    {name = "Ryan",email = "r.mckee@qub.ac.uk"}
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "hatch",
+  "pyyaml",
+  "protobuf (<=3.20.1)",
+  "lark"
+]
+[project.urls]
+Documentation = "https://github.com/RyanMcKeeQUB/colav_protobuf/blob/main/README.md"
+Issues = "https://github.com/RyanMcKeeQUB/colav_protobuf/issues"
+Source = "https://github.com/RyanMcKeeQUB/colav_protobuf"
+
+[tool.hatch.version]
+path = "src/__about__.py"
+
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/ tests}"
+
+[tool.hatch.envs.test]
+dependencies = ["pytest","lark", "pyyaml"]
+
+[tool.hatch.envs.test.types.scripts]
+run = "pytest test/colav_protobuf/test_mission_request.py"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.sdist]
+packages = ["src/colav_protobuf" , "src/colav_protobuf/examples"]
+
+[tool.coverage.run]
+source_pkgs = ["colav_protobuf", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/colav_protobuf/__about__.py",
+]
+
+[tool.coverage.paths]
+colav_protobuf = ["src/colav_protobuf", "*/colav-protobuf-utils/src/colav_protobuf_utils"]
+tests = ["tests", "*/colav-protobuf-utils/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
