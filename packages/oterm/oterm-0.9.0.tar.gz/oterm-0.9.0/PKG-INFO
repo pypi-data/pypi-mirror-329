@@ -1,0 +1,90 @@
+Metadata-Version: 2.4
+Name: oterm
+Version: 0.9.0
+Summary: A text-based terminal client for Ollama.
+Project-URL: Homepage, https://github.com/ggozad/oterm
+Project-URL: Repository, https://github.com/ggozad/oterm
+Project-URL: Issues, https://github.com/ggozad/oterm/issues
+Project-URL: Documentation, https://ggozad.github.io/oterm/
+Author-email: Yiorgis Gozadinos <ggozadinos@gmail.com>
+License: MIT
+License-File: LICENSE
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: Microsoft :: Windows :: Windows 10
+Classifier: Operating System :: Microsoft :: Windows :: Windows 11
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Typing :: Typed
+Requires-Python: >=3.10
+Requires-Dist: aiosql<14,>=13.2
+Requires-Dist: aiosqlite<0.22,>=0.21.0
+Requires-Dist: jinja2>=3.1.5
+Requires-Dist: mcp[cli]>=1.3.0
+Requires-Dist: ollama<0.5,>=0.4.7
+Requires-Dist: packaging<25,>=24.2
+Requires-Dist: pillow<12,>=11.0.0
+Requires-Dist: pydantic<2.11,>=2.10.1
+Requires-Dist: pyperclip<1.10,>=1.9.0
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: rich-pixels>=3.0.1
+Requires-Dist: textual<1.1,>=1.0.0
+Requires-Dist: textualeffects>=0.1.3
+Requires-Dist: typer<0.16,>=0.15.1
+Description-Content-Type: text/markdown
+
+# oterm
+
+the text-based terminal client for [Ollama](https://github.com/ollama/ollama).
+
+## Features
+
+* intuitive and simple terminal UI, no need to run servers, frontends, just type `oterm` in your terminal.
+* multiple persistent chat sessions, stored together with system prompt & parameter customizations in sqlite.
+* can use any of the models you have pulled in Ollama, or your own custom models.
+* allows for easy customization of the model's system prompt and parameters.
+* supports tools integration for providing external information to the model.
+
+## Quick install
+
+```bash
+uvx oterm
+```
+See [Installation](https://ggozad.github.io/oterm/installation) for more details.
+
+## Documentation
+
+[oterm Documentation](https://ggozad.github.io/oterm/)
+
+## What's new
+
+* Create custom commands that can be run from the terminal using oterm. Each of these commands is a chat, customized to your liking and connected to the tools of your choice.
+* Support for Model Context Protocol (MCP) tools. You can now use any of the MCP tools to provide external information to the model.
+* Support for the `<thinking/>` tag in reasoning models.
+
+### Screenshots
+![Splash](https://raw.githubusercontent.com/ggozad/oterm/refs/heads/main/docs/img/splash.gif)
+The splash screen animation that greets users when they start oterm.
+
+![Chat](https://raw.githubusercontent.com/ggozad/oterm/main/docs/img/chat.png)
+A view of the chat interface, showcasing the conversation between the user and the model.
+
+![Model selection](https://raw.githubusercontent.com/ggozad/oterm/main/docs/img/customizations.svg)
+The model selection screen, allowing users to choose and customize available models.
+
+![Tool support](https://raw.githubusercontent.com/ggozad/oterm/main/docs/img/mcp.svg)
+oterm using the `git` MCP server to access its own repo.
+
+![Image selection](https://raw.githubusercontent.com/ggozad/oterm/main/docs/img/image_selection.png)
+The image selection interface, demonstrating how users can include images in their conversations.
+
+![Theme](https://raw.githubusercontent.com/ggozad/oterm/main/docs/img/theme.svg)
+oterm supports multiple themes, allowing users to customize the appearance of the interface.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
