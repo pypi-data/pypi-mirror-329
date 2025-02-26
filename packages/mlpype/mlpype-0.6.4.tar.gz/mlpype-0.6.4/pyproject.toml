@@ -1,0 +1,82 @@
+[project]
+name = "mlpype"
+authors = [
+    {name = "Jeroen van den Hoven"},
+]
+description = "Standardise model training across libraries"
+readme = "README.md"
+requires-python = ">=3.9"
+version = "0.6.4"
+dynamic = ["license"]
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 120
+known_third_party = "kedro"
+
+[tool.pytest.ini_options]
+markers = [
+    "end_to_end: End to end test, tends to be slow.",
+    "spark: uses Spark, will take extra time to set up.",
+    "wheel: will do wheel integrations, will take extra time"
+]
+filterwarnings = [
+    'ignore:Call to deprecated create function',  # Some tensorboard internal stuff
+    'ignore:Creating a LegacyVersion has been deprecated',  # Some pip internal stuff
+]   
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.pyc
+  | build
+  | dist
+  | \.toml
+)/
+'''
+
+[tool.mypy]
+mypy_path = "mlpype"
+ignore_missing_imports = true
+disallow_untyped_defs = true
+python_version = "3.10"
+implicit_reexport = true
+
+[tool.pydoclint]
+style = 'google'
+exclude = 'tests|examples'
+skip-checking-short-docstrings = true
+skip-checking-raises = true
+allow-init-docstring = true
+disable = ["E203"]
+
+[tool.flake8]
+# to match black
+max-line-length = 120
+exclude = [
+    "tests/*",
+    "docs/*",
+    ".git/*"    
+]
+ignore = [
+    # Imperative start of docstring
+    "D401",
+    # line break before binary operator, conflicts with black
+    "W503",
+    # Imported but unused. This one just gets things wrong often.
+    "F401",
+]
+add_select = [
+    # Does not work for now, but adding parameter checks would be useful
+    "D417"
+]
+
+# pep257, numpy, or google
+docstring-convention = "pep257"
