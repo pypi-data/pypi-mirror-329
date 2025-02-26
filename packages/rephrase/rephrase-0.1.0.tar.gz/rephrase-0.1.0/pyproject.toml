@@ -1,0 +1,78 @@
+[project]
+name = "rephrase"
+version = "0.1.0"
+description = "A command-line tool to rephrase text in different styles using OpenAI's API."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["openai>=1.64.0", "typer>=0.15.1"]
+authors = [{ name = "Jayson Panganiban", email = "jsoncp@proton.me" }]
+license = { text = "MIT License" }
+
+[project.scripts]
+rephrase = "rephrase.main:app"
+
+[project.urls]
+"Homepage" = "https://github.com/jayson-panganiban/rephrase"
+"Source" = "https://github.com/jayson-panganiban/rephrase"
+
+[dependency-groups]
+dev = [
+    "hatchling>=1.27.0",
+    "mypy>=1.15.0",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.14.0",
+    "pytest-xdist>=3.6.1",
+    "ruff>=0.9.7",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "--cov=rephrase --cov-report=term-missing -v"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks tests as integration tests (requires API key)",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+src = ["rephrase", "tests"]
+exclude = [".venv", "__pycache__", "dist", "build"]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # Line length, let Ruff format handle it
+    "B008",  # Function call in defaults, fine for Typer/CLI stuff
+    "C901",  # Too complex
+]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true 
+warn_unused_ignores = true
+warn_redundant_casts = true  # No unnecessary casts
+disallow_any_unimported = true  # No shortcuts
+disallow_untyped_defs = false  # Allows functions without return type, pero type pa rin elsewhere
+exclude = [".venv", "dist", "build"]
+
+[[tool.mypy.overrides]]
+module = ["pytest", "openai.*", "typer.*", "pytest_mock.*"]
+ignore_missing_imports = true  # Okay lang kung walang stubs, minsan
