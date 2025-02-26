@@ -1,0 +1,103 @@
+Metadata-Version: 2.1
+Name: aeromaps
+Version: 0.8.0b0
+Summary: AeroMAPS: Multidisciplinary Assessment of Prospective Scenarios for air transport
+Home-page: https://github.com/AeroMAPS/AeroMAPS
+License: GPL-3.0-only
+Keywords: air transport,climate change,prospective scenarios,energy issues
+Author: Thomas PLANES
+Author-email: thomas.planes@isae-supaero.fr
+Requires-Python: >=3.9,<3.13
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Provides-Extra: lca
+Requires-Dist: aenum (>=3.1.12,<4.0.0)
+Requires-Dist: dacite (>=1.8.0,<2.0.0)
+Requires-Dist: docstring-inheritance (>=2.0.0,<3.0.0)
+Requires-Dist: fair (==2.1.4)
+Requires-Dist: gemseo (>=6.0,<7.0)
+Requires-Dist: ipydatagrid (>=1.1.14,<2.0.0)
+Requires-Dist: ipympl (>=0.9.3,<0.10.0)
+Requires-Dist: ipysheet (>=0.5.0,<1)
+Requires-Dist: ipytree (>=0.2.2,<0.3.0)
+Requires-Dist: ipywidgets (>=8.0.6,<9.0.0)
+Requires-Dist: jupyterlab (>=3.3.0,<4.0.0)
+Requires-Dist: lca-modeller ; (python_version >= "3.10" and python_version < "3.12") and (extra == "lca")
+Requires-Dist: markdown (>=3.4.3,<4.0.0)
+Requires-Dist: matplotlib (>=3.7,<4.0)
+Requires-Dist: numpy (>=1.20.3,<2.0.0)
+Requires-Dist: openpyxl (>=3.1.2,<4.0.0)
+Requires-Dist: pandas (>=1.1.0,<2.0.0)
+Requires-Dist: plotly (>=5.0.0,<6.0.0)
+Requires-Dist: scipy (>=1.4.1,<2.0.0)
+Requires-Dist: voila (>=0.5.0,<0.6.0)
+Requires-Dist: xlrd (==1.2.0)
+Description-Content-Type: text/markdown
+
+[![image](https://img.shields.io/pypi/v/aeromaps.svg)](https://pypi.python.org/pypi/aeromaps)
+[![image](https://img.shields.io/pypi/pyversions/aeromaps.svg)](https://pypi.python.org/pypi/aeromaps)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+![Tests](https://github.com/AeroMAPS/AeroMAPS/workflows/tests/badge.svg)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/AeroMAPS/AeroMAPS/HEAD)
+
+AeroMAPS: Multidisciplinary Assessment of Prospective Scenarios for air transport
+=================================================================================
+
+AeroMAPS is a framework for performing Multidisciplinary Assessment of Prospective Scenarios for air transport. For
+instance, it allows simulating and analyzing scenarios for reducing aviation climate impacts through various levers of
+action. It is intended to become a sectoral Integrated Assessment Model (IAM) taking into account technological,
+environmental, sociological, economic and other considerations. It aims to assess the sustainability of simulated air
+transport transition scenarios on multiple criteria.
+
+AeroMAPS is licensed under the [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) license.
+
+A [documentation](https://aeromaps.github.io/AeroMAPS/) is available for more details on AeroMAPS.
+
+
+Quick start
+-----------
+
+For a quick start in order to discover the different features of AeroMAPS,
+a graphical user interface has been developed for facilitating the first uses.
+It is available at the following address: https://aeromaps.isae-supaero.fr/
+Another solution is to use the [Binder-hosted graphical user interface](https://mybinder.org/v2/gh/AeroMAPS/AeroMAPS/HEAD?urlpath=voila%2Frender%2Faeromaps%2Fapp.ipynb).
+
+
+Quick installation
+------------------
+
+The use of the Python Package Index ([PyPI](https://pypi.org/)) is the simplest method for installing AeroMAPS.
+More details and other solutions are provided in the documentation.
+
+**Prerequisite**: AeroMAPS needs at least Python 3.9.0.
+
+You can install the latest version with this command:
+
+``` {.bash}
+$ pip install --upgrade aeromaps
+```
+
+If you also want to use the life cycle assessment models, it requires at least Python 3.10.0. In this case, you can install the latest version with this command:
+
+``` {.bash}
+$ pip install --upgrade aeromaps[lca]
+```
+
+
+Citation
+--------
+
+If you use AeroMAPS in your work, please cite the following reference. Other references are available in the
+documentation.
+
+Planès, T., Delbecq, S., Salgas, A. (2023).
+AeroMAPS: a framework for performing multidisciplinary assessment of prospective scenarios for air transport.
+Submitted to Journal of Open Aviation Science.
+
