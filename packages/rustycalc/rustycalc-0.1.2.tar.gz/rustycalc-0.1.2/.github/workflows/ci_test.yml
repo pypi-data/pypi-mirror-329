@@ -1,0 +1,31 @@
+name: CI tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install UV & rust
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    - uses: actions/checkout@v4
+    - name: Build
+      run: |
+        uv sync --all-extras
+        uv build
+        pip install -e .
+    - name: Run tests
+      run: |
+        pip install pytest
+        pytest
