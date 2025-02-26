@@ -1,0 +1,26 @@
+pyVmomi==7.0.3
+pyOpenSSL~=24.1.0
+lxml~=5.2.2
+jsonschema~=4.17.3
+urllib3~=1.26.19
+beautifulsoup4>=4.12.3
+
+[:python_version <= "3.7"]
+requests~=2.31.0
+
+[:python_version >= "3.8"]
+requests~=2.32.2
+
+[api]
+gunicorn~=21.2.0
+pyyaml~=6.0.1
+
+[api:python_version <= "3.7"]
+fastapi~=0.103.2
+uvicorn[standard]~=0.22.0
+pydantic~=2.5.3
+
+[api:python_version >= "3.8"]
+fastapi~=0.110.0
+uvicorn[standard]~=0.28.0
+pydantic~=2.6.4
