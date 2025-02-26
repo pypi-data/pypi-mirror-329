@@ -1,0 +1,1237 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.io.vcf_reader &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.io.vcf_reader</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.io.vcf_reader</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pysam</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">snpio.read_input.genotype_data</span> <span class="kn">import</span> <span class="n">GenotypeData</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.benchmarking</span> <span class="kn">import</span> <span class="n">Benchmark</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.logging</span> <span class="kn">import</span> <span class="n">LoggerManager</span>
+
+<span class="n">measure_execution_time</span> <span class="o">=</span> <span class="n">Benchmark</span><span class="o">.</span><span class="n">measure_execution_time</span>
+
+
+<div class="viewcode-block" id="VCFReader">
+<a class="viewcode-back" href="../../../snpio.io.html#snpio.io.vcf_reader.VCFReader">[docs]</a>
+<span class="k">class</span> <span class="nc">VCFReader</span><span class="p">(</span><span class="n">GenotypeData</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to read VCF files into GenotypeData objects and write GenotypeData objects to VCF files.</span>
+
+<span class="sd">    This class inherits from GenotypeData and provides methods to read VCF files and extract the necessary attributes.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from snpio import VCFReader</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data = VCFReader(filename=&quot;example.vcf&quot;, popmapfile=&quot;popmap.txt&quot;, verbose=True)</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.snp_data</span>
+<span class="sd">        array([[&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;], [&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;], [&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;]], dtype=&quot;&lt;U1&quot;)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.samples</span>
+<span class="sd">        [&quot;sample1&quot;, &quot;sample2&quot;, &quot;sample3&quot;, &quot;sample4&quot;]</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.num_inds</span>
+<span class="sd">        4</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.num_snps</span>
+<span class="sd">        3</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.populations</span>
+<span class="sd">        [&quot;pop1&quot;, &quot;pop1&quot;, &quot;pop2&quot;, &quot;pop2&quot;]</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.popmap</span>
+<span class="sd">        {&quot;sample1&quot;: &quot;pop1&quot;, &quot;sample2&quot;: &quot;pop1&quot;, &quot;sample3&quot;: &quot;pop2&quot;, &quot;sample4&quot;:</span>
+<span class="sd">        &quot;pop2&quot;}</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.popmap_inverse</span>
+<span class="sd">        {&quot;pop1&quot;: [&quot;sample1&quot;, &quot;sample2&quot;], &quot;pop2&quot;: [&quot;sample3&quot;, &quot;sample4&quot;]}</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.loci_indices</span>
+<span class="sd">        array([True, True, True], dtype=bool)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.sample_indices</span>
+<span class="sd">        array([True, True, True, True], dtype=bool)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.ref</span>
+<span class="sd">        [&quot;A&quot;, &quot;A&quot;, &quot;A&quot;]</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.alt</span>
+<span class="sd">        [&quot;T&quot;, &quot;T&quot;, &quot;T&quot;]</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.missingness_reports()</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.run_pca()</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; genotype_data.write_vcf(&quot;output.vcf&quot;)</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        filename (Optional[str]): The name of the VCF file to read.</span>
+<span class="sd">        popmapfile (Optional[str]): The name of the population map file to read.</span>
+<span class="sd">        chunk_size (int): The size of the chunks to read from the VCF file.</span>
+<span class="sd">        force_popmap (bool): Whether to force the use of the population map file.</span>
+<span class="sd">        exclude_pops (Optional[List[str]]): The populations to exclude.</span>
+<span class="sd">        include_pops (Optional[List[str]]): The populations to include.</span>
+<span class="sd">        plot_format (str): The format to save the plots in.</span>
+<span class="sd">        plot_fontsize (int): The font size for the plots.</span>
+<span class="sd">        plot_dpi (int): The DPI for the plots.</span>
+<span class="sd">        plot_despine (bool): Whether to remove the spines from the plots.</span>
+<span class="sd">        show_plots (bool): Whether to show the plots.</span>
+<span class="sd">        prefix (str): The prefix to use for the output files.</span>
+<span class="sd">        verbose (bool): Whether to print verbose output.</span>
+<span class="sd">        sample_indices (np.ndarray): The indices of the samples to read.</span>
+<span class="sd">        loci_indices (np.ndarray): The indices of the loci to read.</span>
+<span class="sd">        debug (bool): Whether to enable debug mode.</span>
+<span class="sd">        num_records (int): The number of records in the VCF file.</span>
+<span class="sd">        filetype (str): The type of the file.</span>
+<span class="sd">        vcf_header (Optional[pysam.libcbcf.VariantHeader]): The VCF header.</span>
+<span class="sd">        info_fields (Optional[List[str]]): The VCF info fields.</span>
+<span class="sd">        resource_data (dict): A dictionary to store resource data.</span>
+<span class="sd">        logger (logging.Logger): The logger object.</span>
+<span class="sd">        snp_data (np.ndarray): The SNP data.</span>
+<span class="sd">        samples (np.ndarray): The sample names.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The VCF file is bgzipped, sorted, and indexed using Tabix to ensure efficient reading, if necessary.</span>
+
+<span class="sd">        The VCF file is read in chunks to avoid memory issues.</span>
+
+<span class="sd">        The VCF attributes are extracted and stored in an HDF5 file for efficient access.</span>
+
+<span class="sd">        The genotype data is transformed into IUPAC codes for efficient storage and processing.</span>
+
+<span class="sd">        The VCF attributes are stored in an HDF5 file for efficient access.</span>
+
+<span class="sd">        The VCF attributes are extracted and stored in an HDF5 file for efficient access.</span>
+
+<span class="sd">        The genotype data is transformed into IUPAC codes for efficient storage and processing.</span>
+
+<span class="sd">        The VCF attributes are stored in an HDF5 file for efficient access.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">popmapfile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">force_popmap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">exclude_pops</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_pops</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">plot_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;png&quot;</span><span class="p">,</span>
+        <span class="n">plot_fontsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
+        <span class="n">plot_dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+        <span class="n">plot_despine</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">show_plots</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;snpio&quot;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">sample_indices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">loci_indices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the VCFReader object.</span>
+
+<span class="sd">        This class inherits from GenotypeData and provides methods to read VCF files and extract the necessary attributes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (Optional[str], optional): The name of the VCF file to read. Defaults to None.</span>
+<span class="sd">            popmapfile (Optional[str], optional): The name of the population map file to read. Defaults to None.</span>
+<span class="sd">            chunk_size (int, optional): The size of the chunks to read from the VCF file. Defaults to 1000.</span>
+<span class="sd">            force_popmap (bool, optional): Whether to force the use of the population map file. Defaults to False.</span>
+<span class="sd">            exclude_pops (Optional[List[str]], optional): The populations to exclude. Defaults to None.</span>
+<span class="sd">            include_pops (Optional[List[str]], optional): The populations to include. Defaults to None.</span>
+<span class="sd">            plot_format (str, optional): The format to save the plots in. Defaults to &quot;png&quot;.</span>
+<span class="sd">            plot_fontsize (int, optional): The font size for the plots. Defaults to 18.</span>
+<span class="sd">            plot_dpi (int, optional): The DPI for the plots. Defaults to 300.</span>
+<span class="sd">            plot_despine (bool, optional): Whether to remove the spines from the plots. Defaults to True.</span>
+<span class="sd">            show_plots (bool, optional): Whether to show the plots. Defaults to False.</span>
+<span class="sd">            prefix (str, optional): The prefix to use for the output files. Defaults to &quot;snpio&quot;.</span>
+<span class="sd">            verbose (bool, optional): Whether to print verbose output. Defaults to False.</span>
+<span class="sd">            sample_indices (Optional[np.ndarray], optional): The indices of the samples to read. Defaults to None.</span>
+<span class="sd">            loci_indices (Optional[np.ndarray], optional): The indices of the loci to read. Defaults to None.</span>
+<span class="sd">            debug (bool, optional): Whether to enable debug mode. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">outdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_output&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;gtdata&quot;</span> <span class="o">/</span> <span class="s2">&quot;alignments&quot;</span> <span class="o">/</span> <span class="s2">&quot;vcf&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vcf_attributes_fn</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;vcf_attributes.h5&quot;</span>
+
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;prefix&quot;</span><span class="p">:</span> <span class="n">prefix</span><span class="p">,</span> <span class="s2">&quot;verbose&quot;</span><span class="p">:</span> <span class="n">verbose</span><span class="p">,</span> <span class="s2">&quot;debug&quot;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
+        <span class="n">logman</span> <span class="o">=</span> <span class="n">LoggerManager</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="vm">__name__</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logman</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource_data</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+            <span class="n">filetype</span><span class="o">=</span><span class="s2">&quot;vcf&quot;</span><span class="p">,</span>
+            <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmapfile</span><span class="p">,</span>
+            <span class="n">force_popmap</span><span class="o">=</span><span class="n">force_popmap</span><span class="p">,</span>
+            <span class="n">exclude_pops</span><span class="o">=</span><span class="n">exclude_pops</span><span class="p">,</span>
+            <span class="n">include_pops</span><span class="o">=</span><span class="n">include_pops</span><span class="p">,</span>
+            <span class="n">plot_format</span><span class="o">=</span><span class="n">plot_format</span><span class="p">,</span>
+            <span class="n">plot_fontsize</span><span class="o">=</span><span class="n">plot_fontsize</span><span class="p">,</span>
+            <span class="n">plot_dpi</span><span class="o">=</span><span class="n">plot_dpi</span><span class="p">,</span>
+            <span class="n">plot_despine</span><span class="o">=</span><span class="n">plot_despine</span><span class="p">,</span>
+            <span class="n">show_plots</span><span class="o">=</span><span class="n">show_plots</span><span class="p">,</span>
+            <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="n">sample_indices</span><span class="o">=</span><span class="n">sample_indices</span><span class="p">,</span>
+            <span class="n">loci_indices</span><span class="o">=</span><span class="n">loci_indices</span><span class="p">,</span>
+            <span class="n">chunk_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">,</span>
+            <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
+            <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_records</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filetype</span> <span class="o">=</span> <span class="s2">&quot;vcf&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vcf_header</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_fields</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">outdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Define reverse IUPAC mapping (example, should be defined appropriately)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_iupac_mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">),</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="VCFReader.load_aln">
+<a class="viewcode-back" href="../../../snpio.io.html#snpio.io.vcf_reader.VCFReader.load_aln">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">load_aln</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the alignment from the VCF file into the VCFReader object.</span>
+
+<span class="sd">        This method ensures that the input VCF file is bgzipped, sorted, and indexed using Tabix. It then reads the VCF file and extracts the necessary attributes. The VCF attributes are stored in an HDF5 file for efficient access. The genotype data is transformed into IUPAC codes for efficient storage and processing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing input VCF file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+        <span class="n">vcf_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">bgzipped_vcf</span> <span class="o">=</span> <span class="n">vcf_path</span>
+
+        <span class="c1"># Ensure the VCF file is bgzipped</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bgzipped</span><span class="p">(</span><span class="n">vcf_path</span><span class="p">):</span>
+            <span class="n">bgzipped_vcf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bgzip_file</span><span class="p">(</span><span class="n">vcf_path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bgzipped VCF file to </span><span class="si">{</span><span class="n">bgzipped_vcf</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Ensure the VCF file is sorted</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_sorted</span><span class="p">(</span><span class="n">bgzipped_vcf</span><span class="p">):</span>
+            <span class="n">bgzipped_vcf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sort_vcf_file</span><span class="p">(</span><span class="n">bgzipped_vcf</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sorted VCF file to </span><span class="si">{</span><span class="n">bgzipped_vcf</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Ensure the VCF file is indexed</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_tabix_index</span><span class="p">(</span><span class="n">bgzipped_vcf</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tabix_index</span><span class="p">(</span><span class="n">bgzipped_vcf</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Indexed VCF file </span><span class="si">{</span><span class="n">bgzipped_vcf</span><span class="si">}</span><span class="s2">.tbi&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">bgzipped_vcf</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">pysam</span><span class="o">.</span><span class="n">VariantFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">vcf</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vcf_header</span> <span class="o">=</span> <span class="n">vcf</span><span class="o">.</span><span class="n">header</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vcf</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_records</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">vcf</span><span class="p">)</span>
+            <span class="n">vcf</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">vcf_attributes_fn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_vcf_attributes</span><span class="p">(</span><span class="n">vcf</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span><span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;VCF file successfully loaded!&quot;</span><span class="p">)</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Loaded Alignment contains:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> samples,</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> loci.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;snp_data: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;snp_data shape: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="VCFReader.get_vcf_attributes">
+<a class="viewcode-back" href="../../../snpio.io.html#snpio.io.vcf_reader.VCFReader.get_vcf_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_vcf_attributes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">vcf</span><span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">VariantFile</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts VCF attributes and returns them in an efficient manner with chunked processing.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            vcf (pysam.VariantFile): The VCF file object to extract attributes from.</span>
+<span class="sd">            chunk_size (int, optional): The size of the chunks to process. Defaults to 1000.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[str, np.ndarray, np.ndarray]: The path to the HDF5 file containing the VCF attributes, the SNP data, and the sample names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">h5_outfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vcf_attributes_fn</span>
+        <span class="n">h5_outfile</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">snp_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sample_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vcf</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">h5_outfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">chrom_dset</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                <span class="s2">&quot;chrom&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="n">maxshape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="n">pos_dset</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;pos&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="n">maxshape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+            <span class="n">id_dset</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="n">maxshape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="n">ref_dset</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;ref&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="n">maxshape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;S1&quot;</span><span class="p">)</span>
+            <span class="n">alt_dset</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                <span class="s2">&quot;alt&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="n">maxshape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">()</span>
+            <span class="p">)</span>
+
+            <span class="n">qual_dset</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                <span class="s2">&quot;qual&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="n">maxshape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">()</span>
+            <span class="p">)</span>
+
+            <span class="n">filt_dset</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;filt&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="n">maxshape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;S4&quot;</span><span class="p">)</span>
+
+            <span class="n">fmt_dset</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                <span class="s2">&quot;fmt&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="n">maxshape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">()</span>
+            <span class="p">)</span>
+
+            <span class="n">fmt_data_dset</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                <span class="s2">&quot;fmt_data&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="n">maxshape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">()</span>
+            <span class="p">)</span>
+
+            <span class="n">info_fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vcf</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_fields</span> <span class="o">=</span> <span class="n">info_fields</span>
+
+            <span class="n">info_group</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s2">&quot;info&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Create datasets within info groups</span>
+            <span class="n">info_dsets</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">k</span><span class="p">:</span> <span class="n">info_group</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                    <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="n">maxshape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">()</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">info_fields</span>
+            <span class="p">}</span>
+
+            <span class="p">(</span>
+                <span class="n">chrom_chunk</span><span class="p">,</span>
+                <span class="n">pos_chunk</span><span class="p">,</span>
+                <span class="n">id_chunk</span><span class="p">,</span>
+                <span class="n">ref_chunk</span><span class="p">,</span>
+                <span class="n">alt_chunk</span><span class="p">,</span>
+                <span class="n">qual_chunk</span><span class="p">,</span>
+                <span class="n">filt_chunk</span><span class="p">,</span>
+                <span class="n">fmt_chunk</span><span class="p">,</span>
+                <span class="n">info_chunk</span><span class="p">,</span>
+                <span class="n">snp_chunk</span><span class="p">,</span>
+                <span class="n">fmt_data_chunk</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="p">([],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">),</span> <span class="p">[],</span> <span class="p">[])</span>
+
+            <span class="k">for</span> <span class="n">variant</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+                <span class="n">vcf</span><span class="o">.</span><span class="n">fetch</span><span class="p">(),</span>
+                <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Processing VCF records: &quot;</span><span class="p">,</span>
+                <span class="n">total</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_records</span><span class="p">,</span>
+                <span class="n">unit</span><span class="o">=</span><span class="s2">&quot; records&quot;</span><span class="p">,</span>
+            <span class="p">):</span>
+                <span class="n">chrom_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">chrom</span><span class="p">)</span>
+                <span class="n">pos_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+                <span class="n">id_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="k">if</span> <span class="n">variant</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">variant</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">ref_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">ref</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">variant</span><span class="o">.</span><span class="n">alts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">alt_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">alt_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">variant</span><span class="o">.</span><span class="n">alts</span><span class="p">]))</span>
+
+                <span class="n">qual_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="k">if</span> <span class="n">variant</span><span class="o">.</span><span class="n">qual</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">qual</span><span class="p">))</span>
+                <span class="n">filt_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">&quot;.&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">variant</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">fmt_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">variant</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">keys</span><span class="p">()]))</span>
+
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">info_fields</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">variant</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                    <span class="n">processed_value</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">value</span><span class="p">))</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="n">value</span>
+                    <span class="p">)</span>
+                    <span class="n">info_chunk</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">processed_value</span><span class="p">)</span>
+
+                <span class="n">gt_data</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">variant</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="n">sample</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GT&quot;</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">sample_names</span>
+                <span class="p">]</span>
+
+                <span class="n">fmt_data</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">sample_names</span><span class="p">:</span>
+                    <span class="n">fmd_list</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">variant</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;GT&quot;</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="n">fmd</span> <span class="o">=</span> <span class="n">variant</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="n">sample</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fmd</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fmd</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                                <span class="n">fmd</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fmd</span><span class="p">)</span>
+                            <span class="n">fmd</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fmd</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">fmd</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fmd</span><span class="p">)</span>
+                        <span class="n">fmd_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fmd</span><span class="p">)</span>
+                    <span class="n">fmt_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fmd_list</span><span class="p">))</span>
+                <span class="n">fmt_data_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fmt_data</span><span class="p">))</span>
+
+                <span class="n">transformed_gt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_gt</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gt_data</span><span class="p">),</span> <span class="n">variant</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="n">variant</span><span class="o">.</span><span class="n">alts</span>
+                <span class="p">)</span>
+                <span class="n">snp_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transformed_gt</span><span class="p">)</span>
+
+                <span class="c1"># Process chunk if it reaches the specified chunk size</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chrom_chunk</span><span class="p">)</span> <span class="o">==</span> <span class="n">chunk_size</span><span class="p">:</span>
+                    <span class="c1"># Extend the datasets</span>
+                    <span class="n">current_size</span> <span class="o">=</span> <span class="n">chrom_dset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">new_size</span> <span class="o">=</span> <span class="n">current_size</span> <span class="o">+</span> <span class="n">chunk_size</span>
+                    <span class="n">chrom_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                    <span class="n">pos_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                    <span class="n">id_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                    <span class="n">ref_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                    <span class="n">alt_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                    <span class="n">qual_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                    <span class="n">filt_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                    <span class="n">fmt_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                    <span class="n">fmt_data_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">info_dsets</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">info_chunk</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                            <span class="n">info_dsets</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                            <span class="n">info_dsets</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                                <span class="n">info_chunk</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span>
+                            <span class="p">)</span>
+                            <span class="n">info_chunk</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+                    <span class="c1"># Write the chunk data</span>
+                    <span class="n">chrom_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">chrom_chunk</span>
+                    <span class="n">pos_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos_chunk</span>
+                    <span class="n">id_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_chunk</span>
+                    <span class="n">ref_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_chunk</span>
+                    <span class="n">alt_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">alt_chunk</span>
+
+                    <span class="n">qual_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">qual_chunk</span>
+                    <span class="n">filt_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">filt_chunk</span>
+                    <span class="n">fmt_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmt_chunk</span>
+                    <span class="n">fmt_data_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmt_data_chunk</span>
+
+                    <span class="n">snp_data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">snp_chunk</span><span class="p">)</span>
+
+                    <span class="c1"># Reset the chunk lists</span>
+                    <span class="p">(</span>
+                        <span class="n">chrom_chunk</span><span class="p">,</span>
+                        <span class="n">pos_chunk</span><span class="p">,</span>
+                        <span class="n">id_chunk</span><span class="p">,</span>
+                        <span class="n">ref_chunk</span><span class="p">,</span>
+                        <span class="n">alt_chunk</span><span class="p">,</span>
+                        <span class="n">qual_chunk</span><span class="p">,</span>
+                        <span class="n">filt_chunk</span><span class="p">,</span>
+                        <span class="n">fmt_chunk</span><span class="p">,</span>
+                        <span class="n">snp_chunk</span><span class="p">,</span>
+                        <span class="n">fmt_data_chunk</span><span class="p">,</span>
+                    <span class="p">)</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="p">[],</span>
+                        <span class="p">[],</span>
+                        <span class="p">[],</span>
+                        <span class="p">[],</span>
+                        <span class="p">[],</span>
+                        <span class="p">[],</span>
+                        <span class="p">[],</span>
+                        <span class="p">[],</span>
+                        <span class="p">[],</span>
+                        <span class="p">[],</span>
+                    <span class="p">)</span>
+
+            <span class="c1"># Handle any remaining data in the chunks</span>
+            <span class="k">if</span> <span class="n">chrom_chunk</span><span class="p">:</span>
+                <span class="n">current_size</span> <span class="o">=</span> <span class="n">chrom_dset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">new_size</span> <span class="o">=</span> <span class="n">current_size</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">chrom_chunk</span><span class="p">)</span>
+                <span class="n">chrom_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                <span class="n">pos_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                <span class="n">id_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                <span class="n">ref_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                <span class="n">alt_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                <span class="n">qual_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                <span class="n">filt_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                <span class="n">fmt_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                <span class="n">fmt_data_dset</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">info_dsets</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">info_dsets</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">new_size</span><span class="p">,))</span>
+                    <span class="n">info_dsets</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                        <span class="n">info_chunk</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span>
+                    <span class="p">)</span>
+                    <span class="n">info_chunk</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="n">chrom_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">chrom_chunk</span>
+                <span class="n">pos_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos_chunk</span>
+                <span class="n">id_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_chunk</span>
+                <span class="n">ref_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_chunk</span>
+                <span class="n">alt_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">alt_chunk</span>
+                <span class="n">qual_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">qual_chunk</span>
+                <span class="n">filt_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">filt_chunk</span>
+                <span class="n">fmt_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmt_chunk</span>
+                <span class="n">fmt_data_dset</span><span class="p">[</span><span class="n">current_size</span><span class="p">:</span><span class="n">new_size</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmt_data_chunk</span>
+
+                <span class="n">snp_data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">snp_chunk</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">h5_outfile</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">snp_data</span><span class="p">),</span> <span class="n">sample_names</span></div>
+
+
+<div class="viewcode-block" id="VCFReader.transform_gt">
+<a class="viewcode-back" href="../../../snpio.io.html#snpio.io.vcf_reader.VCFReader.transform_gt">[docs]</a>
+    <span class="k">def</span> <span class="nf">transform_gt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gt</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">alts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transforms genotype tuples into their IUPAC codes or corresponding strings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            gt (np.ndarray): The genotype tuples to transform.</span>
+<span class="sd">            ref (str): The reference allele.</span>
+<span class="sd">            alts (List[str]): The alternate alleles.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: The transformed genotype tuples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">iupac_mapping</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iupac_code</span><span class="p">()</span>
+
+        <span class="c1"># Convert alts to a list, ensuring it&#39;s mutable and indexable</span>
+        <span class="n">alts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">alts</span><span class="p">)</span> <span class="k">if</span> <span class="n">alts</span> <span class="k">else</span> <span class="p">[]</span>
+
+        <span class="c1"># Prepare the array of possible alleles including reference</span>
+        <span class="n">alt_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ref</span><span class="p">]</span> <span class="o">+</span> <span class="n">alts</span><span class="p">)</span>
+
+        <span class="n">transformed_gt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span>
+                    <span class="n">iupac_mapping</span><span class="p">(</span>
+                        <span class="p">(</span>
+                            <span class="p">(</span>
+                                <span class="n">alt_array</span><span class="p">[</span><span class="n">allele1</span><span class="p">]</span>
+                                <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">allele1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">alt_array</span><span class="p">)</span>
+                                <span class="k">else</span> <span class="n">ref</span>
+                            <span class="p">),</span>
+                            <span class="p">(</span>
+                                <span class="n">alt_array</span><span class="p">[</span><span class="n">allele2</span><span class="p">]</span>
+                                <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">allele2</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">alt_array</span><span class="p">)</span>
+                                <span class="k">else</span> <span class="n">ref</span>
+                            <span class="p">),</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">allele1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">allele2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="k">else</span> <span class="s2">&quot;N&quot;</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">allele1</span><span class="p">,</span> <span class="n">allele2</span> <span class="ow">in</span> <span class="n">gt</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">transformed_gt</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_iupac_code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a callable function to get the IUPAC code for a given allele pair.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Callable: A function to get the IUPAC code for a given allele pair.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">iupac_mapping</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iupac_from_gt_tuples</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">get_code</span><span class="p">(</span><span class="n">alleles</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">iupac_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">alleles</span><span class="p">)),</span> <span class="s2">&quot;N&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">get_code</span>
+
+    <span class="k">def</span> <span class="nf">_iupac_from_gt_tuples</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a mapping from genotype tuples to IUPAC codes.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[Tuple[str], str]: A dictionary mapping genotype tuples to IUPAC codes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Define IUPAC codes for allele pairs</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">):</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">):</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">):</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">):</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">):</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">):</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">):</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">):</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">):</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">):</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">mapping</span>
+
+    <span class="k">def</span> <span class="nf">_is_bgzipped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if a file is bgzipped.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (Path): The path to the file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if bgzipped, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">magic</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x1f\x8b</span><span class="s2">&quot;</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error checking bgzip status: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_bgzip_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;BGZips a VCF file using pysam&#39;s BGZFile.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (Path): The path to the VCF file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Path: The path to the bgzipped VCF file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bgzipped_path</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="n">filepath</span><span class="o">.</span><span class="n">suffix</span> <span class="o">+</span> <span class="s2">&quot;.gz&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_in</span><span class="p">,</span> <span class="n">pysam</span><span class="o">.</span><span class="n">BGZFile</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">bgzipped_path</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">f_out</span><span class="p">:</span>
+                <span class="c1"># Read and write in chunks to handle large files efficiently</span>
+                <span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>  <span class="c1"># 1MB</span>
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">chunk</span> <span class="o">=</span> <span class="n">f_in</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">bgzipped_path</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error bgzipping file </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+
+    <span class="k">def</span> <span class="nf">_is_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the VCF file is sorted alphanumerically by chromosome and position.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (Path): The path to the bgzipped VCF file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if sorted, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">pysam</span><span class="o">.</span><span class="n">VariantFile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">vcf</span><span class="p">:</span>
+                <span class="n">previous_chrom</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">previous_pos</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">vcf</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">previous_chrom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">chrom</span> <span class="o">&lt;</span> <span class="n">previous_chrom</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="kc">False</span>
+                        <span class="k">elif</span> <span class="p">(</span>
+                            <span class="n">record</span><span class="o">.</span><span class="n">chrom</span> <span class="o">==</span> <span class="n">previous_chrom</span> <span class="ow">and</span> <span class="n">record</span><span class="o">.</span><span class="n">pos</span> <span class="o">&lt;</span> <span class="n">previous_pos</span>
+                        <span class="p">):</span>
+                            <span class="k">return</span> <span class="kc">False</span>
+                    <span class="n">previous_chrom</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">chrom</span>
+                    <span class="n">previous_pos</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">pos</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error checking sort order: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_natural_sort_key</span><span class="p">(</span><span class="n">chrom_pos</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts a natural sort key for sorting.&quot;&quot;&quot;</span>
+        <span class="n">chrom</span><span class="p">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">chrom_pos</span>
+        <span class="c1"># Split chrom into alphanumeric segments to achieve natural order</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;([0-9]+)&quot;</span><span class="p">,</span> <span class="n">chrom</span><span class="p">)],</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="n">pos</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_sort_vcf_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sorts a VCF file alphanumerically using custom logic, then indexes it.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (Path): The path to the bgzipped VCF file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Path: The path to the sorted bgzipped VCF file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sorted_path</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">filepath</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">&quot;_sorted.vcf.gz&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Read the VCF file and split into header and data lines</span>
+            <span class="n">header_lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">data_lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">with</span> <span class="n">pysam</span><span class="o">.</span><span class="n">VariantFile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">vcf_in</span><span class="p">:</span>
+                <span class="n">header_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">vcf_in</span><span class="o">.</span><span class="n">header</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">vcf_in</span><span class="p">:</span>
+                    <span class="n">data_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+
+            <span class="c1"># Sort the data lines alphanumerically by CHROM and POS</span>
+            <span class="n">sorted_data_lines</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">data_lines</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">VCFReader</span><span class="o">.</span><span class="n">_natural_sort_key</span><span class="p">((</span><span class="n">r</span><span class="o">.</span><span class="n">contig</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">pos</span><span class="p">))</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Write sorted data to a temporary VCF file</span>
+            <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span>
+                <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.vcf&quot;</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">temp_vcf</span><span class="p">:</span>
+                <span class="c1"># Write the header lines</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">header_lines</span><span class="p">:</span>
+                    <span class="n">temp_vcf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+                <span class="c1"># Write sorted data lines</span>
+                <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">sorted_data_lines</span><span class="p">:</span>
+                    <span class="n">temp_vcf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="p">))</span>
+
+                <span class="n">temp_vcf_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_vcf</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="c1"># Bgzip and tabix index the sorted VCF file</span>
+            <span class="n">sorted_bgzip_path</span> <span class="o">=</span> <span class="n">sorted_path</span>
+            <span class="n">pysam</span><span class="o">.</span><span class="n">tabix_compress</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">temp_vcf_path</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">sorted_bgzip_path</span><span class="p">),</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">pysam</span><span class="o">.</span><span class="n">tabix_index</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sorted_bgzip_path</span><span class="p">),</span> <span class="n">preset</span><span class="o">=</span><span class="s2">&quot;vcf&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="c1"># Clean up the temporary uncompressed VCF</span>
+            <span class="n">temp_vcf_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">sorted_bgzip_path</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error sorting VCF file with custom sort: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+
+    <span class="k">def</span> <span class="nf">_has_tabix_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if a Tabix index exists for the given VCF file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (Path): The path to the bgzipped VCF file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if index exists, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">index_path</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="n">filepath</span><span class="o">.</span><span class="n">suffix</span> <span class="o">+</span> <span class="s2">&quot;.tbi&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">index_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_tabix_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a Tabix index for a bgzipped VCF file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (Path): The path to the bgzipped VCF file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pysam</span><span class="o">.</span><span class="n">tabix_index</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span> <span class="n">preset</span><span class="o">=</span><span class="s2">&quot;vcf&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error indexing VCF file </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+
+<div class="viewcode-block" id="VCFReader.validate_input_vcf">
+<a class="viewcode-back" href="../../../snpio.io.html#snpio.io.vcf_reader.VCFReader.validate_input_vcf">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate_input_vcf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates the input VCF file to ensure it meets required criteria.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (Path): The path to the bgzipped and sorted VCF file.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the VCF file does not meet validation criteria.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">pysam</span><span class="o">.</span><span class="n">VariantFile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">vcf</span><span class="p">:</span>
+                <span class="n">required_fields</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;CHROM&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;POS&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;ID&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;REF&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;ALT&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;QUAL&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;FILTER&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;FORMAT&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="n">header_fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">vcf</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">required_fields</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">header_fields</span><span class="p">):</span>
+                    <span class="n">missing</span> <span class="o">=</span> <span class="n">required_fields</span> <span class="o">-</span> <span class="n">header_fields</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;VCF file is missing required fields: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="s2">&quot;GT&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vcf</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">formats</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;VCF file is missing the GT format field.&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vcf</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;VCF file contains no samples.&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;VCF file contains no samples.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input VCF validation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="VCFReader.validate_output_vcf">
+<a class="viewcode-back" href="../../../snpio.io.html#snpio.io.vcf_reader.VCFReader.validate_output_vcf">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate_output_vcf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates the output VCF file to ensure it was written correctly.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (Path): The path to the bgzipped and indexed output VCF file.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the VCF file does not meet validation criteria.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">pysam</span><span class="o">.</span><span class="n">VariantFile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">vcf</span><span class="p">:</span>
+                <span class="c1"># Basic checks: header presence, samples match, etc.</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vcf_header</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Output VCF file lacks a header.&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+                <span class="n">output_samples</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">vcf</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
+                <span class="n">expected_samples</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">expected_samples</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">output_samples</span><span class="p">):</span>
+                    <span class="n">missing</span> <span class="o">=</span> <span class="n">expected_samples</span> <span class="o">-</span> <span class="n">output_samples</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Output VCF is missing samples: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+                <span class="c1"># Additional checks can be added as needed</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output VCF validation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="VCFReader.write_vcf">
+<a class="viewcode-back" href="../../../snpio.io.html#snpio.io.vcf_reader.VCFReader.write_vcf">[docs]</a>
+    <span class="nd">@measure_execution_time</span>
+    <span class="k">def</span> <span class="nf">write_vcf</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">output_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">hdf5_file_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes the GenotypeData object data to a VCF file in chunks.</span>
+
+<span class="sd">        This method writes the VCF data, bgzips the output file, indexes it with Tabix,</span>
+<span class="sd">        and validates the output.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output_filename (str): The name of the output VCF file to write.</span>
+<span class="sd">            hdf5_file_path (str, optional): The path to the HDF5 file containing the VCF attributes. Defaults to None.</span>
+<span class="sd">            chunk_size (int, optional): The size of the chunks to read from the HDF5 file. Defaults to 1000.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            VCFReader: The current instance of VCFReader.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing VCF file to: </span><span class="si">{</span><span class="n">output_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">hdf5_file_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">hdf5_file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vcf_attributes_fn</span>
+
+        <span class="n">of</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_filename</span><span class="p">)</span>
+
+        <span class="c1"># Open the HDF5 file for reading and the output VCF file for writing</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">hdf5_file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdf5_file</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="c1"># Write the VCF header</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_build_vcf_header</span><span class="p">())</span>
+
+            <span class="c1"># Get the total number of loci</span>
+            <span class="n">total_loci</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">hdf5_file</span><span class="p">[</span><span class="s2">&quot;chrom&quot;</span><span class="p">])</span>
+
+            <span class="n">chunk_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span>
+
+            <span class="k">with</span> <span class="n">tqdm</span><span class="p">(</span>
+                <span class="n">total</span><span class="o">=</span><span class="n">total_loci</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Writing VCF Records: &quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot; records&quot;</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
+                <span class="c1"># Iterate over data in chunks</span>
+                <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_loci</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">):</span>
+                    <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">total_loci</span><span class="p">)</span>
+
+                    <span class="c1"># Read data in chunks</span>
+                    <span class="n">chrom</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="s2">&quot;chrom&quot;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                    <span class="n">pos</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="s2">&quot;pos&quot;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+                    <span class="n">vid</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                    <span class="n">ref</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                    <span class="n">alt</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="s2">&quot;alt&quot;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                    <span class="n">qual</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="s2">&quot;qual&quot;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                    <span class="n">filt</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="s2">&quot;filt&quot;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                    <span class="n">fmt</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="s2">&quot;fmt&quot;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                    <span class="n">fmt_data</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="s2">&quot;fmt_data&quot;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+                    <span class="c1"># Read info fields in chunks</span>
+                    <span class="n">info_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">hdf5_file</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+                    <span class="c1"># Create a dictionary to hold the info fields data</span>
+                    <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="n">k</span><span class="p">:</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;info/</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">info_keys</span>
+                    <span class="p">}</span>
+
+                    <span class="c1"># Format the info fields into strings</span>
+                    <span class="n">info_result</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+                    <span class="p">]</span>
+
+                    <span class="c1"># Write each row to the VCF file</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chrom</span><span class="p">)):</span>
+                        <span class="c1"># Construct the ALT field by combining alternate alleles</span>
+                        <span class="n">alt_alleles_str</span> <span class="o">=</span> <span class="n">alt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">alt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;.&quot;</span> <span class="k">else</span> <span class="s2">&quot;.&quot;</span>
+                        <span class="n">ref_str</span> <span class="o">=</span> <span class="n">ref</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                        <span class="n">alts</span> <span class="o">=</span> <span class="n">alt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">alt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;.&quot;</span> <span class="k">else</span> <span class="p">[]</span>
+
+                        <span class="c1"># Split fmt_data[i] by tab to get individual sample data</span>
+                        <span class="n">fmt_data_samples</span> <span class="o">=</span> <span class="n">fmt_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                        <span class="c1"># Join fmt_data with snp_data by &quot;:&quot;</span>
+                        <span class="n">combined_data</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">fmt_data_samples</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">))</span>
+                        <span class="p">]</span>
+
+                        <span class="n">row</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="n">chrom</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                            <span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                            <span class="n">vid</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                            <span class="n">ref_str</span><span class="p">,</span>
+                            <span class="n">alt_alleles_str</span><span class="p">,</span>
+                            <span class="n">qual</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                            <span class="n">filt</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                            <span class="n">info_result</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                            <span class="n">fmt</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                        <span class="p">]</span> <span class="o">+</span> <span class="n">combined_data</span>
+
+                        <span class="c1"># Replace alleles if necessary</span>
+                        <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replace_alleles</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ref_str</span><span class="p">,</span> <span class="n">alts</span><span class="p">)</span>
+
+                        <span class="c1"># Write the row to the file</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                    <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+
+        <span class="c1"># Bgzip and index the output VCF file</span>
+        <span class="n">bgzipped_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bgzip_file</span><span class="p">(</span><span class="n">of</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bgzipped output VCF file to </span><span class="si">{</span><span class="n">bgzipped_output</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tabix_index</span><span class="p">(</span><span class="n">bgzipped_output</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Indexed output VCF file </span><span class="si">{</span><span class="n">bgzipped_output</span><span class="si">}</span><span class="s2">.tbi&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully wrote VCF file!&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_replace_alleles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">alts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace the alleles in the VCF row with the corresponding VCF genotype codes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            row (List[str]): The VCF row to process.</span>
+<span class="sd">            ref (str): The reference allele.</span>
+<span class="sd">            alts (List[str]): The alternate alleles.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[str]: The processed VCF row.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">get_genotype_code</span><span class="p">(</span>
+            <span class="n">allele1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">allele2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">alts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Assigns the genotype code based on the decoded alleles.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                allele1 (str): The first allele.</span>
+<span class="sd">                allele2 (str): The second allele.</span>
+<span class="sd">                ref (str): The reference allele.</span>
+<span class="sd">                alts (List[str]): The alternate alleles.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                str: The genotype code in VCF format.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">allele1</span> <span class="o">==</span> <span class="n">ref</span> <span class="ow">and</span> <span class="n">allele2</span> <span class="o">==</span> <span class="n">ref</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;0/0&quot;</span>
+            <span class="k">elif</span> <span class="n">allele1</span> <span class="o">==</span> <span class="n">ref</span> <span class="ow">and</span> <span class="n">allele2</span> <span class="ow">in</span> <span class="n">alts</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;0/</span><span class="si">{</span><span class="n">alts</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">allele2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">elif</span> <span class="n">allele1</span> <span class="ow">in</span> <span class="n">alts</span> <span class="ow">and</span> <span class="n">allele2</span> <span class="o">==</span> <span class="n">ref</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;0/</span><span class="si">{</span><span class="n">alts</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">allele1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">elif</span> <span class="n">allele1</span> <span class="ow">in</span> <span class="n">alts</span> <span class="ow">and</span> <span class="n">allele2</span> <span class="ow">in</span> <span class="n">alts</span><span class="p">:</span>
+                <span class="n">index1</span> <span class="o">=</span> <span class="n">alts</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">allele1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">index2</span> <span class="o">=</span> <span class="n">alts</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">allele2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">index1</span><span class="p">,</span><span class="w"> </span><span class="n">index2</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">index1</span><span class="p">,</span><span class="w"> </span><span class="n">index2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">return</span> <span class="s2">&quot;./.&quot;</span>
+
+        <span class="c1"># Apply allele replacements</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="n">iupac_code</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">fmt_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">[]</span>
+
+            <span class="c1"># Decode the IUPAC code to get the alleles</span>
+            <span class="k">if</span> <span class="n">iupac_code</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_iupac_mapping</span><span class="p">:</span>
+                <span class="n">alleles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_iupac_mapping</span><span class="p">[</span><span class="n">iupac_code</span><span class="p">]</span>
+                <span class="c1"># If multiple alleles are present in the mapping, take the first two</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">alleles</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">allele1</span><span class="p">,</span> <span class="n">allele2</span> <span class="o">=</span> <span class="n">alleles</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">allele1</span> <span class="o">=</span> <span class="n">allele2</span> <span class="o">=</span> <span class="n">alleles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Handle cases where genotype is a single allele or missing</span>
+                <span class="k">if</span> <span class="n">iupac_code</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">}:</span>
+                    <span class="n">row</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./.&quot;</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">allele1</span> <span class="o">=</span> <span class="n">allele2</span> <span class="o">=</span> <span class="n">iupac_code</span>
+
+            <span class="c1"># Assign genotype code based on decoded alleles</span>
+            <span class="n">row</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_genotype_code</span><span class="p">(</span><span class="n">allele1</span><span class="p">,</span> <span class="n">allele2</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">alts</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">fmt_data</span><span class="p">:</span>
+                <span class="n">fmt_data</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fmt_data</span><span class="p">)</span>
+                <span class="n">row</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">fmt_data</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">row</span>
+
+    <span class="k">def</span> <span class="nf">_build_vcf_header</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dynamically builds the VCF header based on the loaded sample IDs.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The VCF header.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sample_headers</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
+
+        <span class="n">vcf_header</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">            ##fileformat=VCFv4.2</span>
+<span class="s2">            ##source=SNPio</span>
+<span class="s2">            ##INFO=&lt;ID=NS,Number=1,Type=Integer,Description=&quot;Number of Samples With Data&quot;&gt;</span>
+<span class="s2">            ##INFO=&lt;ID=VAF,Number=A,Type=Float,Description=&quot;Variant Allele Frequency&quot;&gt;</span>
+<span class="s2">            ##FORMAT=&lt;ID=GT,Number=1,Type=String,Description=&quot;Genotype&quot;&gt;</span>
+<span class="s2">            #CHROM</span><span class="se">\t</span><span class="s2">POS</span><span class="se">\t</span><span class="s2">ID</span><span class="se">\t</span><span class="s2">REF</span><span class="se">\t</span><span class="s2">ALT</span><span class="se">\t</span><span class="s2">QUAL</span><span class="se">\t</span><span class="s2">FILTER</span><span class="se">\t</span><span class="s2">INFO</span><span class="se">\t</span><span class="s2">FORMAT</span><span class="se">\t</span><span class="si">{</span><span class="n">sample_headers</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">vcf_header</span>
+
+<div class="viewcode-block" id="VCFReader.update_vcf_attributes">
+<a class="viewcode-back" href="../../../snpio.io.html#snpio.io.vcf_reader.VCFReader.update_vcf_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_vcf_attributes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">snp_data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">sample_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">loci_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">samples</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the VCF attributes with new data in chunks.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            snp_data (np.ndarray): The SNP data to update the VCF attributes with.</span>
+<span class="sd">            sample_indices (np.ndarray): The indices of the samples to update.</span>
+<span class="sd">            loci_indices (np.ndarray): The indices of the loci to update.</span>
+<span class="sd">            samples (np.ndarray): The sample names to update.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If the VCF attributes file is not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span> <span class="o">=</span> <span class="n">snp_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span> <span class="o">=</span> <span class="n">sample_indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span> <span class="o">=</span> <span class="n">loci_indices</span>
+
+        <span class="n">hdf5_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vcf_attributes_fn</span><span class="p">)</span>
+        <span class="n">hdf5_file_filt</span> <span class="o">=</span> <span class="n">hdf5_file_path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="s2">&quot;vcf_attributes_filtered.h5&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">hdf5_file_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">hdf5_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;VCF attributes file </span><span class="si">{</span><span class="n">hdf5_file_path</span><span class="si">}</span><span class="s2"> not found.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">new_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">loci_indices</span><span class="p">)</span>
+
+        <span class="c1"># Helper function to process chunks</span>
+        <span class="k">def</span> <span class="nf">process_chunk</span><span class="p">(</span>
+            <span class="n">dataset_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">fw</span><span class="p">:</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">,</span> <span class="n">fr</span><span class="p">:</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">,</span> <span class="n">new_size</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Reads, filters, and writes a dataset in chunks.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                dataset_name (str): The name of the dataset to process.</span>
+<span class="sd">                dtype (object): The datatype of the dataset.</span>
+<span class="sd">                fw (h5py.File): The filtered output file handle.</span>
+<span class="sd">                fr (h5py.File): The input file handle.</span>
+<span class="sd">                new_size (int): The new size of the dataset after filtering.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">chunk_size_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span>
+            <span class="n">dset_size</span> <span class="o">=</span> <span class="n">fr</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">fw</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                <span class="n">dataset_name</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">new_size</span><span class="p">,),</span> <span class="n">maxshape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,)</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Reading and writing the dataset in chunks</span>
+            <span class="n">start_idx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">write_idx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">start_idx</span> <span class="o">&lt;</span> <span class="n">dset_size</span><span class="p">:</span>
+                <span class="n">end_idx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">start_idx</span> <span class="o">+</span> <span class="n">chunk_size_inner</span><span class="p">,</span> <span class="n">dset_size</span><span class="p">)</span>
+                <span class="n">chunk</span> <span class="o">=</span> <span class="n">fr</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">]</span>
+                <span class="n">filtered_chunk</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="n">loci_indices</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">]]</span>
+                <span class="n">chunk_size_to_write</span> <span class="o">=</span> <span class="n">filtered_chunk</span><span class="o">.</span><span class="n">size</span>
+                <span class="n">fw</span><span class="p">[</span><span class="n">dataset_name</span><span class="p">][</span>
+                    <span class="n">write_idx</span> <span class="p">:</span> <span class="n">write_idx</span> <span class="o">+</span> <span class="n">chunk_size_to_write</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="n">filtered_chunk</span>
+                <span class="n">write_idx</span> <span class="o">+=</span> <span class="n">chunk_size_to_write</span>
+                <span class="n">start_idx</span> <span class="o">=</span> <span class="n">end_idx</span>
+
+        <span class="c1"># Open the filtered output file for writing</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">hdf5_file_filt</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fw</span><span class="p">:</span>
+            <span class="c1"># Process each dataset in chunks</span>
+            <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">hdf5_file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fr</span><span class="p">:</span>
+                <span class="n">pcp</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">process_chunk</span><span class="p">,</span> <span class="n">fw</span><span class="o">=</span><span class="n">fw</span><span class="p">,</span> <span class="n">fr</span><span class="o">=</span><span class="n">fr</span><span class="p">,</span> <span class="n">new_size</span><span class="o">=</span><span class="n">new_size</span><span class="p">)</span>
+                <span class="n">pcp</span><span class="p">(</span><span class="s2">&quot;chrom&quot;</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">())</span>
+                <span class="n">pcp</span><span class="p">(</span><span class="s2">&quot;pos&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+                <span class="n">pcp</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">())</span>
+                <span class="n">pcp</span><span class="p">(</span><span class="s2">&quot;ref&quot;</span><span class="p">,</span> <span class="s2">&quot;S1&quot;</span><span class="p">)</span>
+                <span class="n">pcp</span><span class="p">(</span><span class="s2">&quot;alt&quot;</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">())</span>
+                <span class="n">pcp</span><span class="p">(</span><span class="s2">&quot;qual&quot;</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">())</span>
+                <span class="n">pcp</span><span class="p">(</span><span class="s2">&quot;filt&quot;</span><span class="p">,</span> <span class="s2">&quot;S4&quot;</span><span class="p">)</span>
+                <span class="n">pcp</span><span class="p">(</span><span class="s2">&quot;fmt&quot;</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">())</span>
+                <span class="n">pcp</span><span class="p">(</span><span class="s2">&quot;fmt_data&quot;</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">())</span>
+                <span class="p">[</span><span class="n">pcp</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;info/</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">string_dtype</span><span class="p">())</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">fr</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+
+        <span class="c1"># Update the VCF file path to the new filtered file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vcf_attributes_fn</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">hdf5_file_filt</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">vcf_attributes_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The path to the HDF5 file containing the VCF attributes.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The path to the HDF5 file containing the VCF attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vcf_attributes_fn</span>
+
+    <span class="nd">@vcf_attributes_fn</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">vcf_attributes_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the path to the HDF5 file containing the VCF attributes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (str): The path to the HDF5 file containing the VCF attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vcf_attributes_fn</span> <span class="o">=</span> <span class="n">value</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

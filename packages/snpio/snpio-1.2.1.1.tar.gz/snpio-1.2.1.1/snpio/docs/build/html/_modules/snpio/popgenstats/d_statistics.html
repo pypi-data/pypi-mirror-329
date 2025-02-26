@@ -1,0 +1,726 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.popgenstats.d_statistics &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.popgenstats.d_statistics</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.popgenstats.d_statistics</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="c1"># Mapping of IUPAC codes to sets of alleles</span>
+<span class="n">iupac_to_set</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;T&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;G&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>  <span class="c1"># N for missing data</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="bootstrap_iteration">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.d_statistics.bootstrap_iteration">[docs]</a>
+<span class="k">def</span> <span class="nf">bootstrap_iteration</span><span class="p">(</span>
+    <span class="n">alignment</span><span class="p">,</span>
+    <span class="n">d1_inds</span><span class="p">,</span>
+    <span class="n">d2_inds</span><span class="p">,</span>
+    <span class="n">d3_inds</span><span class="p">,</span>
+    <span class="n">d4_inds</span><span class="p">,</span>
+    <span class="n">outgroup_inds</span><span class="p">,</span>
+    <span class="n">sample_ids</span><span class="p">,</span>
+    <span class="n">d_statistic_func</span><span class="p">,</span>
+    <span class="n">include_heterozygous</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standalone function for a single bootstrap iteration to enable tracking sample IDs with D-statistics.&quot;&quot;&quot;</span>
+
+    <span class="n">snp_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+        <span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">d4_inds</span><span class="p">:</span>
+        <span class="n">individual_results</span> <span class="o">=</span> <span class="n">d_statistic_func</span><span class="p">(</span>
+            <span class="n">alignment</span><span class="p">,</span>
+            <span class="n">d1_inds</span><span class="p">,</span>
+            <span class="n">d2_inds</span><span class="p">,</span>
+            <span class="n">d3_inds</span><span class="p">,</span>
+            <span class="n">d4_inds</span><span class="p">,</span>
+            <span class="n">outgroup_inds</span><span class="p">,</span>
+            <span class="n">sample_ids</span><span class="p">,</span>
+            <span class="n">include_heterozygous</span><span class="p">,</span>
+            <span class="n">snp_indices</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">individual_results</span> <span class="o">=</span> <span class="n">d_statistic_func</span><span class="p">(</span>
+            <span class="n">alignment</span><span class="p">,</span>
+            <span class="n">d1_inds</span><span class="p">,</span>
+            <span class="n">d2_inds</span><span class="p">,</span>
+            <span class="n">d3_inds</span><span class="p">,</span>
+            <span class="n">outgroup_inds</span><span class="p">,</span>
+            <span class="n">sample_ids</span><span class="p">,</span>
+            <span class="n">include_heterozygous</span><span class="p">,</span>
+            <span class="n">snp_indices</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">individual_results</span></div>
+
+
+
+<div class="viewcode-block" id="DStatistics">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.d_statistics.DStatistics">[docs]</a>
+<span class="k">class</span> <span class="nc">DStatistics</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to calculate D-statistics (Patterson, Partitioned, and DFOIL) from SNP data.</span>
+
+<span class="sd">    This class provides methods to calculate D-statistics using the ABBA/BABA method from SNP data. The D-statistic is a measure of the degree of allele sharing between populations and is used to infer the presence of gene flow between populations.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        alignment (np.ndarray): Array of SNP data with rows representing individuals and columns representing</span>
+<span class="sd">            SNP sites.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; alignment = np.array(</span>
+<span class="sd">        &gt;&gt;&gt; [[&quot;A&quot;, &quot;A&quot;, &quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;T&quot;, &quot;C&quot;, &quot;C&quot;, &quot;C&quot;, &quot;G&quot;, &quot;G&quot;, &quot;G&quot;],</span>
+<span class="sd">        &gt;&gt;&gt; [&quot;A&quot;, &quot;A&quot;, &quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;T&quot;, &quot;C&quot;, &quot;C&quot;, &quot;C&quot;, &quot;G&quot;, &quot;G&quot;, &quot;G&quot;],</span>
+<span class="sd">        &gt;&gt;&gt; [&quot;A&quot;, &quot;A&quot;, &quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;T&quot;, &quot;C&quot;, &quot;C&quot;, &quot;C&quot;, &quot;G&quot;, &quot;G&quot;, &quot;G&quot;],</span>
+<span class="sd">        &gt;&gt;&gt; [&quot;A&quot;, &quot;A&quot;, &quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;T&quot;, &quot;C&quot;, &quot;C&quot;, &quot;C&quot;, &quot;G&quot;, &quot;G&quot;, &quot;G&quot;],</span>
+<span class="sd">        &gt;&gt;&gt; [&quot;A&quot;, &quot;A&quot;, &quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;T&quot;, &quot;C&quot;, &quot;C&quot;, &quot;C&quot;, &quot;G&quot;, &quot;G&quot;, &quot;G&quot;]]</span>
+<span class="sd">        &gt;&gt;&gt; d1_inds = [0, 1, 2]</span>
+<span class="sd">        &gt;&gt;&gt; d2_inds = [3, 4, 5]</span>
+<span class="sd">        &gt;&gt;&gt; d3_inds = [6, 7, 8]</span>
+<span class="sd">        &gt;&gt;&gt; outgroup_inds = [9, 10, 11]</span>
+<span class="sd">        &gt;&gt;&gt; d_statistic = DStatistic(alignment)</span>
+<span class="sd">        &gt;&gt;&gt; observed_d_statistic, z_score, p_value = d_statistic.calculate_z_and_p_values(</span>
+<span class="sd">        &gt;&gt;&gt;     d1_inds, d2_inds, d3_inds, outgroup_inds, num_bootstraps=1000</span>
+<span class="sd">        &gt;&gt;&gt; )</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; # Expected output: (1.0, 0.0, 1.0)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">alignment</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sample_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize DStatisticCalculator with SNP alignment data.</span>
+
+<span class="sd">        This class provides methods to calculate D-statistics using the ABBA/BABA method from SNP data. The D-statistic is a measure of the degree of allele sharing between populations and is used to infer the presence of gene flow between populations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            alignment (np.ndarray): Array of SNP data with rows representing individuals and columns representing SNP sites.</span>
+<span class="sd">            logger (logging.Logger): Logger object for logging messages.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="n">alignment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_ids</span> <span class="o">=</span> <span class="n">sample_ids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_consensus_genotype</span><span class="p">(</span><span class="n">bases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">include_heterozygous</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get consensus genotype with optional heterozygote inclusion.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bases (list[str]): List of bases to consider.</span>
+<span class="sd">            include_heterozygous (bool): Whether to include heterozygotes.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set[str]: Set of consensus genotypes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">allele_counts</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">bases</span><span class="p">:</span>
+            <span class="n">alleles</span> <span class="o">=</span> <span class="n">iupac_to_set</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">allele</span> <span class="ow">in</span> <span class="n">alleles</span><span class="p">:</span>
+                <span class="n">allele_counts</span><span class="p">[</span><span class="n">allele</span><span class="p">]</span> <span class="o">=</span> <span class="n">allele_counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">allele</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c1"># If including heterozygotes, treat both alleles equally</span>
+        <span class="k">if</span> <span class="n">include_heterozygous</span><span class="p">:</span>
+            <span class="n">sorted_alleles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">allele_counts</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_alleles</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sorted_alleles</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">sorted_alleles</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="nb">set</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">sorted_alleles</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">sorted_alleles</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="p">)</span>  <span class="c1"># Return both as heterozygous</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">sorted_alleles</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Only consider the most frequent single allele</span>
+            <span class="k">if</span> <span class="n">allele_counts</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="nb">max</span><span class="p">(</span><span class="n">allele_counts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">allele_counts</span><span class="o">.</span><span class="n">get</span><span class="p">)}</span>
+            <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DStatistics.bootstrap_d_statistic">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.d_statistics.DStatistics.bootstrap_d_statistic">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">bootstrap_d_statistic</span><span class="p">(</span>
+        <span class="n">alignment</span><span class="p">,</span>
+        <span class="n">d1_inds</span><span class="p">,</span>
+        <span class="n">d2_inds</span><span class="p">,</span>
+        <span class="n">d3_inds</span><span class="p">,</span>
+        <span class="n">d4_inds</span><span class="p">,</span>
+        <span class="n">outgroup_inds</span><span class="p">,</span>
+        <span class="n">sample_ids</span><span class="p">,</span>
+        <span class="n">include_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">num_bootstraps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;patterson&quot;</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Bootstrap specified D-statistic method over SNP sites, tracking sample combinations.&quot;&quot;&quot;</span>
+
+        <span class="n">method_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;patterson&quot;</span><span class="p">:</span> <span class="n">DStatistics</span><span class="o">.</span><span class="n">patterson_d_statistic</span><span class="p">,</span>
+            <span class="s2">&quot;partitioned&quot;</span><span class="p">:</span> <span class="n">DStatistics</span><span class="o">.</span><span class="n">partitioned_d_statistic</span><span class="p">,</span>
+            <span class="s2">&quot;dfoil&quot;</span><span class="p">:</span> <span class="n">DStatistics</span><span class="o">.</span><span class="n">dfoil_statistic</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">method_map</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid method provided: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">d_statistic_func</span> <span class="o">=</span> <span class="n">method_map</span><span class="p">[</span><span class="n">method</span><span class="p">]</span>
+
+        <span class="c1"># Configure parallel processing</span>
+        <span class="n">parallel</span> <span class="o">=</span> <span class="n">n_jobs</span> <span class="o">!=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">parallel</span> <span class="ow">and</span> <span class="n">n_jobs</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">parallel</span> <span class="ow">and</span> <span class="n">n_jobs</span> <span class="o">&gt;</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">():</span>
+            <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+
+        <span class="c1"># Perform bootstrapping with progress tracking</span>
+        <span class="k">if</span> <span class="n">parallel</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+                <span class="c1"># Use tqdm to wrap the executor map for progress tracking</span>
+                <span class="n">bootstrapped_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                    <span class="n">tqdm</span><span class="p">(</span>
+                        <span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                            <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">bootstrap_iteration</span><span class="p">(</span>
+                                <span class="n">alignment</span><span class="p">,</span>
+                                <span class="n">d1_inds</span><span class="p">,</span>
+                                <span class="n">d2_inds</span><span class="p">,</span>
+                                <span class="n">d3_inds</span><span class="p">,</span>
+                                <span class="n">d4_inds</span><span class="p">,</span>
+                                <span class="n">outgroup_inds</span><span class="p">,</span>
+                                <span class="n">sample_ids</span><span class="p">,</span>
+                                <span class="n">d_statistic_func</span><span class="p">,</span>
+                                <span class="n">include_heterozygous</span><span class="p">,</span>
+                            <span class="p">),</span>
+                            <span class="nb">range</span><span class="p">(</span><span class="n">num_bootstraps</span><span class="p">),</span>
+                        <span class="p">),</span>
+                        <span class="n">total</span><span class="o">=</span><span class="n">num_bootstraps</span><span class="p">,</span>
+                        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Bootstrapping (parallel)&quot;</span><span class="p">,</span>
+                        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;replicate&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bootstrapped_results</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">bootstrap_iteration</span><span class="p">(</span>
+                    <span class="n">alignment</span><span class="p">,</span>
+                    <span class="n">d1_inds</span><span class="p">,</span>
+                    <span class="n">d2_inds</span><span class="p">,</span>
+                    <span class="n">d3_inds</span><span class="p">,</span>
+                    <span class="n">d4_inds</span><span class="p">,</span>
+                    <span class="n">outgroup_inds</span><span class="p">,</span>
+                    <span class="n">sample_ids</span><span class="p">,</span>
+                    <span class="n">d_statistic_func</span><span class="p">,</span>
+                    <span class="n">include_heterozygous</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+                    <span class="nb">range</span><span class="p">(</span><span class="n">num_bootstraps</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Bootstrapping&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;replicate&quot;</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+
+        <span class="c1"># Flatten results from all replicates and organize by sample ID</span>
+        <span class="c1"># combinations</span>
+        <span class="n">combo_results</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">replicate_results</span> <span class="ow">in</span> <span class="n">bootstrapped_results</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">sample_combo</span><span class="p">,</span> <span class="n">d_stat</span> <span class="ow">in</span> <span class="n">replicate_results</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">sample_combo</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">combo_results</span><span class="p">:</span>
+                    <span class="n">combo_results</span><span class="p">[</span><span class="n">sample_combo</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">combo_results</span><span class="p">[</span><span class="n">sample_combo</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d_stat</span><span class="p">)</span>
+
+        <span class="c1"># Return individual results with mean D-statistics for each sample combo</span>
+        <span class="k">return</span> <span class="n">combo_results</span></div>
+
+
+<div class="viewcode-block" id="DStatistics.calculate_z_and_p_values">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.d_statistics.DStatistics.calculate_z_and_p_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_z_and_p_values</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">d1_inds</span><span class="p">,</span>
+        <span class="n">d2_inds</span><span class="p">,</span>
+        <span class="n">d3_inds</span><span class="p">,</span>
+        <span class="n">outgroup_inds</span><span class="p">,</span>
+        <span class="n">d4_inds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">num_bootstraps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;patterson&quot;</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
+        <span class="n">List</span><span class="p">[</span>
+            <span class="n">Tuple</span><span class="p">[</span>
+                <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+                <span class="nb">float</span><span class="p">,</span>
+                <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+                <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+            <span class="p">]</span>
+        <span class="p">],</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate Z-scores and P-values from D-statistic using bootstrapping with sample tracking.&quot;&quot;&quot;</span>
+
+        <span class="n">method</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;patterson&quot;</span><span class="p">,</span> <span class="s2">&quot;partitioned&quot;</span><span class="p">,</span> <span class="s2">&quot;dfoil&quot;</span><span class="p">}:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid method specified: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid method specified: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alignment</span><span class="p">,</span>
+            <span class="n">d1_inds</span><span class="p">,</span>
+            <span class="n">d2_inds</span><span class="p">,</span>
+            <span class="n">d3_inds</span><span class="p">,</span>
+            <span class="n">d4_inds</span><span class="p">,</span>
+            <span class="n">outgroup_inds</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sample_ids</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;include_heterozygous&quot;</span><span class="p">:</span> <span class="n">include_heterozygous</span><span class="p">,</span>
+            <span class="s2">&quot;num_bootstraps&quot;</span><span class="p">:</span> <span class="n">num_bootstraps</span><span class="p">,</span>
+            <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span>
+            <span class="s2">&quot;n_jobs&quot;</span><span class="p">:</span> <span class="n">n_jobs</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Get the bootstrapped D-statistics per sample combination</span>
+        <span class="n">combo_results</span> <span class="o">=</span> <span class="n">DStatistics</span><span class="o">.</span><span class="n">bootstrap_d_statistic</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">combo_z_p_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">overall_bootstrapped_values</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">sample_combo</span><span class="p">,</span> <span class="n">bootstrapped_d_stats</span> <span class="ow">in</span> <span class="n">combo_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Remove None values (cases where D-statistic couldn&#39;t be</span>
+            <span class="c1"># calculated)</span>
+            <span class="n">bootstrapped_d_stats</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">bootstrapped_d_stats</span> <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">bootstrapped_d_stats</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;No valid bootstrapped D-statistics for sample combination: </span><span class="si">{</span><span class="n">sample_combo</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Calculate mean D-statistic</span>
+            <span class="n">mean_d_stat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">bootstrapped_d_stats</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">):</span>
+                <span class="c1"># Calculate standard deviation of bootstrapped D-statistics</span>
+                <span class="n">std_d_stat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">bootstrapped_d_stats</span><span class="p">)</span>
+
+            <span class="c1"># Calculate Z-score and P-value</span>
+            <span class="k">if</span> <span class="n">std_d_stat</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">z_score</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">p_value</span> <span class="o">=</span> <span class="mf">1.0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Zero variance in bootstrapped D-statistics for </span><span class="si">{</span><span class="n">sample_combo</span><span class="si">}</span><span class="s2">, skipping Z/P calculation.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">z_score</span> <span class="o">=</span> <span class="n">mean_d_stat</span> <span class="o">/</span> <span class="n">std_d_stat</span>
+                <span class="n">p_value</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">z_score</span><span class="p">)))</span>
+
+            <span class="n">combo_z_p_values</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sample_combo</span><span class="p">,</span> <span class="n">mean_d_stat</span><span class="p">,</span> <span class="n">z_score</span><span class="p">,</span> <span class="n">p_value</span><span class="p">))</span>
+            <span class="n">overall_bootstrapped_values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">bootstrapped_d_stats</span><span class="p">)</span>
+
+        <span class="c1"># Calculate overall Z-score and P-value</span>
+        <span class="n">overall_bootstrapped_values</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">overall_bootstrapped_values</span> <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">]</span>
+        <span class="n">mean_overall</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">overall_bootstrapped_values</span><span class="p">)</span>
+        <span class="n">std_overall</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">overall_bootstrapped_values</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">std_overall</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">overall_z_score</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">overall_p_value</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Zero variance in overall bootstrapped D-statistics, skipping overall Z/P calculation.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">overall_z_score</span> <span class="o">=</span> <span class="n">mean_overall</span> <span class="o">/</span> <span class="n">std_overall</span>
+            <span class="n">overall_p_value</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">overall_z_score</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">combo_z_p_values</span><span class="p">,</span> <span class="n">overall_z_score</span><span class="p">,</span> <span class="n">overall_p_value</span></div>
+
+
+<div class="viewcode-block" id="DStatistics.patterson_d_statistic">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.d_statistics.DStatistics.patterson_d_statistic">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">patterson_d_statistic</span><span class="p">(</span>
+        <span class="n">alignment</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">d1_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">d2_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">d3_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">outgroup_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">sample_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">include_heterozygous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">snp_indices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate Patterson&#39;s D-statistic for all individual combinations across populations.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">snp_indices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">snp_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">individual_results</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Pre-compute consensus for each individual and SNP site</span>
+        <span class="n">consensus_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">DStatistics</span><span class="o">.</span><span class="n">_consensus_genotype</span><span class="p">([</span><span class="n">base</span><span class="p">],</span> <span class="n">include_heterozygous</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="n">snp_indices</span><span class="p">]</span>
+            <span class="p">]</span>
+
+        <span class="c1"># Iterate over all individual combinations using product</span>
+        <span class="k">for</span> <span class="n">d1_ind</span><span class="p">,</span> <span class="n">d2_ind</span><span class="p">,</span> <span class="n">d3_ind</span><span class="p">,</span> <span class="n">outgroup_ind</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span>
+            <span class="n">d1_inds</span><span class="p">,</span> <span class="n">d2_inds</span><span class="p">,</span> <span class="n">d3_inds</span><span class="p">,</span> <span class="n">outgroup_inds</span>
+        <span class="p">):</span>
+
+            <span class="n">sample_id_combo</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">d1_ind</span><span class="p">],</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">d2_ind</span><span class="p">],</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">d3_ind</span><span class="p">],</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">outgroup_ind</span><span class="p">],</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Access precomputed consensus data for each SNP</span>
+            <span class="n">d1_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">d1_ind</span><span class="p">]</span>
+            <span class="n">d2_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">d2_ind</span><span class="p">]</span>
+            <span class="n">d3_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">d3_ind</span><span class="p">]</span>
+            <span class="n">outgroup_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">outgroup_ind</span><span class="p">]</span>
+
+            <span class="c1"># Define valid data mask and patterns</span>
+            <span class="n">valid_mask</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">d1_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d2_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d3_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">outgroup_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+            <span class="p">)</span>
+            <span class="n">abba_mask</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">d1_consensus</span> <span class="o">==</span> <span class="n">d2_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d3_consensus</span> <span class="o">!=</span> <span class="n">outgroup_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="n">valid_mask</span>
+            <span class="p">)</span>
+            <span class="n">baba_mask</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">d1_consensus</span> <span class="o">==</span> <span class="n">d3_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d2_consensus</span> <span class="o">!=</span> <span class="n">outgroup_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="n">valid_mask</span>
+            <span class="p">)</span>
+
+            <span class="n">abba_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">abba_mask</span><span class="p">)</span>
+            <span class="n">baba_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">baba_mask</span><span class="p">)</span>
+
+            <span class="n">total_count</span> <span class="o">=</span> <span class="n">abba_count</span> <span class="o">+</span> <span class="n">baba_count</span>
+
+            <span class="c1"># Handle edge case with no valid patterns</span>
+            <span class="k">if</span> <span class="n">total_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># No valid patterns found</span>
+                <span class="n">individual_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sample_id_combo</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Calculate final D-statistic</span>
+                <span class="n">d_statistic</span> <span class="o">=</span> <span class="p">(</span><span class="n">abba_count</span> <span class="o">-</span> <span class="n">baba_count</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_count</span>
+                <span class="n">individual_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sample_id_combo</span><span class="p">,</span> <span class="n">d_statistic</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">individual_results</span></div>
+
+
+<div class="viewcode-block" id="DStatistics.partitioned_d_statistic">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.d_statistics.DStatistics.partitioned_d_statistic">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">partitioned_d_statistic</span><span class="p">(</span>
+        <span class="n">alignment</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">d1_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">d2_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">d3_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">d4_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">outgroup_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">sample_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">include_heterozygous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">snp_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the partitioned D-statistic for all individual combinations across populations.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">snp_indices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">snp_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">individual_results</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Pre-compute consensus for each individual and SNP site</span>
+        <span class="n">consensus_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">DStatistics</span><span class="o">.</span><span class="n">_consensus_genotype</span><span class="p">([</span><span class="n">base</span><span class="p">],</span> <span class="n">include_heterozygous</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="n">snp_indices</span><span class="p">]</span>
+            <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">d1_ind</span><span class="p">,</span> <span class="n">d2_ind</span><span class="p">,</span> <span class="n">d3_ind</span><span class="p">,</span> <span class="n">d4_ind</span><span class="p">,</span> <span class="n">outgroup_ind</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span>
+            <span class="n">d1_inds</span><span class="p">,</span> <span class="n">d2_inds</span><span class="p">,</span> <span class="n">d3_inds</span><span class="p">,</span> <span class="n">d4_inds</span><span class="p">,</span> <span class="n">outgroup_inds</span>
+        <span class="p">):</span>
+
+            <span class="n">sample_id_combo</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">d1_ind</span><span class="p">],</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">d2_ind</span><span class="p">],</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">d3_ind</span><span class="p">],</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">d4_ind</span><span class="p">],</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">outgroup_ind</span><span class="p">],</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Access precomputed consensus data for each SNP</span>
+            <span class="n">d1_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">d1_ind</span><span class="p">]</span>
+            <span class="n">d2_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">d2_ind</span><span class="p">]</span>
+            <span class="n">d3_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">d3_ind</span><span class="p">]</span>
+            <span class="n">d4_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">d4_ind</span><span class="p">]</span>
+            <span class="n">outgroup_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">outgroup_ind</span><span class="p">]</span>
+
+            <span class="n">valid_mask</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">d1_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d2_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d3_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d4_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">outgroup_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+            <span class="p">)</span>
+            <span class="n">abcd_mask</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">d1_consensus</span> <span class="o">==</span> <span class="n">d2_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d3_consensus</span> <span class="o">==</span> <span class="n">d4_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d3_consensus</span> <span class="o">!=</span> <span class="n">outgroup_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="n">valid_mask</span>
+            <span class="p">)</span>
+            <span class="n">dcba_mask</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">d1_consensus</span> <span class="o">==</span> <span class="n">d4_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d2_consensus</span> <span class="o">==</span> <span class="n">d3_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d2_consensus</span> <span class="o">!=</span> <span class="n">outgroup_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="n">valid_mask</span>
+            <span class="p">)</span>
+
+            <span class="n">abcd_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">abcd_mask</span><span class="p">)</span>
+            <span class="n">dcba_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">dcba_mask</span><span class="p">)</span>
+
+            <span class="n">total_count</span> <span class="o">=</span> <span class="n">abcd_count</span> <span class="o">+</span> <span class="n">dcba_count</span>
+
+            <span class="k">if</span> <span class="n">total_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># No valid patterns found</span>
+                <span class="n">individual_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sample_id_combo</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">partitioned_d_statistic</span> <span class="o">=</span> <span class="p">(</span><span class="n">abcd_count</span> <span class="o">-</span> <span class="n">dcba_count</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_count</span>
+                <span class="n">individual_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sample_id_combo</span><span class="p">,</span> <span class="n">partitioned_d_statistic</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="n">individual_results</span></div>
+
+
+<div class="viewcode-block" id="DStatistics.dfoil_statistic">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.d_statistics.DStatistics.dfoil_statistic">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">dfoil_statistic</span><span class="p">(</span>
+        <span class="n">alignment</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">d1_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">d2_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">d3_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">d4_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">outgroup_inds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">sample_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">include_heterozygous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">snp_indices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the DFOIL statistic for all individual combinations across populations.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">snp_indices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">snp_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">individual_results</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Pre-compute consensus for each individual and SNP site</span>
+        <span class="n">consensus_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">DStatistics</span><span class="o">.</span><span class="n">_consensus_genotype</span><span class="p">([</span><span class="n">base</span><span class="p">],</span> <span class="n">include_heterozygous</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="n">snp_indices</span><span class="p">]</span>
+            <span class="p">]</span>
+
+        <span class="c1"># Iterate over all combinations of individuals across populations</span>
+        <span class="k">for</span> <span class="n">d1_ind</span><span class="p">,</span> <span class="n">d2_ind</span><span class="p">,</span> <span class="n">d3_ind</span><span class="p">,</span> <span class="n">d4_ind</span><span class="p">,</span> <span class="n">outgroup_ind</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span>
+            <span class="n">d1_inds</span><span class="p">,</span> <span class="n">d2_inds</span><span class="p">,</span> <span class="n">d3_inds</span><span class="p">,</span> <span class="n">d4_inds</span><span class="p">,</span> <span class="n">outgroup_inds</span>
+        <span class="p">):</span>
+            <span class="n">sample_id_combo</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">d1_ind</span><span class="p">],</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">d2_ind</span><span class="p">],</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">d3_ind</span><span class="p">],</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">d4_ind</span><span class="p">],</span>
+                <span class="n">sample_ids</span><span class="p">[</span><span class="n">outgroup_ind</span><span class="p">],</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Access precomputed consensus data for each SNP</span>
+            <span class="n">d1_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">d1_ind</span><span class="p">]</span>
+            <span class="n">d2_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">d2_ind</span><span class="p">]</span>
+            <span class="n">d3_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">d3_ind</span><span class="p">]</span>
+            <span class="n">d4_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">d4_ind</span><span class="p">]</span>
+            <span class="n">d5_consensus</span> <span class="o">=</span> <span class="n">consensus_matrix</span><span class="p">[</span><span class="n">outgroup_ind</span><span class="p">]</span>
+
+            <span class="n">valid_mask</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">d1_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d2_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d3_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d4_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d5_consensus</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">())</span>
+            <span class="p">)</span>
+
+            <span class="n">abba_mask</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">d1_consensus</span> <span class="o">==</span> <span class="n">d2_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d3_consensus</span> <span class="o">!=</span> <span class="n">d4_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d4_consensus</span> <span class="o">==</span> <span class="n">d5_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="n">valid_mask</span>
+            <span class="p">)</span>
+            <span class="n">baba_mask</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">d1_consensus</span> <span class="o">!=</span> <span class="n">d2_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d3_consensus</span> <span class="o">==</span> <span class="n">d4_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d2_consensus</span> <span class="o">==</span> <span class="n">d5_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="n">valid_mask</span>
+            <span class="p">)</span>
+            <span class="n">faba_mask</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">d1_consensus</span> <span class="o">!=</span> <span class="n">d2_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d2_consensus</span> <span class="o">==</span> <span class="n">d3_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d3_consensus</span> <span class="o">!=</span> <span class="n">d4_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="n">valid_mask</span>
+            <span class="p">)</span>
+            <span class="n">foab_mask</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">d1_consensus</span> <span class="o">==</span> <span class="n">d3_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d2_consensus</span> <span class="o">!=</span> <span class="n">d4_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">d3_consensus</span> <span class="o">==</span> <span class="n">d5_consensus</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="n">valid_mask</span>
+            <span class="p">)</span>
+
+            <span class="n">abba_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">abba_mask</span><span class="p">)</span>
+            <span class="n">baba_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">baba_mask</span><span class="p">)</span>
+            <span class="n">faba_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">faba_mask</span><span class="p">)</span>
+            <span class="n">foab_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">foab_mask</span><span class="p">)</span>
+
+            <span class="n">total_count</span> <span class="o">=</span> <span class="n">abba_count</span> <span class="o">+</span> <span class="n">baba_count</span> <span class="o">+</span> <span class="n">faba_count</span> <span class="o">+</span> <span class="n">foab_count</span>
+
+            <span class="k">if</span> <span class="n">total_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># No valid patterns found</span>
+                <span class="n">individual_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sample_id_combo</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Calculate individual DFOIL statistic for this combination</span>
+                <span class="n">dfoil_statistic</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">abba_count</span> <span class="o">-</span> <span class="n">baba_count</span> <span class="o">+</span> <span class="n">faba_count</span> <span class="o">-</span> <span class="n">foab_count</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="n">total_count</span>
+                <span class="n">individual_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sample_id_combo</span><span class="p">,</span> <span class="n">dfoil_statistic</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">individual_results</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

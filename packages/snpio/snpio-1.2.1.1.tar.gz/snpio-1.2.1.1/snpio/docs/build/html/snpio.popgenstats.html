@@ -1,0 +1,666 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.popgenstats package &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=859da57e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=ca842793"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="snpio.utils package" href="snpio.utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SNPio
+              <img src="_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">snpio</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="snpio.html">snpio package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="snpio.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="snpio.filtering.html">snpio.filtering package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.plotting.html">snpio.plotting package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.io.html">snpio.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.analysis.html">snpio.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.read_input.html">snpio.read_input package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.utils.html">snpio.utils package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">snpio.popgenstats package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="snpio.html#module-snpio">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">snpio</a></li>
+          <li class="breadcrumb-item"><a href="snpio.html">snpio package</a></li>
+      <li class="breadcrumb-item active">snpio.popgenstats package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/btmartin721/SNPio/blob/master/docs/source/snpio.popgenstats.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="snpio-popgenstats-package">
+<h1>snpio.popgenstats package<a class="headerlink" href="#snpio-popgenstats-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="snpio-popgenstats-pop-gen-statistics-module">
+<h2>snpio.popgenstats.pop_gen_statistics module<a class="headerlink" href="#snpio-popgenstats-pop-gen-statistics-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.popgenstats.pop_gen_statistics.</span></span><span class="sig-name descname"><span class="pre">PopGenStatistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/pop_gen_statistics.html#PopGenStatistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for calculating population genetics statistics from SNP data.</p>
+<p>This class provides methods for calculating population genetics statistics from SNP data. It is designed to work with GenotypeData objects. The PopGenStatistics class can calculate Patterson’s D-statistic, partitioned D-statistic, D-foil statistic, summary statistics, and perform PCA and DAPC dimensionality reduction analysis.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">amova</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regionmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/pop_gen_statistics.html#PopGenStatistics.amova"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Conduct AMOVA (Analysis Of Molecular Variance).</p>
+<p>AMOVA (Analysis of Molecular Variance) is a method for partitioning genetic variation into components due to differences among populations, among individuals within populations, and within individuals. This method calculates variance components and Phi statistics for a given number of hierarchical levels (1, 2, or 3). If bootstrapping is enabled, it also estimates p-values for the variance components. The number of hierarchical levels determines the structure of the AMOVA model: 1 =&gt; populations only, 2 =&gt; region -&gt; populations, 3 =&gt; region -&gt; population -&gt; individuals. If regionmap is provided, it is used to map populations to regions.</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Algorithm adapted from the R package ‘poppr’ (Kamvar et al., 2014).</p></li>
+<li><p>The Phi statistic is a measure of genetic differentiation between populations.</p></li>
+<li><p>Algorithm description: First, the total variance is calculated. Then, the variance components are calculated by summing the squared differences between the mean of each group and the global mean. The Phi statistic is calculated as the ratio of the among-group variance to the total variance. P-values are estimated by bootstrapping.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>regionmap</strong> (<em>dict</em><em>, </em><em>optional</em>) – Mapping from population_id -&gt; region_id.
+If None but hierarchical_levels&gt;1, raises ValueError.</p></li>
+<li><p><strong>n_bootstraps</strong> (<em>int</em>) – Number of bootstrap replicates across SNP loci.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of parallel jobs. -1 uses all cores.</p></li>
+<li><p><strong>random_seed</strong> (<em>int</em><em>, </em><em>optional</em>) – Random seed for reproducibility.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>AMOVA results (variance components, Phi statistics, and possibly p-values).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If regionmap is required but not provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">calculate_d_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outgroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population4</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_heterozygous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_individuals_per_pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">individual_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/pop_gen_statistics.html#PopGenStatistics.calculate_d_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate D-statistics, Z-scores, and P-values from D-statistics.</p>
+<p>This method calculates D-statistics, Z-scores, and P-values for all possible sample combinations based on the chosen <code class="docutils literal notranslate"><span class="pre">method</span></code>. The results are saved to a CSV file and returned as a pandas DataFrame. The overall mean D-statistic, Z-score, and P-value are also returned as a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<em>str</em>) – The method to use for calculating D-statistics. Supported options include “patterson”, “partitioned”, “dfoil”. “patterson” is the default and represents the traditional 4-taxon D-statistic. “partitioned” is a generalization of the D-statistic that allows for more than 4 populations. “dfoil” is a method that calculates D-statistics for all possible combinations of 4 populations (i.e., the FOIL method). Defaults to “patterson”.</p></li>
+<li><p><strong>population1</strong> (<em>str</em><em> | </em><em>List</em><em>[</em><em>str</em><em>]</em>) – Population ID or list of IDs.</p></li>
+<li><p><strong>population2</strong> (<em>str</em><em> | </em><em>List</em><em>[</em><em>str</em><em>]</em>) – Population ID or list of IDs.</p></li>
+<li><p><strong>population3</strong> (<em>str</em><em> | </em><em>List</em><em>[</em><em>str</em><em>]</em>) – Population ID or list of IDs.</p></li>
+<li><p><strong>outgroup</strong> (<em>str</em><em> | </em><em>List</em><em>[</em><em>str</em><em>]</em>) – Population ID or list of IDs.</p></li>
+<li><p><strong>population4</strong> (<em>str</em><em> | </em><em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Population ID or list of IDs. Required for “partitioned” and “dfoil” methods.</p></li>
+<li><p><strong>include_heterozygous</strong> (<em>bool</em>) – Whether to include heterozygous genotypes. Defaults to False.</p></li>
+<li><p><strong>num_bootstraps</strong> (<em>int</em>) – Number of bootstrap replicates.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of parallel jobs. -1 uses all available cores. Defaults to -1.</p></li>
+<li><p><strong>max_individuals_per_pop</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Max individuals per population. Defaults to None. If specified, will select individuals from each population based on the criteria specified in <code class="docutils literal notranslate"><span class="pre">individual_selection</span></code>.</p></li>
+<li><p><strong>individual_selection</strong> (<em>str</em><em> | </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – Method for selecting individuals. Defaults to “random”. If max_individuals_per_pop is specified, can be a dictionary with population IDs as keys and lists of selected individuals as values.</p></li>
+<li><p><strong>output_file</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Path to save the results CSV file. If not specified, results will be saved to a default location. Defaults to None.</p></li>
+<li><p><strong>save_plot</strong> (<em>bool</em>) – Whether to save the plots D-statistic plots. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the results of all sample combinations as a pandas DataFrame and the overall mean D-statistic, Z-score, and P-value as a dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">detect_fst_outliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">correction_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_bootstrap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tail_direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/pop_gen_statistics.html#PopGenStatistics.detect_fst_outliers"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Detect Fst outliers from SNP data using bootstrapping or DBSCAN.</p>
+<p>This method detects Fst outliers from SNP data using bootstrapping or DBSCAN clustering. Outliers are identified based on the distribution of Fst values between population pairs. The method returns a DataFrame containing the Fst outliers and contributing population pairs, as well as a DataFrame containing the adjusted or unadjusted P-values, depending on whether a multiple testing correction method was specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>correction_method</strong> (<em>str</em><em>, </em><em>optional</em>) – Multiple testing correction method that performs P-value adjustment, ‘bonf’ (Bonferroni) or ‘fdr’ (FDR B-H). If not specified, no correction or P-value adjustment is applied. Defaults to None.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Significance level for multiple test correction (with adjusted P-values). Defaults to 0.05.</p></li>
+<li><p><strong>use_bootstrap</strong> (<em>bool</em>) – Whether to use bootstrapping to estimate variance of Fst per SNP. If False, DBSCAN clustering is used instead. Defaults to False.</p></li>
+<li><p><strong>n_bootstraps</strong> (<em>int</em>) – Number of bootstrap replicates to use for estimating variance of Fst per SNP. Defaults to 1000.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of CPU threads to use for parallelization. If set to -1, all available CPU threads are used. Defaults to 1.</p></li>
+<li><p><strong>tail_direction</strong> (<em>str</em>) – Direction of the test for Fst outliers. “both” for two-tailed, “upper” for testing higher than expected, and “lower” for lower than expected. Defaults to “both”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A DataFrame containing the Fst outliers and contributing population pairs, and a DataFrame containing the adjusted P-values if <code class="docutils literal notranslate"><span class="pre">correction_method</span></code> was provided or the un-adjusted P-values otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[pd.DataFrame, pd.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">neis_genetic_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">palette</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'coolwarm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supress_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/pop_gen_statistics.html#PopGenStatistics.neis_genetic_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Nei’s genetic distance between all pairs of populations.</p>
+<p>Optionally computes bootstrap-based p-values for each population pair if n_bootstraps &gt; 0.</p>
+<p>Nei’s genetic distance is defined as <code class="docutils literal notranslate"><span class="pre">D</span> <span class="pre">=</span> <span class="pre">-ln(</span> <span class="pre">Ī</span> <span class="pre">)</span></code>, where Ī is the ratio of the average genetic identity to the geometric mean of the average homozygosities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_bootstraps</strong> (<em>int</em>) – Number of bootstrap replicates to compute p-values. Defaults to 0 (only distances are returned).</p></li>
+<li><p><strong>palette</strong> (<em>str</em>) – Color palette for the distance matrix plot. Can use any matplotlib gradient-based palette. Some frequently used options include: “coolwarm”, “viridis”, “magma”, and “inferno”. Defaults to ‘coolwarm’.</p></li>
+<li><p><strong>supress_plot</strong> (<em>bool</em>) – If True, suppresses the plotting of the distance matrix. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If n_bootstraps == 0, returns a DataFrame of Nei’s distances.
+Tuple[pd.DataFrame, pd.DataFrame]: If n_bootstraps &gt; 0, returns a tuple of (distance matrix, p-value matrix).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">summary_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/pop_gen_statistics.html#PopGenStatistics.summary_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate a suite of summary statistics for SNP data.</p>
+<p>This method calculates a suite of summary statistics for SNP data, including observed heterozygosity (Ho), expected heterozygosity (He), nucleotide diversity (Pi), and Fst between populations. Summary statistics are calculated both overall and per population.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_bootstraps</strong> (<em>int</em>) – Number of bootstrap replicates to use for estimating variance of Fst per SNP. If 0, then bootstrapping is not used and confidence intervals are estimated from the data. Defaults to 0.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of parallel jobs. If set to -1, all available CPU threads are used. Defaults to 1.</p></li>
+<li><p><strong>save_plots</strong> (<em>bool</em>) – Whether to save plots of the summary statistics. In any case, a dictionary of summary statistics is returned. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing summary statistics per population and overall.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-popgenstats-plot-d-statistics-module">
+<h2>snpio.popgenstats.plot_d_statistics module<a class="headerlink" href="#snpio-popgenstats-plot-d-statistics-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.popgenstats.d_statistics.</span></span><span class="sig-name descname"><span class="pre">DStatistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alignment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/d_statistics.html#DStatistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to calculate D-statistics (Patterson, Partitioned, and DFOIL) from SNP data.</p>
+<p>This class provides methods to calculate D-statistics using the ABBA/BABA method from SNP data. The D-statistic is a measure of the degree of allele sharing between populations and is used to infer the presence of gene flow between populations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">alignment</span></span></dt>
+<dd><p>Array of SNP data with rows representing individuals and columns representing
+SNP sites.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">alignment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d1_inds</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d2_inds</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d3_inds</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">outgroup_inds</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d_statistic</span> <span class="o">=</span> <span class="n">DStatistic</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">observed_d_statistic</span><span class="p">,</span> <span class="n">z_score</span><span class="p">,</span> <span class="n">p_value</span> <span class="o">=</span> <span class="n">d_statistic</span><span class="o">.</span><span class="n">calculate_z_and_p_values</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">d1_inds</span><span class="p">,</span> <span class="n">d2_inds</span><span class="p">,</span> <span class="n">d3_inds</span><span class="p">,</span> <span class="n">outgroup_inds</span><span class="p">,</span> <span class="n">num_bootstraps</span><span class="o">=</span><span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Expected output: (1.0, 0.0, 1.0)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bootstrap_d_statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alignment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d3_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d4_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outgroup_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_heterozygous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'patterson'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/d_statistics.html#DStatistics.bootstrap_d_statistic"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bootstrap specified D-statistic method over SNP sites, tracking sample combinations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">calculate_z_and_p_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d1_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d3_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outgroup_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d4_inds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_heterozygous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'patterson'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/d_statistics.html#DStatistics.calculate_z_and_p_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Z-scores and P-values from D-statistic using bootstrapping with sample tracking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]], <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dfoil_statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alignment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d3_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d4_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outgroup_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_heterozygous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snp_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/d_statistics.html#DStatistics.dfoil_statistic"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate the DFOIL statistic for all individual combinations across populations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">partitioned_d_statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alignment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d3_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d4_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outgroup_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_heterozygous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snp_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/d_statistics.html#DStatistics.partitioned_d_statistic"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate the partitioned D-statistic for all individual combinations across populations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">patterson_d_statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alignment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d3_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outgroup_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_heterozygous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snp_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/d_statistics.html#DStatistics.patterson_d_statistic"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Patterson’s D-statistic for all individual combinations across populations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">snpio.popgenstats.d_statistics.</span></span><span class="sig-name descname"><span class="pre">bootstrap_iteration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alignment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d3_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d4_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outgroup_inds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_statistic_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_heterozygous</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/d_statistics.html#bootstrap_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Standalone function for a single bootstrap iteration to enable tracking sample IDs with D-statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="snpio-popgenstats-amova-module">
+<h2>snpio.popgenstats.amova module<a class="headerlink" href="#snpio-popgenstats-amova-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.popgenstats.amova.</span></span><span class="sig-name descname"><span class="pre">AMOVA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alignment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/amova.html#AMOVA"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Analysis of Molecular Variance (AMOVA) class.</p>
+<p>This class provides methods for conducting AMOVA with 1, 2, or 3 hierarchical levels. The AMOVA method partitions genetic variation into components due to differences among populations, among individuals within populations, and within individuals. This method calculates variance components and Phi statistics for a given number of hierarchical levels (1, 2, or 3). If bootstrapping is enabled, it also estimates p-values for the variance components. The number of hierarchical levels determines the structure of the AMOVA model: 1 =&gt; populations only, 2 =&gt; region -&gt; populations, 3 =&gt; region -&gt; population -&gt; individuals. If regionmap is provided, it is used to map populations to regions.</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Algorithm adapted from the R package ‘poppr’ (Kamvar et al., 2014) and Excoffier et al. (1992).</p></li>
+<li><p>The Phi statistic is a measure of genetic differentiation.</p></li>
+<li><p>Bootstrapping is implemented by resampling SNP loci with replacement.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regionmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/amova.html#AMOVA.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Conduct AMOVA with 1, 2, or 3 hierarchical levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>regionmap</strong> (<em>dict</em><em>, </em><em>optional</em>) – Mapping from population_id -&gt; region_id. Must be provided for hierarchical_levels &gt; 1. Defaults to None.</p></li>
+<li><p><strong>n_bootstraps</strong> (<em>int</em>) – Number of bootstrap replicates (across loci). Default: 0 (no bootstrapping).</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of parallel jobs. -1 uses all cores. Defaults to 1</p></li>
+<li><p><strong>random_seed</strong> (<em>int</em><em>, </em><em>optional</em>) – Random seed for reproducibility. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>AMOVA results (variance components, Phi statistics, p-values if bootstrapping).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-popgenstats-genetic-distance-module">
+<h2>snpio.popgenstats.genetic_distance module<a class="headerlink" href="#snpio-popgenstats-genetic-distance-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.popgenstats.genetic_distance.</span></span><span class="sig-name descname"><span class="pre">GeneticDistance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alignment_012</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/genetic_distance.html#GeneticDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Class for calculating Nei’s genetic distance between populations.</p>
+<p>This class calculates genetic distance between populations using allele frequencies. The genetic distance is calculated using Nei’s method, which is based on the proportion of shared alleles between populations. The genetic distance is calculated as <code class="docutils literal notranslate"><span class="pre">-log(I)</span></code>, where I is the proportion of shared alleles between populations.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">calculate_neis_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">palette</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'coolwarm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supress_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/genetic_distance.html#GeneticDistance.calculate_neis_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate Nei’s genetic distance between all pairs of populations.</p>
+<p>Optionally computes bootstrap-based p-values for each population pair if n_bootstraps &gt; 0.</p>
+<p>Nei’s genetic distance is defined as D = -ln( Ī ), where Ī is the ratio of the average genetic identity to the geometric mean of the average homozygosities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_bootstraps</strong> (<em>int</em>) – Number of bootstrap replicates to compute p-values. Defaults to 0 (only distances are returned).</p></li>
+<li><p><strong>palette</strong> (<em>str</em>) – Color palette for the distance matrix plot. Can use any matplotlib gradient-based palette. Some frequently used options include: “coolwarm”, “viridis”, “magma”, and “inferno”. Defaults to ‘coolwarm’.</p></li>
+<li><p><strong>supress_plot</strong> (<em>bool</em>) – If True, suppresses the plotting of the distance matrix. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If n_bootstraps == 0, returns a DataFrame of Nei’s distances.
+Tuple[pd.DataFrame, pd.DataFrame]: If n_bootstraps &gt; 0, returns a tuple of (distance matrix, p-value matrix).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-popgenstats-fst-outliers-module">
+<h2>snpio.popgenstats.fst_outliers module<a class="headerlink" href="#snpio-popgenstats-fst-outliers-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.popgenstats.fst_outliers.</span></span><span class="sig-name descname"><span class="pre">FstOutliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alignment_012</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/fst_outliers.html#FstOutliers"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Class for detecting Fst outliers between populations.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">detect_fst_outliers_bootstrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">correction_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'two'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/fst_outliers.html#FstOutliers.detect_fst_outliers_bootstrap"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Detect Fst outliers from SNP data using traditional bootstrapping.</p>
+<p>Outliers are identified based on the distribution of Fst values between population pairs. This method now supports one-tailed tests: specifying ‘upper’ identifies SNPs with significantly higher Fst than expected, and ‘lower’ identifies SNPs with significantly lower Fst than expected. The default ‘two’ option performs a two-tailed test.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>correction_method</strong> (<em>Literal</em><em>[</em><em>&quot;bonferroni&quot;</em><em>, </em><em>&quot;fdr_bh&quot;</em><em>] </em><em>| </em><em>None</em>) – Multiple testing correction method.
+If None, no adjustment is applied.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Significance level for adjusted P-values. Defaults to 0.05.</p></li>
+<li><p><strong>n_bootstraps</strong> (<em>int</em>) – Number of bootstrap replicates. Defaults to 1000.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of CPU threads for parallelization. Defaults to 1.</p></li>
+<li><p><strong>alternative</strong> (<em>Literal</em><em>[</em><em>&quot;two&quot;</em><em>, </em><em>&quot;upper&quot;</em><em>, </em><em>&quot;lower&quot;</em><em>]</em>) – Type of test to perform.
+“two” for two-tailed, “upper” for testing higher than expected, and “lower” for lower than expected.
+Defaults to “two”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing a DataFrame of Fst outliers (with contributing
+population pairs as a column) and a DataFrame of adjusted (or unadjusted) P-values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[pd.DataFrame, pd.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">detect_fst_outliers_dbscan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">correction_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/fst_outliers.html#FstOutliers.detect_fst_outliers_dbscan"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Detect Fst outliers from SNP data using DBSCAN.</p>
+<p>This method detects Fst outliers from SNP data using DBSCAN clustering. Outliers are identified based on the distribution of Fst values between population pairs. The method returns a DataFrame containing the Fst outliers and contributing population pairs, as well as a DataFrame containing the adjusted or unadjusted P-values, depending on whether a multiple testing correction method was specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>correction_method</strong> (<em>str</em><em>, </em><em>optional</em>) – Multiple testing correction method that performs P-value adjustment, ‘bonf’ (Bonferroni) or ‘fdr’ (FDR B-H). If not specified, no correction or P-value adjustment is applied. Defaults to None.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Significance level for multiple test correction (with adjusted P-values). Defaults to 0.05.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of CPU threads to use for parallelization. If set to -1, all available CPU threads are used. Defaults to 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A DataFrame containing the Fst outliers and contributing population pairs, and a DataFrame containing the adjusted P-values if <code class="docutils literal notranslate"><span class="pre">correction_method</span></code> was provided or the un-adjusted P-values otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[pd.DataFrame, pd.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-popgenstats-summary-statistics-module">
+<h2>snpio.popgenstats.summary_statistics module<a class="headerlink" href="#snpio-popgenstats-summary-statistics-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.popgenstats.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">SummaryStatistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alignment_012</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/summary_statistics.html#SummaryStatistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Class for calculating summary statistics from genotype data.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">calculate_summary_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/summary_statistics.html#SummaryStatistics.calculate_summary_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate a suite of summary statistics for SNP data.</p>
+<p>This method calculates a suite of summary statistics for SNP data, including observed heterozygosity (Ho), expected heterozygosity (He), nucleotide diversity (Pi), and Fst between populations. Summary statistics are calculated both overall and per population.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_bootstraps</strong> (<em>int</em>) – Number of bootstrap replicates to use for estimating variance of Fst per SNP. If 0, then bootstrapping is not used and confidence intervals are estimated from the data. Defaults to 0.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of parallel jobs. If set to -1, all available CPU threads are used. Defaults to 1.</p></li>
+<li><p><strong>save_plots</strong> (<em>bool</em>) – Whether to save plots of the summary statistics. In any case, a dictionary of summary statistics is returned. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing summary statistics per population and overall.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">expected_heterozygosity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/summary_statistics.html#SummaryStatistics.expected_heterozygosity"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate expected heterozygosity (He) for each locus.</p>
+<p>Expected heterozygosity (He) is the expected proportion of heterozygous individuals under Hardy-Weinberg equilibrium.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An array containing expected heterozygosity values for each locus.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">expected_heterozygosity_per_population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/summary_statistics.html#SummaryStatistics.expected_heterozygosity_per_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate expected heterozygosity (He) for each locus per population.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>return_n</strong> (<em>bool</em>) – If True, also return the number of non-missing individuals per locus.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary where keys are population IDs and values are pandas Series containing the expected heterozygosity values per locus for that population. If return_n is True, returns a tuple (he, n_individuals) per population.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">nucleotide_diversity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/summary_statistics.html#SummaryStatistics.nucleotide_diversity"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate nucleotide diversity (Pi) for each locus.</p>
+<p>Nucleotide diversity (Pi) is the average number of nucleotide differences per site between two sequences.</p>
+<p class="rubric">Notes</p>
+<p>A bias correction is applied in the calculation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An array containing nucleotide diversity values for each locus.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">nucleotide_diversity_per_population</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/summary_statistics.html#SummaryStatistics.nucleotide_diversity_per_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate nucleotide diversity (Pi) for each locus per population.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary where keys are population IDs and values are pandas Series containing the nucleotide diversity values per locus for that population.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">observed_heterozygosity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/summary_statistics.html#SummaryStatistics.observed_heterozygosity"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate observed heterozygosity (Ho) for each locus.</p>
+<p>Observed heterozygosity (Ho) is defined as the proportion of heterozygous individuals at a given locus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An array containing observed heterozygosity values for each locus.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">observed_heterozygosity_per_population</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/summary_statistics.html#SummaryStatistics.observed_heterozygosity_per_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate observed heterozygosity (Ho) for each locus per population.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary where keys are population IDs and values are pandas Series containing the observed heterozygosity values per locus for that population.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">weir_cockerham_fst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/popgenstats/summary_statistics.html#SummaryStatistics.weir_cockerham_fst"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate pairwise per-population Weir and Cockerham’s Fst.</p>
+<p>This method calculates pairwise Weir and Cockerham’s Fst between populations. Fst is a measure of population differentiation due to genetic structure. Fst values range from 0 to 1, where 0 indicates no genetic differentiation and 1 indicates complete differentiation. Bootstrapping can be used to estimate the variance of Fst per SNP.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_bootstraps</strong> (<em>int</em>) – Number of bootstrap replicates. Default is 0 (no bootstrapping).</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of parallel jobs for bootstrapping. Default is -1 (use all available cores).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If n_bootstraps is 0, returns a dictionary where keys are population pairs and values are pandas Series of Fst values per locus. If n_bootstraps &gt; 0, returns a dictionary where keys are population pairs and values are numpy arrays with shape (n_loci, n_bootstraps).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="snpio.utils.html" class="btn btn-neutral float-left" title="snpio.utils package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

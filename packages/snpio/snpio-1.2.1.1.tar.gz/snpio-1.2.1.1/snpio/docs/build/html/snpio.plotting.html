@@ -1,0 +1,901 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.plotting package &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=859da57e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=ca842793"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="snpio.io package" href="snpio.io.html" />
+    <link rel="prev" title="snpio.filtering package" href="snpio.filtering.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SNPio
+              <img src="_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">snpio</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="snpio.html">snpio package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="snpio.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="snpio.filtering.html">snpio.filtering package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">snpio.plotting package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.io.html">snpio.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.analysis.html">snpio.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.read_input.html">snpio.read_input package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.utils.html">snpio.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.popgenstats.html">snpio.popgenstats package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="snpio.html#module-snpio">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">snpio</a></li>
+          <li class="breadcrumb-item"><a href="snpio.html">snpio package</a></li>
+      <li class="breadcrumb-item active">snpio.plotting package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/btmartin721/SNPio/blob/master/docs/source/snpio.plotting.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="snpio-plotting-package">
+<h1>snpio.plotting package<a class="headerlink" href="#snpio-plotting-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="snpio-plotting-plotting-module">
+<h2>snpio.plotting.plotting module<a class="headerlink" href="#snpio-plotting-plotting-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.plotting.plotting.</span></span><span class="sig-name descname"><span class="pre">Plotting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_title_fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">despine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class containing various methods for generating plots based on genotype data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">genotype_data</span></span></dt>
+<dd><p>Initialized GenotypeData object containing necessary data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>GenotypeData</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">prefix</span></span></dt>
+<dd><p>Prefix string for output directories and files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">output_dir</span></span></dt>
+<dd><p>Output directory for saving plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">show</span></span></dt>
+<dd><p>Whether to display the plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_format</span></span></dt>
+<dd><p>Format in which to save the plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">dpi</span></span></dt>
+<dd><p>Resolution of the saved plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_fontsize</span></span></dt>
+<dd><p>Font size for the plot labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_title_fontsize</span></span></dt>
+<dd><p>Font size for the plot titles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">despine</span></span></dt>
+<dd><p>Whether to remove the top and right plot axis spines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">verbose</span></span></dt>
+<dd><p>Whether to enable verbose logging.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">debug</span></span></dt>
+<dd><p>Whether to enable debug logging.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">logger</span></span></dt>
+<dd><p>Logger object for logging messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">boolean_filter_methods</span></span></dt>
+<dd><p>List of boolean filter methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">missing_filter_methods</span></span></dt>
+<dd><p>List of missing data filter methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">maf_filter_methods</span></span></dt>
+<dd><p>List of MAF filter methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">mpl_params</span></span></dt>
+<dd><p>Default Matplotlib parameters for the plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_sankey_filtering_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_sankey_filtering_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot a Sankey diagram for the filtering report.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_pca</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_pca"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot a PCA scatter plot with 2 or 3 dimensions, colored by missing data proportions, and labeled by population with symbols for each sample.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_summary_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_summary_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot summary statistics per sample and per population on the same figure. The summary statistics are plotted as lines for each statistic (Ho, He, Pi, Fst).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_dapc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_dapc"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot a DAPC scatter plot. with 2 or 3 dimensions, colored by population, and labeled by population with symbols for each sample.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_fst_heatmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Plot a heatmap of Fst values between populations, sorted by highest Fst and displaying only the lower triangle.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_fst_outliers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_fst_outliers"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot a heatmap of Fst values for outlier SNPs, highlighting contributing population pairs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_d_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_d_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create plots for D-statistics with multiple test corrections.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_set_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Set the logger object based on the debug attribute. If debug is True, the logger will log debug messages.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_get_attribute_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting._get_attribute_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Determine the value for an attribute based on the provided argument, genotype_data attribute, or default value. If a value is provided during initialization, it is used. Otherwise, the genotype_data attribute is used if available. If neither is available, the default value is used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_plot_summary_statistics_per_sample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting._plot_summary_statistics_per_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot summary statistics per sample. If an axis is provided, the plot is drawn on that axis.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_plot_summary_statistics_per_population</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting._plot_summary_statistics_per_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot summary statistics per population. If an axis is provided, the plot is drawn on that axis.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_plot_summary_statistics_per_population_grid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting._plot_summary_statistics_per_population_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot summary statistics per population using a Seaborn PairGrid plot. Not yet implemented.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_plot_summary_statistics_per_sample_grid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting._plot_summary_statistics_per_sample_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot summary statistics per sample using a Seaborn PairGrid plot. Not yet implemented.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_d_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_d_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create plots for D-statistics with multiple test corrections.</p>
+<p>This method creates three plots:
+1. Bar plot of significant D-statistic counts (raw, Bonferroni, FDR-BH).
+2. Distribution plot of D-statistic values using raw p-values for comparison.
+3. Box plot of D-statistics by population combination.</p>
+<p>The method saves the plots to the output directory and displays them if <code class="docutils literal notranslate"><span class="pre">show</span></code> is True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame containing D-statistics and p-values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_dapc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dapc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alignment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popmap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_dapc"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot a DAPC scatter plot.</p>
+<p>This method plots a DAPC scatter plot with 2 or 3 dimensions, colored by population, and labeled by population with symbols for each sample. The plot is saved to a file. If the <cite>show</cite> attribute is True, the plot is displayed. The plot is saved to the <cite>output_dir</cite> directory with the filename: <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;_output/gtdata/plots/dapc_plot.{plot_format}</span></code>. The plot is saved in the format specified by the <code class="docutils literal notranslate"><span class="pre">plot_format</span></code> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dapc</strong> (<em>sklearn.discriminant_analysis.LinearDiscriminantAnalysis</em>) – The fitted DAPC object used for dimensionality reduction and transformation.</p></li>
+<li><p><strong>alignment</strong> (<em>numpy.ndarray</em>) – The genotype data in the form of a numpy array.</p></li>
+<li><p><strong>popmap</strong> (<em>pd.DataFrame</em>) – The DataFrame containing the population mapping information, with columns “SampleID” and “PopulationID”.</p></li>
+<li><p><strong>dimensions</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of dimensions to plot (2 or 3). Defaults to 2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The DAPC scatter plot is saved to a file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised if the <cite>dimensions</cite> argument is neither 2 nor 3.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The DAPC object must be fitted before calling this method.</p></li>
+<li><p>The DAPC object must be fitted using the genotype data provided in the <cite>alignment</cite> argument.</p></li>
+<li><p>The <cite>popmap</cite> DataFrame must contain the population mapping information with columns “SampleID” and “PopulationID”.</p></li>
+<li><p>The <cite>dimensions</cite> argument must be either 2 or 3.</p></li>
+<li><p>The plot is saved to a file in the <cite>output_dir</cite> directory.</p></li>
+<li><p>The plot is displayed if the <cite>show</cite> attribute is True.</p></li>
+<li><p>The plot is saved in the format specified by the <cite>plot_format</cite> attribute.</p></li>
+<li><p>The plot is saved with the filename: <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;_output/gtdata/plots/dapc_plot.{plot_format}</span></code>.</p></li>
+<li><p>The plot is colored by population and labeled by population with symbols for each sample.</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_dist_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">palette</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'coolwarm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Distance</span> <span class="pre">Matrix'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_dist_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot a distance matrix.</p>
+<p>This method plots a distance matrix. A distance matrix is a heatmap plot that shows the pairwise distances between populations. The plot is saved to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The input dataframe containing the distance matrix data.</p></li>
+<li><p><strong>pvals</strong> (<em>pd.DataFrame</em><em> | </em><em>None</em>) – The input dataframe containing the p-values for the distance matrix data. If not provided, the p-values will not be plotted. Defaults to None.</p></li>
+<li><p><strong>palette</strong> (<em>str</em>) – The color palette to use for the heatmap plot. Defaults to “coolwarm”.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – The title of the plot. Defaults to “Distance Matrix”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plot is saved to a file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised if the input dataframes are empty.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The input dataframe must contain the distance matrix data.</p></li>
+<li><p>The input dataframe must contain the p-values for the distance matrix data.</p></li>
+<li><p>The plot will be saved in the ‘&lt;prefix&gt;_output/gtdata/plots’ directory.</p></li>
+<li><p>Supported image formats include: “pdf”, “svg”, “png”, and “jpeg” (or “jpg”).</p></li>
+<li><p>The distance matrix is a heatmap plot that shows the pairwise distances between populations.</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_filter_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_filter_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot the filter report.</p>
+<p>This method plots the filter report data. The filter report data contains the proportion of loci removed and kept for each filtering threshold. The plot is saved to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>pd.DataFrame</em>) – The dataframe containing the filter report data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plot is saved to a file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised if the input dataframe is empty.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The input dataframe must contain the filter report data.</p></li>
+<li><p>The input dataframe must contain the filter report data for the removed and kept loci.</p></li>
+<li><p>The input dataframe must contain the filter report data for the filtering threshold.</p></li>
+<li><p>The input dataframe must contain the filter report data for the filtering method.</p></li>
+<li><p>The input dataframe must contain the filter report data for the filtering step.</p></li>
+<li><p>The input dataframe must contain the filter report data for the removed and kept loci counts.</p></li>
+<li><p>The input dataframe must contain the filter report data for the removed and kept loci proportions.</p></li>
+<li><p>The input dataframe must contain the filter report data for the filtering thresholds.</p></li>
+<li><p>The input dataframe must contain the filter report data for the missing data threshold.</p></li>
+<li><p>The input dataframe must contain the filter report data for the MAF threshold.</p></li>
+<li><p>The input dataframe must contain the filter report data for the MAC threshold.</p></li>
+<li><p>The input dataframe must contain the filter report data for the boolean threshold.</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_fst_outliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outlier_snps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_fst_outliers"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create a heatmap of Fst values for outlier SNPs.</p>
+<p>This method creates a heatmap of Fst values for outlier SNPs, highlighting contributing population pairs. The heatmap is sorted by SNP index and population pair, and only the lower triangle is displayed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>outlier_snps</strong> (<em>pd.DataFrame</em>) – DataFrame containing Fst values and Contributing_Pairs for outlier SNPs.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_gt_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_gt_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot the distribution of genotype counts.</p>
+<p>This method plots the distribution of genotype counts as a bar plot. The bar plot shows the genotype counts for each genotype. The plot is saved to a file. If the <cite>show</cite> attribute is True, the plot is displayed. The plot is saved to the <cite>output_dir</cite> directory with the filename: <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;_output/gtdata/plots/genotype_distribution.{plot_format}</span></code>. The plot is saved in the format specified by the <cite>plot_format</cite> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The input dataframe containing the genotype counts.</p></li>
+<li><p><strong>annotation_size</strong> (<em>int</em><em>, </em><em>optional</em>) – The font size for count annotations. Defaults to 15.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plot is saved to a file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised if the input dataframe is empty.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The input dataframe must contain the genotype counts.</p></li>
+<li><p>The input dataframe must have the genotype counts as columns.</p></li>
+<li><p>The input dataframe must have the genotype counts as rows.</p></li>
+<li><p>The input dataframe must have the genotype counts as values.</p></li>
+<li><p>The input dataframe must have the genotype counts as integers.</p></li>
+<li><p>The input dataframe must have the genotype counts as strings.</p></li>
+<li><p>The input dataframe must have the genotype counts as IUPAC codes.</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_pca</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pca</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alignment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popmap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_pca"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot a PCA scatter plot.</p>
+<p>This method plots a PCA scatter plot with 2 or 3 dimensions, colored by population, and labeled by population with symbols for each sample. The plot is saved to a file. If the <cite>show</cite> attribute is True, the plot is displayed. The plot is saved to the <cite>output_dir</cite> directory with the filename: <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;_output/gtdata/plots/pca_plot.{plot_format}</span></code>. The plot is saved in the format specified by the <code class="docutils literal notranslate"><span class="pre">plot_format</span></code> attribute.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The PCA object must be fitted before calling this method.</p></li>
+<li><p>The PCA object must be fitted using the genotype data provided in the <cite>alignment</cite> argument.</p></li>
+<li><p>The <cite>popmap</cite> DataFrame must contain the population mapping information with columns “SampleID” and “PopulationID”.</p></li>
+<li><p>The <cite>dimensions</cite> argument must be either 2 or 3.</p></li>
+<li><p>The plot is saved to a file in the <cite>output_dir</cite> directory.</p></li>
+<li><p>The plot is displayed if the <cite>show</cite> attribute is True.</p></li>
+<li><p>The plot is saved in the format specified by the <cite>plot_format</cite> attribute.</p></li>
+<li><p>The plot is saved with the filename: <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;_output/gtdata/plots/pca_plot.{plot_format}</span></code>.</p></li>
+<li><p>The plot is colored by population and labeled by population with symbols for each sample.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pca</strong> (<em>sklearn.decomposition.PCA</em>) – The fitted PCA object.
+The fitted PCA object used for dimensionality reduction and transformation.</p></li>
+<li><p><strong>alignment</strong> (<em>numpy.ndarray</em>) – The genotype data used for PCA.
+The genotype data in the form of a numpy array.</p></li>
+<li><p><strong>popmap</strong> (<em>pd.DataFrame</em>) – The DataFrame containing the population mapping information, with columns “SampleID” and “PopulationID”.</p></li>
+<li><p><strong>dimensions</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of dimensions to plot (2 or 3). Defaults to 2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised if the <cite>dimensions</cite> argument is neither 2 nor 3.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The PCA scatter plot is saved to a file.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_performance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resource_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#8C56E3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(18,</span> <span class="pre">10)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_performance"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plots the performance metrics: CPU Load, Memory Footprint, and Execution Time using boxplots.</p>
+<p>This function takes a dictionary of performance data and plots the metrics for each method using boxplots to show variability. The resulting plots are saved in a file of the specified format. The plot shows the CPU Load, Memory Footprint, and Execution Time for each method. The plot is colored based on the specified color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>resource_data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>float</em><em>]</em><em>]</em><em>]</em>) – Dictionary with performance data. Keys are method names, and values are lists of dictionaries with keys ‘cpu_load’, ‘memory_footprint’, and ‘execution_time’.</p></li>
+<li><p><strong>color</strong> (<em>str</em><em>, </em><em>optional</em>) – Color to be used in the plot. Should be a valid color string. Defaults to “#8C56E3”.</p></li>
+<li><p><strong>figsize</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>optional</em>) – Size of the figure. Should be a tuple of 2 integers. Defaults to (18, 10).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None. The function saves the plot to a file.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised if the input data is not a dictionary.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The performance data should be in the format of a dictionary with method names as keys and lists of dictionaries as values. Each dictionary should have keys ‘cpu_load’, ‘memory_footprint’, and ‘execution_time’.</p></li>
+<li><p>The plot will be saved in the ‘&lt;prefix&gt;_output/gtdata/plots/performance’ directory.</p></li>
+<li><p>Supported image formats include: “pdf”, “svg”, “png”, and “jpeg” (or “jpg”).</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_pop_counts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_pop_counts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot the population counts.</p>
+<p>This function takes a series of population data and plots the counts and proportions of each population ID. The resulting plot is saved to a file of the specified format. The plot shows the counts and proportions of each population ID. The plot is colored based on the median count and proportion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>populations</strong> (<em>pd.Series</em>) – The series containing population data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plot is saved to a file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised if the input data is not a pandas Series.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The population data should be in the format of a pandas Series.</p></li>
+<li><p>The plot will be saved in the ‘&lt;prefix&gt;_output/gtdata/plots’ directory.</p></li>
+<li><p>Supported image formats include: “pdf”, “svg”, “png”, and “jpeg” (or “jpg”).</p></li>
+<li><p>The plot will be colored based on the median count and proportion.</p></li>
+<li><p>The plot will show the counts and proportions of each population ID.</p></li>
+<li><p>The plot will show the counts and proportions of each population ID.</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_sankey_filtering_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_sankey_filtering_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot a Sankey diagram for the filtering report.</p>
+<p>This method plots a Sankey diagram for the filtering report. The Sankey diagram shows the flow of loci through the filtering steps. The loci are filtered based on the missing data proportion, MAF, MAC, and other filtering thresholds. The Sankey diagram shows the number of loci kept and removed at each step. The Sankey diagram is saved to a file. If the <cite>show</cite> attribute is True, the plot is displayed. The plot is saved to the <cite>output_dir</cite> directory with the filename: <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;_output/nremover/plots/sankey_plot_{thresholds}.{plot_format}</span></code>. The plot is saved in the format specified by the <code class="docutils literal notranslate"><span class="pre">plot_format</span></code> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The input DataFrame containing the filtering report.</p></li>
+<li><p><strong>search_mode</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the Sankey diagram is being plotted in search mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plot is saved to a file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – Raised if the input DataFrame is empty.</p></li>
+<li><p><strong>ValueError</strong> – Raised if multiple threshold combinations are detected when attempting to plot the Sankey diagram.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Sankey diagram shows the flow of loci through the filtering steps.</p>
+<p>The loci are filtered based on the missing data proportion, MAF, MAC, and other filtering thresholds.</p>
+<p>The Sankey diagram shows the number of loci kept and removed at each step.</p>
+<p>The Sankey diagram is saved to a file in the <cite>output_dir</cite> directory.</p>
+<p>The Sankey diagram is displayed if the <cite>show</cite> attribute is True.</p>
+<p>The Sankey diagram is saved in the format specified by the <cite>plot_format</cite> attribute.</p>
+<p>The Sankey diagram is saved with the filename: <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;_output/nremover/plots/sankey_plot_{thresholds}.{plot_format}</span></code>.</p>
+<p>The Sankey diagram is colored based on the kept and removed loci.</p>
+<p>The kept loci are colored green, and the removed loci are colored red.</p>
+<p>The Sankey diagram is plotted using the Bokeh plotting library.</p>
+<p>The Sankey diagram is plotted using the Holoviews library.</p>
+<p>The Sankey diagram is plotted using the Bokeh extension for Holoviews.</p>
+<p>The Sankey diagram is plotted using the <cite>hv.Sankey</cite> method from Holoviews.</p>
+<p>The Sankey diagram is plotted with edge labels showing the number of loci kept and removed at each step.</p>
+<p>The Sankey diagram is plotted with a common “Removed” node for the removed loci at each step.</p>
+<p>The Sankey diagram is plotted with a common “Kept” node for the kept loci moving to the next filter.</p>
+<p>The Sankey diagram is plotted with a common “Unfiltered” node for the initial unfiltered loci.</p>
+<p>The Sankey diagram is plotted with a common “Kept” node for the final kept loci.</p>
+<p>The Sankey diagram is plotted with a common “Removed” node for the final removed loci.</p>
+</div>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">VCFReader</span><span class="p">,</span> <span class="n">NRemover</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;example.vcf&quot;</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="s2">&quot;popmap.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrm</span> <span class="o">=</span> <span class="n">NRemover</span><span class="p">(</span><span class="n">gd</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrm</span><span class="o">.</span><span class="n">filter_missing</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_mac</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">filter_missing_pop</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">filter_singletons</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">filter_monomorphic</span><span class="p">()</span><span class="o">.</span><span class="n">filter_biallelic</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrm</span><span class="o">.</span><span class="n">plot_sankey_filtering_report</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_search_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_combined</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_search_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot and save the filtering results based on the available data.</p>
+<p>This method plots the filtering results based on the available data. The filtering results are plotted for the per-sample and per-locus missing data proportions, MAF, and boolean filtering thresholds. The plots are saved to files in the output directory. If the <cite>show</cite> attribute is True, the plots are displayed. The plots are saved in the format specified by the <cite>plot_format</cite> attribute into the <cite>output_dir</cite> directory in the format: <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;_output/gtdata/plots/filtering_results_{method}.{plot_format}</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df_combined</strong> (<em>pd.DataFrame</em>) – The input dataframe containing the filtering results.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised if the input dataframe is empty.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The input dataframe must contain the filtering results.</p></li>
+<li><p>The input dataframe must contain the filtering results for the per-sample and per-locus missing data proportions.</p></li>
+<li><p>The input dataframe must contain the filtering results for the MAF and boolean filtering thresholds.</p></li>
+<li><p>The input dataframe must contain the filtering results for the removed and kept loci proportions.</p></li>
+<li><p>The input dataframe must contain the filtering results for the removed and kept loci counts.</p></li>
+<li><p>The input dataframe must contain the filtering results for the filtering method.</p></li>
+<li><p>The input dataframe must contain the filtering results for the filtering step.</p></li>
+<li><p>The input dataframe must contain the filtering results for the filtering thresholds.</p></li>
+<li><p>The input dataframe must contain the filtering results for the removed and kept loci counts.</p></li>
+<li><p>The input dataframe must contain the filtering results for the removed and kept loci proportions.</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_summary_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summary_statistics</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.plot_summary_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot summary statistics per sample and per population.</p>
+<p>This method plots summary statistics per sample and per population on the same figure. The summary statistics are plotted as lines for each statistic (Ho, He, Pi, Fst). The method also plots summary statistics per sample and per population using Seaborn PairGrid plots. The method saves the plots to the output directory and displays them if <code class="docutils literal notranslate"><span class="pre">show</span></code> is True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>summary_statistics</strong> (<em>dict</em>) – Dictionary containing summary statistics for plotting.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">run_pca</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1088</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">700</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.run_pca"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Runs PCA and makes scatterplot with colors showing missingness.</p>
+<p>Genotypes are plotted as separate shapes per population and colored according to missingness per individual.</p>
+<p>This function is run at the end of each imputation method, but can be run independently to change plot and PCA parameters such as <code class="docutils literal notranslate"><span class="pre">n_axes=3</span></code> or <code class="docutils literal notranslate"><span class="pre">scale=True</span></code> for full customization. Setting <code class="docutils literal notranslate"><span class="pre">n_axes=3</span></code> will make a 3D PCA plot.</p>
+<p>PCA (principal component analysis) scatterplot can have either two or three axes, set with the n_axes parameter.</p>
+<p>The plot is saved as both an interactive HTML file and as a static image. Each population is represented by point shapes. The interactive plot has associated metadata when hovering over the points.</p>
+<p>Files are saved to a reports directory as &lt;prefix&gt;_output/imputed_pca.&lt;plot_format|html&gt;. Supported image formats include: “pdf”, “svg”, “png”, and “jpeg” (or “jpg”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_components</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of principal components to include in the PCA. Defaults to None (all components).</p></li>
+<li><p><strong>center</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, centers the genotypes to the mean before doing the PCA. If False, no centering is done. Defaults to True.</p></li>
+<li><p><strong>scale</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, scales the genotypes to unit variance before doing the PCA. If False, no scaling is done. Defaults to False.</p></li>
+<li><p><strong>n_axes</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of principal component axes to plot. Must be set to either 2 or 3. If set to 3, a 3-dimensional plot will be made. Defaults to 2.</p></li>
+<li><p><strong>point_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Point size for scatterplot points. Defaults to 15.</p></li>
+<li><p><strong>bottom_margin</strong> (<em>int</em><em>, </em><em>optional</em>) – Adjust bottom margin. If whitespace cuts off some of your plot, lower the corresponding margins. The default corresponds to that of plotly update_layout(). Defaults to 0.</p></li>
+<li><p><strong>top_margin</strong> (<em>int</em><em>, </em><em>optional</em>) – Adjust top margin. If whitespace cuts off some of your plot, lower the corresponding margins. The default corresponds to that of plotly update_layout(). Defaults to 0.</p></li>
+<li><p><strong>left_margin</strong> (<em>int</em><em>, </em><em>optional</em>) – Adjust left margin. If whitespace cuts off some of your plot, lower the corresponding margins. The default corresponds to that of plotly update_layout(). Defaults to 0.</p></li>
+<li><p><strong>right_margin</strong> (<em>int</em><em>, </em><em>optional</em>) – Adjust right margin. If whitespace cuts off some of your plot, lower the corresponding margins. The default corresponds to that of plotly update_layout(). Defaults to 0.</p></li>
+<li><p><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) – Width of plot space. If your plot is cut off at the edges, even after adjusting the margins, increase the width and height. Try to keep the aspect ratio similar. Defaults to 1088.</p></li>
+<li><p><strong>height</strong> (<em>int</em><em>, </em><em>optional</em>) – Height of plot space. If your plot is cut off at the edges, even after adjusting the margins, increase the width and height. Try to keep the aspect ratio similar. Defaults to 700.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The PCA is run on the genotype data. Missing data is imputed using K-nearest-neighbors (per-sample) before running the PCA. The PCA is run using the sklearn.decomposition.PCA class.</p>
+<p>The PCA data is saved as a numpy array with shape (n_samples, n_components).</p>
+<p>The PCA object is saved as a sklearn.decomposition.PCA object. Any of the sklearn.decomposition.PCA attributes can be accessed from this object. See the sklearn documentation.</p>
+<p>The explained variance ratio can be calculated from the PCA object.</p>
+<p>The plot is saved as both an interactive HTML file and as a static image. Each population is represented by point shapes. The interactive plot has associated metadata when hovering over the points.</p>
+<p>Files are saved to a reports directory as &lt;prefix&gt;_output/imputed_pca.&lt;plot_format|html&gt;. Supported image formats include: “pdf”, “svg”, “png”, and “jpeg” (or “jpg).</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>PCA data as a numpy array with shape (n_samples, n_components).</p>
+<p>sklearn.decomposision.PCA: Scikit-learn PCA object from sklearn.decomposision.PCA. Any of the sklearn.decomposition.PCA attributes can be accessed from this object. See sklearn documentation.</p>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If n_axes is not set to 2 or 3.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">Plotting</span><span class="p">,</span> <span class="n">VCFReader</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="s2">&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span><span class="p">,</span> <span class="n">popmap</span><span class="o">=</span><span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span><span class="p">,</span> <span class="n">force_popmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Define the plotting object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plotting</span> <span class="o">=</span> <span class="n">Plotting</span><span class="p">(</span><span class="n">gd</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Run the PCA and get the components and PCA object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">components</span><span class="p">,</span> <span class="n">pca</span> <span class="o">=</span> <span class="n">plotting</span><span class="o">.</span><span class="n">run_pca</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Calculate and print explained variance ratio</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">explvar</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">explvar</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Output: [0.123, 0.098, 0.087, ...]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">visualize_missingness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontal_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bar_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gray'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heatmap_palette</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'magma'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/plotting/plotting.html#Plotting.visualize_missingness"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Make multiple plots to visualize missing data.</p>
+<p>This method makes multiple plots to visualize missing data. The plots include per-individual and per-locus missing data proportions, per-population + per-locus missing data proportions, per-population missing data proportions, and per-individual and per-population missing data proportions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The plots are saved in the ‘&lt;prefix&gt;_output/gtdata/plots’ directory.</p></li>
+<li><p>Supported image formats include: “pdf”, “svg”, “png”, and “jpeg” (or “jpg”).</p></li>
+<li><p>The heatmap plot uses the seaborn library. The heatmap palette can be set using the heatmap_palette parameter. The default palette is ‘magma’.</p></li>
+<li><p>The barplots use the matplotlib library. The color of the bars can be set using the bar_color parameter. The default color is ‘gray’.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – DataFrame with snps to visualize.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – Prefix to use for the output files. If None, the prefix is set to the input filename. Defaults to None.</p></li>
+<li><p><strong>zoom</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, zooms in to the missing proportion range on some of the plots. If False, the plot range is fixed at [0, 1]. Defaults to False.</p></li>
+<li><p><strong>horizontal_space</strong> (<em>float</em><em>, </em><em>optional</em>) – Set width spacing between subplots. If your plot are overlapping horizontally, increase horizontal_space. If your plots are too far apart, decrease it. Defaults to 0.6.</p></li>
+<li><p><strong>vertical_space</strong> (<em>float</em><em>, </em><em>optioanl</em>) – Set height spacing between subplots. If your plots are overlapping vertically, increase vertical_space. If your plots are too far apart, decrease it. Defaults to 0.6.</p></li>
+<li><p><strong>bar_color</strong> (<em>str</em><em>, </em><em>optional</em>) – Color of the bars on the non-stacked barplots. Can be any color supported by matplotlib. See matplotlib.pyplot.colors documentation. Defaults to ‘gray’.</p></li>
+<li><p><strong>heatmap_palette</strong> (<em>str</em><em>, </em><em>optional</em>) – Palette to use for heatmap plot. Can be any palette supported by seaborn. See seaborn documentation. Defaults to ‘magma’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns the missing data proportions for per-individual, per-locus, per-population + per-locus, per-population, and per-individual + per-population.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the input data is not a pandas DataFrame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="snpio.filtering.html" class="btn btn-neutral float-left" title="snpio.filtering package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="snpio.io.html" class="btn btn-neutral float-right" title="snpio.io package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

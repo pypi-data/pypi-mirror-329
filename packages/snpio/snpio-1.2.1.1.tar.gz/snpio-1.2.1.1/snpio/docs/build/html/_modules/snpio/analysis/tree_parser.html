@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.analysis.tree_parser &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.analysis.tree_parser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.analysis.tree_parser</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">toytree</span> <span class="k">as</span> <span class="nn">tt</span>
+
+<span class="kn">from</span> <span class="nn">snpio.read_input.genotype_data</span> <span class="kn">import</span> <span class="n">GenotypeData</span>
+
+
+<div class="viewcode-block" id="TreeParser">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.tree_parser.TreeParser">[docs]</a>
+<span class="k">class</span> <span class="nc">TreeParser</span><span class="p">(</span><span class="n">GenotypeData</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;TreeParser class for reading and manipulating phylogenetic trees.</span>
+
+<span class="sd">    This class provides methods for reading, writing, and manipulating phylogenetic trees. The TreeParser class inherits from the GenotypeData class and provides additional functionality for working with phylogenetic trees. The TreeParser class can read phylogenetic trees from Newick or NEXUS format files, calculate basic statistics for the tree, extract subtrees, prune the tree, reroot the tree, and calculate pairwise distance matrices.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; tp = TreeParser(</span>
+<span class="sd">        ...     genotype_data=gd_filt,</span>
+<span class="sd">        ...     treefile=&quot;snpio/example_data/trees/test.tre&quot;,</span>
+<span class="sd">        ...     qmatrix=&quot;snpio/example_data/trees/test.iqtree&quot;,</span>
+<span class="sd">        ...     siterates=&quot;snpio/example_data/trees/test14K.rate&quot;,</span>
+<span class="sd">        ...     show_plots=True,</span>
+<span class="sd">        ...     verbose=True,</span>
+<span class="sd">        ...     debug=False,</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; tree = tp.read_tree()</span>
+<span class="sd">        &gt;&gt;&gt; print(tp.tree_stats())</span>
+<span class="sd">        &gt;&gt;&gt; tp.reroot_tree(&quot;~EA&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(tp.get_distance_matrix())</span>
+<span class="sd">        &gt;&gt;&gt; print(tp.qmat)</span>
+<span class="sd">        &gt;&gt;&gt; print(tp.site_rates)</span>
+<span class="sd">        &gt;&gt;&gt; subtree = tp.get_subtree(&quot;~EA&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; pruned_tree = tp.prune_tree(&quot;~ON&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(tp.write_tree(subtree, save_path=None))</span>
+<span class="sd">        &gt;&gt;&gt; print(tp.write_tree(pruned_tree, save_path=None)</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        genotype_data (GenotypeData): GenotypeData object containing the SNP data.</span>
+<span class="sd">        treefile (str): Path to the phylogenetic tree file.</span>
+<span class="sd">        qmatrix (str): Path to the Q matrix file.</span>
+<span class="sd">        siterates (str): Path to the site rates file.</span>
+<span class="sd">        verbose (bool): Whether to display verbose output.</span>
+<span class="sd">        debug (bool): Whether to display debug output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">genotype_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">treefile</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">qmatrix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">siterates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the TreeParser object.</span>
+
+<span class="sd">        This class provides methods for reading, writing, and manipulating phylogenetic trees. The TreeParser class inherits from the GenotypeData class and provides additional functionality for working with phylogenetic trees. The TreeParser class can read phylogenetic trees from Newick or NEXUS format files, calculate basic statistics for the tree, extract subtrees, prune the tree, reroot the tree, and calculate pairwise distance matrices.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            genotype_data (Any): GenotypeData object containing the SNP data.</span>
+<span class="sd">            treefile (str): Path to the phylogenetic tree file.</span>
+<span class="sd">            qmatrix (str, optional): Path to the Q matrix file. Defaults to None.</span>
+<span class="sd">            siterates (str, optional): Path to the site rates file. Defaults to None.</span>
+<span class="sd">            verbose (bool, optional): Whether to display verbose output. Defaults to False.</span>
+<span class="sd">            debug (bool, optional): Whether to display debug output. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Initialize the parent class GenotypeData</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+            <span class="n">filetype</span><span class="o">=</span><span class="s2">&quot;tree&quot;</span><span class="p">,</span>
+            <span class="n">popmapfile</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">popmapfile</span><span class="p">,</span>
+            <span class="n">force_popmap</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">force_popmap</span><span class="p">,</span>
+            <span class="n">exclude_pops</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">exclude_pops</span><span class="p">,</span>
+            <span class="n">include_pops</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">include_pops</span><span class="p">,</span>
+            <span class="n">plot_format</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">plot_format</span><span class="p">,</span>
+            <span class="n">prefix</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="n">debug</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">debug</span><span class="p">,</span>
+            <span class="n">plot_fontsize</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">plot_fontsize</span><span class="p">,</span>
+            <span class="n">plot_dpi</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">plot_dpi</span><span class="p">,</span>
+            <span class="n">loci_indices</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">,</span>
+            <span class="n">sample_indices</span><span class="o">=</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">logger</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span> <span class="o">=</span> <span class="n">genotype_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">treefile</span> <span class="o">=</span> <span class="n">treefile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qmatrix</span> <span class="o">=</span> <span class="n">qmatrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">siterates</span> <span class="o">=</span> <span class="n">siterates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qmatrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qmat</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="TreeParser.read_tree">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.tree_parser.TreeParser.read_tree">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tt</span><span class="o">.</span><span class="n">ToyTree</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read Newick or NEXUS-style phylogenetic tree into toytree object.</span>
+
+<span class="sd">        This method reads a phylogenetic tree from a file and returns it as a toytree object. The tree file can be in Newick or NEXUS format. If the tree file is not found or is unreadable, an exception is raised.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            toytree.tree object: The input tree as a toytree object.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If the tree file is not found.</span>
+<span class="sd">            PermissionError: If the tree file exists but is not readable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treefile</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">treefile</span><span class="si">}</span><span class="s2"> not found!&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treefile</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">R_OK</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Tree file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">treefile</span><span class="si">}</span><span class="s2"> is unreadable.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">PermissionError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tt</span><span class="o">.</span><span class="n">tree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treefile</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TreeParser.write_tree">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.tree_parser.TreeParser.write_tree">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_tree</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">:</span> <span class="n">tt</span><span class="o">.</span><span class="n">ToyTree</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">nexus</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the phylogenetic tree to a file.</span>
+
+<span class="sd">        This method saves the phylogenetic tree to a file in Newick or NEXUS format. If the save_path argument is not provided, the tree is returned as a string representation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tree (toytree.tree): The tree object to save.</span>
+<span class="sd">            save_path (str, optional): Path to save the tree file. If not provided (left as None), then a string representation of the tree is returned. Defaults to None.</span>
+<span class="sd">            nexus (bool, optional): Whether to save the tree in NEXUS format.If False, then Newick format is used. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Optional[str]: The string representation of the tree if save_path is None. Otherwise, None is returned.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the input tree is not a toytree object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">tt</span><span class="o">.</span><span class="n">ToyTree</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Input tree must be a toytree object, but got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">tree_str</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">save_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">tree_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tree_str</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tree saved to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TreeParser.tree_stats">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.tree_parser.TreeParser.tree_stats">[docs]</a>
+    <span class="k">def</span> <span class="nf">tree_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate basic statistics for the phylogenetic tree.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: Dictionary containing tree statistics such as the number of tips, number of nodes, and total tree height.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_tree</span><span class="p">()</span>
+
+        <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;num_tips&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">ntips</span><span class="p">,</span>
+            <span class="s2">&quot;num_nodes&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">nnodes</span><span class="p">,</span>
+            <span class="s2">&quot;max_tree_height&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_node_data</span><span class="p">()[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+            <span class="s2">&quot;tree_length&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_node_data</span><span class="p">()[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+            <span class="s2">&quot;is_rooted&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">is_rooted</span><span class="p">(),</span>
+            <span class="s2">&quot;is_bifurcating&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">is_bifurcating</span><span class="p">(),</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tree statistics: </span><span class="si">{</span><span class="n">stats</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">stats</span></div>
+
+
+<div class="viewcode-block" id="TreeParser.get_subtree">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.tree_parser.TreeParser.get_subtree">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_subtree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tt</span><span class="o">.</span><span class="n">ToyTree</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a subtree rooted at a specified node or tip.</span>
+
+<span class="sd">        This method extracts a subtree from the phylogenetic tree rooted at the specified node or tip. The subtree is returned as a toytree object. The regex argument can be a regular expression to match the node or tip name. Regular expressions can be prefixed with &#39;~&#39; to indicate taxa to keep.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            regex (int): Regular expression to match the node or tip name. Regular expressions can be prefixed with &#39;~&#39; to indicate taxa to keep.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            toytree.tree: The subtree rooted at the specified node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_tree</span><span class="p">()</span>
+
+        <span class="n">subtree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">extract_subtree</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Subtree with any tips labeled </span><span class="si">{</span><span class="n">regex</span><span class="si">}</span><span class="s2"> obtained.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">subtree</span></div>
+
+
+<div class="viewcode-block" id="TreeParser.prune_tree">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.tree_parser.TreeParser.prune_tree">[docs]</a>
+    <span class="k">def</span> <span class="nf">prune_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">taxa</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tt</span><span class="o">.</span><span class="n">ToyTree</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prune the tree by removing a set of taxa (leaf nodes).</span>
+
+<span class="sd">        This method prunes the tree by removing a set of taxa (leaf nodes) from the tree. The taxa argument can be a list of taxa names to remove from the tree or a regular expression to match the node or tip name. Regular expressions can be prefixed with &#39;~&#39; to indicate taxa to keep.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            taxa (Union[List[str], str]): List of taxa names to remove from the tree or a regular expression to match the node or tip name. Regular expressions can be prefixed with &#39;~&#39; to indicate taxa to keep.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            toytree.tree: The pruned tree object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_tree</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">taxa</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">pruned_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">drop_tips</span><span class="p">(</span><span class="o">*</span><span class="n">taxa</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pruned_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">drop_tips</span><span class="p">(</span><span class="n">taxa</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pruned tree by removing taxa: </span><span class="si">{</span><span class="n">taxa</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pruned_tree</span></div>
+
+
+<div class="viewcode-block" id="TreeParser.get_distance_matrix">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.tree_parser.TreeParser.get_distance_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_distance_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the pairwise distance matrix between all tips in the tree.</span>
+
+<span class="sd">        This method computes the pairwise distance matrix between all nodes and tips in the phylogenetic tree. The distance matrix is returned as a pandas DataFrame object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: Pairwise distance matrix as a pandas DataFrame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_tree</span><span class="p">()</span>
+
+        <span class="n">dist_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">get_node_distance_matrix</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Computed pairwise distance matrix for the tree.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dist_df</span></div>
+
+
+<div class="viewcode-block" id="TreeParser.reroot_tree">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.tree_parser.TreeParser.reroot_tree">[docs]</a>
+    <span class="k">def</span> <span class="nf">reroot_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">tt</span><span class="o">.</span><span class="n">ToyTree</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reroot the tree at a specific node or tip.</span>
+
+<span class="sd">        This method reroots the tree at a specific node or tip, changing the root of the tree to the specified node. The rerooted tree is returned as a toytree object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node (Union[int, str]): Index of the node or tip where the tree should be rerooted, a regex string to match the node or tip name prefixed by &quot;~&quot;, or a list of node or tip names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            toytree.tree: The rerooted tree.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_tree</span><span class="p">()</span>
+
+        <span class="n">is_list</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+
+        <span class="n">tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span>
+        <span class="n">mrca</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_mrca_node</span><span class="p">(</span><span class="o">*</span><span class="n">node</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_list</span> <span class="k">else</span> <span class="n">tree</span><span class="o">.</span><span class="n">get_mrca_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+        <span class="n">rerooted_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">root</span><span class="p">(</span><span class="n">mrca</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tree rerooted at node </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rerooted_tree</span></div>
+
+
+<div class="viewcode-block" id="TreeParser.load_tree_from_string">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.tree_parser.TreeParser.load_tree_from_string">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_tree_from_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newick_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tt</span><span class="o">.</span><span class="n">ToyTree</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a phylogenetic tree from a Newick string.</span>
+
+<span class="sd">        This method loads a phylogenetic tree from a Newick string and returns it as a toytree object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            newick_str (str): The Newick string representing the tree.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            toytree.tree: The loaded tree object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">tree</span><span class="p">(</span><span class="n">newick_str</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Loaded tree from Newick string.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tree</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_q_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read Q matrix from a file.</span>
+
+<span class="sd">        This method reads the Q matrix from a file and returns it as a pandas DataFrame object. The Q matrix file can be in either comma-separated or whitespace-separated format.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pandas.DataFrame: The Q-matrix as a pandas.DataFrame object.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If the Q matrix file is not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qmatrix</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">qmatrix</span><span class="si">}</span><span class="s2"> not found!&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qmatrix</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+            <span class="n">header</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="s2">&quot;A&quot;</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">else</span> <span class="kc">False</span>
+
+            <span class="c1"># Check if the file is comma or whitespace separated</span>
+            <span class="n">sep</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;,&quot;</span> <span class="k">if</span> <span class="sa">r</span><span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;\s+&quot;</span>
+
+        <span class="n">header_idx</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">header</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="c1"># Read the Q matrix file using pandas.</span>
+        <span class="n">dfq</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qmatrix</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">header_idx</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+            <span class="n">dfq</span> <span class="o">=</span> <span class="n">dfq</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">dfq</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nucs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">]</span>
+            <span class="n">dfq</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">nucs</span>
+            <span class="n">dfq</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">nucs</span>
+        <span class="n">dfq</span> <span class="o">=</span> <span class="n">dfq</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dfq</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dfq</span>
+
+    <span class="k">def</span> <span class="nf">_q_from_iqtree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read Q matrix from an IQ-TREE (.iqtree) file.</span>
+
+<span class="sd">        The IQ-TREE file contains the standard output of an IQ-TREE run and includes the Q-matrix. This method reads the Q matrix from the IQ-TREE file and returns it as a pandas DataFrame object. The IQ-TREE file should contain the rate matrix Q in the format:</span>
+
+<span class="sd">        ```</span>
+<span class="sd">            Rate matrix Q</span>
+
+<span class="sd">            A	C	G	T</span>
+<span class="sd">            -0.000000	0.000000	0.000000	0.000000</span>
+<span class="sd">            0.000000	-0.000000	0.000000	0.000000</span>
+<span class="sd">            0.000000	0.000000	-0.000000	0.000000</span>
+<span class="sd">            0.000000	0.000000	0.000000	-0.000000</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        The header row and index column are optional and can be omitted. The Q matrix values and header should be separated by whitespace or commas, and the matrix should be square with the columns and index in the order A, C, G, T.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            iqfile (str): Path to the IQ-TREE file (.iqtree).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pandas.DataFrame: The Q-matrix as a pandas DataFrame.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If the IQ-TREE file could not be found.</span>
+<span class="sd">            IOError: If the IQ-TREE file could not be read.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">qlines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qmatrix</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="n">foundLine</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">matlinecount</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="s2">&quot;rate matrix q&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                    <span class="n">foundLine</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">foundLine</span><span class="p">:</span>
+                    <span class="n">matlinecount</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">matlinecount</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">qlines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="c1"># Check that the Q matrix was found and read</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">qlines</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rate matrix Q not found in IQ-TREE file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">qmatrix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Populate q matrix with values from the IQ-TREE file</span>
+        <span class="n">qlines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">line</span> <span class="k">else</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">qlines</span><span class="p">]</span>
+
+        <span class="n">dfq</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">qlines</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;nuc&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">])</span>
+        <span class="n">dfq</span> <span class="o">=</span> <span class="n">dfq</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;nuc&quot;</span><span class="p">)</span>
+        <span class="n">dfq</span> <span class="o">=</span> <span class="n">dfq</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dfq</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dfq</span>
+
+    <span class="k">def</span> <span class="nf">_siterates_from_iqtree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read site-specific substitution rates from .rates file.</span>
+
+<span class="sd">        The rates file is an optional output file generated by IQ-TREE (.rate) and contains a table of site-specific rates and rate categories. This method reads the site rates from the IQ-TREE file and returns them as a list of float values. The rates file should contain the site rates in the format:</span>
+
+<span class="sd">        ```</span>
+<span class="sd">        # Any comment lines can be included here.</span>
+<span class="sd">        Site    Rate   Cat C_rate</span>
+<span class="sd">        1       0.0000  1   0.0000</span>
+<span class="sd">        2       0.0000  1   0.0000</span>
+<span class="sd">        3       0.0000  1   0.0000</span>
+<span class="sd">        4       0.0000  1   0.0000</span>
+<span class="sd">        5       0.0000  1   0.0000</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        The site rates should be in the &#39;Rate&#39; column and separated by whitespace or commas.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[float]: List of site-specific substitution rates.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If the rates file could not be found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">siterates</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">siterates</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">siterates</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dfs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">siterates</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;#&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Could not read rates file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">siterates</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span>
+
+        <span class="k">return</span> <span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;Rate&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_validate_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rates</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the number of site rates matches the number of SNPs.</span>
+
+<span class="sd">        This method validates the number of site rates matches the number of SNPs in the alignment. If the number of site rates does not match the number of SNPs, a ValueError is raised.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            rates (pd.DataFrame): Site rates object as a pandas DataFrame</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the number of site rates does not match the number of SNPs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">snp_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">snp_data</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rates</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">num_snps</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Number of site rates != number of snps in the alignment: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rates</span><span class="p">)</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">num_snps</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_siterates_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read site-specific substitution rates from a file.</span>
+
+<span class="sd">        This method reads the site-specific substitution rates from a file and returns them as a list of float values. The site rates file should contain the site rates in a single column, with each rate on a separate line. For example:</span>
+
+<span class="sd">        ```</span>
+<span class="sd">        0.0000</span>
+<span class="sd">        0.0000</span>
+<span class="sd">        0.0000</span>
+<span class="sd">        0.0000</span>
+<span class="sd">        0.0000</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[float]: List of site-specific substitution rates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">siterates</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span> <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">&quot;\s+&quot;</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="n">line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Site rates file is empty.&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+
+            <span class="n">ncol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">ncol</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Site rates file must have only one column.&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">header</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">header</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="n">dfs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">siterates</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Rate&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">dfs</span><span class="p">[</span><span class="s2">&quot;Rate&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_validate_qmat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qmat</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the Q matrix.</span>
+
+<span class="sd">        This method validates the Q matrix to ensure it is a square matrix with the correct columns and index. The Q matrix should be a square matrix with columns and index in the order A, C, G, T.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            qmat (pd.DataFrame): Q matrix as a pandas DataFrame.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the Q matrix is not a pandas DataFrame.</span>
+<span class="sd">            ValueError: If the Q matrix is empty.</span>
+<span class="sd">            ValueError: If the Q matrix is not square.</span>
+<span class="sd">            ValueError: If the Q matrix columns do not equal the index.</span>
+<span class="sd">            ValueError: If the Q matrix columns are not in the order A, C, G, T.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">qmat</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Q matrix must be a pandas DataFrame, but got: {type(qmat)}&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">qmat</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Q matrix is empty after attempting to load from file.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">qmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">qmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Q matrix is not square: </span><span class="si">{qmat.shape}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">qmat</span><span class="o">.</span><span class="n">columns</span> <span class="o">==</span> <span class="n">qmat</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;Q matrix columns must equal the index: </span><span class="si">{qmat.columns}</span><span class="s2"> != </span><span class="si">{qmat.index}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">qmat</span><span class="o">.</span><span class="n">columns</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">]):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Q matrix columns must be in the order A, C, G, T: </span><span class="si">{qmat.columns}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">qmat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get q-matrix object for a corresponding phylogenetic tree.</span>
+
+<span class="sd">        This method reads the Q matrix from a file and returns it as a pandas DataFrame object. The Q matrix file can be in either comma-separated or whitespace-separated format. The Q matrix should be a square matrix with columns and index in the order A, C, G, T.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pandas.DataFrame: The Q-matrix as a pandas DataFrame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qmat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_qmat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_qmat</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qmat</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qmatrix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Q matrix file path not provided.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">is_iqtree</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qmatrix</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">line</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">lines</span>
+                <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;rate matrix q&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">5</span>
+            <span class="p">):</span>
+                <span class="n">is_iqtree</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qmat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q_from_iqtree</span><span class="p">()</span> <span class="k">if</span> <span class="n">is_iqtree</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q_from_file</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_qmat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_qmat</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qmat</span>
+
+    <span class="nd">@qmat</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">qmat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set q-matrix for the corrresponding phylogenetic tree.</span>
+
+<span class="sd">        This method sets the Q matrix for the corresponding phylogenetic tree. The Q matrix should be a square matrix with columns and index in the order A, C, G, T. The Q matrix must be provided as a pandas DataFrame object with the correct columns and index.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (pd.DataFrame): The Q-matrix as a pandas.DataFrame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_qmat</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qmat</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">site_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get site rate data for phylogenetic tree.</span>
+
+<span class="sd">        This method reads the site-specific substitution rates from a file and returns them as a list of float values. The site rates file should either contain the site rates in a single column, with each rate on a separate line, or in a table format with the rates in the &#39;Rate&#39; column, as output by IQ-TREE. For example:</span>
+
+<span class="sd">        ```</span>
+<span class="sd">        0.0000</span>
+<span class="sd">        0.0000</span>
+<span class="sd">        0.0000</span>
+<span class="sd">        0.0000</span>
+<span class="sd">        0.0000</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        OR:</span>
+
+<span class="sd">        ```</span>
+<span class="sd">        # Any comment lines can be included here.</span>
+<span class="sd">        Site    Rate   Cat C_rate</span>
+<span class="sd">        1       0.0000  1   0.0000</span>
+<span class="sd">        2       0.0000  1   0.0000</span>
+<span class="sd">        3       0.0000  1   0.0000</span>
+<span class="sd">        4       0.0000  1   0.0000</span>
+<span class="sd">        5       0.0000  1   0.0000</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: Site rates for the phylogenetic tree.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_rates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">siterates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Site rates file path not provided.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">is_iqtree</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">siterates</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">line</span><span class="p">]</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)]</span>
+
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;c_rate&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
+                <span class="s2">&quot;rate&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span>
+            <span class="p">):</span>
+                <span class="n">is_iqtree</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">is_iqtree</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_siterates_from_iqtree</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_siterates_from_file</span><span class="p">()</span>
+
+        <span class="c1"># Filter site rates to only include rates for remaining loci after</span>
+        <span class="c1"># alignment filtering.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span><span class="p">):</span>
+            <span class="n">sr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span> <span class="o">=</span> <span class="n">sr</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_rates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span>
+
+    <span class="nd">@site_rates</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">site_rates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set site_rates object.</span>
+
+<span class="sd">        This method sets the site rates for the corresponding phylogenetic tree. The site rates should be provided as a list of float values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (List[float]): The site rates as a list of floats.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_rates</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_site_rates</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get newick tree from provided path.</span>
+
+<span class="sd">        This method reads the phylogenetic tree from the provided tree file path and returns it as a toytree object. If the tree file path is not provided, an exception is raised.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            toytree.tree: The toytree tree object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">treefile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Tree file path not provided.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_tree</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span>
+
+    <span class="nd">@tree</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">tt</span><span class="o">.</span><span class="n">ToyTree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setter for newick tree data.</span>
+
+<span class="sd">        This method sets the phylogenetic tree for the corresponding tree parser object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (toytree.tree): The tree object to set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span> <span class="o">=</span> <span class="n">value</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

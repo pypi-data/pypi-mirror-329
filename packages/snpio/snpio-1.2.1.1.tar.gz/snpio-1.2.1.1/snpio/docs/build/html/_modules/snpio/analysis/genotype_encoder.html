@@ -1,0 +1,868 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.analysis.genotype_encoder &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.analysis.genotype_encoder</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.analysis.genotype_encoder</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">snpio.utils</span> <span class="kn">import</span> <span class="n">misc</span><span class="p">,</span> <span class="n">sequence_tools</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.logging</span> <span class="kn">import</span> <span class="n">LoggerManager</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.misc</span> <span class="kn">import</span> <span class="n">IUPAC</span>
+
+
+<div class="viewcode-block" id="GenotypeEncoder">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.genotype_encoder.GenotypeEncoder">[docs]</a>
+<span class="k">class</span> <span class="nc">GenotypeEncoder</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Encode genotypes to various formats suitable for machine learning.</span>
+
+<span class="sd">    This class provides methods to encode genotypes to various formats suitable for machine learning, including 012, one-hot, and integer encodings, as well as the inverse operations.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; # Import necessary modules</span>
+<span class="sd">        &gt;&gt;&gt; from snpio import VCFReader, GenotypeEncoder</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Initialize VCFReader and GenotypeEncoder objects</span>
+<span class="sd">        &gt;&gt;&gt; gd = VCFReader(filename=&quot;my_vcf.vcf&quot;, popmapfile=&quot;my_popmap.txt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; ge = GenotypeEncoder(gd)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Encode genotypes to 012, one-hot, and integer formats</span>
+<span class="sd">        &gt;&gt;&gt; gt_012 = ge.genotypes_012</span>
+<span class="sd">        &gt;&gt;&gt; gt_onehot = ge.genotypes_onehot(gt_012)</span>
+<span class="sd">        &gt;&gt;&gt; gt_int = ge.genotypes_int(gt_012)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Inverse operations</span>
+<span class="sd">        &gt;&gt;&gt; ge.genotypes_012 = gt_012</span>
+<span class="sd">        &gt;&gt;&gt; ge.genotypes_onehot = gt_onehot</span>
+<span class="sd">        &gt;&gt;&gt; ge.genotypes_int = gt_int</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        plot_format (str): Plot format for the data.</span>
+<span class="sd">        prefix (str): Prefix for the output directory.</span>
+<span class="sd">        verbose (bool): If True, display verbose output.</span>
+<span class="sd">        snp_data (List[List[str]]): List of lists of SNPs.</span>
+<span class="sd">        samples (List[str]): List of sample IDs.</span>
+<span class="sd">        filetype (str): File type of the data.</span>
+<span class="sd">        missing_vals (List[str]): List of missing values.</span>
+<span class="sd">        replace_vals (List[str]): List of values to replace missing values with.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">genotype_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the GenotypeEncoder object.</span>
+
+<span class="sd">        This class provides methods to encode genotypes to various formats suitable for machine learning, including 012, one-hot, and integer encodings, as well as the inverse operations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            genotype_data (GenotypeData): Initialized GenotypeData object.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The GenotypeData object must be initialized before creating an instance of this class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_format</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">plot_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">snp_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">samples</span>
+        <span class="n">debug</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">debug</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filetype</span> <span class="o">=</span> <span class="s2">&quot;encoded&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replace_vals</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-9&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">missing_vals</span><span class="p">)</span>
+
+        <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;verbose&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="s2">&quot;debug&quot;</span><span class="p">:</span> <span class="n">debug</span><span class="p">}</span>
+        <span class="n">logman</span> <span class="o">=</span> <span class="n">LoggerManager</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">:</span> <span class="n">Logger</span> <span class="o">=</span> <span class="n">logman</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span> <span class="o">=</span> <span class="n">IUPAC</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GenotypeEncoder.read_012">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.genotype_encoder.GenotypeEncoder.read_012">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_012</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read 012-encoded comma-delimited file.</span>
+
+<span class="sd">        This method reads a 012-encoded comma-delimited file and stores the data in the GenotypeEncoder object.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Sequences differ in length.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading 012-encoded file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_filetype</span><span class="p">(</span><span class="s2">&quot;encoded&quot;</span><span class="p">)</span>
+        <span class="n">snp_data</span><span class="p">,</span> <span class="n">num_snps</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="n">num_inds</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+                <span class="n">inds</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">snps</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="n">num_snps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">snps</span><span class="p">))</span>
+                <span class="n">num_inds</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">snp_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">snps</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inds</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">num_snps</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;All sequences must be the same length. At least one sequence differs in length from the others&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">miss_vals</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NA&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">]</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">snp_data</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">miss_vals</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;-9&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">miss_vals</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># Decodes 012 and converts to self.snp_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genotypes_012</span> <span class="o">=</span> <span class="n">df</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alt</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;012 file successfully loaded!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Found:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_inds</span><span class="si">}</span><span class="s2"> individuals...</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_snps</span><span class="si">}</span><span class="s2"> SNPs...</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenotypeEncoder.convert_012">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.genotype_encoder.GenotypeEncoder.convert_012">[docs]</a>
+    <span class="k">def</span> <span class="nf">convert_012</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">snps</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode IUPAC nucleotides as 0 (reference), 1 (heterozygous), and 2 (alternate) alleles.</span>
+
+<span class="sd">        This method encodes IUPAC nucleotides as 0 (reference), 1 (heterozygous), and 2 (alternate) alleles.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            snps (List[List[str]]): 2D list of genotypes of shape (n_samples, n_sites).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[List[int]]: Encoded 012 genotypes.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">            Monomorphic sites are detected and encoded as 0 (reference).</span>
+
+<span class="sd">            Non-biallelic sites are detected and forced to be bi-allelic.</span>
+
+<span class="sd">            Sites with all missing data are detected and excluded from the alignment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">snps_012</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">new_snps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">monomorphic_sites</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">non_biallelic_sites</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_missing</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">snps</span><span class="p">)):</span>
+            <span class="n">new_snps</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">snps</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+            <span class="n">loc</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">snps</span><span class="p">)):</span>
+                <span class="n">loc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">snps</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;N&quot;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">loc</span><span class="p">):</span>
+                <span class="n">all_missing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">num_alleles</span> <span class="o">=</span> <span class="n">sequence_tools</span><span class="o">.</span><span class="n">count_alleles</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">num_alleles</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1"># If monomorphic</span>
+                <span class="k">if</span> <span class="n">num_alleles</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">monomorphic_sites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">ref</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                            <span class="nb">map</span><span class="p">(</span>
+                                <span class="n">sequence_tools</span><span class="o">.</span><span class="n">get_major_allele</span><span class="p">,</span>
+                                <span class="n">loc</span><span class="p">,</span>
+                                <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">loc</span><span class="p">],</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                        <span class="n">ref</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ref</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                        <span class="n">ref</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                            <span class="nb">map</span><span class="p">(</span>
+                                <span class="n">sequence_tools</span><span class="o">.</span><span class="n">get_major_allele</span><span class="p">,</span>
+                                <span class="n">loc</span><span class="p">,</span>
+                                <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">loc</span><span class="p">],</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="n">alt</span> <span class="o">=</span> <span class="kc">None</span>
+
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">snps</span><span class="p">)):</span>
+                        <span class="k">if</span> <span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;-9&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">]:</span>
+                            <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">)</span>
+
+                        <span class="k">elif</span> <span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">ref</span><span class="p">:</span>
+                            <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="c1"># If &gt;2 alleles</span>
+                <span class="k">elif</span> <span class="n">num_alleles</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">non_biallelic_sites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                    <span class="n">all_alleles</span> <span class="o">=</span> <span class="n">sequence_tools</span><span class="o">.</span><span class="n">get_major_allele</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+                    <span class="n">all_alleles</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_alleles</span><span class="p">]</span>
+                    <span class="n">ref</span> <span class="o">=</span> <span class="n">all_alleles</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">alt</span> <span class="o">=</span> <span class="n">all_alleles</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">others</span> <span class="o">=</span> <span class="n">all_alleles</span>
+
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">snps</span><span class="p">)):</span>
+                        <span class="k">if</span> <span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;-9&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">]:</span>
+                            <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">)</span>
+
+                        <span class="k">elif</span> <span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">ref</span><span class="p">:</span>
+                            <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+                        <span class="k">elif</span> <span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">alt</span><span class="p">:</span>
+                            <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+                        <span class="c1"># Force biallelic</span>
+                        <span class="k">elif</span> <span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">others</span><span class="p">:</span>
+                            <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ref</span><span class="p">,</span> <span class="n">alt</span> <span class="o">=</span> <span class="n">sequence_tools</span><span class="o">.</span><span class="n">get_major_allele</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+                <span class="n">ref</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+                <span class="n">alt</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">snps</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;-9&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">]:</span>
+                        <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">ref</span><span class="p">:</span>
+                        <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">alt</span><span class="p">:</span>
+                        <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">new_snps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">outdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_output&quot;</span><span class="p">,</span> <span class="s2">&quot;gtdata&quot;</span><span class="p">,</span> <span class="s2">&quot;logs&quot;</span><span class="p">)</span>
+        <span class="n">outdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">monomorphic_sites</span><span class="p">:</span>
+            <span class="c1"># TODO: Check here if column is all missing.</span>
+            <span class="c1"># TODO: What to do in this case? Error out?</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;monomorphic_sites.txt&quot;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+                <span class="n">mono_sites</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">monomorphic_sites</span><span class="p">]</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mono_sites</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Monomorphic sites detected. You can check the locus indices in the following log file: </span><span class="si">{</span><span class="n">outfile</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">non_biallelic_sites</span><span class="p">:</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;non_biallelic_sites.txt&quot;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+                <span class="n">nba</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">non_biallelic_sites</span><span class="p">]</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nba</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;SNP column indices listed in the log file </span><span class="si">{</span><span class="n">outfile</span><span class="si">}</span><span class="s2"> had &gt;2 alleles and was forced to be bi-allelic. If that is not desired, please fix or remove the column and re-run.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">all_missing</span><span class="p">:</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">/</span> <span class="s2">&quot;all_missing_sites.txt&quot;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+                <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_missing</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;SNP column indices found in the log file </span><span class="si">{</span><span class="n">outfile</span><span class="si">}</span><span class="s2"> had all missing data and were excluded from the alignment.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">snps_012</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">new_snps</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">snps_012</span></div>
+
+
+<div class="viewcode-block" id="GenotypeEncoder.convert_onehot">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.genotype_encoder.GenotypeEncoder.convert_onehot">[docs]</a>
+    <span class="k">def</span> <span class="nf">convert_onehot</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">snp_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]],</span>
+        <span class="n">encodings_dict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert input data to one-hot encoded format.</span>
+
+<span class="sd">        This method converts input data to one-hot encoded format.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            snp_data (Union[np.ndarray, List[List[int]]]): Input 012-encoded data of shape (n_samples, n_SNPs).</span>
+
+<span class="sd">            encodings_dict (Optional[Dict[str, int]]): Encodings to convert structure to phylip format. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: One-hot encoded data.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            If the data file type is &quot;phylip&quot; and `encodings_dict` is not provided, default encodings for nucleotides are used.</span>
+
+<span class="sd">            If the data file type is &quot;structure1row&quot; or &quot;structure2row&quot; and `encodings_dict` is not provided, default encodings for alleles are used.</span>
+
+<span class="sd">            Otherwise, if `encodings_dict` is provided, it will be used for conversion.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">            If the data file type is &quot;structure1row&quot; or &quot;structure2row&quot; and `encodings_dict` is not provided, default encodings for alleles are used.</span>
+
+<span class="sd">            If the data file type is &quot;phylip&quot; and `encodings_dict` is not provided, default encodings for nucleotides are used.</span>
+
+<span class="sd">            If the data file type is &quot;structure&quot; and `encodings_dict` is not provided, default encodings for alleles are used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">encodings_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">onehot_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span><span class="o">.</span><span class="n">onehot_dict</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">snp_data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                <span class="n">snp_data</span> <span class="o">=</span> <span class="n">snp_data</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">onehot_dict</span> <span class="o">=</span> <span class="n">encodings_dict</span>
+        <span class="n">onehot_outer_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span> <span class="k">if</span> <span class="n">encodings_dict</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">snp_data</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rows</span><span class="p">):</span>
+            <span class="n">onehot_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">snp_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                <span class="n">onehot_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">onehot_dict</span><span class="p">[</span><span class="n">snp_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]])</span>
+            <span class="n">onehot_outer_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">onehot_list</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">onehot_outer_list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenotypeEncoder.inverse_onehot">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.genotype_encoder.GenotypeEncoder.inverse_onehot">[docs]</a>
+    <span class="k">def</span> <span class="nf">inverse_onehot</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">onehot_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]],</span>
+        <span class="n">encodings_dict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert one-hot encoded data back to original format.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            onehot_data (Union[np.ndarray, List[List[float]]]): Input one-hot encoded data of shape (n_samples, n_SNPs).</span>
+
+<span class="sd">            encodings_dict (Optional[Dict[str, List[float]]]): Encodings to convert from one-hot encoding to original format. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: Original format data.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            If the data file type is &quot;phylip&quot; or &quot;vcf&quot; and `encodings_dict` is not provided, default encodings based on IUPAC codes are used.</span>
+
+<span class="sd">            If the data file type is &quot;structure&quot; and `encodings_dict` is not provided, default encodings for alleles are used.</span>
+
+<span class="sd">            Otherwise, if `encodings_dict` is provided, it will be used for conversion.</span>
+
+<span class="sd">            If the input data is a numpy array, it will be converted to a list of lists before decoding.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">onehot_dict</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span><span class="o">.</span><span class="n">onehot_dict</span> <span class="k">if</span> <span class="n">encodings_dict</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">encodings_dict</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create inverse dictionary (from list to key)</span>
+        <span class="n">inverse_onehot_dict</span> <span class="o">=</span> <span class="p">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">v</span><span class="p">):</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">onehot_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">onehot_data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">onehot_data</span> <span class="o">=</span> <span class="n">onehot_data</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="n">decoded_outer_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">onehot_data</span><span class="p">)):</span>
+            <span class="n">decoded_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">onehot_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                <span class="c1"># Look up original key using one-hot encoded list</span>
+                <span class="n">decoded_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inverse_onehot_dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">onehot_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])])</span>
+            <span class="n">decoded_outer_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decoded_list</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">decoded_outer_list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenotypeEncoder.convert_int_iupac">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.genotype_encoder.GenotypeEncoder.convert_int_iupac">[docs]</a>
+    <span class="k">def</span> <span class="nf">convert_int_iupac</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">snp_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]],</span>
+        <span class="n">encodings_dict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert input data to integer-encoded format (0-9) based on IUPAC codes.</span>
+
+<span class="sd">        This method converts input data to integer-encoded format (0-9) based on IUPAC codes. The integer encoding is as follows: A=0, T=1, G=2, C=3, W=4, R=5, M=6, K=7, Y=8, S=9, N=-9.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            snp_data (numpy.ndarray of shape (n_samples, n_SNPs) or List[List[int]]): Input 012-encoded data.</span>
+
+<span class="sd">            encodings_dict (Dict[str, int] or None): Encodings to convert structure to phylip format.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: Integer-encoded data.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            If the data file type is &quot;phylip&quot; or &quot;vcf&quot; and ``encodings_dict`` is not provided, default encodings based on IUPAC codes are used.</span>
+
+<span class="sd">            If the data file type is &quot;structure&quot; and ``encodings_dict`` is not provided, default encodings for alleles are used.</span>
+
+<span class="sd">            Otherwise, if ``encodings_dict`` is provided, it will be used for conversion.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">encodings_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">int_iupac_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span><span class="o">.</span><span class="n">int_iupac_dict</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">snp_data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                <span class="n">snp_data</span> <span class="o">=</span> <span class="n">snp_data</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+            <span class="n">int_iupac_dict</span> <span class="o">=</span> <span class="n">encodings_dict</span>
+
+        <span class="n">outer_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span> <span class="k">if</span> <span class="n">encodings_dict</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">snp_data</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rows</span><span class="p">):</span>
+            <span class="n">int_iupac</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">snp_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                <span class="n">int_iupac</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">int_iupac_dict</span><span class="p">[</span><span class="n">snp_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]])</span>
+            <span class="n">outer_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">int_iupac</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">outer_list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenotypeEncoder.inverse_int_iupac">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.genotype_encoder.GenotypeEncoder.inverse_int_iupac">[docs]</a>
+    <span class="k">def</span> <span class="nf">inverse_int_iupac</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">int_encoded_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]],</span>
+        <span class="n">encodings_dict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert integer-encoded data back to original format.</span>
+
+<span class="sd">        This method converts integer-encoded data back to the original format based on IUPAC codes. The integer encoding is as follows: A=0, T=1, G=2, C=3, W=4, R=5, M=6, K=7, Y=8, S=9, N=-9.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            int_encoded_data (numpy.ndarray of shape (n_samples, n_SNPs) or List[List[int]]): Input integer-encoded data.</span>
+
+<span class="sd">            encodings_dict (Dict[str, int] or None): Encodings to convert from integer encoding to original format.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: Original format data.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            If the data file type is &quot;phylip&quot; or &quot;vcf&quot; and `encodings_dict` is not provided, default encodings based on IUPAC codes are used.</span>
+
+<span class="sd">            If the data file type is &quot;structure&quot; and `encodings_dict` is not provided, default encodings for alleles are used.</span>
+
+<span class="sd">            Otherwise, if `encodings_dict` is provided, it will be used for conversion</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">int_encodings_dict</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iupac</span><span class="o">.</span><span class="n">int_iupac_dict</span> <span class="k">if</span> <span class="n">encodings_dict</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">encodings_dict</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create inverse dictionary (from integer to key)</span>
+        <span class="n">inverse_int_encodings_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">int_encodings_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">int_encoded_data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">int_encoded_data</span> <span class="o">=</span> <span class="n">int_encoded_data</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="n">decoded_outer_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">int_encoded_data</span><span class="p">)):</span>
+            <span class="n">decoded_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">int_encoded_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                <span class="c1"># Look up original key using integer encoding</span>
+                <span class="n">decoded_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inverse_int_encodings_dict</span><span class="p">[</span><span class="n">int_encoded_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]])</span>
+            <span class="n">decoded_outer_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decoded_list</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">decoded_outer_list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenotypeEncoder.decode_012">
+<a class="viewcode-back" href="../../../snpio.analysis.html#snpio.analysis.genotype_encoder.GenotypeEncoder.decode_012">[docs]</a>
+    <span class="k">def</span> <span class="nf">decode_012</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+        <span class="n">write_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">is_nuc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decode 012-encoded or 0-9 integer-encoded imputed data to STRUCTURE or PHYLIP format.</span>
+
+<span class="sd">        This method decodes 012-encoded or 0-9 integer-encoded imputed data to IUPAC format. The decoded data can be saved to a file or returned as a DataFrame.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X (pandas.DataFrame | numpy.ndarray | List[List[int]]): Imputed data to decode, encoded as 012 or 0-9 integers.</span>
+
+<span class="sd">            write_output (bool): If True, save the decoded output to a file. If False, return the decoded data as a DataFrame. Defaults to True.</span>
+
+<span class="sd">            is_nuc (bool): Whether the encoding is based on nucleotides instead of 012. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str | pandas.DataFrame: If write_output is True, returns the filename where the imputed data was written. If write_output is False, returns the decoded data as a DataFrame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">validate_input_type</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;df&quot;</span><span class="p">)</span>
+
+        <span class="n">nuc</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;A/A&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;T/T&quot;</span><span class="p">:</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;G/G&quot;</span><span class="p">:</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;C/C&quot;</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;A/G&quot;</span><span class="p">:</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;G/A&quot;</span><span class="p">:</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;C/T&quot;</span><span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;T/C&quot;</span><span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;G/C&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;C/G&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;A/T&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;T/A&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;G/T&quot;</span><span class="p">:</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;T/G&quot;</span><span class="p">:</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;A/C&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;C/A&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;N/N&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">ft</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filetype</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="n">is_phylip</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">ft</span> <span class="o">==</span> <span class="s2">&quot;phylip&quot;</span> <span class="ow">or</span> <span class="n">ft</span> <span class="o">==</span> <span class="s2">&quot;vcf&quot;</span><span class="p">:</span>
+            <span class="n">is_phylip</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">df_decoded</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">df_decoded</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_nuc</span><span class="p">:</span>
+            <span class="n">classes_int</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+            <span class="n">classes_string</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">classes_int</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">is_phylip</span><span class="p">:</span>
+                <span class="n">gt</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">gt</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="s2">&quot;1/1&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;2/2&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;3/3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;4/4&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;1/2&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;1/3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;1/4&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;2/3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;2/4&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;3/4&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;-9/-9&quot;</span><span class="p">,</span>
+                <span class="p">]</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">classes_int</span><span class="p">,</span> <span class="n">gt</span><span class="p">))</span>
+            <span class="n">dstr</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">classes_string</span><span class="p">,</span> <span class="n">gt</span><span class="p">))</span>
+            <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">dstr</span><span class="p">)</span>
+            <span class="n">dreplace</span> <span class="o">=</span> <span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="n">d</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)}</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dreplace</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">alt</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ref</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alt</span><span class="p">):</span>
+                <span class="c1"># if site is monomorphic, set alt and ref state the</span>
+                <span class="c1"># same</span>
+                <span class="k">if</span> <span class="n">alt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">alt</span> <span class="o">=</span> <span class="n">ref</span>
+                <span class="n">ref2</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ref</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">ref</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">alt2</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">alt</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">alt</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">het2</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ref</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">alt</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                <span class="k">if</span> <span class="n">is_phylip</span><span class="p">:</span>
+                    <span class="n">ref2</span> <span class="o">=</span> <span class="n">nuc</span><span class="p">[</span><span class="n">ref2</span><span class="p">]</span>
+                    <span class="n">alt2</span> <span class="o">=</span> <span class="n">nuc</span><span class="p">[</span><span class="n">alt2</span><span class="p">]</span>
+                    <span class="n">het2</span> <span class="o">=</span> <span class="n">nuc</span><span class="p">[</span><span class="n">het2</span><span class="p">]</span>
+
+                <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;0&quot;</span><span class="p">:</span> <span class="n">ref2</span><span class="p">,</span>
+                    <span class="mi">0</span><span class="p">:</span> <span class="n">ref2</span><span class="p">,</span>
+                    <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="n">het2</span><span class="p">,</span>
+                    <span class="mi">1</span><span class="p">:</span> <span class="n">het2</span><span class="p">,</span>
+                    <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="n">alt2</span><span class="p">,</span>
+                    <span class="mi">2</span><span class="p">:</span> <span class="n">alt2</span><span class="p">,</span>
+                    <span class="s2">&quot;-9&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span>
+                    <span class="o">-</span><span class="mi">9</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="n">dreplace</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
+
+        <span class="n">df_decoded</span> <span class="o">=</span> <span class="n">df_decoded</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">dreplace</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">write_output</span><span class="p">:</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_output&quot;</span><span class="p">,</span> <span class="s2">&quot;gtdata&quot;</span><span class="p">,</span> <span class="s2">&quot;alignments&quot;</span><span class="p">,</span> <span class="s2">&quot;012&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ft</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;structure&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">ft</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;structure2row&quot;</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_decoded</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="n">df_decoded</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">df_decoded</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+                        <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">x</span><span class="p">)))</span>
+                    <span class="p">)</span>
+
+                <span class="n">df_decoded</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;sampleID&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="p">)</span>
+                <span class="n">df_decoded</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;popID&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_populations</span><span class="p">)</span>
+
+                <span class="c1"># Transform each element to a separate row.</span>
+                <span class="n">df_decoded</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">df_decoded</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s2">&quot;sampleID&quot;</span><span class="p">,</span> <span class="s2">&quot;popID&quot;</span><span class="p">])</span>
+                    <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="o">.</span><span class="n">explode</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">ft</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;structure1row&quot;</span><span class="p">):</span>
+                <span class="n">df_decoded</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">df_decoded</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+                        <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">add_prefix</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_decoded</span><span class="o">.</span><span class="n">columns</span>
+                    <span class="p">],</span>
+                    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">ft</span> <span class="o">==</span> <span class="s2">&quot;structure&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_decoded</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="n">df_decoded</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">df_decoded</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+                        <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">x</span><span class="p">)))</span>
+                    <span class="p">)</span>
+
+                <span class="n">df_decoded</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;sampleID&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="p">)</span>
+                <span class="n">df_decoded</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;popID&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_populations</span><span class="p">)</span>
+
+                <span class="c1"># Transform each element to a separate row.</span>
+                <span class="n">df_decoded</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">df_decoded</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s2">&quot;sampleID&quot;</span><span class="p">,</span> <span class="s2">&quot;popID&quot;</span><span class="p">])</span>
+                    <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="o">.</span><span class="n">explode</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">write_output</span><span class="p">:</span>
+                <span class="n">of</span> <span class="o">=</span> <span class="n">outfile</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.str&quot;</span><span class="p">)</span>
+                <span class="n">df_decoded</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;sampleID&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="p">)</span>
+                <span class="n">df_decoded</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;popID&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_populations</span><span class="p">)</span>
+
+                <span class="n">df_decoded</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">ft</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;phylip&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">write_output</span><span class="p">:</span>
+                <span class="n">of</span> <span class="o">=</span> <span class="n">outfile</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.phy&quot;</span><span class="p">)</span>
+                <span class="n">header</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_inds</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_snps</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+                    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+
+                <span class="n">lst_decoded</span> <span class="o">=</span> <span class="n">df_decoded</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">sample</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_samples</span><span class="p">,</span> <span class="n">lst_decoded</span><span class="p">):</span>
+                        <span class="n">seqs</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">])</span>
+                        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">seqs</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">write_output</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">of</span>
+        <span class="k">return</span> <span class="n">df_decoded</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">genotypes_012</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode 012 genotypes as a numpy array.</span>
+
+<span class="sd">        This method encodes genotypes as 0 (reference), 1 (heterozygous), and 2 (alternate) alleles. The encoded genotypes are returned as a 2D list, numpy array, or pandas DataFrame.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[List[int]], np.ndarray, or pd.DataFrame: encoded 012 genotypes.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; gd = VCFReader(filename=&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;, popmapfile=&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;, force_popmap=True, chunk_size=5000, verbose=False)</span>
+<span class="sd">            &gt;&gt;&gt; ge = GenotypeEncoder(gd)</span>
+<span class="sd">            &gt;&gt;&gt; gt012 = ge.genotypes_012</span>
+<span class="sd">            &gt;&gt;&gt; print(gt012)</span>
+<span class="sd">            [[&quot;0&quot;, &quot;1&quot;, &quot;2&quot;], [&quot;0&quot;, &quot;1&quot;, &quot;2&quot;], [&quot;0&quot;, &quot;1&quot;, &quot;2&quot;]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">g012</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_012</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">)</span>
+        <span class="n">g012</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">validate_input_type</span><span class="p">(</span><span class="n">g012</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;array&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Genotypes 012: </span><span class="si">{</span><span class="n">g012</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">g012</span>
+
+    <span class="nd">@genotypes_012</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">genotypes_012</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the 012 genotypes. They will be decoded back to a 2D list of genotypes as ``snp_data`` object.</span>
+
+<span class="sd">        012-encoded genotypes are returned as a 2D numpy array of shape (n_samples, n_sites). The encoding is as follows: 0=reference, 1=heterozygous, 2=alternate allele.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (np.ndarray | pd.DataFrame | List[List[int]]): 2D numpy array with 012-encoded genotypes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode_012</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Decoded 012 genotypes: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">genotypes_onehot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;One-hot encoded snps format of shape (n_samples, n_loci, 4).</span>
+
+<span class="sd">        One-hot encoded genotypes are returned as a 3D numpy array of shape (n_samples, n_loci, 4).  The one-hot encoding is as follows: A=[1, 0, 0, 0], T=[0, 1, 0, 0], G=[0, 0, 1, 0], C=[0, 0, 0, 1]. Missing values are encoded as [0, 0, 0, 0]. The one-hot encoding is based on the IUPAC ambiguity codes. Heterozygous sites are encoded as 0.5 for each allele.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: One-hot encoded numpy array of shape (n_samples, n_loci, 4).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gohe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_onehot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">)</span>
+        <span class="n">gohe</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">validate_input_type</span><span class="p">(</span><span class="n">gohe</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;array&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Genotypes one-hot encoded: </span><span class="si">{</span><span class="n">gohe</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gohe</span>
+
+    <span class="nd">@genotypes_onehot</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">genotypes_onehot</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the onehot-encoded genotypes. They will be decoded back to a 2D list of IUPAC genotypes as ``snp_data``.</span>
+
+<span class="sd">        One-hot encoded genotypes are returned as a 3D numpy array of shape (n_samples, n_loci, 4).  The one-hot encoding is as follows: A=[1, 0, 0, 0], T=[0, 1, 0, 0], G=[0, 0, 1, 0], C=[0, 0, 0, 1]. Missing values are encoded as [0, 0, 0, 0]. The one-hot encoding is based on the IUPAC ambiguity codes. Heterozygous sites are encoded as 0.5 for each allele.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (Union[np.ndarray, List[List[List[int]]], pd.DataFrame]): 3D numpy array with one-hot encoded genotypes.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If `value` is not of type pd.DataFrame, np.ndarray, or list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">validate_input_type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;array&quot;</span><span class="p">)</span>
+        <span class="n">Xt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_onehot</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span> <span class="o">=</span> <span class="n">Xt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Decoded one-hot genotypes: </span><span class="si">{</span><span class="n">Xt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">genotypes_int</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Integer-encoded (0-9 including IUPAC characters) snps format.</span>
+
+<span class="sd">        Integer-encoded genotypes are returned as a 2D numpy array of shape (n_samples, n_sites). The integer encoding is as follows: A=0, T=1, G=2, C=3, W=4, R=5, M=6, K=7, Y=8, S=9, N=-9. Missing values are encoded as -9.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: 2D array of shape (n_samples, n_sites), integer-encoded from 0-9 with IUPAC characters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_int_iupac</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span><span class="p">)</span>
+        <span class="n">gint</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">validate_input_type</span><span class="p">(</span><span class="n">gint</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;array&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Genotypes integer-encoded: </span><span class="si">{</span><span class="n">gint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gint</span>
+
+    <span class="nd">@genotypes_int</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">genotypes_int</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the integer-encoded (0-9) genotypes. They will be decoded back to a 2D list of IUPAC genotypes as a ``snp_data`` object.</span>
+
+<span class="sd">        Integer-encoded genotypes are returned as a 2D numpy array of shape (n_samples, n_sites). The integer encoding is as follows: A=0, T=1, G=2, C=3, W=4, R=5, M=6, K=7, Y=8, S=9, N=-9. Missing values are encoded as -9.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">validate_input_type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;array&quot;</span><span class="p">)</span>
+        <span class="n">Xt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_int_iupac</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snp_data</span> <span class="o">=</span> <span class="n">Xt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Decoded integer-encoded genotypes: </span><span class="si">{</span><span class="n">Xt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

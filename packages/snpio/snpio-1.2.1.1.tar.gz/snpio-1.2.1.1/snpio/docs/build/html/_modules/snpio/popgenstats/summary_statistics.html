@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.popgenstats.summary_statistics &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.popgenstats.summary_statistics</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.popgenstats.summary_statistics</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="SummaryStatistics">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.summary_statistics.SummaryStatistics">[docs]</a>
+<span class="k">class</span> <span class="nc">SummaryStatistics</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for calculating summary statistics from genotype data.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">genotype_data</span><span class="p">,</span> <span class="n">alignment_012</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">plotter</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the SummaryStatistics object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            genotype_data (GenotypeData): GenotypeData object containing genotype data.</span>
+<span class="sd">            alignment_012 (np.ndarray): Genotype data in 012-encoded format.</span>
+<span class="sd">            logger (logging.Logger): Logger object.</span>
+<span class="sd">            plotter (snpio.plotting.Plotting): Plotting object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span> <span class="o">=</span> <span class="n">genotype_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alignment_012</span> <span class="o">=</span> <span class="n">alignment_012</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plotter</span> <span class="o">=</span> <span class="n">plotter</span>
+
+<div class="viewcode-block" id="SummaryStatistics.observed_heterozygosity">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.summary_statistics.SummaryStatistics.observed_heterozygosity">[docs]</a>
+    <span class="k">def</span> <span class="nf">observed_heterozygosity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate observed heterozygosity (Ho) for each locus.</span>
+
+<span class="sd">        Observed heterozygosity (Ho) is defined as the proportion of heterozygous individuals at a given locus.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: An array containing observed heterozygosity values for each locus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alignment</span><span class="p">,</span> <span class="n">n_individuals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_alignment_and_individuals</span><span class="p">()</span>
+        <span class="n">ho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_heterozygosity</span><span class="p">(</span><span class="n">alignment</span><span class="p">,</span> <span class="n">n_individuals</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ho</span></div>
+
+
+<div class="viewcode-block" id="SummaryStatistics.expected_heterozygosity">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.summary_statistics.SummaryStatistics.expected_heterozygosity">[docs]</a>
+    <span class="k">def</span> <span class="nf">expected_heterozygosity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate expected heterozygosity (He) for each locus.</span>
+
+<span class="sd">        Expected heterozygosity (He) is the expected proportion of heterozygous individuals under Hardy-Weinberg equilibrium.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: An array containing expected heterozygosity values for each locus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alignment</span><span class="p">,</span> <span class="n">n_individuals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_alignment_and_individuals</span><span class="p">()</span>
+        <span class="n">he</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_heterozygosity</span><span class="p">(</span><span class="n">alignment</span><span class="p">,</span> <span class="n">n_individuals</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">he</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_calculate_heterozygosity</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">alignment</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_individuals</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">observed</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate heterozygosity (Ho or He) for each locus.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            alignment (np.ndarray): The alignment array.</span>
+<span class="sd">            n_individuals (np.ndarray): Number of non-missing individuals per locus.</span>
+<span class="sd">            observed (bool): If True, calculate observed heterozygosity (Ho); otherwise, expected heterozygosity (He).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: Heterozygosity values for each locus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">observed</span><span class="p">:</span>
+            <span class="c1"># Calculate observed heterozygosity</span>
+            <span class="n">heterozygous_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">alignment</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">ho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">heterozygous_counts</span><span class="p">,</span> <span class="n">n_individuals</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">n_individuals</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">ho</span><span class="p">[</span><span class="n">n_individuals</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>  <span class="c1"># Handle loci with no valid data</span>
+            <span class="k">return</span> <span class="n">ho</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Calculate expected heterozygosity</span>
+            <span class="n">alt_allele_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">alignment</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">total_alleles</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_individuals</span>  <span class="c1"># Assuming diploid organisms</span>
+            <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">):</span>
+                <span class="c1"># Frequency of alternate alleles</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">alt_allele_counts</span><span class="p">,</span> <span class="n">total_alleles</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">total_alleles</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p</span>
+                <span class="n">he</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>  <span class="c1"># He = 2pq</span>
+
+                <span class="c1"># Handle loci with no valid data</span>
+                <span class="n">he</span><span class="p">[</span><span class="n">total_alleles</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="k">return</span> <span class="n">he</span>
+
+<div class="viewcode-block" id="SummaryStatistics.nucleotide_diversity">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.summary_statistics.SummaryStatistics.nucleotide_diversity">[docs]</a>
+    <span class="k">def</span> <span class="nf">nucleotide_diversity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate nucleotide diversity (Pi) for each locus.</span>
+
+<span class="sd">        Nucleotide diversity (Pi) is the average number of nucleotide differences per site between two sequences.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            A bias correction is applied in the calculation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: An array containing nucleotide diversity values for each locus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">n_individuals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_alignment_and_individuals</span><span class="p">()</span>
+        <span class="n">he</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">expected_heterozygosity</span><span class="p">()</span>
+
+        <span class="c1"># Calculate nucleotide diversity</span>
+        <span class="n">pi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">he</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">n_individuals</span> <span class="o">&gt;</span> <span class="mi">1</span>  <span class="c1"># Need at least 2 individuals for diversity</span>
+        <span class="n">pi</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">=</span> <span class="n">he</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_individuals</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_individuals</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pi</span></div>
+
+
+<div class="viewcode-block" id="SummaryStatistics.calculate_summary_statistics">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.summary_statistics.SummaryStatistics.calculate_summary_statistics">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_summary_statistics</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">save_plots</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate a suite of summary statistics for SNP data.</span>
+
+<span class="sd">        This method calculates a suite of summary statistics for SNP data, including observed heterozygosity (Ho), expected heterozygosity (He), nucleotide diversity (Pi), and Fst between populations. Summary statistics are calculated both overall and per population.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_bootstraps (int): Number of bootstrap replicates to use for estimating variance of Fst per SNP. If 0, then bootstrapping is not used and confidence intervals are estimated from the data. Defaults to 0.</span>
+<span class="sd">            n_jobs (int): Number of parallel jobs. If set to -1, all available CPU threads are used. Defaults to 1.</span>
+<span class="sd">            save_plots (bool): Whether to save plots of the summary statistics. In any case, a dictionary of summary statistics is returned. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary containing summary statistics per population and overall.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating summary statistics...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Overall statistics</span>
+        <span class="n">ho_overall</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observed_heterozygosity</span><span class="p">())</span>
+        <span class="n">he_overall</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">expected_heterozygosity</span><span class="p">())</span>
+        <span class="n">pi_overall</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nucleotide_diversity</span><span class="p">())</span>
+
+        <span class="c1"># Per-population statistics</span>
+        <span class="n">ho_per_population</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observed_heterozygosity_per_population</span><span class="p">()</span>
+        <span class="n">he_per_population</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">expected_heterozygosity_per_population</span><span class="p">()</span>
+        <span class="n">pi_per_population</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nucleotide_diversity_per_population</span><span class="p">()</span>
+
+        <span class="n">summary_stats</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;overall&quot;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;Ho&quot;</span><span class="p">:</span> <span class="n">ho_overall</span><span class="p">,</span> <span class="s2">&quot;He&quot;</span><span class="p">:</span> <span class="n">he_overall</span><span class="p">,</span> <span class="s2">&quot;Pi&quot;</span><span class="p">:</span> <span class="n">pi_overall</span><span class="p">}</span>
+            <span class="p">),</span>
+            <span class="s2">&quot;per_population&quot;</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">pop_id</span> <span class="ow">in</span> <span class="n">ho_per_population</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">summary_stats</span><span class="p">[</span><span class="s2">&quot;per_population&quot;</span><span class="p">][</span><span class="n">pop_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;Ho&quot;</span><span class="p">:</span> <span class="n">ho_per_population</span><span class="p">[</span><span class="n">pop_id</span><span class="p">],</span>
+                    <span class="s2">&quot;He&quot;</span><span class="p">:</span> <span class="n">he_per_population</span><span class="p">[</span><span class="n">pop_id</span><span class="p">],</span>
+                    <span class="s2">&quot;Pi&quot;</span><span class="p">:</span> <span class="n">pi_per_population</span><span class="p">[</span><span class="n">pop_id</span><span class="p">],</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Fst between populations</span>
+        <span class="n">fst_between_pops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weir_cockerham_fst</span><span class="p">(</span>
+            <span class="n">n_bootstraps</span><span class="o">=</span><span class="n">n_bootstraps</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span>
+        <span class="p">)</span>
+        <span class="n">summary_stats</span><span class="p">[</span><span class="s2">&quot;Fst_between_populations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fst_between_pops</span>
+
+        <span class="k">if</span> <span class="n">save_plots</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plotter</span><span class="o">.</span><span class="n">plot_summary_statistics</span><span class="p">(</span><span class="n">summary_stats</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Summary statistics calculation complete!&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">summary_stats</span></div>
+
+
+<div class="viewcode-block" id="SummaryStatistics.observed_heterozygosity_per_population">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.summary_statistics.SummaryStatistics.observed_heterozygosity_per_population">[docs]</a>
+    <span class="k">def</span> <span class="nf">observed_heterozygosity_per_population</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate observed heterozygosity (Ho) for each locus per population.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary where keys are population IDs and values are pandas Series containing the observed heterozygosity values per locus for that population.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pop_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">get_population_indices</span><span class="p">()</span>
+        <span class="n">ho_per_population</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">pop_id</span><span class="p">,</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">pop_indices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">pop_alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignment_012</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">pop_alignment</span><span class="p">[</span><span class="n">pop_alignment</span> <span class="o">==</span> <span class="o">-</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>  <span class="c1"># Replace missing data</span>
+
+            <span class="k">if</span> <span class="n">pop_alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pop_alignment</span><span class="p">)):</span>
+                <span class="k">continue</span>  <span class="c1"># Skip populations with no data</span>
+
+            <span class="c1"># Number of non-missing individuals per locus</span>
+            <span class="n">n_individuals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pop_alignment</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">num_heterozygotes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">pop_alignment</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="c1"># Calculate Ho</span>
+            <span class="n">ho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">pop_alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="n">n_individuals</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="n">ho</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">=</span> <span class="n">num_heterozygotes</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">/</span> <span class="n">n_individuals</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+
+            <span class="c1"># Store results as a pandas Series with locus indices</span>
+            <span class="n">ho_per_population</span><span class="p">[</span><span class="n">pop_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                <span class="n">ho</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">pop_alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Ho&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ho_per_population</span></div>
+
+
+<div class="viewcode-block" id="SummaryStatistics.expected_heterozygosity_per_population">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.summary_statistics.SummaryStatistics.expected_heterozygosity_per_population">[docs]</a>
+    <span class="k">def</span> <span class="nf">expected_heterozygosity_per_population</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_n</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate expected heterozygosity (He) for each locus per population.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            return_n (bool): If True, also return the number of non-missing individuals per locus.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary where keys are population IDs and values are pandas Series containing the expected heterozygosity values per locus for that population. If return_n is True, returns a tuple (he, n_individuals) per population.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pop_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">get_population_indices</span><span class="p">()</span>
+        <span class="n">he_per_population</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">pop_id</span><span class="p">,</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">pop_indices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">pop_alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignment_012</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">pop_alignment</span><span class="p">[</span><span class="n">pop_alignment</span> <span class="o">==</span> <span class="o">-</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>  <span class="c1"># Replace missing data</span>
+
+            <span class="k">if</span> <span class="n">pop_alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pop_alignment</span><span class="p">)):</span>
+                <span class="k">continue</span>  <span class="c1"># Skip populations with no data</span>
+
+            <span class="c1"># Number of non-missing individuals per locus</span>
+            <span class="n">n_individuals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pop_alignment</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">total_alleles</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_individuals</span>
+
+            <span class="c1"># Frequency of alternate allele (p)</span>
+            <span class="n">alt_allele_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">pop_alignment</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">alt_allele_counts</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="n">total_alleles</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="n">p</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">=</span> <span class="n">alt_allele_counts</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_alleles</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p</span>
+
+            <span class="c1"># Expected heterozygosity</span>
+            <span class="n">he</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">he</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">p</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">*</span> <span class="n">q</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">return_n</span><span class="p">:</span>
+                <span class="n">he_per_population</span><span class="p">[</span><span class="n">pop_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">he</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">pop_alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;He&quot;</span><span class="p">),</span>
+                    <span class="n">n_individuals</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">he_per_population</span><span class="p">[</span><span class="n">pop_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                    <span class="n">he</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">pop_alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;He&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">he_per_population</span></div>
+
+
+<div class="viewcode-block" id="SummaryStatistics.nucleotide_diversity_per_population">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.summary_statistics.SummaryStatistics.nucleotide_diversity_per_population">[docs]</a>
+    <span class="k">def</span> <span class="nf">nucleotide_diversity_per_population</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate nucleotide diversity (Pi) for each locus per population.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary where keys are population IDs and values are pandas Series containing the nucleotide diversity values per locus for that population.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">he_and_n_per_population</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">expected_heterozygosity_per_population</span><span class="p">(</span>
+            <span class="n">return_n</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">pi_per_population</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">pop_id</span><span class="p">,</span> <span class="p">(</span><span class="n">he</span><span class="p">,</span> <span class="n">n_individuals</span><span class="p">)</span> <span class="ow">in</span> <span class="n">he_and_n_per_population</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">n_individuals</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+            <span class="c1"># Calculate Pi with bias correction</span>
+            <span class="n">pi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">he</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span>
+            <span class="n">pi</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">he</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+
+            <span class="c1"># Store results as a pandas Series</span>
+            <span class="n">pi_per_population</span><span class="p">[</span><span class="n">pop_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                <span class="n">pi</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pi</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Pi&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pi_per_population</span></div>
+
+
+<div class="viewcode-block" id="SummaryStatistics.weir_cockerham_fst">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.summary_statistics.SummaryStatistics.weir_cockerham_fst">[docs]</a>
+    <span class="k">def</span> <span class="nf">weir_cockerham_fst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bootstraps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate pairwise per-population Weir and Cockerham&#39;s Fst.</span>
+
+<span class="sd">        This method calculates pairwise Weir and Cockerham&#39;s Fst between populations. Fst is a measure of population differentiation due to genetic structure. Fst values range from 0 to 1, where 0 indicates no genetic differentiation and 1 indicates complete differentiation. Bootstrapping can be used to estimate the variance of Fst per SNP.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_bootstraps (int): Number of bootstrap replicates. Default is 0 (no bootstrapping).</span>
+<span class="sd">            n_jobs (int): Number of parallel jobs for bootstrapping. Default is -1 (use all available cores).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: If n_bootstraps is 0, returns a dictionary where keys are population pairs and values are pandas Series of Fst values per locus. If n_bootstraps &gt; 0, returns a dictionary where keys are population pairs and values are numpy arrays with shape (n_loci, n_bootstraps).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Prepare population indices and get number of loci</span>
+        <span class="n">pop_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">get_population_indices</span><span class="p">()</span>
+        <span class="n">populations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pop_indices</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">n_loci</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignment_012</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Precompute alignments for each population; convert missing data (&lt; 0) to np.nan</span>
+        <span class="n">pop_alignments</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">pop</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignment_012</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">pop</span><span class="p">,</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">pop_indices</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">alignment</span> <span class="ow">in</span> <span class="n">pop_alignments</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">alignment</span><span class="p">[</span><span class="n">alignment</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="k">def</span> <span class="nf">compute_fst_pair</span><span class="p">(</span><span class="n">alignment1</span><span class="p">,</span> <span class="n">alignment2</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Compute Fst per SNP between two populations.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                alignment1 (np.ndarray): Genotype matrix for population 1 (individuals x loci).</span>
+<span class="sd">                alignment2 (np.ndarray): Genotype matrix for population 2 (individuals x loci).</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                np.ndarray: Fst values for each locus.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># Count non-missing calls per locus for each population.</span>
+            <span class="n">n1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">alignment1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">n2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">alignment2</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">n_total</span> <span class="o">=</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span>
+
+            <span class="c1"># Count alternate alleles per locus.</span>
+            <span class="n">alt1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">alignment1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">alt2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">alignment2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">total_alt</span> <span class="o">=</span> <span class="n">alt1</span> <span class="o">+</span> <span class="n">alt2</span>
+
+            <span class="c1"># Compute allele frequencies where valid.</span>
+            <span class="n">p1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">alt1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n1</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="p">(</span><span class="n">n1</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">p2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">alt2</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n2</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="p">(</span><span class="n">n2</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">p_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">total_alt</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_total</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="p">(</span><span class="n">n_total</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+
+            <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+                <span class="c1"># Suppress RuntimeWarning for NaN values.</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
+                <span class="c1"># Calculate variance in allele frequencies (unbiased estimator).</span>
+                <span class="n">s2</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="o">*</span> <span class="p">(</span><span class="n">p1</span> <span class="o">-</span> <span class="n">p_total</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">n2</span> <span class="o">*</span> <span class="p">(</span><span class="n">p2</span> <span class="o">-</span> <span class="n">p_total</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                    <span class="n">n_total</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Expected heterozygosity in the total population.</span>
+            <span class="n">he_total</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">p_total</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_total</span><span class="p">)</span>
+
+            <span class="c1"># Compute Fst as the ratio of variance to total heterozygosity.</span>
+            <span class="n">fst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">he_total</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="p">(</span><span class="n">he_total</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">n_total</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">fst</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">=</span> <span class="n">s2</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">/</span> <span class="n">he_total</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">fst</span>
+
+        <span class="k">if</span> <span class="n">n_bootstraps</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">fst_per_population_pair</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">pop1</span><span class="p">,</span> <span class="n">pop2</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">populations</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="n">alignment1</span> <span class="o">=</span> <span class="n">pop_alignments</span><span class="p">[</span><span class="n">pop1</span><span class="p">]</span>
+                <span class="n">alignment2</span> <span class="o">=</span> <span class="n">pop_alignments</span><span class="p">[</span><span class="n">pop2</span><span class="p">]</span>
+                <span class="n">fst_values</span> <span class="o">=</span> <span class="n">compute_fst_pair</span><span class="p">(</span><span class="n">alignment1</span><span class="p">,</span> <span class="n">alignment2</span><span class="p">)</span>
+                <span class="n">fst_per_population_pair</span><span class="p">[(</span><span class="n">pop1</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                    <span class="n">fst_values</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_loci</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Fst </span><span class="si">{</span><span class="n">pop1</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">pop2</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="n">fst_per_population_pair</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Prepare dictionary for bootstrap results.</span>
+            <span class="n">fst_bootstrap_per_population_pair</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="p">(</span><span class="n">pop1</span><span class="p">,</span> <span class="n">pop2</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_loci</span><span class="p">,</span> <span class="n">n_bootstraps</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">pop1</span><span class="p">,</span> <span class="n">pop2</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">populations</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="p">}</span>
+
+            <span class="k">def</span> <span class="nf">bootstrap_replicate</span><span class="p">(</span><span class="n">seed</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Compute Fst per SNP between two populations for one bootstrap replicate.</span>
+
+<span class="sd">                Args:</span>
+<span class="sd">                    seed (int): Random seed for reproducibility.</span>
+
+<span class="sd">                Returns:</span>
+<span class="sd">                    dict: Dictionary with keys as population pairs and values as Fst arrays per locus.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+                <span class="n">resample_indices</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">n_loci</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_loci</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">replicate_results</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">pop1</span><span class="p">,</span> <span class="n">pop2</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">populations</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                    <span class="n">alignment1</span> <span class="o">=</span> <span class="n">pop_alignments</span><span class="p">[</span><span class="n">pop1</span><span class="p">][:,</span> <span class="n">resample_indices</span><span class="p">]</span>
+                    <span class="n">alignment2</span> <span class="o">=</span> <span class="n">pop_alignments</span><span class="p">[</span><span class="n">pop2</span><span class="p">][:,</span> <span class="n">resample_indices</span><span class="p">]</span>
+                    <span class="n">fst_values</span> <span class="o">=</span> <span class="n">compute_fst_pair</span><span class="p">(</span><span class="n">alignment1</span><span class="p">,</span> <span class="n">alignment2</span><span class="p">)</span>
+                    <span class="n">replicate_results</span><span class="p">[(</span><span class="n">pop1</span><span class="p">,</span> <span class="n">pop2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">fst_values</span>
+                <span class="k">return</span> <span class="n">replicate_results</span>
+
+            <span class="n">seeds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1e9</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_bootstraps</span><span class="p">)</span>
+            <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span> <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+                <span class="n">bootstrap_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">bootstrap_replicate</span><span class="p">,</span> <span class="n">seeds</span><span class="p">))</span>
+
+            <span class="c1"># Collate bootstrap replicates.</span>
+            <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">replicate</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bootstrap_results</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">pop_pair</span><span class="p">,</span> <span class="n">fst_values</span> <span class="ow">in</span> <span class="n">replicate</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">fst_bootstrap_per_population_pair</span><span class="p">[</span><span class="n">pop_pair</span><span class="p">][:,</span> <span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">fst_values</span>
+
+            <span class="k">return</span> <span class="n">fst_bootstrap_per_population_pair</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_prepare_alignment_and_individuals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare alignment and count non-missing individuals per locus.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[np.ndarray, np.ndarray]: Alignment array and counts of non-missing individuals per locus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignment_012</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Replace missing data (-9) with NaN</span>
+        <span class="n">alignment</span><span class="p">[</span><span class="n">alignment</span> <span class="o">==</span> <span class="o">-</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="c1"># Count valid individuals per locus</span>
+        <span class="n">n_individuals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">alignment</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">alignment</span><span class="p">,</span> <span class="n">n_individuals</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

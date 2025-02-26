@@ -1,0 +1,1002 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.filtering.nremover2 &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.filtering.nremover2</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.filtering.nremover2</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Standard library imports</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="c1"># Third-party imports</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Custom imports</span>
+<span class="kn">from</span> <span class="nn">snpio.filtering.filtering_helper</span> <span class="kn">import</span> <span class="n">FilteringHelper</span>
+<span class="kn">from</span> <span class="nn">snpio.filtering.filtering_methods</span> <span class="kn">import</span> <span class="n">FilteringMethods</span>
+<span class="kn">from</span> <span class="nn">snpio.plotting.plotting</span> <span class="kn">import</span> <span class="n">Plotting</span>
+<span class="kn">from</span> <span class="nn">snpio.utils.logging</span> <span class="kn">import</span> <span class="n">LoggerManager</span>
+
+
+<div class="viewcode-block" id="NRemover2">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.nremover2.NRemover2">[docs]</a>
+<span class="k">class</span> <span class="nc">NRemover2</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for filtering alignments based on various criteria.</span>
+
+<span class="sd">    The class can filter out sequences (samples) and loci (columns) that exceed a missing data threshold (per-column and per-population), minor allele frequency, minor allele count, and other criteria. It can also filter out monomorphic sites, singletons, and loci with more than two alleles. Finally, it can removed all but one linked locus, thin out loci within a specified distance of each other, and randomly subset loci in the SNP dataset. The class provides a flexible and extensible framework for filtering genetic data alignments based on user-defined criteria. It can be used to clean up SNP datasets, remove low-quality loci, and prepare data for downstream analyses.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        NRemover2 handles the following characters as missing data:</span>
+<span class="sd">            - &#39;N&#39;</span>
+<span class="sd">            - &#39;-&#39;</span>
+<span class="sd">            - &#39;?&#39;</span>
+<span class="sd">            - &#39;.&#39;</span>
+
+<span class="sd">        Thus, it treats gaps as missing data. Please keep this in mind when using NRemover2.</span>
+
+<span class="sd">        The class is designed to be used with the GenotypeData class, which contains the genetic data alignment, population map, and populations (if a popmap is provided).</span>
+
+<span class="sd">        The filtering classes use either a threshold or a boolean value to determine whether to consider heterozygous gentoypes in the filtering logic. The following methods use the ``exclude_heterozygous`` parameter:</span>
+
+<span class="sd">            - filter_monomorphic</span>
+<span class="sd">            - filter_singletons</span>
+<span class="sd">            - filter_biallelic</span>
+
+<span class="sd">        If ``exclude_heterozygous`` is set to ``True``, the filtering methods will exclude heterozygous genotypes from the filtering logic. If set to ``False`` (default), heterozygous genotypes will be included in the filtering logic.</span>
+
+<span class="sd">        The class can be used to search for optimal filtering thresholds by plotting the proportion of missing data against the filtering thresholds. The ``search_thresholds()`` method can be used to search across various combinations of filtering thresholds and plot the results.</span>
+
+<span class="sd">        The class can also be used to thin out loci within a specified distance of each other using the ``thin_loci`` method.</span>
+
+<span class="sd">        The class can be used to randomly subset the loci (columns) in the SNP dataset using the ``random_subset_loci`` method.</span>
+
+<span class="sd">        The class can be used to filter out linked loci using the VCF file CHROM field using the ``filter_linked`` method.</span>
+
+<span class="sd">        The class can be used to plot a Sankey diagram showing the number of loci removed at each filtering step using the ``plot_sankey_filtering_report`` method.</span>
+
+<span class="sd">        The class can be used to print a summary of the filtering results using the ``print_filtering_report`` method.</span>
+
+<span class="sd">        The class can be used to filter out monomorphic sites using the ``filter_monomorphic`` method.</span>
+
+<span class="sd">        The class can be used to filter out loci (columns) where the only variant is a singleton using the ``filter_singletons`` method.</span>
+
+<span class="sd">        The class can be used to filter out loci (columns) that have more than 2 alleles using the ``filter_biallelic`` method.</span>
+
+<span class="sd">        The class can be used to filter out loci (columns) where the minor allele frequency is below the threshold using the ``filter_maf`` method.</span>
+
+<span class="sd">        The class can be used to filter out loci (columns) where the minor allele count is below the threshold using the ``filter_mac`` method.</span>
+
+<span class="sd">        The class can be used to filter out loci (columns) from the alignment that have more than a given proportion of missing data using the ``filter_missing`` method.</span>
+
+<span class="sd">        The class can be used to filter out sequences from the alignment that have more than a given proportion of missing data using the ``filter_missing_sample`` method.</span>
+
+<span class="sd">        The class can be used to filter out loci (columns) from the alignment that have more than a given proportion of missing data in a specific population using the ``filter_missing_pop`` method.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from snpio import VCFReader</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Specify the genetic data from a VCF file</span>
+<span class="sd">        &gt;&gt;&gt; vcf_file = &quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Specify the population map file</span>
+<span class="sd">        &gt;&gt;&gt; popmap_file = &quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Read the genetic data from the VCF file</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; gd = VCFReader(filename=vcf_file, popmapfile=popmap_file)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Initialize the NRemover2 class with the GenotypeData instance</span>
+<span class="sd">        &gt;&gt;&gt; nrm = NRemover2(gd)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Filter samples and loci.</span>
+<span class="sd">        &gt;&gt;&gt; nrm.filter_missing_sample(0.75).filter_.filter_missing(0.75).filter_missing_pop(0.75).filter_mac(2).filter_monomorphic(exclude_heterozygous=False).filter_singletons(exclude_heterozygous=False).filter_biallelic(exclude_heterozygous=False).resolve()</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Plot the Sankey diagram showing the number of loci removed at each filtering step.</span>
+<span class="sd">        &gt;&gt;&gt; nrm.plot_sankey_filtering_report()</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Run a threshold search and plot the results.</span>
+<span class="sd">        &gt;&gt;&gt; nrm.search_thresholds(thresholds=[0.1, 0.2, 0.3, 0.4, 0.5], maf_thresholds=[0.01, 0.05, 0.1], mac_thresholds=[2, 3, 4, 5], filter_order=[&quot;filter_missing_sample&quot;, &quot;filter_missing&quot;, &quot;filter_missing_pop&quot;, &quot;filter_maf&quot;, &quot;filter_mac&quot;, &quot;filter_monomorphic&quot;, &quot;filter_singletons&quot;, &quot;filter_biallelic&quot;])</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        genotype_data (GenotypeData): An instance of the GenotypeData class.</span>
+
+<span class="sd">        filtering_helper (FilteringHelper): An instance of the FilteringHelper class.</span>
+
+<span class="sd">        filtering_methods (FilteringMethods): An instance of the FilteringMethods class.</span>
+
+<span class="sd">        df_sample_list (List[pd.DataFrame]): A list of DataFrames containing filtering results for samples.</span>
+
+<span class="sd">        df_global_list (List[pd.DataFrame]): A list of DataFrames containing global filtering results.</span>
+
+<span class="sd">        _chain_active (bool): A boolean flag indicating whether a filtering chain is active.</span>
+
+<span class="sd">        _chain_resolved (bool): A boolean flag indicating whether a filtering chain has been resolved.</span>
+
+<span class="sd">        _search_mode (bool): A boolean flag indicating whether the search mode is active.</span>
+
+<span class="sd">        debug (bool): A boolean flag indicating whether to enable debug mode.</span>
+
+<span class="sd">        verbose (bool): A boolean flag indicating whether to enable verbose mode.</span>
+
+<span class="sd">        logger (Logger): An instance of the Logger class for logging messages.</span>
+
+<span class="sd">        alignment (np.ndarray): The input alignment to filter.</span>
+
+<span class="sd">        populations (List[str]): The population for each sequence in the alignment.</span>
+
+<span class="sd">        samples (List[str]): The sample IDs for each sequence in the alignment.</span>
+
+<span class="sd">        prefix (str): The prefix for the output files.</span>
+
+<span class="sd">        popmap (Dict[str, Union[str, int]]): A dictionary mapping sample IDs to population names.</span>
+
+<span class="sd">        popmap_inverse (Dict[Union[str, int], List[str]]): A dictionary mapping population names to lists of sample IDs.</span>
+
+<span class="sd">        sample_indices (np.ndarray): A boolean array indicating which samples to keep.</span>
+
+<span class="sd">        loci_indices (np.ndarray): A boolean array indicating which loci to keep.</span>
+
+<span class="sd">        loci_removed_per_step (Dict[str, Tuple[int, int]]): A dictionary tracking the number of loci removed at each filtering step.</span>
+
+<span class="sd">        samples_removed_per_step (Dict[str, Tuple[int, int]]): A dictionary tracking the number of samples removed at each filtering step.</span>
+
+<span class="sd">        kept_per_step (Dict[str, Tuple[int, float]]): A dictionary tracking the number of loci or samples kept at each filtering step.</span>
+
+<span class="sd">        step_index (int): The current step index in the filtering process.</span>
+
+<span class="sd">        current_threshold (float): The current threshold for missing data.</span>
+
+<span class="sd">        original_loci_count (int): The original number of loci in the alignment.</span>
+
+<span class="sd">        original_sample_count (int): The original number of samples in the alignment.</span>
+
+<span class="sd">        original_loci_indices (np.ndarray): A boolean array indicating the original loci indices.</span>
+
+<span class="sd">        original_sample_indices (np.ndarray): A boolean array indicating the original sample indices.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        filter_missing: Filters out sequences from the alignment that have more than a given proportion of missing data.</span>
+
+<span class="sd">        filter_missing_pop: Filters out sequences from the alignment that have more than a given proportion of missing data in a specific population.</span>
+
+<span class="sd">        filter_missing_sample: Filters out samples from the alignment that have more than a given proportion of missing data.</span>
+
+<span class="sd">        filter_maf: Filters out loci (columns) where the minor allele frequency is below the threshold.</span>
+
+<span class="sd">        filter_monomorphic: Filters out monomorphic sites.</span>
+
+<span class="sd">        filter_singletons: Filters out loci (columns) where the only variant is a singleton.</span>
+
+<span class="sd">        filter_biallelic: Filter out loci (columns) that have more than 2 alleles.</span>
+
+<span class="sd">        filter_linked: Filter out linked loci using VCF file CHROM field.</span>
+
+<span class="sd">        thin_loci: Thin out loci within a specified distance of each other.</span>
+
+<span class="sd">        random_subset_loci: Randomly subset the loci (columns) in the SNP dataset.</span>
+
+<span class="sd">        search_thresholds: Plots the proportion of missing data against the filtering thresholds.</span>
+
+<span class="sd">        plot_sankey_filtering_report: Makes a Sankey plot showing the number of loci removed at each filtering step.</span>
+
+<span class="sd">        print_filtering_report: Prints a summary of the filtering results.</span>
+
+<span class="sd">        resolve: Finalizes the method chain and returns the updated GenotypeData instance.</span>
+
+<span class="sd">        __repr__: Returns a string representation of the NRemover2 instance.</span>
+
+<span class="sd">        __str__: Returns a string representation of the NRemover2 instance.</span>
+
+<span class="sd">        __getattr__: Custom attribute access method that handles delegating calls to FilteringMethods or FilteringHelper.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">genotype_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the NRemover2 class.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            genotype_data (GenotypeData): An instance of the GenotypeData class containing the genetic data alignment, population map,  populations, and other relevant data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span> <span class="o">=</span> <span class="n">genotype_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">popmap</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">popmap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">popmap_inverse</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">genotype_data</span><span class="o">.</span><span class="n">popmap_inverse</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">popmap_inverse</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popmap_inverse</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">pop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">populations</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span> <span class="k">for</span> <span class="n">pop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">prefix</span>
+
+        <span class="c1"># Store the original alignment and indices as backups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_alignment</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">snp_data</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_loci_count</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">snp_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_sample_count</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">snp_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_loci_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">original_loci_count</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_sample_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">original_sample_count</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_loci_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_loci_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_sample_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_sample_count</span>
+
+        <span class="c1"># Use the originals for the active filtering</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alignment</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_alignment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_alignment_shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignment</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_loci_indices</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_sample_indices</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loci_removed_per_step</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_removed_per_step</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kept_per_step</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Initializing other properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_sample_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_global_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chain_active</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chain_resolved</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Initially, no chain has been started</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_search_mode</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">debug</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">verbose</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;prefix&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="s2">&quot;debug&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">}</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;verbose&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span>
+            <span class="n">logman</span> <span class="o">=</span> <span class="n">LoggerManager</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logman</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">logger</span>
+
+        <span class="c1"># Initialize the filtering helper and methods</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filtering_helper</span> <span class="o">=</span> <span class="n">FilteringHelper</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filtering_methods</span> <span class="o">=</span> <span class="n">FilteringMethods</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_reset_filtering_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the filtering state of the alignment and indices to their original state.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Resetting alignment and indices to original state.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_alignment</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_loci_indices</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_sample_indices</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loci_removed_per_step</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_removed_per_step</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kept_per_step</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">_reset_filtering_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the filtering results (i.e., DataFrame lists) for future filtering steps.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Resetting filtering results.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_global_list</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_sample_list</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_get_filter_methods</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">maf_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">bool_threshold</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">mac_threshold</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves the filter methods based on provided thresholds.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            threshold (float): The threshold for missing data.</span>
+<span class="sd">            maf_threshold (float): The threshold for minor allele frequency.</span>
+<span class="sd">            bool_threshold (bool): A boolean threshold for filtering methods.</span>
+<span class="sd">            mac_threshold (int): The minimum allele count threshold.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Tuple[Callable, Tuple[float, float, bool, int]]]: A dictionary mapping method names to their corresponding callable and thresholds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">thresholds</span> <span class="o">=</span> <span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="n">maf_threshold</span><span class="p">,</span> <span class="n">bool_threshold</span><span class="p">,</span> <span class="n">mac_threshold</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;filter_missing_sample&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_missing_sample</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">),</span>
+            <span class="s2">&quot;filter_missing&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_missing</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">),</span>
+            <span class="s2">&quot;filter_missing_pop&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_missing_pop</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">),</span>
+            <span class="s2">&quot;filter_maf&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_maf</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">),</span>
+            <span class="s2">&quot;filter_mac&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_mac</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">),</span>
+            <span class="s2">&quot;filter_monomorphic&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_monomorphic</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">),</span>
+            <span class="s2">&quot;filter_biallelic&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_biallelic</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">),</span>
+            <span class="s2">&quot;filter_singletons&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_singletons</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_validate_filter_order</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">filter_order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">filter_methods</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates the filter order or sets the default order if none is provided.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filter_order (Optional[List[str]]): A list of filter methods in order of application.</span>
+<span class="sd">            filter_methods (Dict[str, Callable]): A dictionary of available filtering methods.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[str]: The validated or default filter order.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If an unknown method is found in the filter order.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">filter_order</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filter_order</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;filter_missing_sample&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;filter_missing&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;filter_missing_pop&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;filter_maf&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;filter_mac&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;filter_monomorphic&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;filter_biallelic&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;filter_singletons&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+
+        <span class="c1"># Validate the filter order to ensure that only valid methods are</span>
+        <span class="c1"># included</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">filter_order</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">step</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">filter_methods</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Unknown step in filter_order: </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">filter_methods</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">filter_order</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_set_threshold_ranges</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">thresholds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span>
+        <span class="n">maf_thresholds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span>
+        <span class="n">mac_thresholds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the ranges of thresholds for filtering.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            thresholds (Optional[Union[List[float], np.ndarray]]): Thresholds for missing data (0.0 &lt; threshold ≤ 1.0).</span>
+<span class="sd">            maf_thresholds (Optional[Union[List[float], np.ndarray]]): Thresholds for minor allele frequency (0.0 ≤ maf &lt; 1.0).</span>
+<span class="sd">            mac_thresholds (Optional[Union[List[int], np.ndarray]]): Thresholds for minimum allele count (MAC &gt; 1).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]: The validated thresholds, maf thresholds, boolean array, and mac thresholds.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If any of the provided thresholds are invalid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">thresholds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">thresholds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.0</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">thresholds</span><span class="p">]):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid missing data threshold provided. Thresholds must be between 0.0 and 1.0, but got: </span><span class="si">{</span><span class="n">thresholds</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">maf_thresholds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">maf_thresholds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.075</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">maf_thresholds</span><span class="p">]):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Invalid MAF threshold provided. MAF thresholds must be between 0.0 and 1.0.&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mac_thresholds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mac_thresholds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">mac_thresholds</span><span class="p">]):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Invalid MAC threshold provided. MAC thresholds must be greater than 1.&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Max Thresholds: </span><span class="si">{</span><span class="n">thresholds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MAF Thresholds: </span><span class="si">{</span><span class="n">maf_thresholds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MAC Thresholds: </span><span class="si">{</span><span class="n">mac_thresholds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">thresholds</span><span class="p">,</span>
+            <span class="n">maf_thresholds</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span>
+            <span class="n">mac_thresholds</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_apply_filtering_methods</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">filter_methods</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Applies the specified filtering methods in sequence.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filter_methods (Dict[str, Tuple[Callable, Optional[Union[np.ndarray, bool]]]]): A dictionary of filter methods and their corresponding thresholds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagate_chain</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">method_name</span><span class="p">,</span> <span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">)</span> <span class="ow">in</span> <span class="n">filter_methods</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_thresholds</span> <span class="o">=</span> <span class="n">thresholds</span>
+
+            <span class="k">if</span> <span class="n">method_name</span> <span class="ow">in</span> <span class="p">{</span>
+                <span class="s2">&quot;filter_missing_sample&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;filter_missing_pop&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;filter_missing&quot;</span><span class="p">,</span>
+            <span class="p">}:</span>
+                <span class="n">threshold</span> <span class="o">=</span> <span class="n">thresholds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">method_name</span> <span class="o">==</span> <span class="s2">&quot;filter_maf&quot;</span><span class="p">:</span>
+                <span class="n">threshold</span> <span class="o">=</span> <span class="n">thresholds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">method_name</span> <span class="ow">in</span> <span class="p">{</span>
+                <span class="s2">&quot;filter_singletons&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;filter_biallelic&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;filter_monomorphic&quot;</span><span class="p">,</span>
+            <span class="p">}:</span>
+                <span class="n">threshold</span> <span class="o">=</span> <span class="n">thresholds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">method_name</span> <span class="o">==</span> <span class="s2">&quot;filter_mac&quot;</span><span class="p">:</span>
+                <span class="n">threshold</span> <span class="o">=</span> <span class="n">thresholds</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Unknown method: </span><span class="si">{</span><span class="n">method_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">method</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error applying filter </span><span class="si">{</span><span class="n">method_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">e</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">step_index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_plot_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_combined</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot and save the filtering results.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df_combined (pd.DataFrame): Combined DataFrame containing filtering results to plot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Plotting filtering results...&quot;</span><span class="p">)</span>
+
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">plot_kwargs</span>
+        <span class="n">plotting</span> <span class="o">=</span> <span class="n">Plotting</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Call the plot_search_results method from the Plotting class</span>
+        <span class="n">plotting</span><span class="o">.</span><span class="n">plot_search_results</span><span class="p">(</span><span class="n">df_combined</span><span class="o">=</span><span class="n">df_combined</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NRemover2.plot_sankey_filtering_report">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.nremover2.NRemover2.plot_sankey_filtering_report">[docs]</a>
+    <span class="k">def</span> <span class="nf">plot_sankey_filtering_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots a Sankey diagram showing the number of loci removed at each filtering step.</span>
+
+<span class="sd">        This method generates a Sankey diagram showing the number of loci removed at each filtering step. The diagram is saved as a PNG file in the output directory. The Sankey diagram provides a visual representation of the filtering process, showing the number of loci removed at each step and the proportion of loci removed relative to the total number of loci in the alignment. It also shows the number of loci that were retained at each step.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: If the filtering chain has not been resolved.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The Sankey diagram is generated using the Plotting class.</span>
+
+<span class="sd">            The Sankey diagram is saved as PNG and HTML files in the output directory.</span>
+
+<span class="sd">            The Sankey diagram shows the number of loci removed at each filtering step and the proportion of loci removed relative to the total number of loci in the alignment.</span>
+
+<span class="sd">            The Sankey diagram also shows the number of loci that were retained at each step.</span>
+
+<span class="sd">            The Sankey diagram provides a visual representation of the filtering process, making it easier to understand the impact of each filtering step on the alignment.</span>
+
+<span class="sd">            The Sankey diagram is useful for visualizing the filtering process and identifying the most effective filtering steps.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            To plot the Sankey diagram showing the number of loci removed at each filtering step, use the following code:</span>
+
+<span class="sd">            &gt;&gt;&gt; gd = GenotypeData(&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;, &quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; nrm = NRemover2(gd)</span>
+<span class="sd">            &gt;&gt;&gt; nrm.filter_missing_sample(0.75).filter_missing(0.75).filter_missing_pop(0.75).filter_mac(2).filter_monomorphic(exclude_heterozygous=False).filter_singletons(exclude_heterozygous=False).filter_biallelic(exclude_heterozygous=False).resolve()</span>
+<span class="sd">            &gt;&gt;&gt; nrm.plot_sankey_filtering_report()</span>
+<span class="sd">            &gt;&gt;&gt; # The Sankey diagram will be saved as a PNG file in the output directory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Plotting Sankey filtering report...&quot;</span><span class="p">)</span>
+
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">plot_kwargs</span>
+        <span class="n">plotting</span> <span class="o">=</span> <span class="n">Plotting</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df_global_list</span><span class="p">)</span>
+        <span class="n">plotting</span><span class="o">.</span><span class="n">plot_sankey_filtering_report</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">search_mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">search_mode</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NRemover2.propagate_chain">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.nremover2.NRemover2.propagate_chain">[docs]</a>
+    <span class="k">def</span> <span class="nf">propagate_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Propagates the filtering chain to the next step, marking the chain as active.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: If the filtering chain has not been resolved.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            - This method is used to propagate the filtering chain to the next step in the filtering process.</span>
+<span class="sd">            - It marks the chain as active, allowing further filtering steps to be applied.</span>
+<span class="sd">            - The chain must be resolved before starting a new chain.</span>
+<span class="sd">            - The chain is resolved by calling the resolve() method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chain_active</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_start_new_filter_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes a new filtering chain by resetting the filtering state.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: If a previous filtering chain has not been resolved.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chain_resolved</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The previous filtering chain was not resolved. Please call resolve() before starting a new chain.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Proceed with filtering</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_filtering_state</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chain_resolved</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_update_loci_indices</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">included_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the loci indices based on the filtering results and records the step.</span>
+
+<span class="sd">        This method updates the loci indices based on the filtering results and records the step in the filtering results DataFrame. It also updates the loci_removed_per_step dictionary to track the number of loci removed at each filtering step.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            included_indices (np.ndarray): Boolean array indicating which loci are included.</span>
+<span class="sd">            method_name (str): The name of the filtering method used.</span>
+<span class="sd">            threshold (Optional[float]): The threshold value used for filtering.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the method_name is not recognized</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            - This method updates the loci indices based on the filtering results and records the step in the filtering results DataFrame.</span>
+<span class="sd">            - It also updates the loci_removed_per_step dictionary to track the number of loci removed at each filtering step.</span>
+<span class="sd">            - The method_name parameter specifies the filtering method used, such as &quot;filter_missing&quot;, &quot;filter_maf&quot;, &quot;filter_mac&quot;, &quot;filter_monomorphic&quot;, &quot;filter_singletons&quot;, or &quot;filter_biallelic&quot;.</span>
+<span class="sd">            - The threshold parameter specifies the threshold value used for filtering.</span>
+<span class="sd">            - The included_indices parameter is a boolean array indicating which loci are included after filtering.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loci_removed_per_step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_global_list</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_record_filtering_step</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">loci_removed_per_step</span><span class="p">,</span>
+                <span class="n">included_indices</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">df_global_list</span><span class="p">,</span>
+                <span class="n">method_name</span><span class="p">,</span>
+                <span class="n">threshold</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_sample_indices</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">included_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the sample indices based on the filtering results and records the step.</span>
+
+<span class="sd">        This method updates the sample indices based on the filtering results and records the step in the filtering results DataFrame. It also updates the samples_removed_per_step dictionary to track the number of samples removed at each filtering step.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            included_indices (np.ndarray): Boolean array indicating which samples are included.</span>
+<span class="sd">            method_name (str): The name of the filtering method used.</span>
+<span class="sd">            threshold (Optional[float]): The threshold value used for filtering.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the method_name is not recognized</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            - This method updates the sample indices based on the filtering results and records the step in the filtering results DataFrame.</span>
+<span class="sd">            - It also updates the samples_removed_per_step dictionary to track the number of samples removed at each filtering step.</span>
+<span class="sd">            - The method_name parameter specifies the filtering method used, such as &quot;filter_missing_sample&quot;, &quot;filter_missing&quot;, &quot;filter_missing_pop&quot;, &quot;filter_maf&quot;, &quot;filter_mac&quot;, &quot;filter_monomorphic&quot;, &quot;filter_singletons&quot;, or &quot;filter_biallelic&quot;.</span>
+<span class="sd">            - The threshold parameter specifies the threshold value used for filtering.</span>
+<span class="sd">            - The included_indices parameter is a boolean array indicating which samples are included after filtering.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_removed_per_step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_sample_list</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_record_filtering_step</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">samples_removed_per_step</span><span class="p">,</span>
+                <span class="n">included_indices</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">df_sample_list</span><span class="p">,</span>
+                <span class="n">method_name</span><span class="p">,</span>
+                <span class="n">threshold</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_record_filtering_step</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">removed_per_step</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+        <span class="n">included_indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">current_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Records the results of a filtering step and updates the indices.</span>
+
+<span class="sd">        This method records the results of a filtering step, updates the indices, and appends the results to the filtering results DataFrame. It is used to track the number of loci or samples removed at each filtering step.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            removed_per_step (Dict[str, Tuple[int, int]]): Dictionary tracking the number of removed loci or samples per step.</span>
+<span class="sd">            included_indices (np.ndarray): Boolean array indicating which loci or samples are included after filtering.</span>
+<span class="sd">            current_list (List[pd.DataFrame]): List to append filtering results DataFrames.</span>
+<span class="sd">            method_name (str): The name of the filtering method used.</span>
+<span class="sd">            threshold (Optional[float]): The threshold value used for filtering.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[np.ndarray, Dict[str, Tuple[int, int]], List[pd.DataFrame]]: Updated indices, removed per step, and the current list of DataFrames.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the method_name is not recognized</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            - This method records the results of a filtering step, updates the indices, and appends the results to the filtering results DataFrame.</span>
+<span class="sd">            - It is used to track the number of loci or samples removed at each filtering step.</span>
+<span class="sd">            - The removed_per_step dictionary tracks the number of loci or samples removed at each filtering step.</span>
+<span class="sd">            - The included_indices parameter is a boolean array indicating which loci or samples are included after filtering.</span>
+<span class="sd">            - The method_name parameter specifies the filtering method used, such as &quot;filter_missing&quot;, &quot;filter_maf&quot;, &quot;filter_mac&quot;, &quot;filter_monomorphic&quot;, &quot;filter_singletons&quot;, or &quot;filter_biallelic&quot;.</span>
+<span class="sd">            - The threshold parameter specifies the threshold value used for filtering.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_indices</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">method_name</span> <span class="o">!=</span> <span class="s2">&quot;filter_missing_sample&quot;</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">total_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">all_indices</span><span class="p">)</span>
+        <span class="n">n_to_keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">included_indices</span> <span class="o">&amp;</span> <span class="n">all_indices</span><span class="p">)</span>
+        <span class="n">n_removed</span> <span class="o">=</span> <span class="n">total_input</span> <span class="o">-</span> <span class="n">n_to_keep</span>  <span class="c1"># number removed at this step</span>
+
+        <span class="c1"># Append this information to the filtering results DataFrame</span>
+        <span class="n">current_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;Step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_index</span><span class="p">,</span>
+                    <span class="s2">&quot;Filter_Method&quot;</span><span class="p">:</span> <span class="n">method_name</span><span class="p">,</span>
+                    <span class="s2">&quot;Missing_Threshold&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">current_thresholds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">threshold</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;MAF_Threshold&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">current_thresholds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">threshold</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;Bool_Threshold&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">current_thresholds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">threshold</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;MAC_Threshold&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">current_thresholds</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">threshold</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;Removed_Count&quot;</span><span class="p">:</span> <span class="n">n_removed</span><span class="p">,</span>
+                    <span class="s2">&quot;Removed_Prop&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">n_removed</span> <span class="o">/</span> <span class="n">total_input</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">total_input</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;Kept_Count&quot;</span><span class="p">:</span> <span class="n">n_to_keep</span><span class="p">,</span>
+                    <span class="s2">&quot;Kept_Prop&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">n_to_keep</span> <span class="o">/</span> <span class="n">total_input</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">total_input</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;Total_Loci&quot;</span><span class="p">:</span> <span class="n">total_input</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">all_indices</span><span class="p">[</span><span class="o">~</span><span class="n">included_indices</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">all_indices</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">removed_per_step</span><span class="p">,</span> <span class="n">current_list</span>
+
+<div class="viewcode-block" id="NRemover2.resolve">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.nremover2.NRemover2.resolve">[docs]</a>
+    <span class="k">def</span> <span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve the method chain and finalize the filtering process.</span>
+
+<span class="sd">        This method resolves the method chain and finalizes the filtering process. It applies the selected filters to the alignment, updates the alignment, sample indices, and loci indices based on the filtering results, and resets the chain active flag. It returns the updated GenotypeData instance after filtering has been applied.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            GenotypeData: The updated GenotypeData instance after filtering has been applied.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            - This method is used to finalize the method chain by applying the selected filters to the alignment.</span>
+<span class="sd">            - It updates the alignment, sample indices, and loci indices based on the filtering results.</span>
+<span class="sd">            - It also resets the chain active flag and returns the updated GenotypeData instance after filtering has been applied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finalize_chain</span><span class="p">()</span>  <span class="c1"># Finalizes the alignment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chain_resolved</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Mark the chain as resolved</span>
+        <span class="k">return</span> <span class="n">gd</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_finalize_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Finalizes the method chain by applying the selected filters to the alignment.</span>
+
+<span class="sd">        This method finalizes the method chain by applying the selected filters to the alignment. It updates the alignment, sample indices, and loci indices based on the filtering results. It also resets the chain active flag and returns the updated GenotypeData instance after filtering has been applied.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If no samples or loci remain after filtering.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_mode</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filtering_helper</span><span class="o">.</span><span class="n">print_filtering_report</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chain_active</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;No active chain to finalize.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">si</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">li</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loci_indices</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search Mode: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">search_mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sample Indices: </span><span class="si">{</span><span class="n">si</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loci Indices: </span><span class="si">{</span><span class="n">li</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">si</span><span class="p">)</span> <span class="ow">or</span> <span class="n">si</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_mode</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;No samples left after filtering at threshold: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_threshold</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_chain_active</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">return</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">li</span><span class="p">)</span> <span class="ow">or</span> <span class="n">li</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_mode</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;No loci left after filtering at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_threshold</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_chain_active</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">return</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;No loci left after filtering.&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_mode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_chain_active</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignment</span><span class="p">[</span><span class="n">si</span><span class="p">,</span> <span class="p">:][:,</span> <span class="n">li</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">)[</span><span class="n">si</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="n">si</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Update the genotype data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="o">.</span><span class="n">set_alignment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alignment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="n">li</span><span class="p">)</span>
+
+        <span class="c1"># Reset the chain active flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chain_active</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">search_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current search mode status.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: The status of search mode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_search_mode</span>
+
+    <span class="nd">@search_mode</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">search_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the search mode status.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (bool): The new status of search mode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_search_mode</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">loci_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current loci_indices.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: The boolean array indicating which loci to keep.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span>
+
+    <span class="nd">@loci_indices</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">loci_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets loci_indices.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (np.ndarray): The new boolean array indicating which loci to keep.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loci_indices</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sample_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the current sample_indices.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: The boolean array indicating which samples to keep.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span>
+
+    <span class="nd">@sample_indices</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sample_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets sample_indices.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (np.ndarray): The new boolean array indicating which samples to keep.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sample_indices</span> <span class="o">=</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="NRemover2.__getattr__">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.nremover2.NRemover2.__getattr__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Custom attribute access method that handles delegating calls to FilteringMethods or FilteringHelper.</span>
+
+<span class="sd">        This method allows for transparent access to the filtering methods and helper classes from NRemover2.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): The name of the attribute to access.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[Callable, None]: The requested attribute, or None if not found.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AttributeError: If the attribute is not found in either NRemover2 or the filtering methods or helper.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            - This method allows for transparent access to the filtering methods and helper classes from NRemover2.</span>
+<span class="sd">            - It delegates attribute access to the FilteringMethods and FilteringHelper classes if the attribute is not found in NRemover2.</span>
+<span class="sd">            - This method is used to provide a more user-friendly interface for accessing the filtering methods and helper classes.</span>
+<span class="sd">            - It allows users to access the filtering methods and helper classes directly from the NRemover2 instance without having to access them through the filtering_methods or filtering_helper attributes.</span>
+<span class="sd">            - If the attribute is not found in NRemover2, FilteringMethods, or FilteringHelper, an AttributeError is raised.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure filtering_methods is initialized before accessing it</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;filtering_methods&quot;</span><span class="p">,</span> <span class="s2">&quot;filtering_helper&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;filtering_methods&quot;</span> <span class="ow">and</span> <span class="s2">&quot;filtering_methods&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">filtering_methods</span> <span class="o">=</span> <span class="n">FilteringMethods</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;filtering_helper&quot;</span> <span class="ow">and</span> <span class="s2">&quot;filtering_helper&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">filtering_helper</span> <span class="o">=</span> <span class="n">FilteringHelper</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="c1"># Try accessing the attribute directly from NRemover2</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="c1"># Safely access filtering_methods and filtering_helper attributes</span>
+        <span class="k">if</span> <span class="s2">&quot;filtering_methods&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filtering_methods</span><span class="p">,</span> <span class="n">name</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filtering_methods</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;filtering_helper&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filtering_helper</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filtering_helper</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># Raise AttributeError if the attribute is not found</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; object has no attribute &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NRemover2.__repr__">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.nremover2.NRemover2.__repr__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a string representation of the NRemover2 instance.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string representation of the NRemover2 instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;NRemover2(genotype_data=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+<div class="viewcode-block" id="NRemover2.__str__">
+<a class="viewcode-back" href="../../../snpio.filtering.html#snpio.filtering.nremover2.NRemover2.__str__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a string representation of the NRemover2 instance.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string representation of the NRemover2 instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;NRemover2(genotype_data=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">genotype_data</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

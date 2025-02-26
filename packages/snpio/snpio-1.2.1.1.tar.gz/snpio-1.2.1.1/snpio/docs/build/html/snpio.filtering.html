@@ -1,0 +1,1004 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.filtering package &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=859da57e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=ca842793"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="snpio.plotting package" href="snpio.plotting.html" />
+    <link rel="prev" title="snpio package" href="snpio.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SNPio
+              <img src="_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">snpio</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="snpio.html">snpio package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="snpio.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">snpio.filtering package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.plotting.html">snpio.plotting package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.io.html">snpio.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.analysis.html">snpio.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.read_input.html">snpio.read_input package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.utils.html">snpio.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.popgenstats.html">snpio.popgenstats package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="snpio.html#module-snpio">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">snpio</a></li>
+          <li class="breadcrumb-item"><a href="snpio.html">snpio package</a></li>
+      <li class="breadcrumb-item active">snpio.filtering package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/btmartin721/SNPio/blob/master/docs/source/snpio.filtering.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="snpio-filtering-package">
+<h1>snpio.filtering package<a class="headerlink" href="#snpio-filtering-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="snpio-filtering-nremover2-module">
+<h2>snpio.filtering.nremover2 module<a class="headerlink" href="#snpio-filtering-nremover2-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.filtering.nremover2.</span></span><span class="sig-name descname"><span class="pre">NRemover2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/nremover2.html#NRemover2"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for filtering alignments based on various criteria.</p>
+<p>The class can filter out sequences (samples) and loci (columns) that exceed a missing data threshold (per-column and per-population), minor allele frequency, minor allele count, and other criteria. It can also filter out monomorphic sites, singletons, and loci with more than two alleles. Finally, it can removed all but one linked locus, thin out loci within a specified distance of each other, and randomly subset loci in the SNP dataset. The class provides a flexible and extensible framework for filtering genetic data alignments based on user-defined criteria. It can be used to clean up SNP datasets, remove low-quality loci, and prepare data for downstream analyses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt>NRemover2 handles the following characters as missing data:</dt><dd><ul class="simple">
+<li><p>‘N’</p></li>
+<li><p>‘-’</p></li>
+<li><p>‘?’</p></li>
+<li><p>‘.’</p></li>
+</ul>
+</dd>
+</dl>
+<p>Thus, it treats gaps as missing data. Please keep this in mind when using NRemover2.</p>
+<p>The class is designed to be used with the GenotypeData class, which contains the genetic data alignment, population map, and populations (if a popmap is provided).</p>
+<p>The filtering classes use either a threshold or a boolean value to determine whether to consider heterozygous gentoypes in the filtering logic. The following methods use the <code class="docutils literal notranslate"><span class="pre">exclude_heterozygous</span></code> parameter:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>filter_monomorphic</p></li>
+<li><p>filter_singletons</p></li>
+<li><p>filter_biallelic</p></li>
+</ul>
+</div></blockquote>
+<p>If <code class="docutils literal notranslate"><span class="pre">exclude_heterozygous</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the filtering methods will exclude heterozygous genotypes from the filtering logic. If set to <code class="docutils literal notranslate"><span class="pre">False</span></code> (default), heterozygous genotypes will be included in the filtering logic.</p>
+<p>The class can be used to search for optimal filtering thresholds by plotting the proportion of missing data against the filtering thresholds. The <code class="docutils literal notranslate"><span class="pre">search_thresholds()</span></code> method can be used to search across various combinations of filtering thresholds and plot the results.</p>
+<p>The class can also be used to thin out loci within a specified distance of each other using the <code class="docutils literal notranslate"><span class="pre">thin_loci</span></code> method.</p>
+<p>The class can be used to randomly subset the loci (columns) in the SNP dataset using the <code class="docutils literal notranslate"><span class="pre">random_subset_loci</span></code> method.</p>
+<p>The class can be used to filter out linked loci using the VCF file CHROM field using the <code class="docutils literal notranslate"><span class="pre">filter_linked</span></code> method.</p>
+<p>The class can be used to plot a Sankey diagram showing the number of loci removed at each filtering step using the <code class="docutils literal notranslate"><span class="pre">plot_sankey_filtering_report</span></code> method.</p>
+<p>The class can be used to print a summary of the filtering results using the <code class="docutils literal notranslate"><span class="pre">print_filtering_report</span></code> method.</p>
+<p>The class can be used to filter out monomorphic sites using the <code class="docutils literal notranslate"><span class="pre">filter_monomorphic</span></code> method.</p>
+<p>The class can be used to filter out loci (columns) where the only variant is a singleton using the <code class="docutils literal notranslate"><span class="pre">filter_singletons</span></code> method.</p>
+<p>The class can be used to filter out loci (columns) that have more than 2 alleles using the <code class="docutils literal notranslate"><span class="pre">filter_biallelic</span></code> method.</p>
+<p>The class can be used to filter out loci (columns) where the minor allele frequency is below the threshold using the <code class="docutils literal notranslate"><span class="pre">filter_maf</span></code> method.</p>
+<p>The class can be used to filter out loci (columns) where the minor allele count is below the threshold using the <code class="docutils literal notranslate"><span class="pre">filter_mac</span></code> method.</p>
+<p>The class can be used to filter out loci (columns) from the alignment that have more than a given proportion of missing data using the <code class="docutils literal notranslate"><span class="pre">filter_missing</span></code> method.</p>
+<p>The class can be used to filter out sequences from the alignment that have more than a given proportion of missing data using the <code class="docutils literal notranslate"><span class="pre">filter_missing_sample</span></code> method.</p>
+<p>The class can be used to filter out loci (columns) from the alignment that have more than a given proportion of missing data in a specific population using the <code class="docutils literal notranslate"><span class="pre">filter_missing_pop</span></code> method.</p>
+</div>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">VCFReader</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Specify the genetic data from a VCF file</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vcf_file</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Specify the population map file</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">popmap_file</span> <span class="o">=</span> <span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Read the genetic data from the VCF file</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gd</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">vcf_file</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="n">popmap_file</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize the NRemover2 class with the GenotypeData instance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrm</span> <span class="o">=</span> <span class="n">NRemover2</span><span class="p">(</span><span class="n">gd</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Filter samples and loci.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrm</span><span class="o">.</span><span class="n">filter_missing_sample</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_</span><span class="o">.</span><span class="n">filter_missing</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_missing_pop</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_mac</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">filter_monomorphic</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">filter_singletons</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">filter_biallelic</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Plot the Sankey diagram showing the number of loci removed at each filtering step.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrm</span><span class="o">.</span><span class="n">plot_sankey_filtering_report</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Run a threshold search and plot the results.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrm</span><span class="o">.</span><span class="n">search_thresholds</span><span class="p">(</span><span class="n">thresholds</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">maf_thresholds</span><span class="o">=</span><span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">mac_thresholds</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">filter_order</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;filter_missing_sample&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_missing&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_missing_pop&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_maf&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_mac&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_monomorphic&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_singletons&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_biallelic&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">genotype_data</span></span></dt>
+<dd><p>An instance of the GenotypeData class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>GenotypeData</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filtering_helper</span></span></dt>
+<dd><p>An instance of the FilteringHelper class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FilteringHelper</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filtering_methods</span></span></dt>
+<dd><p>An instance of the FilteringMethods class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FilteringMethods</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">df_sample_list</span></span></dt>
+<dd><p>A list of DataFrames containing filtering results for samples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[pd.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">df_global_list</span></span></dt>
+<dd><p>A list of DataFrames containing global filtering results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[pd.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_chain_active</span></span></dt>
+<dd><p>A boolean flag indicating whether a filtering chain is active.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_chain_resolved</span></span></dt>
+<dd><p>A boolean flag indicating whether a filtering chain has been resolved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_search_mode</span></span></dt>
+<dd><p>A boolean flag indicating whether the search mode is active.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">debug</span></span></dt>
+<dd><p>A boolean flag indicating whether to enable debug mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">verbose</span></span></dt>
+<dd><p>A boolean flag indicating whether to enable verbose mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">logger</span></span></dt>
+<dd><p>An instance of the Logger class for logging messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">alignment</span></span></dt>
+<dd><p>The input alignment to filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">populations</span></span></dt>
+<dd><p>The population for each sequence in the alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">samples</span></span></dt>
+<dd><p>The sample IDs for each sequence in the alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">prefix</span></span></dt>
+<dd><p>The prefix for the output files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">popmap</span></span></dt>
+<dd><p>A dictionary mapping sample IDs to population names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Union[str, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">popmap_inverse</span></span></dt>
+<dd><p>A dictionary mapping population names to lists of sample IDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[Union[str, int], List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">sample_indices</span></span></dt>
+<dd><p>A boolean array indicating which samples to keep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">loci_indices</span></span></dt>
+<dd><p>A boolean array indicating which loci to keep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">loci_removed_per_step</span></span></dt>
+<dd><p>A dictionary tracking the number of loci removed at each filtering step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Tuple[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">samples_removed_per_step</span></span></dt>
+<dd><p>A dictionary tracking the number of samples removed at each filtering step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Tuple[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">kept_per_step</span></span></dt>
+<dd><p>A dictionary tracking the number of loci or samples kept at each filtering step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Tuple[int, float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">step_index</span></span></dt>
+<dd><p>The current step index in the filtering process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">current_threshold</span></span></dt>
+<dd><p>The current threshold for missing data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">original_loci_count</span></span></dt>
+<dd><p>The original number of loci in the alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">original_sample_count</span></span></dt>
+<dd><p>The original number of samples in the alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">original_loci_indices</span></span></dt>
+<dd><p>A boolean array indicating the original loci indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">original_sample_indices</span></span></dt>
+<dd><p>A boolean array indicating the original sample indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_missing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Filters out sequences from the alignment that have more than a given proportion of missing data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_missing_pop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Filters out sequences from the alignment that have more than a given proportion of missing data in a specific population.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_missing_sample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Filters out samples from the alignment that have more than a given proportion of missing data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_maf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Filters out loci (columns) where the minor allele frequency is below the threshold.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_monomorphic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Filters out monomorphic sites.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_singletons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Filters out loci (columns) where the only variant is a singleton.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_biallelic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Filter out loci (columns) that have more than 2 alleles.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_linked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Filter out linked loci using VCF file CHROM field.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">thin_loci</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Thin out loci within a specified distance of each other.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">random_subset_loci</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Randomly subset the loci (columns) in the SNP dataset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">search_thresholds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Plots the proportion of missing data against the filtering thresholds.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_sankey_filtering_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/nremover2.html#NRemover2.plot_sankey_filtering_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Makes a Sankey plot showing the number of loci removed at each filtering step.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">print_filtering_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Prints a summary of the filtering results.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">resolve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/nremover2.html#NRemover2.resolve"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Finalizes the method chain and returns the updated GenotypeData instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/nremover2.html#NRemover2.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns a string representation of the NRemover2 instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/nremover2.html#NRemover2.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns a string representation of the NRemover2 instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__getattr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/nremover2.html#NRemover2.__getattr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Custom attribute access method that handles delegating calls to FilteringMethods or FilteringHelper.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loci_indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em></dt>
+<dd><p>Gets the current loci_indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The boolean array indicating which loci to keep.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_sankey_filtering_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/nremover2.html#NRemover2.plot_sankey_filtering_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plots a Sankey diagram showing the number of loci removed at each filtering step.</p>
+<p>This method generates a Sankey diagram showing the number of loci removed at each filtering step. The diagram is saved as a PNG file in the output directory. The Sankey diagram provides a visual representation of the filtering process, showing the number of loci removed at each step and the proportion of loci removed relative to the total number of loci in the alignment. It also shows the number of loci that were retained at each step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>RuntimeError</strong> – If the filtering chain has not been resolved.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Sankey diagram is generated using the Plotting class.</p>
+<p>The Sankey diagram is saved as PNG and HTML files in the output directory.</p>
+<p>The Sankey diagram shows the number of loci removed at each filtering step and the proportion of loci removed relative to the total number of loci in the alignment.</p>
+<p>The Sankey diagram also shows the number of loci that were retained at each step.</p>
+<p>The Sankey diagram provides a visual representation of the filtering process, making it easier to understand the impact of each filtering step on the alignment.</p>
+<p>The Sankey diagram is useful for visualizing the filtering process and identifying the most effective filtering steps.</p>
+</div>
+<p class="rubric">Example</p>
+<p>To plot the Sankey diagram showing the number of loci removed at each filtering step, use the following code:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gd</span> <span class="o">=</span> <span class="n">GenotypeData</span><span class="p">(</span><span class="s2">&quot;snpio/example_data/vcf_files/phylogen_subset14K_sorted.vcf.gz&quot;</span><span class="p">,</span> <span class="s2">&quot;snpio/example_data/popmaps/phylogen_nomx.popmap&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrm</span> <span class="o">=</span> <span class="n">NRemover2</span><span class="p">(</span><span class="n">gd</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrm</span><span class="o">.</span><span class="n">filter_missing_sample</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_missing</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_missing_pop</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">filter_mac</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">filter_monomorphic</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">filter_singletons</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">filter_biallelic</span><span class="p">(</span><span class="n">exclude_heterozygous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrm</span><span class="o">.</span><span class="n">plot_sankey_filtering_report</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The Sankey diagram will be saved as a PNG file in the output directory.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">propagate_chain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/nremover2.html#NRemover2.propagate_chain"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Propagates the filtering chain to the next step, marking the chain as active.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>RuntimeError</strong> – If the filtering chain has not been resolved.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>This method is used to propagate the filtering chain to the next step in the filtering process.</p></li>
+<li><p>It marks the chain as active, allowing further filtering steps to be applied.</p></li>
+<li><p>The chain must be resolved before starting a new chain.</p></li>
+<li><p>The chain is resolved by calling the resolve() method.</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">resolve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/nremover2.html#NRemover2.resolve"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Resolve the method chain and finalize the filtering process.</p>
+<p>This method resolves the method chain and finalizes the filtering process. It applies the selected filters to the alignment, updates the alignment, sample indices, and loci indices based on the filtering results, and resets the chain active flag. It returns the updated GenotypeData instance after filtering has been applied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The updated GenotypeData instance after filtering has been applied.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>GenotypeData</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>This method is used to finalize the method chain by applying the selected filters to the alignment.</p></li>
+<li><p>It updates the alignment, sample indices, and loci indices based on the filtering results.</p></li>
+<li><p>It also resets the chain active flag and returns the updated GenotypeData instance after filtering has been applied.</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em></dt>
+<dd><p>Gets the current sample_indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The boolean array indicating which samples to keep.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">search_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em></dt>
+<dd><p>Gets the current search mode status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The status of search mode.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-filtering-filtering-helper-module">
+<h2>snpio.filtering.filtering_helper module<a class="headerlink" href="#snpio-filtering-filtering-helper-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.filtering.filtering_helper.</span></span><span class="sig-name descname"><span class="pre">FilteringHelper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nremover_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_helper.html#FilteringHelper"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">print_filtering_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_helper.html#FilteringHelper.print_filtering_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Print a filtering report to the terminal.</p>
+<p>This method generates and prints a report detailing the filtering process, including the number of loci and samples before and after filtering, and the percentage of missing data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None. The report is printed to the terminal.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>RuntimeError</strong> – If there is no data left after filtering.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method should be called after filtering is complete.</p>
+<p>If no data is removed during filtering, a warning is logged.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">search_thresholds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maf_thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mac_thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_helper.html#FilteringHelper.search_thresholds"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Search across filtering thresholds and plot the filtering proportions.</p>
+<p>This method searches through various combinations of filtering thresholds and plots the results. The filtering logic is handled by the NRemover2 class, while this method manages the plotting and threshold search.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>thresholds</strong> (<em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – A list of missing data thresholds to search. Defaults to None.</p></li>
+<li><p><strong>maf_thresholds</strong> (<em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – A list of minor allele frequency thresholds to search. Defaults to None.</p></li>
+<li><p><strong>mac_thresholds</strong> (<em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – A list of minor allele count thresholds to search. Defaults to None.</p></li>
+<li><p><strong>filter_order</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – A list of filtering methods to apply in order. If None, the default order is: “filter_missing_sample”, “filter_missing_pop”, “filter_maf”, “filter_mac”, “filter_monomorphic”, “filter_biallelic”, “filter_singletons”. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p>snpio.filtering.filtering_methods module</p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.filtering.filtering_methods.</span></span><span class="sig-name descname"><span class="pre">FilteringMethods</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nremover_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_biallelic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exclude_heterozygous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods.filter_biallelic"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Filters alignment to retain ONLY biallelic loci.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>exclude_heterozygous</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to exclude heterozygous sites from the biallelic filtering. This means that when set to True, only homozygous genotypes will be considered, and heterozygous genotypes will be ignored. Defaults to False.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The NRemover2 object with the filtered alignment’s boolean sample_indices array set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_linked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods.filter_linked"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Filters out linked loci based on VCF file CHROM information.</p>
+<p>Randomly selects one locus from each unique chromosome, ensuring that the selected
+loci are not already filtered out by <cite>self.nremover.loci_indices</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The NRemover2 object with the filtered alignment’s boolean sample_indices array set.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>OSError</strong> – Unsupported file type provided.</p></li>
+<li><p><strong>FileNotFoundError</strong> – If the HDF5 file does not exist.</p></li>
+<li><p><strong>KeyError</strong> – If the key ‘chrom’ is not present in the HDF5 file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_mac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_heterozygous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods.filter_mac"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Filters loci where the minor allele count is below the given minimum count.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min_count</strong> (<em>int</em>) – The minimum minor allele count to retain a locus.</p></li>
+<li><p><strong>exclude_heterozygous</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to exclude heterozygous sites from the MAC calculation. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The NRemover2 object with the filtered alignment’s boolean loci_indices array set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_maf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods.filter_maf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Filters loci where the minor allele frequency is below the threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>float</em>) – The minimum minor allele frequency required to keep a locus.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The NRemover2 object with the filtered alignment’s boolean loci_indices array set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_missing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods.filter_missing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Filters out columns (loci) with missing data proportion greater than the given threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>float</em>) – The maximum proportion of missing data allowed for a locus to be retained.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The NRemover2 object with the filtered alignment’s boolean loci_indices array set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If the threshold is not a float.</p></li>
+<li><p><strong>ValueError</strong> – If the threshold is not between 0.0 and 1.0 inclusive.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_missing_pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods.filter_missing_pop"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Filters loci based on missing data proportion per population.</p>
+<p>The method filters loci where the missing data proportion exceeds the given threshold in any population.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>float</em>) – The maximum proportion of missing data allowed for a locus to be retained.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The NRemover2 object with the filtered alignment’s boolean loci_indices array set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NRemover2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_missing_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods.filter_missing_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_monomorphic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exclude_heterozygous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods.filter_monomorphic"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Filters out monomorphic sites from an alignment. Monomorphic sites are those that contain only one unique valid allele.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>exclude_heterozygous</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to exclude heterozygous sites from the monomorphic filtering.
+Defaults to False.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The NRemover2 object with the filtered alignment’s boolean sample_indices array set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_singletons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exclude_heterozygous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods.filter_singletons"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Filters out singletons from an alignment. A singleton is defined as a locus where one variant appears only once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>exclude_heterozygous</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to exclude heterozygous sites from the singleton filtering. This means that when set to True, only homozygous genotypes will be considered, and heterozygous genotypes will be ignored. Defaults to False.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The NRemover2 object with the filtered alignment’s boolean sample_indices array set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">random_subset_loci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods.random_subset_loci"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Randomly subsets loci based on the <cite>size</cite> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>size</strong> (<em>int</em><em> or </em><em>float</em>) – The number or proportion of loci to subset. If int, the exact number of loci to keep. Must be less than the total number of loci. If float, the proportion of loci to keep (must be in (0, 1]). If the number of loci to keep is greater than the total number of loci, the loci will be randomly sampled with replacement.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The NRemover2 object with the filtered alignment’s boolean loci_indices array set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">thin_loci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/filtering/filtering_methods.html#FilteringMethods.thin_loci"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Thins loci that are within <cite>size</cite> bases of another SNP.</p>
+<p>Uses the CHROM and POS fields of a VCF file to determine the locations of the loci.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>size</strong> (<em>int</em>) – The thinning size. Removes all but one locus within <cite>size</cite> bases of another SNP.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The NRemover2 object with the filtered alignment’s boolean loci_indices array set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="snpio.html" class="btn btn-neutral float-left" title="snpio package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="snpio.plotting.html" class="btn btn-neutral float-right" title="snpio.plotting package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

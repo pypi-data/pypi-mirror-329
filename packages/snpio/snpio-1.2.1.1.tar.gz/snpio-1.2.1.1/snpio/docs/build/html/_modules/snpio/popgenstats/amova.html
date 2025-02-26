@@ -1,0 +1,733 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.popgenstats.amova &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=859da57e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ca842793"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SNPio
+              <img src="../../../_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">snpio</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">snpio.popgenstats.amova</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for snpio.popgenstats.amova</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ProcessPoolExecutor</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">pdist</span><span class="p">,</span> <span class="n">squareform</span>
+
+<span class="kn">from</span> <span class="nn">snpio.utils.misc</span> <span class="kn">import</span> <span class="n">IUPAC</span>
+
+
+<div class="viewcode-block" id="AMOVA">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.amova.AMOVA">[docs]</a>
+<span class="k">class</span> <span class="nc">AMOVA</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analysis of Molecular Variance (AMOVA) class.</span>
+
+<span class="sd">    This class provides methods for conducting AMOVA with 1, 2, or 3 hierarchical levels. The AMOVA method partitions genetic variation into components due to differences among populations, among individuals within populations, and within individuals. This method calculates variance components and Phi statistics for a given number of hierarchical levels (1, 2, or 3). If bootstrapping is enabled, it also estimates p-values for the variance components. The number of hierarchical levels determines the structure of the AMOVA model: 1 =&gt; populations only, 2 =&gt; region -&gt; populations, 3 =&gt; region -&gt; population -&gt; individuals. If regionmap is provided, it is used to map populations to regions.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        - Algorithm adapted from the R package &#39;poppr&#39; (Kamvar et al., 2014) and Excoffier et al. (1992).</span>
+<span class="sd">        - The Phi statistic is a measure of genetic differentiation.</span>
+<span class="sd">        - Bootstrapping is implemented by resampling SNP loci with replacement.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">genotype_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">alignment</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the AMOVA object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            genotype_data (GenotypeData): Genotype data object (must have .popmap_inverse, .samples).</span>
+<span class="sd">            alignment (np.ndarray): Genotype data in 012 format (shape: [n_samples, n_loci]).</span>
+<span class="sd">            logger (Logger, optional): Logger object for debug/info output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_popmap_inverse</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">popmap_inverse</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span> <span class="o">=</span> <span class="n">genotype_data</span><span class="o">.</span><span class="n">samples</span>
+
+        <span class="c1"># self._alignment = IUPAC-coded 2D array.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alignment</span> <span class="o">=</span> <span class="n">alignment</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Set up logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="ow">or</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1"># Cache structures used by single-level or two-level AMOVA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_regions_three_level</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">iupac_data</span> <span class="o">=</span> <span class="n">IUPAC</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="c1"># Get dictionary mapping IUPAC codes to integers.</span>
+        <span class="c1"># This is used for computing pairwise distances.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_iupac_map</span> <span class="o">=</span> <span class="n">iupac_data</span><span class="o">.</span><span class="n">get_iupac_int_map</span><span class="p">()</span>
+
+        <span class="c1"># Precompute IUPAC distance matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_iupac_distance_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_iupac_nucleotide_distance</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">c2</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iupac_map</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="p">]</span>
+                <span class="k">for</span> <span class="n">c1</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iupac_map</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="AMOVA.run">
+<a class="viewcode-back" href="../../../snpio.popgenstats.html#snpio.popgenstats.amova.AMOVA.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">regionmap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_bootstraps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">random_seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Conduct AMOVA with 1, 2, or 3 hierarchical levels.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            regionmap (dict, optional): Mapping from population_id -&gt; region_id. Must be provided for hierarchical_levels &gt; 1. Defaults to None.</span>
+<span class="sd">            n_bootstraps (int): Number of bootstrap replicates (across loci). Default: 0 (no bootstrapping).</span>
+<span class="sd">            n_jobs (int): Number of parallel jobs. -1 uses all cores. Defaults to 1</span>
+<span class="sd">            random_seed (int, optional): Random seed for reproducibility. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: AMOVA results (variance components, Phi statistics, p-values if bootstrapping).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Input validation</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_bootstraps</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">n_bootstraps</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;n_bootstraps must be a non-negative integer.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting AMOVA...&quot;</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amova_three_level</span><span class="p">(</span><span class="n">regionmap</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alignment</span><span class="p">)</span>
+
+        <span class="c1"># Handle bootstrapping</span>
+        <span class="k">if</span> <span class="n">n_bootstraps</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Performing </span><span class="si">{</span><span class="n">n_bootstraps</span><span class="si">}</span><span class="s2"> bootstrap replicates with </span><span class="si">{</span><span class="n">n_jobs</span><span class="si">}</span><span class="s2"> parallel jobs...&quot;</span>
+            <span class="p">)</span>
+            <span class="n">p_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amova_bootstrap</span><span class="p">(</span>
+                <span class="n">results</span><span class="p">,</span>
+                <span class="n">n_bootstraps</span><span class="p">,</span>
+                <span class="n">n_jobs</span><span class="p">,</span>
+                <span class="n">random_seed</span><span class="p">,</span>
+                <span class="n">regionmap</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">_p_value&quot;</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">p_values</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;AMOVA completed!&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_amova_three_level</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">regionmap</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">alignment</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform a three-level hierarchical AMOVA.</span>
+
+<span class="sd">        This method calculates variance components and Phi statistics for a three-level AMOVA model: region -&gt; population -&gt; individuals. It computes among-region, among-population-within-region, and within-population variance components. Returns Phi_RT, Phi_PR, Phi_PT, and variance components.</span>
+
+<span class="sd">        In layman&#39;s terms, this method helps in understanding genetic differentiation at three hierarchical levels: regions, populations within regions, and individuals within populations. It calculates variance components that quantify the genetic diversity at each level. The Phi statistics are measures of genetic differentiation between regions, populations, and individuals.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            regionmap (dict): pop_id -&gt; region_id. Required for this method. If not provided, raises ValueError. Format: {pop_id: region_id}.</span>
+<span class="sd">            alignment (np.ndarray): Genotype data in IUPAC format (shape: [n_samples, n_loci]).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, float]: Dictionary of variance components and Phi statistics in float format. Keys: &quot;Among_region_variance&quot;, &quot;Among_population_within_region_variance&quot;, &quot;Within_population_variance&quot;, &quot;Phi_RT&quot;, &quot;Phi_PR&quot;, &quot;Phi_PT&quot;. Values: float. If any variance component is NaN, the corresponding Phi statistic is also NaN.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;Among_region_variance&quot;: 0.123,</span>
+<span class="sd">                &quot;Among_population_within_region_variance&quot;: 0.456,</span>
+<span class="sd">                &quot;Within_population_variance&quot;: 0.789,</span>
+<span class="sd">                &quot;Phi_RT&quot;: 0.123,</span>
+<span class="sd">                &quot;Phi_PR&quot;: 0.456,</span>
+<span class="sd">                &quot;Phi_PT&quot;: 0.789</span>
+<span class="sd">            }</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            - This method uses a pairwise distance-based approach to calculate variance components.</span>
+<span class="sd">            - The Phi statistics are measures of genetic differentiation.</span>
+<span class="sd">            - Sample-size weighting is applied to variance components.</span>
+<span class="sd">            - The method caches the region -&gt; pop -&gt; sample indices structure for efficiency.</span>
+<span class="sd">            - If any variance component is NaN, the corresponding Phi statistic is also NaN.</span>
+<span class="sd">            - If any variance component is &lt;= 0, the corresponding Phi statistic is NaN.</span>
+<span class="sd">            - If the total variance is &lt;= 0, all Phi statistics are NaN.</span>
+<span class="sd">            - If the total variance is NaN, all Phi statistics are NaN.</span>
+<span class="sd">            - The algorithm is inherently O(N^2) due to pairwise distance calculations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># NOTE: Skip major vectorization here because pairwise distance-based</span>
+        <span class="c1"># AMOVA is inherently O(N^2).</span>
+        <span class="c1"># However, we can still cache the structure that maps region -&gt; pop -&gt;</span>
+        <span class="c1"># sample indices.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_regions_three_level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">popmap_inverse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_popmap_inverse</span>
+            <span class="n">sample_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span>
+            <span class="n">sample_id_to_index</span> <span class="o">=</span> <span class="p">{</span><span class="n">sid</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sample_ids</span><span class="p">)}</span>
+
+            <span class="n">regions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">pop_id</span><span class="p">,</span> <span class="n">samples</span> <span class="ow">in</span> <span class="n">popmap_inverse</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">reg_id</span> <span class="o">=</span> <span class="n">regionmap</span><span class="p">[</span><span class="n">pop_id</span><span class="p">]</span>
+                <span class="n">idxs</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample_id_to_index</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">reg_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
+                    <span class="n">regions</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">regions</span><span class="p">[</span><span class="n">reg_id</span><span class="p">][</span><span class="n">pop_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">idxs</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cached_regions_three_level</span> <span class="o">=</span> <span class="n">regions</span>
+
+        <span class="n">regions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_regions_three_level</span>
+        <span class="n">region_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">regions</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">region_ids</span><span class="p">)</span>
+
+        <span class="c1"># total pops</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pop_dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">pop_dict</span> <span class="ow">in</span> <span class="n">regions</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="c1"># total individuals</span>
+        <span class="n">sample_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samples</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_ids</span><span class="p">)</span>
+
+        <span class="n">SSR_total</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># among regions</span>
+        <span class="n">SSp_r_total</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># among populations within regions</span>
+        <span class="n">SSW_total</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># within populations</span>
+        <span class="n">df_reg_total</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">df_pop_reg_total</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">df_within_total</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">n_loci</span> <span class="o">=</span> <span class="n">alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">locus_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_loci</span><span class="p">):</span>
+            <span class="n">dist_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_locus_pairwise_distances</span><span class="p">(</span><span class="n">locus_idx</span><span class="p">,</span> <span class="n">alignment</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">dist_matrix</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">dist_matrix</span><span class="p">)):</span>
+                <span class="k">continue</span>  <span class="c1"># Skip entirely missing loci</span>
+
+            <span class="n">valid_inds</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">dist_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">])]</span>
+            <span class="n">N_l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_inds</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">N_l</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># degrees of freedom</span>
+            <span class="n">df_reg</span> <span class="o">=</span> <span class="n">R</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">df_pop_reg</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">P</span> <span class="o">-</span> <span class="n">R</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">df_within</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">N_l</span> <span class="o">-</span> <span class="n">P</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">df_reg</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">df_pop_reg</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">df_within</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># global mean distance</span>
+            <span class="n">dist_sum_all</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">valid_pairs</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_l</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N_l</span><span class="p">):</span>
+                    <span class="n">d_ij</span> <span class="o">=</span> <span class="n">dist_matrix</span><span class="p">[</span><span class="n">valid_inds</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">valid_inds</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">d_ij</span><span class="p">):</span>
+                        <span class="n">dist_sum_all</span> <span class="o">+=</span> <span class="n">d_ij</span>
+                        <span class="n">valid_pairs</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">valid_pairs</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">global_mean_dist</span> <span class="o">=</span> <span class="n">dist_sum_all</span> <span class="o">/</span> <span class="n">valid_pairs</span>
+
+            <span class="n">SSR_locus</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">SSp_r_locus</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">SSW_locus</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+            <span class="c1"># among regions</span>
+            <span class="n">region_indices_map</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">reg_id</span> <span class="ow">in</span> <span class="n">region_ids</span><span class="p">:</span>
+                <span class="n">region_indices_map</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">pop_id</span><span class="p">,</span> <span class="n">idx_list</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">region_indices_map</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">idx_list</span><span class="p">)</span>
+
+            <span class="n">region_sizes</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">region_avg_dist</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">reg_id</span> <span class="ow">in</span> <span class="n">region_ids</span><span class="p">:</span>
+                <span class="n">members</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">region_indices_map</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">valid_inds</span><span class="p">]</span>
+                <span class="n">region_sizes</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">members</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">members</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">region_avg_dist</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                    <span class="k">continue</span>
+                <span class="n">sum_reg</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">valid_reg_pairs</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">members</span><span class="p">)):</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">members</span><span class="p">)):</span>
+                        <span class="n">d_ij</span> <span class="o">=</span> <span class="n">dist_matrix</span><span class="p">[</span><span class="n">members</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">members</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">d_ij</span><span class="p">):</span>
+                            <span class="n">sum_reg</span> <span class="o">+=</span> <span class="n">d_ij</span>
+                            <span class="n">valid_reg_pairs</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">region_avg_dist</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">sum_reg</span> <span class="o">/</span> <span class="n">valid_reg_pairs</span> <span class="k">if</span> <span class="n">valid_reg_pairs</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">reg_id</span> <span class="ow">in</span> <span class="n">region_ids</span><span class="p">:</span>
+                <span class="n">n_r</span> <span class="o">=</span> <span class="n">region_sizes</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">n_r</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">region_avg_dist</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]):</span>
+                    <span class="k">continue</span>
+                <span class="n">SSR_locus</span> <span class="o">+=</span> <span class="n">n_r</span> <span class="o">*</span> <span class="p">(</span><span class="n">region_avg_dist</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span> <span class="o">-</span> <span class="n">global_mean_dist</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+            <span class="c1"># among populations within regions</span>
+            <span class="k">for</span> <span class="n">reg_id</span> <span class="ow">in</span> <span class="n">region_ids</span><span class="p">:</span>
+                <span class="n">reg_mean</span> <span class="o">=</span> <span class="n">region_avg_dist</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">reg_mean</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="k">for</span> <span class="n">pop_id</span><span class="p">,</span> <span class="n">idx_list</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">pop_members</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">idx_list</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">valid_inds</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop_members</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">sum_pop</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="n">valid_pop_pairs</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pop_members</span><span class="p">)):</span>
+                        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop_members</span><span class="p">)):</span>
+                            <span class="n">d_ij</span> <span class="o">=</span> <span class="n">dist_matrix</span><span class="p">[</span><span class="n">pop_members</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pop_members</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">d_ij</span><span class="p">):</span>
+                                <span class="n">sum_pop</span> <span class="o">+=</span> <span class="n">d_ij</span>
+                                <span class="n">valid_pop_pairs</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">valid_pop_pairs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">pop_mean</span> <span class="o">=</span> <span class="n">sum_pop</span> <span class="o">/</span> <span class="n">valid_pop_pairs</span>
+                        <span class="n">SSp_r_locus</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop_members</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">pop_mean</span> <span class="o">-</span> <span class="n">reg_mean</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+            <span class="c1"># within populations</span>
+            <span class="k">for</span> <span class="n">reg_id</span> <span class="ow">in</span> <span class="n">region_ids</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">pop_id</span><span class="p">,</span> <span class="n">idx_list</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">pop_members</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">idx_list</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">valid_inds</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop_members</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">sum_pop</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="n">valid_pop_pairs</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pop_members</span><span class="p">)):</span>
+                        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop_members</span><span class="p">)):</span>
+                            <span class="n">d_ij</span> <span class="o">=</span> <span class="n">dist_matrix</span><span class="p">[</span><span class="n">pop_members</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pop_members</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">d_ij</span><span class="p">):</span>
+                                <span class="n">sum_pop</span> <span class="o">+=</span> <span class="n">d_ij</span>
+                                <span class="n">valid_pop_pairs</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">valid_pop_pairs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">pop_mean_dist</span> <span class="o">=</span> <span class="n">sum_pop</span> <span class="o">/</span> <span class="n">valid_pop_pairs</span>
+                    <span class="n">d_ij_values</span> <span class="o">=</span> <span class="n">dist_matrix</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">pop_members</span><span class="p">,</span> <span class="n">pop_members</span><span class="p">)]</span>
+                    <span class="n">valid_values</span> <span class="o">=</span> <span class="n">d_ij_values</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">d_ij_values</span><span class="p">)]</span>
+                    <span class="n">pop_mean_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">valid_values</span><span class="p">)</span>
+                    <span class="n">sum_sq_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">valid_values</span> <span class="o">-</span> <span class="n">pop_mean_dist</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">SSW_locus</span> <span class="o">+=</span> <span class="n">sum_sq_dev</span>
+
+            <span class="n">SSR_total</span> <span class="o">+=</span> <span class="n">SSR_locus</span>
+            <span class="n">SSp_r_total</span> <span class="o">+=</span> <span class="n">SSp_r_locus</span>
+            <span class="n">SSW_total</span> <span class="o">+=</span> <span class="n">SSW_locus</span>
+            <span class="n">df_reg_total</span> <span class="o">+=</span> <span class="n">df_reg</span>
+            <span class="n">df_pop_reg_total</span> <span class="o">+=</span> <span class="n">df_pop_reg</span>
+            <span class="n">df_within_total</span> <span class="o">+=</span> <span class="n">df_within</span>
+
+        <span class="c1"># finalize</span>
+        <span class="k">if</span> <span class="n">df_reg_total</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">df_pop_reg_total</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">df_within_total</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;Among_region_variance&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Among_population_within_region_variance&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Within_population_variance&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Phi_RT&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Phi_PR&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Phi_PT&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="n">MSR</span> <span class="o">=</span> <span class="n">SSR_total</span> <span class="o">/</span> <span class="n">df_reg_total</span>
+        <span class="n">MSP_r</span> <span class="o">=</span> <span class="n">SSp_r_total</span> <span class="o">/</span> <span class="n">df_pop_reg_total</span>
+        <span class="n">MSW</span> <span class="o">=</span> <span class="n">SSW_total</span> <span class="o">/</span> <span class="n">df_within_total</span>
+
+        <span class="c1"># Sample-size weighting (Excoffier approach)</span>
+        <span class="n">n_c_reg</span><span class="p">,</span> <span class="n">n_c_pop</span><span class="p">,</span> <span class="n">n_c_within</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_excoffier_sample_size_weighting</span><span class="p">(</span><span class="n">regions</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_c_reg</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n_c_pop</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n_c_within</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;Among_region_variance&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Among_population_within_region_variance&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Within_population_variance&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Phi_RT&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Phi_PR&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Phi_PT&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="n">sigma_region</span> <span class="o">=</span> <span class="p">(</span><span class="n">MSR</span> <span class="o">-</span> <span class="n">MSP_r</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_c_reg</span>
+        <span class="n">sigma_region</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">sigma_region</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">sigma_pop_region</span> <span class="o">=</span> <span class="p">(</span><span class="n">MSP_r</span> <span class="o">-</span> <span class="n">MSW</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_c_pop</span>
+        <span class="n">sigma_pop_region</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">sigma_pop_region</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">sigma_within</span> <span class="o">=</span> <span class="n">MSW</span> <span class="o">/</span> <span class="n">n_c_within</span>
+        <span class="n">sigma_within</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">sigma_within</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">([</span><span class="n">sigma_region</span><span class="p">,</span> <span class="n">sigma_pop_region</span><span class="p">,</span> <span class="n">sigma_within</span><span class="p">])):</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;Among_region_variance&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Among_population_within_region_variance&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Within_population_variance&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Phi_RT&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Phi_PR&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Phi_PT&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="n">sigma_total</span> <span class="o">=</span> <span class="n">sigma_region</span> <span class="o">+</span> <span class="n">sigma_pop_region</span> <span class="o">+</span> <span class="n">sigma_within</span>
+        <span class="k">if</span> <span class="n">sigma_total</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;Among_region_variance&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">sigma_region</span><span class="p">),</span>
+                <span class="s2">&quot;Among_population_within_region_variance&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">sigma_pop_region</span><span class="p">),</span>
+                <span class="s2">&quot;Within_population_variance&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">sigma_within</span><span class="p">),</span>
+                <span class="s2">&quot;Phi_RT&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Phi_PR&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s2">&quot;Phi_PT&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="n">phi_rt</span> <span class="o">=</span> <span class="n">sigma_region</span> <span class="o">/</span> <span class="n">sigma_total</span>
+        <span class="n">phi_pr</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">sigma_pop_region</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma_pop_region</span> <span class="o">+</span> <span class="n">sigma_within</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">sigma_pop_region</span> <span class="o">+</span> <span class="n">sigma_within</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="p">)</span>
+        <span class="n">phi_pt</span> <span class="o">=</span> <span class="p">(</span><span class="n">sigma_region</span> <span class="o">+</span> <span class="n">sigma_pop_region</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma_total</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;Among_region_variance&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">sigma_region</span><span class="p">),</span>
+            <span class="s2">&quot;Among_population_within_region_variance&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">sigma_pop_region</span><span class="p">),</span>
+            <span class="s2">&quot;Within_population_variance&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">sigma_within</span><span class="p">),</span>
+            <span class="s2">&quot;Phi_RT&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">phi_rt</span><span class="p">),</span>
+            <span class="s2">&quot;Phi_PR&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">phi_pr</span><span class="p">),</span>
+            <span class="s2">&quot;Phi_PT&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">phi_pt</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_compute_locus_pairwise_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locus_idx</span><span class="p">,</span> <span class="n">alignment</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute pairwise distances for one locus using IUPAC-coded alignment.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            locus_idx (int): Column index in self._alignment (locus).</span>
+<span class="sd">            alignment (np.ndarray): Genotype data in IUPAC format (shape: [n_samples, n_loci]).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray or None: A square pairwise distance matrix or None if all missing.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            - The IUPAC code distance matrix is computed using the IUPAC nucleotide distance metric.</span>
+<span class="sd">            - The distance metric is based on the number of nucleotide differences between two IUPAC codes.</span>
+<span class="sd">            - The distance matrix is a squareform matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">locus_bases</span> <span class="o">=</span> <span class="n">alignment</span><span class="p">[:,</span> <span class="n">locus_idx</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">locus_bases</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">})):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">processed_bases</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_iupac_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">locus_bases</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">fast_iupac_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iupac_distance_matrix</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
+
+        <span class="n">pairwise_distances</span> <span class="o">=</span> <span class="n">pdist</span><span class="p">(</span><span class="n">processed_bases</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="n">fast_iupac_distance</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">squareform</span><span class="p">(</span><span class="n">pairwise_distances</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_iupac_nucleotide_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">code2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute distance between two IUPAC codes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            code1 (str): First IUPAC code.</span>
+<span class="sd">            code2 (str): Second IUPAC code.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Distance between the two IUPAC codes.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            - The IUPAC nucleotide distance metric is based on the number of nucleotide differences between two IUPAC codes.</span>
+<span class="sd">            - The distance is 0 if the codes overlap, else 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">iupac_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;G&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;T&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;-&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+            <span class="s2">&quot;?&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+            <span class="s2">&quot;.&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+        <span class="p">}</span>
+        <span class="n">s1</span> <span class="o">=</span> <span class="n">iupac_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code1</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="n">s2</span> <span class="o">=</span> <span class="n">iupac_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code2</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">s1</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">s2</span><span class="p">:</span>
+            <span class="c1"># Gap or unknown =&gt; treat as mismatch</span>
+            <span class="k">return</span> <span class="mf">1.0</span>
+        <span class="c1"># Overlap =&gt; distance = 0, else 1</span>
+        <span class="k">return</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="p">(</span><span class="n">s1</span> <span class="o">&amp;</span> <span class="n">s2</span><span class="p">)</span> <span class="k">else</span> <span class="mf">1.0</span>
+
+    <span class="k">def</span> <span class="nf">_excoffier_sample_size_weighting</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">regions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute multi-level sample-size weighting factors for 3-level AMOVA.</span>
+
+<span class="sd">        This method calculates the weighting factors needed for Analysis of Molecular Variance (AMOVA) at three hierarchical levels: regions, populations, and within populations. These factors adjust the variance components and are essential for computing Phi statistics and p-values in AMOVA.</span>
+
+<span class="sd">        In layman&#39;s terms, this method helps in adjusting the calculations for genetic diversity analysis by considering the sizes of different groups (regions and populations). It ensures that the calculations are fair and accurate, even if some groups have more samples than others.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            regions (dict): region_id -&gt; {pop_id -&gt; list_of_sample_indices}.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[float, float, float]: Weighting factors for regions, populations, and within populations.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            - The sample-size weighting factors are calculated according to Excoffier et al. (1992).</span>
+<span class="sd">            - The factors are typically set to 1.0 for distance-based calculations.</span>
+<span class="sd">            - The factors are capped at 1e-9 to avoid division by zero.</span>
+<span class="sd">            - The factors are used to adjust variance components in AMOVA calculations.</span>
+<span class="sd">            - The factors are used to compute Phi statistics in AMOVA.</span>
+<span class="sd">            - The factors are used to compute p-values in AMOVA bootstrapping.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">region_sizes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pop_sizes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">N_total</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">reg_id</span><span class="p">,</span> <span class="n">pop_dict</span> <span class="ow">in</span> <span class="n">regions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">region_sum</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">idx_list</span> <span class="ow">in</span> <span class="n">pop_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">n_pop</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx_list</span><span class="p">)</span>
+                <span class="n">pop_sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n_pop</span><span class="p">)</span>
+                <span class="n">region_sum</span> <span class="o">+=</span> <span class="n">n_pop</span>
+            <span class="n">region_sizes</span><span class="p">[</span><span class="n">reg_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_sum</span>
+            <span class="n">N_total</span> <span class="o">+=</span> <span class="n">region_sum</span>
+
+        <span class="n">R</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">region_sizes</span><span class="p">)</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop_sizes</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">R</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">sum_sq_r</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sz</span> <span class="o">*</span> <span class="n">sz</span> <span class="k">for</span> <span class="n">sz</span> <span class="ow">in</span> <span class="n">region_sizes</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">n_c_reg</span> <span class="o">=</span> <span class="p">(</span><span class="n">N_total</span> <span class="o">-</span> <span class="n">sum_sq_r</span> <span class="o">/</span> <span class="n">N_total</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">N_total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_c_reg</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+        <span class="k">if</span> <span class="n">P</span> <span class="o">&gt;</span> <span class="n">R</span><span class="p">:</span>
+            <span class="n">sum_sq_p</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sz</span> <span class="o">*</span> <span class="n">sz</span> <span class="k">for</span> <span class="n">sz</span> <span class="ow">in</span> <span class="n">pop_sizes</span><span class="p">)</span>
+            <span class="n">n_c_pop</span> <span class="o">=</span> <span class="p">(</span><span class="n">N_total</span> <span class="o">-</span> <span class="n">sum_sq_p</span> <span class="o">/</span> <span class="n">N_total</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">P</span> <span class="o">-</span> <span class="n">R</span><span class="p">)</span> <span class="k">if</span> <span class="n">N_total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_c_pop</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+        <span class="c1"># Typically set to 1.0 for distance-based calculations</span>
+        <span class="n">n_c_within</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_c_reg</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_c_pop</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_c_within</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_single_bootstrap_run</span><span class="p">(</span>
+        <span class="n">n_loci</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">alignment</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">regionmap</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">phi_keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+        <span class="n">boot_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run a single bootstrap replicate.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_loci (int): Number of loci in the alignment.</span>
+<span class="sd">            alignment (np.ndarray): Genotype data in IUPAC format (shape: [n_samples, n_loci]).</span>
+<span class="sd">            regionmap (dict): pop_id -&gt; region_id mapping.</span>
+<span class="sd">            phi_keys (list): List of Phi statistic keys.</span>
+<span class="sd">            func (callable): AMOVA function to run.</span>
+<span class="sd">            boot_seed (int): Random seed for bootstrapping.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, float]: Dictionary of Phi statistics for the bootstrap replicate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Resample loci (columns) with replacement</span>
+        <span class="n">local_rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">boot_seed</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">local_rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_loci</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_loci</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">aln</span> <span class="o">=</span> <span class="n">alignment</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+
+        <span class="c1"># Run AMOVA</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">regionmap</span><span class="p">,</span> <span class="n">aln</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">phi_keys</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_amova_bootstrap</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">observed_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">n_bootstraps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">random_seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">regionmap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Bootstrap across loci to get p-values for Phi statistics.</span>
+
+<span class="sd">        This method performs bootstrapping across SNP loci to estimate p-values for Phi statistics obtained from AMOVA. It resamples loci with replacement and re-calculates AMOVA for each replicate. The p-value is calculated as the fraction of replicates where the Phi statistic is greater than or equal to the observed value.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            observed_results (dict): Observed results from AMOVA.</span>
+<span class="sd">            n_bootstraps (int): Number of bootstrap replicates.</span>
+<span class="sd">            n_jobs (int): Number of parallel jobs.</span>
+<span class="sd">            random_seed (int): Random seed for reproducibility.</span>
+<span class="sd">            regionmap (dict): population_id -&gt; region_id mapping.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, float]: Dictionary of p-values for Phi statistics. Keys: &quot;Phi_XXX_p_value&quot;. Values: float.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            - The p-value is calculated as the fraction of replicates where the Phi statistic is greater than or equal to the observed value.</span>
+<span class="sd">            - The method uses a frequency-based approach for single-level AMOVA.</span>
+<span class="sd">            - The method uses a pairwise distance-based approach for two-level and three-level AMOVA.</span>
+<span class="sd">            - The method caches the region -&gt; pop -&gt; sample indices structure for efficiency.</span>
+<span class="sd">            - If the observed value is NaN, the p-value is NaN.</span>
+<span class="sd">            - If the observed value is not available in the replicate, the p-value is NaN.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">phi_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">observed_results</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Phi_&quot;</span><span class="p">)]</span>
+        <span class="n">n_loci</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alignment</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+        <span class="n">seeds</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e9</span><span class="p">)),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_bootstraps</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">n_jobs_resolved</span> <span class="o">=</span> <span class="n">n_jobs</span> <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">n_jobs_resolved</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;n_jobs must be a positive integer.&quot;</span><span class="p">)</span>
+
+        <span class="n">original_alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alignment</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">partial_single_boot</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+            <span class="n">AMOVA</span><span class="o">.</span><span class="n">_single_bootstrap_run</span><span class="p">,</span>
+            <span class="n">n_loci</span><span class="p">,</span>
+            <span class="n">original_alignment</span><span class="p">,</span>
+            <span class="n">regionmap</span><span class="p">,</span>
+            <span class="n">phi_keys</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_amova_three_level</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">n_jobs_resolved</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+            <span class="n">replicate_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">partial_single_boot</span><span class="p">,</span> <span class="n">seeds</span><span class="p">))</span>
+
+        <span class="n">aggregated</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">phi_keys</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">rep_dict</span> <span class="ow">in</span> <span class="n">replicate_results</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">phi_keys</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">rep_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+                    <span class="n">aggregated</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+        <span class="c1"># Compute p-values</span>
+        <span class="n">p_values</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">phi_keys</span><span class="p">:</span>
+            <span class="n">obs_val</span> <span class="o">=</span> <span class="n">observed_results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">obs_val</span><span class="p">):</span>
+                <span class="n">p_values</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+                <span class="k">continue</span>
+
+            <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">aggregated</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">arr</span><span class="p">)]</span>  <span class="c1"># Remove NaNs</span>
+
+            <span class="c1"># If no valid bootstrap replicates, assume p-value is high</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">p_values</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+                <span class="k">continue</span>
+
+            <span class="n">more_extreme</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">arr</span> <span class="o">&gt;=</span> <span class="n">obs_val</span><span class="p">)</span>
+            <span class="n">p_values</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">more_extreme</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Ensure p-values are between 0 and 1</span>
+            <span class="n">p_values</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">p_values</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="mf">0.0001</span><span class="p">),</span> <span class="mf">0.9999</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">p_values</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

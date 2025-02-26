@@ -1,0 +1,1046 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>snpio.io package &mdash; SNPio 1.2.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=859da57e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=ca842793"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="snpio.analysis package" href="snpio.analysis.html" />
+    <link rel="prev" title="snpio.plotting package" href="snpio.plotting.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SNPio
+              <img src="_static/snpio_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example_script.html">Example script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pop_gen_statistics.html">PopGenStatistics Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">snpio</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="snpio.html">snpio package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="snpio.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="snpio.filtering.html">snpio.filtering package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.plotting.html">snpio.plotting package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">snpio.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.analysis.html">snpio.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.read_input.html">snpio.read_input package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.utils.html">snpio.utils package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="snpio.popgenstats.html">snpio.popgenstats package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="snpio.html#module-snpio">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SNPio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">snpio</a></li>
+          <li class="breadcrumb-item"><a href="snpio.html">snpio package</a></li>
+      <li class="breadcrumb-item active">snpio.io package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/btmartin721/SNPio/blob/master/docs/source/snpio.io.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="snpio-io-package">
+<h1>snpio.io package<a class="headerlink" href="#snpio-io-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="snpio-io-phylip-reader-module">
+<h2>snpio.io.phylip_reader module<a class="headerlink" href="#snpio-io-phylip-reader-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.io.phylip_reader.</span></span><span class="sig-name descname"><span class="pre">PhylipReader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popmapfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_popmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'snpio'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/phylip_reader.html#PhylipReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">GenotypeData</span></code></p>
+<p>Class to read and write PHYLIP files.</p>
+<p>This class provides methods to read and write PHYLIP files. The PHYLIP format is a simple text format for representing multiple sequence alignments. The first line of a PHYLIP file contains the number of samples and the number of loci. Each subsequent line contains the sample ID followed by the sequence data. The sequence data can be in any format, but it is typically a string of nucleotides or amino acids.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">PhylipReader</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">phylip</span> <span class="o">=</span> <span class="n">PhylipReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;example.phy&quot;</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="s2">&quot;example.popmap&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">snp_data</span>
+<span class="go">array([[&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;], [&quot;C&quot;, &quot;G&quot;, &quot;G&quot;, &quot;C&quot;], [&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;]], dtype=&quot;&lt;U1&quot;)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">samples</span>
+<span class="go">[&quot;Sample1&quot;, &quot;Sample2&quot;, &quot;Sample3&quot;, &quot;Sample4&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">populations</span>
+<span class="go">[&quot;Pop1&quot;, &quot;Pop1&quot;, &quot;Pop2&quot;, &quot;Pop2&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">num_snps</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">num_inds</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">popmap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="s2">&quot;Sample1&quot;</span><span class="p">:</span> <span class="s2">&quot;Pop1&quot;</span><span class="p">,</span> <span class="s2">&quot;Sample2&quot;</span><span class="p">:</span> <span class="s2">&quot;Pop1&quot;</span><span class="p">,</span> <span class="s2">&quot;Sample3&quot;</span><span class="p">:</span> <span class="s2">&quot;Pop2&quot;</span><span class="p">,</span> <span class="s2">&quot;Sample4&quot;</span><span class="p">:</span> <span class="s2">&quot;Pop2&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">popmap_inverse</span>
+<span class="go">{&quot;Pop1&quot;: [&quot;Sample1&quot;, &quot;Sample2&quot;], &quot;Pop2&quot;: [&quot;Sample3&quot;, &quot;Sample4&quot;]}</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">ref</span>
+<span class="go">[&quot;A&quot;, &quot;C&quot;, &quot;A&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">alt</span>
+<span class="go">[&quot;T&quot;, &quot;G&quot;, &quot;T&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">missingness_reports</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">run_pca</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">write_phylip</span><span class="p">(</span><span class="s2">&quot;output.str&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filename</span></span></dt>
+<dd><p>Name of the PHYLIP file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">popmapfile</span></span></dt>
+<dd><p>Name of the population map file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">force_popmap</span></span></dt>
+<dd><p>If True, the population map file is required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">exclude_pops</span></span></dt>
+<dd><p>List of populations to exclude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">include_pops</span></span></dt>
+<dd><p>List of populations to include.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_format</span></span></dt>
+<dd><p>Format for saving plots. Default is ‘png’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">prefix</span></span></dt>
+<dd><p>Prefix for output files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">verbose</span></span></dt>
+<dd><p>If True, status updates are printed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">samples</span></span></dt>
+<dd><p>List of sample IDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">snp_data</span></span></dt>
+<dd><p>List of SNP data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">num_inds</span></span></dt>
+<dd><p>Number of individuals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">num_snps</span></span></dt>
+<dd><p>Number of SNPs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">logger</span></span></dt>
+<dd><p>Logger instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">debug</span></span></dt>
+<dd><p>If True, debug messages are printed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>List of alternate alleles.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alt2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>List of second alternate alleles.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">load_aln</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/phylip_reader.html#PhylipReader.load_aln"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Load the PHYLIP file and populate SNP data, samples, and alleles.</p>
+<p>This method reads the PHYLIP file and populates the SNP data, samples, and alleles. The PHYLIP format is a simple text format for representing multiple sequence alignments. The first line of a PHYLIP file contains the number of samples and the number of loci. Each subsequent line contains the sample ID followed by the sequence data. The sequence data can be in any format, but it is typically a string of nucleotides or amino acids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AlignmentFileNotFoundError</strong> – If the PHYLIP file is not found.</p></li>
+<li><p><strong>AlignmentFormatError</strong> – If the PHYLIP file has an invalid format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ref</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>List of reference alleles.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">write_phylip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snp_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/phylip_reader.html#PhylipReader.write_phylip"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Write the stored alignment as a PHYLIP file.</p>
+<p>This method writes the stored alignment as a PHYLIP file. The PHYLIP format is a simple text format for representing multiple sequence alignments. The first line of a PHYLIP file contains the number of samples and the number of loci. Each subsequent line contains the sample ID followed by the sequence data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_file</strong> (<em>str</em>) – Name of the output PHYLIP file.</p></li>
+<li><p><strong>genotype_data</strong> (<em>GenotypeData</em><em>, </em><em>optional</em>) – GenotypeData instance.</p></li>
+<li><p><strong>snp_data</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – SNP data. Must be provided if genotype_data is None.</p></li>
+<li><p><strong>samples</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of sample IDs. Must be provided if snp_data is not None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If genotype_data and snp_data are both provided.</p></li>
+<li><p><strong>TypeError</strong> – If samples are not provided when snp_data is provided.</p></li>
+<li><p><strong>ValueError</strong> – If samples and snp_data are not the same length.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If genotype_data is provided, the snp_data and samples are loaded from the GenotypeData instance.</p>
+<p>If snp_data is provided, the samples must also be provided.</p>
+<p>If genotype_data is not provided, the snp_data and samples must be provided.</p>
+<p>The sequence data must have the same length for each sample.</p>
+<p>The PHYLIP file must have the correct number of samples and loci.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-io-structure-reader-module">
+<h2>snpio.io.structure_reader module<a class="headerlink" href="#snpio-io-structure-reader-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.io.structure_reader.</span></span><span class="sig-name descname"><span class="pre">StructureReader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popmapfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_popids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_popmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'snpio'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/structure_reader.html#StructureReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">GenotypeData</span></code></p>
+<p>This class reads STRUCTURE files and stores the SNP data, sample IDs, and populations.</p>
+<p><code class="docutils literal notranslate"><span class="pre">StructureReader</span></code> is a subclass of GenotypeData and inherits its attributes and methods. It reads STRUCTURE files and stores the SNP data, sample IDs, and populations, as well as various other attributes.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">StructureReader</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span> <span class="o">=</span> <span class="n">StructureReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;data.structure&quot;</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="s2">&quot;example.popmap&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">snp_data</span>
+<span class="go">array([[&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;], [&quot;C&quot;, &quot;G&quot;, &quot;G&quot;, &quot;C&quot;], [&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;]], dtype=&quot;&lt;U1&quot;)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">samples</span>
+<span class="go">[&quot;Sample1&quot;, &quot;Sample2&quot;, &quot;Sample3&quot;, &quot;Sample4&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">populations</span>
+<span class="go">[&quot;Pop1&quot;, &quot;Pop1&quot;, &quot;Pop2&quot;, &quot;Pop2&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">num_snps</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">num_inds</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">popmap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="s2">&quot;Sample1&quot;</span><span class="p">:</span> <span class="s2">&quot;Pop1&quot;</span><span class="p">,</span> <span class="s2">&quot;Sample2&quot;</span><span class="p">:</span> <span class="s2">&quot;Pop1&quot;</span><span class="p">,</span> <span class="s2">&quot;Sample3&quot;</span><span class="p">:</span> <span class="s2">&quot;Pop2&quot;</span><span class="p">,</span> <span class="s2">&quot;Sample4&quot;</span><span class="p">:</span> <span class="s2">&quot;Pop2&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">popmap_inverse</span>
+<span class="go">{&quot;Pop1&quot;: [&quot;Sample1&quot;, &quot;Sample2&quot;], &quot;Pop2&quot;: [&quot;Sample3&quot;, &quot;Sample4&quot;]}</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">ref</span>
+<span class="go">[&quot;A&quot;, &quot;C&quot;, &quot;A&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">alt</span>
+<span class="go">[&quot;T&quot;, &quot;G&quot;, &quot;T&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">missingness_reports</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">run_pca</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">write_structure</span><span class="p">(</span><span class="s2">&quot;output.str&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">logger</span></span></dt>
+<dd><p>Logger object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>LoggerManager</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">verbose</span></span></dt>
+<dd><p>If True, status updates are printed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">debug</span></span></dt>
+<dd><p>If True, debug messages are printed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_has_popids</span></span></dt>
+<dd><p>If True, the STRUCTURE file includes population IDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">_onerow</span></span></dt>
+<dd><p>If True, the STRUCTURE file is in one-row format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">load_aln</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/structure_reader.html#StructureReader.load_aln"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Load the STRUCTURE file and populate SNP data, samples, and populations.</p>
+<p>This method reads the STRUCTURE file and populates the SNP data, sample IDs, and populations. It also sets the number of SNPs and individuals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AlignmentNotFoundError</strong> – If the STRUCTURE file is not found.</p></li>
+<li><p><strong>AlignmentFormatError</strong> – If the STRUCTURE file has an invalid format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method should be called after initializing the StructureReader object.</p>
+<p>The SNP data, sample IDs, and populations are stored in the snp_data, samples, and populations attributes, respectively.4</p>
+<p>The number of SNPs and individuals are stored in the num_snps and num_inds attributes, respectively.</p>
+<p>The STRUCTURE file can be written to a new file using the write_structure method.</p>
+<p>The SNP data can be accessed in the IUPAC format using the <cite>snp_data</cite> attribute.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">write_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genotype_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snp_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/structure_reader.html#StructureReader.write_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Write the stored alignment as a STRUCTURE file.</p>
+<p>This method writes the stored alignment as a STRUCTURE file. If genotype_data is provided, the SNP data and sample IDs are extracted from it. Otherwise, the SNP data and sample IDs must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_file</strong> (<em>str</em>) – Name of the output STRUCTURE file.</p></li>
+<li><p><strong>genotype_data</strong> (<em>GenotypeData</em><em>, </em><em>optional</em>) – GenotypeData instance.</p></li>
+<li><p><strong>snp_data</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – SNP data in IUPAC format. Must be provided if genotype_data is None.</p></li>
+<li><p><strong>samples</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – List of sample IDs. Must be provided if snp_data is not provided.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, status updates are printed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If genotype_data and snp_data are both provided.</p></li>
+<li><p><strong>TypeError</strong> – If samples are not provided when snp_data is provided.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="snpio-io-vcf-reader-module">
+<h2>snpio.io.vcf_reader module<a class="headerlink" href="#snpio-io-vcf-reader-module" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">snpio.io.vcf_reader.</span></span><span class="sig-name descname"><span class="pre">VCFReader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popmapfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_popmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_pops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">18</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_despine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'snpio'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loci_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/vcf_reader.html#VCFReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">GenotypeData</span></code></p>
+<p>A class to read VCF files into GenotypeData objects and write GenotypeData objects to VCF files.</p>
+<p>This class inherits from GenotypeData and provides methods to read VCF files and extract the necessary attributes.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">snpio</span> <span class="kn">import</span> <span class="n">VCFReader</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span> <span class="o">=</span> <span class="n">VCFReader</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;example.vcf&quot;</span><span class="p">,</span> <span class="n">popmapfile</span><span class="o">=</span><span class="s2">&quot;popmap.txt&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">snp_data</span>
+<span class="go">array([[&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;], [&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;], [&quot;A&quot;, &quot;T&quot;, &quot;T&quot;, &quot;A&quot;]], dtype=&quot;&lt;U1&quot;)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">samples</span>
+<span class="go">[&quot;sample1&quot;, &quot;sample2&quot;, &quot;sample3&quot;, &quot;sample4&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">num_inds</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">num_snps</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">populations</span>
+<span class="go">[&quot;pop1&quot;, &quot;pop1&quot;, &quot;pop2&quot;, &quot;pop2&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">popmap</span>
+<span class="go">{&quot;sample1&quot;: &quot;pop1&quot;, &quot;sample2&quot;: &quot;pop1&quot;, &quot;sample3&quot;: &quot;pop2&quot;, &quot;sample4&quot;:</span>
+<span class="go">&quot;pop2&quot;}</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">popmap_inverse</span>
+<span class="go">{&quot;pop1&quot;: [&quot;sample1&quot;, &quot;sample2&quot;], &quot;pop2&quot;: [&quot;sample3&quot;, &quot;sample4&quot;]}</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">loci_indices</span>
+<span class="go">array([True, True, True], dtype=bool)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">sample_indices</span>
+<span class="go">array([True, True, True, True], dtype=bool)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">ref</span>
+<span class="go">[&quot;A&quot;, &quot;A&quot;, &quot;A&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">alt</span>
+<span class="go">[&quot;T&quot;, &quot;T&quot;, &quot;T&quot;]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">missingness_reports</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">run_pca</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genotype_data</span><span class="o">.</span><span class="n">write_vcf</span><span class="p">(</span><span class="s2">&quot;output.vcf&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filename</span></span></dt>
+<dd><p>The name of the VCF file to read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">popmapfile</span></span></dt>
+<dd><p>The name of the population map file to read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">chunk_size</span></span></dt>
+<dd><p>The size of the chunks to read from the VCF file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">force_popmap</span></span></dt>
+<dd><p>Whether to force the use of the population map file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">exclude_pops</span></span></dt>
+<dd><p>The populations to exclude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">include_pops</span></span></dt>
+<dd><p>The populations to include.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_format</span></span></dt>
+<dd><p>The format to save the plots in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_fontsize</span></span></dt>
+<dd><p>The font size for the plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_dpi</span></span></dt>
+<dd><p>The DPI for the plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">plot_despine</span></span></dt>
+<dd><p>Whether to remove the spines from the plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">show_plots</span></span></dt>
+<dd><p>Whether to show the plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">prefix</span></span></dt>
+<dd><p>The prefix to use for the output files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">verbose</span></span></dt>
+<dd><p>Whether to print verbose output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">sample_indices</span></span></dt>
+<dd><p>The indices of the samples to read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">loci_indices</span></span></dt>
+<dd><p>The indices of the loci to read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">debug</span></span></dt>
+<dd><p>Whether to enable debug mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">num_records</span></span></dt>
+<dd><p>The number of records in the VCF file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filetype</span></span></dt>
+<dd><p>The type of the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">vcf_header</span></span></dt>
+<dd><p>The VCF header.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[pysam.libcbcf.VariantHeader]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">info_fields</span></span></dt>
+<dd><p>The VCF info fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">resource_data</span></span></dt>
+<dd><p>A dictionary to store resource data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">logger</span></span></dt>
+<dd><p>The logger object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">snp_data</span></span></dt>
+<dd><p>The SNP data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">samples</span></span></dt>
+<dd><p>The sample names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The VCF file is bgzipped, sorted, and indexed using Tabix to ensure efficient reading, if necessary.</p>
+<p>The VCF file is read in chunks to avoid memory issues.</p>
+<p>The VCF attributes are extracted and stored in an HDF5 file for efficient access.</p>
+<p>The genotype data is transformed into IUPAC codes for efficient storage and processing.</p>
+<p>The VCF attributes are stored in an HDF5 file for efficient access.</p>
+<p>The VCF attributes are extracted and stored in an HDF5 file for efficient access.</p>
+<p>The genotype data is transformed into IUPAC codes for efficient storage and processing.</p>
+<p>The VCF attributes are stored in an HDF5 file for efficient access.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_vcf_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vcf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/vcf_reader.html#VCFReader.get_vcf_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extracts VCF attributes and returns them in an efficient manner with chunked processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vcf</strong> (<em>pysam.VariantFile</em>) – The VCF file object to extract attributes from.</p></li>
+<li><p><strong>chunk_size</strong> (<em>int</em><em>, </em><em>optional</em>) – The size of the chunks to process. Defaults to 1000.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The path to the HDF5 file containing the VCF attributes, the SNP data, and the sample names.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[str, np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">load_aln</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/vcf_reader.html#VCFReader.load_aln"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Loads the alignment from the VCF file into the VCFReader object.</p>
+<p>This method ensures that the input VCF file is bgzipped, sorted, and indexed using Tabix. It then reads the VCF file and extracts the necessary attributes. The VCF attributes are stored in an HDF5 file for efficient access. The genotype data is transformed into IUPAC codes for efficient storage and processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">transform_gt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/vcf_reader.html#VCFReader.transform_gt"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Transforms genotype tuples into their IUPAC codes or corresponding strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gt</strong> (<em>np.ndarray</em>) – The genotype tuples to transform.</p></li>
+<li><p><strong>ref</strong> (<em>str</em>) – The reference allele.</p></li>
+<li><p><strong>alts</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The alternate alleles.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The transformed genotype tuples.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">update_vcf_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snp_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loci_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/vcf_reader.html#VCFReader.update_vcf_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Updates the VCF attributes with new data in chunks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>snp_data</strong> (<em>np.ndarray</em>) – The SNP data to update the VCF attributes with.</p></li>
+<li><p><strong>sample_indices</strong> (<em>np.ndarray</em>) – The indices of the samples to update.</p></li>
+<li><p><strong>loci_indices</strong> (<em>np.ndarray</em>) – The indices of the loci to update.</p></li>
+<li><p><strong>samples</strong> (<em>np.ndarray</em>) – The sample names to update.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – If the VCF attributes file is not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">validate_input_vcf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/vcf_reader.html#VCFReader.validate_input_vcf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Validates the input VCF file to ensure it meets required criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>Path</em>) – The path to the bgzipped and sorted VCF file.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the VCF file does not meet validation criteria.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">validate_output_vcf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/vcf_reader.html#VCFReader.validate_output_vcf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Validates the output VCF file to ensure it was written correctly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>Path</em>) – The path to the bgzipped and indexed output VCF file.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the VCF file does not meet validation criteria.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vcf_attributes_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd><p>The path to the HDF5 file containing the VCF attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The path to the HDF5 file containing the VCF attributes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">write_vcf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hdf5_file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snpio/io/vcf_reader.html#VCFReader.write_vcf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Writes the GenotypeData object data to a VCF file in chunks.</p>
+<p>This method writes the VCF data, bgzips the output file, indexes it with Tabix,
+and validates the output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_filename</strong> (<em>str</em>) – The name of the output VCF file to write.</p></li>
+<li><p><strong>hdf5_file_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The path to the HDF5 file containing the VCF attributes. Defaults to None.</p></li>
+<li><p><strong>chunk_size</strong> (<em>int</em><em>, </em><em>optional</em>) – The size of the chunks to read from the HDF5 file. Defaults to 1000.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The current instance of VCFReader.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>VCFReader</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="snpio.plotting.html" class="btn btn-neutral float-left" title="snpio.plotting package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="snpio.analysis.html" class="btn btn-neutral float-right" title="snpio.analysis package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Bradley T. Martin and Tyler K. Chafin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
