@@ -1,0 +1,97 @@
+Metadata-Version: 2.3
+Name: logreel
+Version: 0.2.0
+Summary: Application that retrieves logs from systems that aren’t natively supported by Google SecOps
+Author: Simone Roma
+Author-email: simone.roma@nomios.co.uk
+Requires-Python: >=3.12,<4.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Dist: fastapi (>=0.115.3,<0.116.0)
+Requires-Dist: pydantic-settings (>=2.6.0,<3.0.0)
+Requires-Dist: setuptools (>=75.2.0,<76.0.0)
+Requires-Dist: structlog (>=24.4.0,<25.0.0)
+Requires-Dist: uvicorn (>=0.32.0,<0.33.0)
+Description-Content-Type: text/markdown
+
+# LogReel
+
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/nomios-opensource/logreel/publish.yml)
+[![codecov](https://codecov.io/gh/nomios-opensource/logreel/branch/develop/graph/badge.svg?token=iKZNzUr2LI)](https://codecov.io/gh/nomios-opensource/logreel)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/logreel)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/logreel)
+![GitHub License](https://img.shields.io/github/license/nomios-opensource/logreel)
+
+An open-source logging utility for reliable API-to-API log transport with modular plugin support.
+
+`LogReel` is authored by [Simone Roma](https://github.com/devsimone), governed as a [benevolent dictatorship](CODE_OF_CONDUCT.md), and distributed under [license](LICENSE).
+
+## Introduction
+
+In modern SaaS applications, logging is fundamentally different from traditional logging systems. SaaS applications expose APIs that must be periodically scraped to collect data, which is then stored in a logging system. Given the critical importance of logging for security and operational monitoring, any API logging service must ensure reliability and prevent data loss—even when remote systems experience temporary outages.
+
+LogReel is a logging utility that simplifies API-based logging by fetching data from a source API and forwarding it to a destination API. It uses a cursor-based tracking mechanism to maintain continuity and prevent data duplication or loss. With its plugin-based architecture, users can easily create custom plugins to connect to different APIs, allowing LogReel to handle the continuous data collection and delivery.
+
+## Features
+
+- **Reliable API Logging**, tracks the last successful fetch with a cursor-based mechanism.
+- **Plugin Architecture**, allows users to implement their own plugins for source and destination APIs.
+- **Continuous Execution**, executes user-defined plugins in a continuous loop for real-time logging.
+- **Containerised Deployment**, deployable using Compose or Kubernetes for scalability and IaC integration.
+
+## Installation
+
+Install using `pip install logreel` or `poetry add logreel`
+
+## Quickstart
+
+1. Create your LogReel user environment repo
+2. Add the `logreel` package from pypi as a dependency
+3. Define your plugins that implement the corresponding base classes
+    ```python
+    from logreel import SourcePlugin, DestinationPlugin
+
+    class MySourcePlugin(SourcePlugin):
+        ...
+
+    class MyDestinationPlugin(DestinationPlugin):
+        ...
+    ```
+3. Register the plugins using corresponding entrypoints
+    ```toml
+    # pyproject.toml - example using Poetry
+
+    [tool.poetry.plugins."logreel.sources"]
+    my_source_plugin = "module_path:MySourcePlugin"
+
+    [tool.poetry.plugins."logreel.destinations"]
+    my_destination_plugin = "module_path:MyDestinationPlugin"
+
+    ``` 
+4. Create a docker compose file to run the service, using environment variables to specify the plugin names and parameters.
+
+    ```yaml
+    services:
+      logreel_mysource_to_mydestination:
+        build:
+          context: .
+        restart: always
+        environment:
+          - SOURCE_PLUGIN=my_source_plugin
+          - DESTINATION_PLUGIN=my_destination_plugin
+          - OTHER_PLUGIN_PARAMS_FOO=${FOO}
+    ```
+
+
+## Versioning
+
+Releases will follow semantic versioning (major.minor.patch). Before 1.0.0 breaking changes can be included in a minor release, therefore we highly recommend pinning this package.
+
+## Contributing
+
+Suggest a [feature]() or report a [bug](). Read our developer [guide](CONTRIBUTING.md).
+
+## License
+
+LogReel is distributed under the Apache 2.0 [license](LICENSE).
