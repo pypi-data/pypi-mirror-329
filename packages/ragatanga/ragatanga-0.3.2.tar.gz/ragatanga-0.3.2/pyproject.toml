@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ragatanga"
+version = "0.3.2"
+authors = [
+    {name = "Dionisio Agourakis", email = "dionisio@getjai.com"},
+]
+description = "A hybrid semantic knowledge base and query system combining ontology-based reasoning with semantic search"
+readme = "readme.md"
+requires-python = ">=3.8"
+keywords = ["semantic", "knowledge-base", "ontology", "reasoning", "rag"]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "aiofiles>=24.1.0",
+    "instructor>=1.7.2",
+    "faiss-cpu>=1.7.4",
+    "numpy>=1.22.0",
+    "openai>=1.0.0",
+    "uvicorn>=0.34.0",
+    "fastapi>=0.100.0",
+    "rdflib>=6.0.0",
+    "owlready2>=0.47",
+    "python-multipart>=0.0.20",
+    "loguru>=0.7.0",
+    "pydantic>=2.0.0",
+    "sentence-transformers>=2.2.2",
+    "anthropic>=0.18.0",
+    "httpx>=0.24.0",
+    "googletrans>=4.0.0-rc1",
+    "transformers>=4.30.0",
+    "torch>=2.0.0",
+    "requests>=2.28.0",
+    "aiohttp>=3.8.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/jquant/ragatanga"
+"Bug Tracker" = "https://github.com/jquant/ragatanga/issues"
+
+[tool.setuptools]
+packages = ["ragatanga", "ragatanga.core", "ragatanga.api", "ragatanga.utils", "ragatanga.data"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"ragatanga.data" = ["*.md", "*.ttl"] 
