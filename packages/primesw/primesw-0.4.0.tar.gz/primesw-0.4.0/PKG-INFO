@@ -1,0 +1,59 @@
+Metadata-Version: 2.1
+Name: primesw
+Version: 0.4.0
+Summary: Probabilistic Regressor for Input to the Magnetosphere Estimation (Solar Wind)
+License: GPL-3.0
+Author: Connor OBrien
+Requires-Python: >=3.8,<3.11
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Scientific/Engineering :: Astronomy
+Classifier: Topic :: Scientific/Engineering :: Atmospheric Science
+Classifier: Topic :: Scientific/Engineering :: Physics
+Requires-Dist: cdasws (>=1.8.9,<2.0.0)
+Requires-Dist: cdflib (>=1.3.2,<2.0.0)
+Requires-Dist: matplotlib (>=3.4)
+Requires-Dist: numpy (>=1.20.3)
+Requires-Dist: pandas (>=1.2)
+Requires-Dist: protobuf (==3.20.0)
+Requires-Dist: scikit-learn (>=0.24)
+Requires-Dist: scipy (>=1.6)
+Requires-Dist: tables (>=3.8.0,<4.0.0)
+Requires-Dist: tensorflow (==2.8.0)
+Requires-Dist: tensorflow-io-gcs-filesystem (==0.25.0)
+Requires-Dist: xarray (>=2023.1.0,<2024.0.0)
+Description-Content-Type: text/markdown
+
+# PRIME
+[![DOI](https://zenodo.org/badge/648224321.svg)](https://zenodo.org/badge/latestdoi/648224321)
+
+PRIME (Probabilistic Regressor for Input to the Magnetosphere Estimation) is a probabilistic algorithm that uses solar wind time history from L1 monitors to generate predictions of near-Earth solar wind with uncertainties. Install with
+```
+pip install primesw
+```
+
+For usage, read the [documentation](https://connor-obrien888.github.io/prime/primesw.html).
+
+For information on PRIME, including results from its validation and caveats on its use, please see the [paper](https://www.frontiersin.org/articles/10.3389/fspas.2023.1250779/full).
+
+If you make use of PRIME, please cite it:
+```
+@article{obrien_prime_2023,
+	title = {{PRIME}: a probabilistic neural network approach to solar wind propagation from {L1}},
+	volume = {10},
+	issn = {2296-987X},
+	shorttitle = {{PRIME}},
+	url = {https://www.frontiersin.org/articles/10.3389/fspas.2023.1250779/full},
+	doi = {10.3389/fspas.2023.1250779},
+	urldate = {2023-11-13},
+	journal = {Frontiers in Astronomy and Space Sciences},
+	author = {O’Brien, Connor and Walsh, Brian M. and Zou, Ying and Tasnim, Samira and Zhang, Huaming and Sibeck, David Gary},
+	month = sep,
+	year = {2023},
+	pages = {1250779},
+}
+```
