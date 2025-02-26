@@ -1,0 +1,112 @@
+Metadata-Version: 2.4
+Name: tabular_data_loader
+Version: 0.1.0
+Classifier: Programming Language :: Rust
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Dist: openpyxl>=3.1.3
+Summary: A Rust-powered library for loading tabular data from CSV and Excel files
+Author-email: Your Name <your.email@example.com>
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown; charset=UTF-8; variant=GFM
+
+# Tabular Data Loader
+
+This is a Rust library that can be used in Python to load tabular data from binary file content. It supports CSV, XLS, and XLSX file formats.
+
+## Installation
+
+You can install the package directly from PyPI:
+
+```bash
+pip install tabular_data_loader
+```
+
+The package provides manylinux2014 wheels for Python 3.8-3.12 on Linux, and native wheels for macOS and Windows.
+
+## Development Setup
+
+1. Install maturin:
+```bash
+pip install maturin
+```
+
+2. Build and install in development mode:
+```bash
+maturin develop
+```
+
+3. Build release version:
+```bash
+# For local platform
+maturin build --release
+
+# For manylinux2014 compatibility
+maturin build --release --strip --manylinux 2014
+```
+
+4. To publish to PyPI:
+```bash
+maturin publish
+```
+
+## Usage
+
+```python
+import io
+from tabular_data_loader import load_tabular_data
+
+# For CSV files
+csv_content = io.BytesIO(b"col1,col2\nval1,val2\nval3,val4")
+csv_result = load_tabular_data(csv_content.getvalue())
+print(csv_result)  # [['col1', 'col2'], ['val1', 'val2'], ['val3', 'val4']]
+
+# For Excel files (XLS/XLSX)
+with open('example.xlsx', 'rb') as f:
+    excel_content = f.read()
+excel_result = load_tabular_data(excel_content)
+print(excel_result)  # Returns data from the first sheet as list of lists
+```
+
+## Features
+
+- Supports CSV files with flexible parsing
+- Supports both XLS and XLSX Excel files
+- Automatically detects the file format
+- Converts all data to strings for consistent output
+- Handles empty cells, numbers, dates, and boolean values
+- Type inference for data fields
+- Multi-sheet support for Excel files
+
+## CI/CD
+
+The project uses GitLab CI with Kubernetes executor for automated building and testing. The pipeline includes:
+
+1. Building Python wheels using maturin with manylinux2014 compatibility
+2. Building wheels for Python versions 3.8-3.12
+3. Running tests on the built package
+4. Caching of Rust and Python dependencies for faster builds
+
+To use the CI/CD pipeline:
+
+1. Ensure your GitLab runner has Kubernetes executor configured
+2. Push your changes to GitLab
+3. The pipeline will automatically:
+   - Build manylinux2014 wheels for all supported Python versions
+   - Run tests
+   - Create wheel artifacts
+
+The built wheels will be available as artifacts in the GitLab CI interface and will be compatible with most Linux distributions.
+
+## Contributing
+
+1. Clone the repository
+2. Install development dependencies: `pip install maturin`
+3. Make your changes
+4. Build and test: `maturin develop`
+5. Submit a pull request
+
