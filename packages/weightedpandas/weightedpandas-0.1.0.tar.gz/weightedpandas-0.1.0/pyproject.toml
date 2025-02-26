@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "weightedpandas"
+version = "0.1.0"
+description = "Extends pandas Series and DataFrame classes to support weighted operations"
+readme = "README.md"
+authors = [
+    {name = "WeightedPandas Contributors"}
+]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "pandas>=1.4.0,<3.0.0",
+    "numpy>=1.20.0,<3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "isort>=5.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+]
+docs = [
+    "jupyter-book>=0.13.0",
+    "sphinx>=4.0",
+    "sphinx_rtd_theme",
+    "sphinx-autodoc-typehints",
+    "sphinx_book_theme",
+    "furo",
+    "matplotlib",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/policyengine/weightedpandas"
+"Bug Tracker" = "https://github.com/policyengine/weightedpandas/issues"
+"Documentation" = "https://github.com/policyengine/weightedpandas"
+
+[tool.setuptools]
+packages = ["weightedpandas"]
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["weightedpandas/tests"]
+python_files = "test_*.py"
