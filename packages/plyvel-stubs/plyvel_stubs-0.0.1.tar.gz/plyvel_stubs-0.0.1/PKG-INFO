@@ -1,0 +1,93 @@
+Metadata-Version: 2.4
+Name: plyvel-stubs
+Version: 0.0.1
+Summary: Type stubs for plyvel
+Project-URL: Homepage, https://github.com/ysenarath/plyvel-stubs
+Project-URL: Repository, https://github.com/ysenarath/plyvel-stubs
+Author: ysenarath
+License: MIT License
+        
+        Copyright (c) 2025 ysenarath
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+License-File: LICENSE
+Keywords: leveldb,plyvel,stubs,typing
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Typing :: Stubs Only
+Description-Content-Type: text/markdown
+
+# plyvel-stubs
+
+Type stubs for [plyvel](https://github.com/wbolster/plyvel), a Python interface
+to LevelDB.
+
+## Installation
+
+```bash
+pip install plyvel-stubs
+```
+
+## Usage
+
+These stubs provide type information for the plyvel package. Once installed,
+your type checker (like mypy, pyright, or Pylance) will automatically use these
+stubs when checking code that uses plyvel.
+
+## Supported Types
+
+The package provides type information for:
+
+- `DB` class for LevelDB database operations
+- `WriteBatch` class for batch operations
+- `PrefixedDB` class for prefix-based database operations
+
+## Example
+
+```python
+from plyvel import DB
+
+db = DB("/path/to/db", create_if_missing=True)
+db.put(b"key", b"value")
+value = db.get(b"key")  # Type: Optional[bytes]
+
+# Using with context manager
+with db.write_batch() as batch:
+    batch.put(b"key1", b"value1")
+    batch.put(b"key2", b"value2")
+
+# Using prefix database
+prefixed_db = db.prefixed_db(b"prefix-")
+prefixed_db.put(b"key", b"value")  # Will store as "prefix-key"
+```
+
+## Development
+
+This package contains only type stubs (.pyi files) for the plyvel package. It
+does not contain any runtime code.
+
+## License
+
+MIT License - see LICENSE file for details.
