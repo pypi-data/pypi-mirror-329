@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.hatch.build.targets.wheel]
+packages = ["savant_models"]
+
+[project]
+name = "savant_models"
+version = "1.0.13"
+authors = [
+  { name = "SAVANT", email = "savantmdt@gmail.com" },
+]
+description = "A small example package"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+# Add your dependencies here:
+dependencies = [
+    "fastapi==0.115.6",
+    "pydantic==2.10.5",
+    "pydantic_core==2.27.2",
+    "pymongo==4.9.2",
+]
+
+[project.urls]
+repo = "https://bitbucket.org/realtimeml/savant-models/src/main/"
+
