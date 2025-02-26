@@ -1,0 +1,54 @@
+Metadata-Version: 2.1
+Name: laonlp-spellchecker
+Version: 0.1.9
+Summary: A Lao NLP library for spell-checking
+Home-page: https://github.com/Monaliza14xx/laonlp_spellchecker
+Author: Khonepaseuth SOUNAKHEN
+Author-email: khonepaserth@fe-nuol.edu.la
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: symspellpy
+
+# laonlp_spellchecker - Lao NLP Spell Checker
+
+[![Python Version](https://img.shields.io/badge/python-3.6%2B-blue)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+`laonlp_spellchecker` is a simple **Lao NLP spell-checker** that automatically corrects misspelled Lao words using a pre-built dictionary and edit distance algorithms. 
+
+---
+
+## 🚀 **Features**
+✅ Lao spell-checking using **SymSpell**  
+✅ Fast and lightweight spell correction  
+✅ Easy to install and use  
+✅ Supports **custom word dictionaries**  
+
+---
+
+## 🔧 **Installation**
+### Install from PyPI
+```bash
+pip install laonlp-spellchecker
+```
+## 🔧 **Example**
+### How to use the spell checker
+```example
+from laonlp_spellchecker import LaoSpellChecker
+
+sentence = "ສາທານະນະຊຸກ"
+# Initialize the spell checker (it will use the default dictionary file bundled in the package)
+spell_checker = LaoSpellChecker()
+
+# Correct the sentence
+corrected_sentence = spell_checker.correct_sentence(sentence)
+print(f"Original: {sentence}")
+print(f"Corrected: {corrected_sentence}")
+# Output: Original: ສາທານະນະຊຸກ
+#         Corrected: ສາທາລະນະສຸກ
+```
+
+
